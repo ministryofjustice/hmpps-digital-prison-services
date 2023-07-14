@@ -3,10 +3,10 @@
 
 generic-service:
   ingress:
-    host: hmpps-digital-prison-services.hmpps.service.justice.gov.uk
+    host: dps.prison.service.justice.gov.uk
 
   env:
-    INGRESS_URL: "https://hmpps-digital-prison-services.hmpps.service.justice.gov.uk"
+    INGRESS_URL: "https://dps.prison.service.justice.gov.uk"
     HMPPS_AUTH_URL: "https://sign-in.hmpps.service.justice.gov.uk/auth"
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api.prison.service.justice.gov.uk"
 
