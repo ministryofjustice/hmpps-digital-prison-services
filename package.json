@@ -1,7 +1,7 @@
 {
   "name": "hmpps-digital-prison-services",
   "version": "0.0.1",
-  "description": "Hmpps Digital Prison Services",
+  "description": "HMPPS Digital Prison Services",
   "repository": "git@github.com:ministryofjustice/hmpps-digital-prison-services.git",
   "license": "MIT",
   "scripts": {
@@ -142,7 +142,7 @@
     "audit-ci": "^6.6.1",
     "concurrently": "^8.2.0",
     "cookie-session": "^2.0.0",
-    "cypress": "^12.16.0",
+    "cypress": "^12.17.1",
     "cypress-multi-reporters": "^1.6.3",
     "dotenv": "^16.3.1",
     "eslint": "^8.44.0",
@@ -170,6 +170,9 @@
     "typescript": "^5.1.6"
   },
   "overrides": {
-    "semver": "^7.5.3"
+    "semver": "^7.5.3",
+    "cypress": {
+      "tough-cookie": "^4.1.3"
+    }
   }
 }
