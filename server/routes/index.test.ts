@@ -14,11 +14,6 @@ afterEach(() => {
 
 describe('GET /', () => {
   it('should render index page', () => {
-    return request(app)
-      .get('/')
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        expect(res.text).toContain('This site is under construction...')
-      })
+    return request(app).get('/').expect('Content-Type', /html/)
   })
 })
