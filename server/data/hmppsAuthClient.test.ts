@@ -1,10 +1,25 @@
 import nock from 'nock'
 
 import config from '../config'
-import HmppsAuthClient from './hmppsAuthClient'
+import HmppsAuthClient, { systemTokenBuilder } from './hmppsAuthClient'
 import TokenStore from './tokenStore'
+import restClientBuilder from '.'
+import { ApplicationInfo } from '../applicationInfo'
 
 jest.mock('./tokenStore')
+jest.mock('../applicationInfo.ts', () => {
+  return {
+    __esModule: true,
+    default: jest.fn(() => {
+      return {
+        applicationName: 'test',
+        buildNumber: '1',
+        gitRef: 'long ref',
+        gitShortHash: 'short ref',
+      } as ApplicationInfo
+    }),
+  }
+})
 
 const tokenStore = new TokenStore(null) as jest.Mocked<TokenStore>
 
@@ -13,11 +28,11 @@ const token = { access_token: 'token-1', expires_in: 300 }
 
 describe('hmppsAuthClient', () => {
   let fakeHmppsAuthApi: nock.Scope
-  let hmppsAuthClient: HmppsAuthClient
+  let systemToken: (u?: string) => Promise<string>
 
   beforeEach(() => {
     fakeHmppsAuthApi = nock(config.apis.hmppsAuth.url)
-    hmppsAuthClient = new HmppsAuthClient(tokenStore)
+    systemToken = systemTokenBuilder(tokenStore)
   })
 
   afterEach(() => {
@@ -34,32 +49,26 @@ describe('hmppsAuthClient', () => {
         .matchHeader('authorization', `Bearer ${token.access_token}`)
         .reply(200, response)
 
-      const output = await hmppsAuthClient.getUser(token.access_token)
+      const hmppsAuthClient = restClientBuilder(
+        'HMPPS Auth Client',
+        config.apis.hmppsAuth,
+        HmppsAuthClient,
+      )(token.access_token)
+
+      const output = await hmppsAuthClient.getUser()
       expect(output).toEqual(response)
-    })
-  })
-
-  describe('getUserRoles', () => {
-    it('should return data from api', async () => {
-      fakeHmppsAuthApi
-        .get('/api/user/me/roles')
-        .matchHeader('authorization', `Bearer ${token.access_token}`)
-        .reply(200, [{ roleCode: 'role1' }, { roleCode: 'role2' }])
-
-      const output = await hmppsAuthClient.getUserRoles(token.access_token)
-      expect(output).toEqual(['role1', 'role2'])
     })
   })
 
   describe('getSystemClientToken', () => {
     it('should instantiate the redis client', async () => {
       tokenStore.getToken.mockResolvedValue(token.access_token)
-      await hmppsAuthClient.getSystemClientToken(username)
+      await systemToken(username)
     })
 
     it('should return token from redis if one exists', async () => {
       tokenStore.getToken.mockResolvedValue(token.access_token)
-      const output = await hmppsAuthClient.getSystemClientToken(username)
+      const output = await systemToken(username)
       expect(output).toEqual(token.access_token)
     })
 
@@ -72,7 +81,7 @@ describe('hmppsAuthClient', () => {
         .matchHeader('Content-Type', 'application/x-www-form-urlencoded')
         .reply(200, token)
 
-      const output = await hmppsAuthClient.getSystemClientToken(username)
+      const output = await systemToken(username)
 
       expect(output).toEqual(token.access_token)
       expect(tokenStore.setToken).toBeCalledWith('Bob', token.access_token, 240)
@@ -87,7 +96,7 @@ describe('hmppsAuthClient', () => {
         .matchHeader('Content-Type', 'application/x-www-form-urlencoded')
         .reply(200, token)
 
-      const output = await hmppsAuthClient.getSystemClientToken()
+      const output = await systemToken()
 
       expect(output).toEqual(token.access_token)
       expect(tokenStore.setToken).toBeCalledWith('%ANONYMOUS%', token.access_token, 240)

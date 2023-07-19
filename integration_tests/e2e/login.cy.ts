@@ -8,6 +8,8 @@ context('SignIn', () => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
+    cy.task('stubUserCaseLoads')
+    cy.task('stubUserLocations')
   })
 
   it('Unauthenticated user directed to auth', () => {
@@ -44,6 +46,7 @@ context('SignIn', () => {
 
   it('Token verification failure takes user to sign in page', () => {
     cy.signIn()
+    cy.setupUserAuth()
     Page.verifyOnPage(IndexPage)
     cy.task('stubVerifyToken', false)
 
@@ -53,6 +56,7 @@ context('SignIn', () => {
 
   it('Token verification failure clears user session', () => {
     cy.signIn()
+    cy.setupUserAuth()
     const indexPage = Page.verifyOnPage(IndexPage)
     cy.task('stubVerifyToken', false)
 
@@ -60,7 +64,7 @@ context('SignIn', () => {
     cy.request('/').its('body').should('contain', 'Sign in')
 
     cy.task('stubVerifyToken', true)
-    cy.task('stubAuthUser', 'bobby brown')
+    cy.task('stubAuthUser', { name: 'bobby brown' })
     cy.signIn()
 
     indexPage.headerUserName().contains('B. Brown')

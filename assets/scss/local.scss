@@ -2,3 +2,33 @@
   min-height: 600px;
   padding-top: 0;
 }
+
+// Creates width helper classes to set input, paragraph or other element width based on EMs
+// e.g. hmpps-width-20 sets the width of the element to 20em
+// Classes created got from 1em to 40em
+@mixin hmpps-width-x {
+  @for $i from 1 through 40 {
+    .hmpps-width-#{$i} { width: #{$i}em; }
+  }
+}
+@include hmpps-width-x;
+
+// FIXME remove after all sections are complete
+.tbd {
+  border: 3px dashed $govuk-border-colour;
+  border-radius: 20px;
+  background-color: rgba(govuk-colour("light-grey"), .5);
+  min-height: 300px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: govuk-colour("mid-grey");
+  margin: 15px -15px;
+
+  pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+}
