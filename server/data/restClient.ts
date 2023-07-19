@@ -22,13 +22,16 @@ interface PostRequest {
   responseType?: string
   data?: Record<string, unknown>
   raw?: boolean
-  retry?: boolean
 }
 
 interface StreamRequest {
   path?: string
   headers?: Record<string, string>
   errorLogger?: (e: UnsanitisedError) => void
+}
+
+export function RestClientBuilder(name: string, config: ApiConfig) {
+  return (token: string): RestClient => new RestClient(name, config, token)
 }
 
 export default class RestClient {
@@ -46,7 +49,7 @@ export default class RestClient {
     return this.config.timeout
   }
 
-  async get({ path = null, query = '', headers = {}, responseType = '', raw = false }: GetRequest): Promise<unknown> {
+  async get<T>({ path = null, query = '', headers = {}, responseType = '', raw = false }: GetRequest): Promise<T> {
     logger.info(`Get using user credentials: calling ${this.name}: ${path} ${query}`)
     try {
       const result = await superagent
@@ -77,7 +80,6 @@ export default class RestClient {
     responseType = '',
     data = {},
     raw = false,
-    retry = false,
   }: PostRequest = {}): Promise<unknown> {
     logger.info(`Post using user credentials: calling ${this.name}: ${path}`)
     try {
@@ -87,9 +89,6 @@ export default class RestClient {
         .agent(this.agent)
         .use(restClientMetricsMiddleware)
         .retry(2, (err, res) => {
-          if (retry === false) {
-            return false
-          }
           if (err) logger.info(`Retry handler found API error with ${err.code} ${err.message}`)
           return undefined // retry handler only for logging retries, not to influence retry logic
         })
@@ -106,7 +105,7 @@ export default class RestClient {
     }
   }
 
-  async stream({ path = null, headers = {} }: StreamRequest = {}): Promise<unknown> {
+  async stream({ path = null, headers = {} }: StreamRequest = {}): Promise<Readable> {
     logger.info(`Get using user credentials: calling ${this.name}: ${path}`)
     return new Promise((resolve, reject) => {
       superagent

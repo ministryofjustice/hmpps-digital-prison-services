@@ -2,7 +2,15 @@
 import nunjucks from 'nunjucks'
 import express from 'express'
 import path from 'path'
-import { initialiseName } from './utils'
+import {
+  addDefaultSelectedValue,
+  asSelectItem,
+  findError,
+  initialiseName,
+  prisonerBelongsToUsersCaseLoad,
+  userHasAllRoles,
+  userHasRoles,
+} from './utils'
 import { ApplicationInfo } from '../applicationInfo'
 
 const production = process.env.NODE_ENV === 'production'
@@ -38,6 +46,12 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
       express: app,
     },
   )
+  njkEnv.addGlobal('prisonerBelongsToUsersCaseLoad', prisonerBelongsToUsersCaseLoad)
+  njkEnv.addGlobal('userHasRoles', userHasRoles)
+  njkEnv.addGlobal('userHasAllRoles', userHasAllRoles)
 
   njkEnv.addFilter('initialiseName', initialiseName)
+  njkEnv.addFilter('findError', findError)
+  njkEnv.addFilter('addDefaultSelectedValue', addDefaultSelectedValue)
+  njkEnv.addFilter('asSelectItems', asSelectItem)
 }

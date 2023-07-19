@@ -20,6 +20,7 @@ export declare global {
       verified?: boolean
       id: string
       logout(done: (err: unknown) => void): void
+      flash(type: string, message: unknown): number
     }
   }
 }

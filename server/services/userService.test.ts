@@ -1,5 +1,6 @@
 import UserService from './userService'
 import HmppsAuthClient, { User } from '../data/hmppsAuthClient'
+import PrisonApiRestClient from '../data/prisonApiClient'
 
 jest.mock('../data/hmppsAuthClient')
 
@@ -7,12 +8,17 @@ const token = 'some token'
 
 describe('User service', () => {
   let hmppsAuthClient: jest.Mocked<HmppsAuthClient>
+  let prisonApiClient: jest.Mocked<PrisonApiRestClient>
   let userService: UserService
 
   describe('getUser', () => {
     beforeEach(() => {
       hmppsAuthClient = new HmppsAuthClient(null) as jest.Mocked<HmppsAuthClient>
-      userService = new UserService(hmppsAuthClient)
+      prisonApiClient = new PrisonApiRestClient(null) as jest.Mocked<PrisonApiRestClient>
+      userService = new UserService(
+        () => hmppsAuthClient,
+        () => prisonApiClient,
+      )
     })
     it('Retrieves and formats user name', async () => {
       hmppsAuthClient.getUser.mockResolvedValue({ name: 'john smith' } as User)
