@@ -25,6 +25,7 @@ describe('Homepage service', () => {
         return assignedRollCountMock
       })
       prisonApiClient.getMovements = jest.fn(async prisonId => {
+        if (prisonId) return movementsMock
         return movementsMock
       })
 
