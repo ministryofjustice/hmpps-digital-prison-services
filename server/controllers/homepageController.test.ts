@@ -1,12 +1,18 @@
 import { Role } from '../enums/role'
 import HomepageController from './homepageController'
 import config from '../config'
+import HomepageService from '../services/homepageService'
+import { todayDataMock } from '../mocks/todayDataMock'
 
 let req: any
 let res: any
 let controller: any
 
+jest.mock('../services/homepageService.ts')
+
 describe('Homepage Controller', () => {
+  let homepageService: HomepageService
+
   beforeEach(() => {
     req = {
       headers: {
@@ -29,18 +35,23 @@ describe('Homepage Controller', () => {
       redirect: jest.fn(),
     }
 
-    controller = new HomepageController()
+    homepageService = new HomepageService(null)
+    homepageService.getTodaySection = jest.fn(async () => todayDataMock)
+
+    controller = new HomepageController(homepageService)
   })
 
   describe('Display homepage', () => {
     it('should get homepage data', async () => {
       await controller.displayHomepage()(req, res)
 
+      expect(controller['homepageService'].getTodaySection).toHaveBeenCalled()
       expect(res.render).toHaveBeenCalledWith('pages/index', {
         errors: undefined,
         userHasGlobal: true,
         globalPreset: false,
         searchViewAllUrl: `${config.serviceUrls.digitalPrisons}/prisoner-search?keywords=&location=${res.locals.user.activeCaseLoadId}`,
+        ...todayDataMock,
       })
     })
 
@@ -54,6 +65,7 @@ describe('Homepage Controller', () => {
         userHasGlobal: true,
         globalPreset: true,
         searchViewAllUrl: `${config.serviceUrls.digitalPrisons}/prisoner-search?keywords=&location=${res.locals.user.activeCaseLoadId}`,
+        ...todayDataMock,
       })
     })
   })

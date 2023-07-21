@@ -28,4 +28,17 @@ export default class IndexPage extends Page {
       viewAllLink: () => searchSection().find('[data-qa=search-view-all-link]'),
     }
   }
+
+  today = () => {
+    const todaySection = (): PageElement => cy.get('[data-qa=homepage-today-section]')
+
+    return {
+      heading: () => todaySection().find('h2'),
+      lastUpdated: () => todaySection().find('.today-last-updated'),
+      unlockRollCard: () => todaySection().find('[data-qa=today-unlock-roll-card]'),
+      populationCard: () => todaySection().find('[data-qa=today-current-population-card]'),
+      inTodayCard: () => todaySection().find('[data-qa=today-in-card]'),
+      outTodayCard: () => todaySection().find('[data-qa=today-out-card]'),
+    }
+  }
 }

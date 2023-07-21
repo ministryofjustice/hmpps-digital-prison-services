@@ -1,6 +1,7 @@
 import Page from '../pages/page'
 import IndexPage from '../pages'
 import { Role } from '../../server/enums/role'
+import { todayDataMock } from '../../server/mocks/todayDataMock'
 
 context('Homepage', () => {
   beforeEach(() => {
@@ -11,7 +12,9 @@ context('Homepage', () => {
         { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
       ],
     })
-    cy.task('stubUserLocations')
+    cy.task('stubRollCount')
+    cy.task('stubRollCountUnassigned')
+    cy.task('stubMovements')
     cy.signIn()
     cy.visit('/')
   })
@@ -48,6 +51,29 @@ context('Homepage', () => {
       page.search().locationField().should('be.disabled')
     })
   })
+
+  context('Today', () => {
+    it('should display today data', () => {
+      const page = Page.verifyOnPage(IndexPage)
+      page.today().heading().should('be.visible').and('contain.text', 'Today in Leeds (HMP)')
+      page.today().lastUpdated().should('be.visible')
+
+      page.today().unlockRollCard().should('be.visible').find('h3').contains("Today's unlock roll")
+      page.today().unlockRollCard().find('.today-card__count').contains(todayDataMock.unlockRollCount)
+
+      page.today().populationCard().should('be.visible').find('h3').contains('Current population')
+      page.today().populationCard().find('.today-card__count').contains(todayDataMock.currentPopulationCount)
+      page.today().populationCard().find('a').contains('Establishment roll')
+
+      page.today().inTodayCard().should('be.visible').find('h3').contains('In today')
+      page.today().inTodayCard().find('.today-card__count').contains(todayDataMock.inTodayCount)
+      page.today().inTodayCard().find('a').contains('People in today')
+
+      page.today().outTodayCard().should('be.visible').find('h3').contains('Out today')
+      page.today().outTodayCard().find('.today-card__count').contains(todayDataMock.outTodayCount)
+      page.today().outTodayCard().find('a').contains('People out today')
+    })
+  })
 })
 
 context('Homepage - no global search', () => {
@@ -58,6 +84,9 @@ context('Homepage - no global search', () => {
         { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
       ],
     })
+    cy.task('stubRollCount')
+    cy.task('stubRollCountUnassigned')
+    cy.task('stubMovements')
     cy.signIn()
     cy.visit('/')
   })
