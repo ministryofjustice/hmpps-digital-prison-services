@@ -1,6 +1,6 @@
 <section class="dps-homepage-today" data-qa="homepage-today-section">
     <h2>Today in {{ user.activeCaseLoad.description }}</h2>
-    <p class="today-last-updated">Last updated: {{ todayLastUpdated | formatDateTime({ order: 'time-date', separator: 'on', style: 'short' }) }}</p>
+    <p class="today-last-updated">Last updated at {{ todayLastUpdated | formatDateTime({ order: 'time-date', separator: 'on', style: 'long' }) }}</p>
     <div class="today-card-container">
         <div class="today-card" data-qa="today-unlock-roll-card">
             <h3>Today's unlock roll</h3>
