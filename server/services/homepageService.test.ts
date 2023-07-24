@@ -3,7 +3,6 @@ import { assignedRollCountMock, unassignedRollCountMock } from '../mocks/rollCou
 import { movementsMock } from '../mocks/movementsMock'
 import HomepageService from './homepageService'
 import { todayDataMock } from '../mocks/todayDataMock'
-import { formatDateTimeISO } from '../utils/dateHelpers'
 
 jest.mock('../data/prisonApiClient')
 
@@ -38,7 +37,10 @@ describe('Homepage service', () => {
       expect(prisonApiClient.getRollCount).toHaveBeenCalledWith(activeCaseLoadId)
       expect(prisonApiClient.getRollCount).toHaveBeenCalledWith(activeCaseLoadId, true)
       expect(prisonApiClient.getMovements).toHaveBeenCalled()
-      expect(todayData).toEqual({ ...todayDataMock, todayLastUpdated: formatDateTimeISO(new Date()) })
+      expect(todayData).toEqual({
+        ...todayDataMock,
+        todayLastUpdated: expect.stringContaining(new Date().toISOString().slice(0, -5)),
+      })
     })
   })
 })
