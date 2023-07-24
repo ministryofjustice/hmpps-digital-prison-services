@@ -7,9 +7,9 @@ export default class HomepageService {
 
   public async getTodaySection(clientToken: string, activeCaseLoadId: string) {
     const [assignedRollCount, unassignedRollCount, movements] = await Promise.all([
-      await this.prisonApiClientBuilder(clientToken).getRollCount(activeCaseLoadId),
-      await this.prisonApiClientBuilder(clientToken).getRollCount(activeCaseLoadId, true),
-      await this.prisonApiClientBuilder(clientToken).getMovements(activeCaseLoadId),
+      this.prisonApiClientBuilder(clientToken).getRollCount(activeCaseLoadId),
+      this.prisonApiClientBuilder(clientToken).getRollCount(activeCaseLoadId, true),
+      this.prisonApiClientBuilder(clientToken).getMovements(activeCaseLoadId),
     ])
 
     const populationCount =
