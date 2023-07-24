@@ -25,7 +25,11 @@
   justify-content: center;
   font-weight: bold;
   color: govuk-colour("mid-grey");
-  margin: 15px -15px;
+  margin: 15px 0;
+
+  .govuk-grid-row & {
+    margin: 15px -15px;
+  }
 
   pre {
     white-space: pre-wrap;

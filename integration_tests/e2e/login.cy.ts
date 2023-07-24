@@ -10,6 +10,9 @@ context('SignIn', () => {
     cy.task('stubAuthUser')
     cy.task('stubUserCaseLoads')
     cy.task('stubUserLocations')
+    cy.task('stubRollCount')
+    cy.task('stubRollCountUnassigned')
+    cy.task('stubMovements')
   })
 
   it('Unauthenticated user directed to auth', () => {
@@ -23,12 +26,14 @@ context('SignIn', () => {
   })
 
   it('User name visible in header', () => {
+    cy.setupUserAuth()
     cy.signIn()
     const indexPage = Page.verifyOnPage(IndexPage)
     indexPage.headerUserName().should('contain.text', 'J. Smith')
   })
 
   it('User can log out', () => {
+    cy.setupUserAuth()
     cy.signIn()
     const indexPage = Page.verifyOnPage(IndexPage)
     indexPage.signOut().click()
@@ -36,6 +41,7 @@ context('SignIn', () => {
   })
 
   it('User can manage their details', () => {
+    cy.setupUserAuth()
     cy.signIn()
     const indexPage = Page.verifyOnPage(IndexPage)
 
@@ -45,8 +51,8 @@ context('SignIn', () => {
   })
 
   it('Token verification failure takes user to sign in page', () => {
-    cy.signIn()
     cy.setupUserAuth()
+    cy.signIn()
     Page.verifyOnPage(IndexPage)
     cy.task('stubVerifyToken', false)
 
@@ -55,8 +61,8 @@ context('SignIn', () => {
   })
 
   it('Token verification failure clears user session', () => {
-    cy.signIn()
     cy.setupUserAuth()
+    cy.signIn()
     const indexPage = Page.verifyOnPage(IndexPage)
     cy.task('stubVerifyToken', false)
 
@@ -64,7 +70,7 @@ context('SignIn', () => {
     cy.request('/').its('body').should('contain', 'Sign in')
 
     cy.task('stubVerifyToken', true)
-    cy.task('stubAuthUser', { name: 'bobby brown' })
+    cy.task('stubAuthUser', { name: 'bobby brown', activeCaseLoadId: 'LEI' })
     cy.signIn()
 
     indexPage.headerUserName().contains('B. Brown')

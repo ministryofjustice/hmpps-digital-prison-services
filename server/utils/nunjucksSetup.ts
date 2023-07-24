@@ -12,6 +12,8 @@ import {
   userHasRoles,
 } from './utils'
 import { ApplicationInfo } from '../applicationInfo'
+import { formatDate, formatDateTime } from './dateHelpers'
+import config from '../config'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -20,6 +22,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
 
   app.locals.asset_path = '/assets/'
   app.locals.applicationName = 'Digital Prison Services'
+  app.locals.config = config
 
   // Cachebusting version string
   if (production) {
@@ -54,4 +57,6 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   njkEnv.addFilter('findError', findError)
   njkEnv.addFilter('addDefaultSelectedValue', addDefaultSelectedValue)
   njkEnv.addFilter('asSelectItems', asSelectItem)
+  njkEnv.addFilter('formatDate', formatDate)
+  njkEnv.addFilter('formatDateTime', formatDateTime)
 }

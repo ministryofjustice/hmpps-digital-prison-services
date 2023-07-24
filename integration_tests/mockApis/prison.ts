@@ -2,6 +2,8 @@ import { stubFor } from './wiremock'
 import { CaseLoad } from '../../server/data/interfaces/caseLoad'
 import { Location } from '../../server/data/interfaces/location'
 import { locationsMock } from '../../server/mocks/locationMock'
+import { assignedRollCountMock, unassignedRollCountMock } from '../../server/mocks/rollCountMock'
+import { movementsMock } from '../../server/mocks/movementsMock'
 
 export default {
   stubUserCaseLoads: (caseLoads: CaseLoad[] = []) => {
@@ -32,6 +34,54 @@ export default {
           'Content-Type': 'application/json;charset=UTF-8',
         },
         jsonBody: locations.length > 0 ? locations : [],
+      },
+    })
+  },
+
+  stubRollCount: () => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        url: `/prison/api/movements/rollcount/LEI`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: assignedRollCountMock,
+      },
+    })
+  },
+
+  stubRollCountUnassigned: () => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        url: `/prison/api/movements/rollcount/LEI?unassigned=true`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: unassignedRollCountMock,
+      },
+    })
+  },
+
+  stubMovements: () => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: `/prison/api/movements/rollcount/LEI/movements`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: movementsMock,
       },
     })
   },
