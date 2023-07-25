@@ -1,6 +1,5 @@
 import { PrisonApiClient } from '../data/interfaces/prisonApiClient'
 import { RestClientBuilder } from '../data'
-import { formatDateTimeISO } from '../utils/dateHelpers'
 
 export default class HomepageService {
   constructor(private readonly prisonApiClientBuilder: RestClientBuilder<PrisonApiClient>) {}
@@ -21,7 +20,7 @@ export default class HomepageService {
       currentPopulationCount: populationCount,
       inTodayCount: movements.in,
       outTodayCount: movements.out,
-      todayLastUpdated: formatDateTimeISO(new Date()),
+      todayLastUpdated: new Date().toISOString(),
     }
   }
 }

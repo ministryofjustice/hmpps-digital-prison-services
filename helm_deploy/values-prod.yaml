@@ -11,6 +11,7 @@ generic-service:
     TOKEN_VERIFICATION_API_URL: "https://token-verification-api.prison.service.justice.gov.uk"
     PRISON_API_URL: "https://api.prison.service.justice.gov.uk"
     DIGITAL_PRISONS_URL: "https://digital.prison.service.justice.gov.uk"
+    TODAY_CACHE_TTL: 10
 
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service

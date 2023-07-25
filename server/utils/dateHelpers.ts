@@ -37,7 +37,7 @@ export const formatDateTimeISO = (date: Date, options?: { startOfDay?: boolean; 
     adjustedDate.setSeconds(59)
   }
   try {
-    dateStr = format(adjustedDate, "yyyy-MM-dd'T'HH:mm:ss'Z")
+    dateStr = format(adjustedDate, "yyyy-MM-dd'T'HH:mm:ss'Z'")
   } catch (error) {
     logger.error(`Error: formatDateTimeISO - ${error.message}`)
   }
@@ -120,9 +120,4 @@ export const formatDateTime = (
     return [timeStr, dateStr].join(options?.separator ? ` ${options?.separator} ` : ' ')
   }
   return [dateStr, timeStr].join(options?.separator ? ` ${options?.separator} ` : ' ')
-}
-
-export const utcNow = (): Date => {
-  const now = new Date()
-  return new Date(now.toUTCString())
 }

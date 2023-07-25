@@ -18,7 +18,7 @@ export default function routes(services: Services): Router {
       handlers.map(handler => asyncMiddleware(handler)),
     )
 
-  const homepageController = new HomepageController(services.homepageService)
+  const homepageController = new HomepageController(services.homepageService, services.todayCache)
 
   get('/', homepageController.displayHomepage())
 

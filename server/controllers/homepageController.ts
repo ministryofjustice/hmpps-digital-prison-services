@@ -3,12 +3,13 @@ import { userHasRoles } from '../utils/utils'
 import { Role } from '../enums/role'
 import config from '../config'
 import HomepageService from '../services/homepageService'
+import HmppsCache from '../middleware/hmppsCache'
 
 /**
  * Parse requests for case notes routes and orchestrate response
  */
 export default class HomepageController {
-  constructor(private readonly homepageService: HomepageService) {}
+  constructor(private readonly homepageService: HomepageService, private readonly todayCache: HmppsCache) {}
 
   public displayHomepage(): RequestHandler {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -19,8 +20,10 @@ export default class HomepageController {
       const userHasGlobal = userHasRoles([Role.GlobalSearch], userRoles)
       const searchViewAllUrl = `${config.serviceUrls.digitalPrisons}/prisoner-search?keywords=&location=${activeCaseLoadId}`
 
-      // Today Section
-      const todayData = await this.homepageService.getTodaySection(res.locals.clientToken, activeCaseLoadId)
+      // Today Section - wrapped with a caching function per prison to reduce API calls
+      const todayData = await this.todayCache.wrap(activeCaseLoadId, () =>
+        this.homepageService.getTodaySection(res.locals.clientToken, activeCaseLoadId),
+      )
 
       res.render('pages/index', {
         errors,

@@ -3,6 +3,7 @@ import HomepageController from './homepageController'
 import config from '../config'
 import HomepageService from '../services/homepageService'
 import { todayDataMock } from '../mocks/todayDataMock'
+import HmppsCache from '../middleware/hmppsCache'
 
 let req: any
 let res: any
@@ -38,7 +39,7 @@ describe('Homepage Controller', () => {
     homepageService = new HomepageService(null)
     homepageService.getTodaySection = jest.fn(async () => todayDataMock)
 
-    controller = new HomepageController(homepageService)
+    controller = new HomepageController(homepageService, new HmppsCache(1))
   })
 
   describe('Display homepage', () => {
