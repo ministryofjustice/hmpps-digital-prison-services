@@ -5,6 +5,7 @@ import path from 'path'
 import {
   addDefaultSelectedValue,
   asSelectItem,
+  baseUrl,
   findError,
   initialiseName,
   prisonerBelongsToUsersCaseLoad,
@@ -49,6 +50,8 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   njkEnv.addGlobal('prisonerBelongsToUsersCaseLoad', prisonerBelongsToUsersCaseLoad)
   njkEnv.addGlobal('userHasRoles', userHasRoles)
   njkEnv.addGlobal('userHasAllRoles', userHasAllRoles)
+
+  njkEnv.addGlobal('baseUrl', baseUrl)
 
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('findError', findError)

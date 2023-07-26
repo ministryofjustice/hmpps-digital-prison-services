@@ -40,6 +40,23 @@ describe('Homepage Controller', () => {
         errors: undefined,
         userHasGlobal: true,
         globalPreset: false,
+        services: [
+          {
+            description: 'Search for someone in any establishment, or who has been released.',
+            heading: 'Global search',
+            href: 'http://localhost:3001/global-search',
+            id: 'global-search',
+            subLinks: [],
+          },
+          {
+            description:
+              'View unlock lists, all appointments and COVID units, manage attendance and add bulk appointments.',
+            heading: 'Manage prisoner whereabouts',
+            href: 'http://localhost:3001/manage-prisoner-whereabouts',
+            id: 'manage-prisoner-whereabouts',
+            subLinks: [],
+          },
+        ],
         searchViewAllUrl: `${config.serviceUrls.digitalPrisons}/prisoner-search?keywords=&location=${res.locals.user.activeCaseLoadId}`,
       })
     })
@@ -53,6 +70,23 @@ describe('Homepage Controller', () => {
         errors: [{ text: 'error', href: '#name' }],
         userHasGlobal: true,
         globalPreset: true,
+        services: [
+          {
+            description: 'Search for someone in any establishment, or who has been released.',
+            heading: 'Global search',
+            href: 'http://localhost:3001/global-search',
+            id: 'global-search',
+            subLinks: [],
+          },
+          {
+            description:
+              'View unlock lists, all appointments and COVID units, manage attendance and add bulk appointments.',
+            heading: 'Manage prisoner whereabouts',
+            href: 'http://localhost:3001/manage-prisoner-whereabouts',
+            id: 'manage-prisoner-whereabouts',
+            subLinks: [],
+          },
+        ],
         searchViewAllUrl: `${config.serviceUrls.digitalPrisons}/prisoner-search?keywords=&location=${res.locals.user.activeCaseLoadId}`,
       })
     })

@@ -1,3 +1,4 @@
+import config from '../config'
 import { CaseLoad } from '../data/interfaces/caseLoad'
 import { HmppsError } from '../data/interfaces/hmppsError'
 import { SelectItem } from '../data/interfaces/selectItem'
@@ -92,3 +93,8 @@ export const addDefaultSelectedValue = (items: SelectItem[], text: string, value
 
 export const asSelectItem = (items: Record<string, string>[], text: string, value?: string) =>
   items && items.map(entry => ({ value: entry[value || text], text: entry[text] }))
+
+export const baseUrl = (): string => {
+  const urlWithBaseUrl = `${config.serviceUrls.digitalPrisons}`
+  return urlWithBaseUrl
+}

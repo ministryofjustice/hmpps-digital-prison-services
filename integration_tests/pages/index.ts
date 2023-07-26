@@ -28,4 +28,15 @@ export default class IndexPage extends Page {
       viewAllLink: () => searchSection().find('[data-qa=search-view-all-link]'),
     }
   }
+
+  services = () => {
+    const servicesSection = (): PageElement => cy.get('[data-qa="homepage-services-section"] > .govuk-width-container')
+
+    return {
+      heading: () => servicesSection().find('[data-qa="homepage-services-heading"]'),
+      serviceOne: () => servicesSection().find('.hmpps-services > :nth-child(1)'),
+      serviceTwo: () => servicesSection().find('.hmpps-services > :nth-child(2)'),
+      serviceThree: () => servicesSection().find('.hmpps-services > :nth-child(3)'),
+    }
+  }
 }
