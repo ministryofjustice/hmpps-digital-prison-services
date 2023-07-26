@@ -1,5 +1,4 @@
 import express from 'express'
-
 import createError from 'http-errors'
 
 import nunjucksSetup from './utils/nunjucksSetup'

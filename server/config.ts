@@ -198,4 +198,5 @@ export default {
     digitalPrisons: get('DIGITAL_PRISONS_URL', 'http://localhost:3001', requiredInProduction),
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
+  todayCacheTTL: Number(get('TODAY_CACHE_TTL', 0, requiredInProduction)),
 }
