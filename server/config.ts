@@ -187,11 +187,19 @@ export default {
     },
     whereabouts: {
       url: process.env.WHEREABOUTS_ENDPOINT_URL || 'http://localhost:8082/',
-      timeoutSeconds: toNumber(process.env.API_WHEREABOUTS_ENDPOINT_TIMEOUT_SECONDS) || 30,
+      timeout: {
+        response: Number(get('API_WHEREABOUTS_ENDPOINT_TIMEOUT_SECONDS', 20000)),
+        deadline: Number(get('API_WHEREABOUTS_ENDPOINT_TIMEOUT_SECONDS', 20000)),
+      },
+      agent: new AgentConfig(Number(get('API_WHEREABOUTS_ENDPOINT_TIMEOUT_SECONDS', 20000))),
     },
     keyworker: {
       url: process.env.KEYWORKER_API_URL || 'http://localhost:8081/',
-      timeoutSeconds: toNumber(process.env.KEYWORKER_API_TIMEOUT_SECONDS) || 30,
+      timeout: {
+        response: Number(get('KEYWORKER_API_TIMEOUT_SECONDS', 20000)),
+        deadline: Number(get('KEYWORKER_API_TIMEOUT_SECONDS', 20000)),
+      },
+      agent: new AgentConfig(Number(get('KEYWORKER_API_TIMEOUT_SECONDS', 20000))),
     },
   },
   serviceUrls: {

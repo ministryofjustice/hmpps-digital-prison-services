@@ -3,6 +3,11 @@ import { assignedRollCountMock, unassignedRollCountMock } from '../mocks/rollCou
 import { movementsMock } from '../mocks/movementsMock'
 import HomepageService from './homepageService'
 import { todayDataMock } from '../mocks/todayDataMock'
+import WhereAboutsApiRestClient from '../data/whereAboutsApiClient'
+import { KeyWorkerApiClient } from '../data/interfaces/keyWorkerApiClient'
+import KeyWorkerApiRestClient from '../data/keyWorkerApiClient'
+import { RestClientBuilder } from '../data'
+import { WhereAboutsApiClient } from '../data/interfaces/whereAboutsApiClient'
 
 jest.mock('../data/prisonApiClient')
 
@@ -12,11 +17,12 @@ const activeCaseLoadId = 'LEI'
 describe('Homepage service', () => {
   let service: HomepageService
   let prisonApiClient: jest.Mocked<PrisonApiRestClient>
+  let whereAboutsApiClient: RestClientBuilder<WhereAboutsApiClient>
+  let keyWorkerApiClient: RestClientBuilder<KeyWorkerApiRestClient>
 
   describe('getTodaySection', () => {
     beforeEach(() => {
       prisonApiClient = new PrisonApiRestClient(null) as jest.Mocked<PrisonApiRestClient>
-
       prisonApiClient.getRollCount = jest.fn(async (prisonId, unassigned) => {
         if (unassigned) {
           return unassignedRollCountMock
@@ -28,7 +34,7 @@ describe('Homepage service', () => {
         return movementsMock
       })
 
-      service = new HomepageService(() => prisonApiClient)
+      service = new HomepageService(() => prisonApiClient, whereAboutsApiClient, keyWorkerApiClient)
     })
 
     it('should return today data', async () => {
