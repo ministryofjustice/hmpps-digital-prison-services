@@ -3,8 +3,6 @@ import { assignedRollCountMock, unassignedRollCountMock } from '../mocks/rollCou
 import { movementsMock } from '../mocks/movementsMock'
 import HomepageService from './homepageService'
 import { todayDataMock } from '../mocks/todayDataMock'
-import WhereAboutsApiRestClient from '../data/whereAboutsApiClient'
-import { KeyWorkerApiClient } from '../data/interfaces/keyWorkerApiClient'
 import KeyWorkerApiRestClient from '../data/keyWorkerApiClient'
 import { RestClientBuilder } from '../data'
 import { WhereAboutsApiClient } from '../data/interfaces/whereAboutsApiClient'
