@@ -28,9 +28,9 @@ export default class HomepageController {
         this.homepageService.getTodaySection(res.locals.clientToken, activeCaseLoadId),
       )
 
-      const services = await this.getServices(req, res, next)
+      const servicesData = await this.getServices(req, res, next)
 
-      services
+      const services = servicesData
         .filter(task => task.enabled)
         .map(task => ({
           id: task.id,

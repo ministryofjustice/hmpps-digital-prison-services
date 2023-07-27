@@ -30,7 +30,7 @@ export default class IndexPage extends Page {
   }
 
   services = () => {
-    const servicesSection = (): PageElement => cy.get('[data-qa="homepage-services-section"] > .govuk-width-container')
+    const servicesSection = (): PageElement => cy.get('[data-qa="homepage-services-section"]')
 
     return {
       heading: () => servicesSection().find('[data-qa="homepage-services-heading"]'),

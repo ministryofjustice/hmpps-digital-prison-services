@@ -58,7 +58,6 @@ context('Homepage', () => {
       page.services().heading().should('be.visible')
       page.services().serviceOne().should('be.visible')
       page.services().serviceTwo().should('be.visible')
-      page.services().serviceThree().should('be.visible')
     })
   })
 
@@ -116,7 +115,7 @@ context('Homepage - no global search', () => {
       const page = Page.verifyOnPage(IndexPage)
       page.services().heading().should('be.visible')
       page.services().serviceOne().should('be.visible')
-      page.services().serviceTwo().should('be.visible')
+      page.services().serviceTwo().should('not.exist')
       page.services().serviceThree().should('not.exist')
     })
   })
