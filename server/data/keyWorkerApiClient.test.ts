@@ -23,11 +23,11 @@ jest.mock('../applicationInfo.ts', () => {
 const token = { access_token: 'token-1', expires_in: 300 }
 
 describe.skip('keyWorkerApiClient', () => {
-  let fakePrisonApi: nock.Scope
+  let fakeKeyWorkerApi: nock.Scope
   let keyWorkerApiClient: KeyWorkerApiClient
 
   beforeEach(() => {
-    fakePrisonApi = nock(config.apis.prisonApi.url)
+    fakeKeyWorkerApi = nock(config.apis.keyworker.url)
     keyWorkerApiClient = restClientBuilder(
       'Key Worker API',
       config.apis.keyworker,
@@ -41,7 +41,7 @@ describe.skip('keyWorkerApiClient', () => {
   })
 
   const mockSuccessfulKeyWorkerApiCall = <TReturnData>(url: string, returnData: TReturnData) => {
-    fakePrisonApi.get(url).matchHeader('authorization', `Bearer ${token.access_token}`).reply(200, returnData)
+    fakeKeyWorkerApi.get(url).matchHeader('authorization', `Bearer ${token.access_token}`).reply(200, returnData)
   }
 
   describe('getPrisonMigrationStatus', () => {
