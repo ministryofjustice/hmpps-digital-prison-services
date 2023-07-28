@@ -1,0 +1,29 @@
+.whats-new-post--full {
+  margin-bottom: 20px;
+
+  .whats-new-post__caption {
+    margin-top: 25px;
+    margin-bottom: 5px;
+  }
+
+  h1 {
+    font-size: 36px;
+    line-height: 40px;
+    margin-top: 0;
+    margin-bottom: 15px;
+  }
+
+  .whats-new-post__date {
+    margin-bottom: 30px;
+  }
+
+  .whats-new-post__summary {
+    margin-top: 15px;
+    margin-bottom: 20px;
+  }
+
+  pre.whats-new-post__body {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+}

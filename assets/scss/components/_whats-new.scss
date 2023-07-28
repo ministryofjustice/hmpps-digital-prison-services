@@ -1,0 +1,17 @@
+@mixin whats-new {
+  .whats-new-post {
+    border-bottom: 1px solid $govuk-border-colour;
+    margin-bottom: 20px;
+
+    .whats-new-post__date {
+      font-size: 16px;
+      color: govuk-colour('dark-grey');
+      margin-bottom: 5px;
+    }
+
+    .whats-new-post__summary {
+      margin-top: 15px;
+      margin-bottom: 20px;
+    }
+  }
+}

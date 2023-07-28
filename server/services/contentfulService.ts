@@ -46,4 +46,31 @@ export default class ContentfulService {
         },
     )
   }
+
+  /**
+   * Get specific `whatsNewPost` entry by `slug`.
+   *
+   * @param slug
+   */
+  public async getWhatsNewPost(slug: string): Promise<WhatsNewPost> {
+    const entries = await this.contentfulApiClient.getEntries({
+      content_type: 'whatsNewPost',
+      'fields.slug': slug,
+    })
+
+    if (!entries.items?.length) {
+      throw new Error('Not found')
+    }
+
+    const { fields } = entries.items[0]
+
+    return <WhatsNewPost>{
+      title: fields.title,
+      summary: fields.summary,
+      slug: fields.slug,
+      body: documentToHtmlString(fields.body as Document),
+      date: fields.date,
+      prisons: fields.prisons,
+    }
+  }
 }

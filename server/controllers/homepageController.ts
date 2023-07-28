@@ -7,7 +7,7 @@ import HmppsCache from '../middleware/hmppsCache'
 import ContentfulService from '../services/contentfulService'
 
 /**
- * Parse requests for case notes routes and orchestrate response
+ * Parse requests for homepage routes and orchestrate response
  */
 export default class HomepageController {
   constructor(

@@ -1,0 +1,25 @@
+.dps-whats-new {
+  @include whats-new;
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 40px 30px;
+
+  .whats-new-list {
+    max-width: 770px;
+  }
+  .whats-new-related-content {
+    border-top: 4px solid govuk-colour('blue');
+    width: 270px;
+
+    h2 {
+      font-size: 19px;
+    }
+
+    a {
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+  }
+}
