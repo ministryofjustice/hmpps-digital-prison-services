@@ -27,13 +27,16 @@ export default class WhatsNewController {
     return async (req: Request, res: Response, next: NextFunction) => {
       const { slug } = req.params
 
-      // Whats new Section - filter to active caseload if post has been marked for specific prisons
-      const whatsNewPost = await this.contentfulService.getWhatsNewPost(slug)
+      try {
+        const whatsNewPost = await this.contentfulService.getWhatsNewPost(slug)
 
-      res.render('pages/whatsNewPost', {
-        pageTitle: whatsNewPost.title,
-        whatsNewPost,
-      })
+        res.render('pages/whatsNewPost', {
+          pageTitle: whatsNewPost.title,
+          whatsNewPost,
+        })
+      } catch (error) {
+        res.render('notFound')
+      }
     }
   }
 }
