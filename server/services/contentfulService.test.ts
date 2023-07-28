@@ -46,4 +46,25 @@ describe('ContentfulService', () => {
       },
     ])
   })
+
+  it('should get whats new post', async () => {
+    const contentfulSpy = jest
+      .spyOn<any, string>(contentfulService['contentfulApiClient'], 'getEntries')
+      .mockReturnValue(contentfulWhatsNewPostEntriesMock)
+    const slug = 'example-post'
+    const post = await contentfulService.getWhatsNewPost(slug)
+
+    expect(contentfulSpy).toHaveBeenCalledWith({
+      content_type: 'whatsNewPost',
+      'fields.slug': slug,
+    })
+    expect(post).toEqual({
+      title: 'title',
+      summary: 'summary',
+      slug: 'slug',
+      body: '<p>body</p>',
+      date: '2023-07-27',
+      prisons: ['LEI'],
+    })
+  })
 })

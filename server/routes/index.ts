@@ -3,6 +3,7 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import HomepageController from '../controllers/homepageController'
+import whatsNewRouter from './whatsNewRouter'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function routes(services: Services): Router {
@@ -25,8 +26,9 @@ export default function routes(services: Services): Router {
   )
 
   get('/', homepageController.displayHomepage())
-
   post('/search', homepageController.search())
+
+  router.use(whatsNewRouter(services))
 
   return router
 }

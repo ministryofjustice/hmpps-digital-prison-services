@@ -4,6 +4,10 @@
 {% set mainClasses = "app-container govuk-body" %}
 {% set containerClasses = "dps-homepage-container" %}
 
+{% block beforeContent %}
+{# Override the inherited layout to remove empty breadcumbs as the homepage has none #}
+{% endblock %}
+
 {% block content %}
 
   {% include "../partials/homepage/hero.njk" %}
