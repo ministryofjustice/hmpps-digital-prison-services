@@ -1,1 +1,11 @@
-<div class="tbd">What's new</div>
+<section class="dps-homepage-whats-new" data-qa="homepage-whats-new-section">
+    <h2>What's new in DPS</h2>
+    {% for post in whatsNewPosts %}
+        <article class="whats-new-post">
+            <div class="whats-new-post__date">{{ post.date | formatDate('long') }}</div>
+            <a href="/whats-new/{{ post.slug }}" class="govuk-link govuk-link--no-visited-state">{{ post.title }}</a>
+            <div class="whats-new-post__summary">{{ post.summary }}</div>
+        </article>
+    {% endfor %}
+    <a href="/whats-new" class="govuk-link govuk-link--no-visited-state">All updates</a>
+</section>
