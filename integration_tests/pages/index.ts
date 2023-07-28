@@ -41,4 +41,13 @@ export default class IndexPage extends Page {
       outTodayCard: () => todaySection().find('[data-qa=today-out-card]'),
     }
   }
+
+  whatsNew = () => {
+    const whatsNewSection = (): PageElement => cy.get('[data-qa=homepage-whats-new-section]')
+
+    return {
+      heading: () => whatsNewSection().find('h2'),
+      whatsNewPost: () => whatsNewSection().find('.whats-new-post'),
+    }
+  }
 }

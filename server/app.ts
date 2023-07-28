@@ -1,5 +1,4 @@
 import express from 'express'
-import createError from 'http-errors'
 
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
@@ -18,6 +17,7 @@ import setUpWebSession from './middleware/setUpWebSession'
 import routes from './routes'
 import type { Services } from './services'
 import populateClientToken from './middleware/populateClientToken'
+import setUpPageNotFound from './middleware/setUpPageNotFound'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -41,7 +41,7 @@ export default function createApp(services: Services): express.Application {
 
   app.use(routes(services))
 
-  app.use((req, res, next) => next(createError(404, 'Not found')))
+  app.use(setUpPageNotFound)
   app.use(errorHandler(process.env.NODE_ENV === 'production'))
 
   return app

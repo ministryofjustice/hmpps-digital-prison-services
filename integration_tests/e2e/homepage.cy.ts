@@ -15,6 +15,7 @@ context('Homepage', () => {
     cy.task('stubRollCount')
     cy.task('stubRollCountUnassigned')
     cy.task('stubMovements')
+    cy.task('stubWhatsNewPosts')
     cy.signIn()
     cy.visit('/')
   })
@@ -74,6 +75,18 @@ context('Homepage', () => {
       page.today().outTodayCard().find('a').contains('People out today')
     })
   })
+
+  context('Whats New', () => {
+    it('should display whats new data', () => {
+      const page = Page.verifyOnPage(IndexPage)
+      page.whatsNew().heading().should('be.visible').and('contain.text', "What's new in DPS")
+      page.whatsNew().whatsNewPost().should('have.length', 3)
+      page.whatsNew().whatsNewPost().first().find('.whats-new-post__date').should('have.text', '27 July 2023')
+      page.whatsNew().whatsNewPost().first().find('a').should('have.text', 'title')
+      page.whatsNew().whatsNewPost().first().find('a').should('have.attr', 'href', '/whats-new/slug')
+      page.whatsNew().whatsNewPost().first().find('.whats-new-post__summary').should('have.text', 'summary')
+    })
+  })
 })
 
 context('Homepage - no global search', () => {
@@ -87,6 +100,7 @@ context('Homepage - no global search', () => {
     cy.task('stubRollCount')
     cy.task('stubRollCountUnassigned')
     cy.task('stubMovements')
+    cy.task('stubWhatsNewPosts')
     cy.signIn()
     cy.visit('/')
   })

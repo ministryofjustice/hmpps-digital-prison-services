@@ -3,6 +3,7 @@ import UserService from './userService'
 import HomepageService from './homepageService'
 import HmppsCache from '../middleware/hmppsCache'
 import config from '../config'
+import ContentfulService from './contentfulService'
 
 export const services = () => {
   const { hmppsAuthClientBuilder, prisonApiClientBuilder, applicationInfo } = dataAccess
@@ -10,6 +11,7 @@ export const services = () => {
   const todayCache = new HmppsCache(config.todayCacheTTL)
   const userService = new UserService(hmppsAuthClientBuilder, prisonApiClientBuilder)
   const homepageService = new HomepageService(prisonApiClientBuilder)
+  const contentfulService = new ContentfulService()
 
   return {
     dataAccess,
@@ -17,6 +19,7 @@ export const services = () => {
     userService,
     homepageService,
     todayCache,
+    contentfulService,
   }
 }
 

@@ -14,13 +14,9 @@
     {% include "../partials/homepage/today.njk" %}
   </div>
   <hr class="today-section-break--blue govuk-width-container">
-  <div class="govuk-grid-row govuk-width-container">
-    <div class="govuk-grid-column-two-thirds">
-      {% include "../partials/homepage/whats-new.njk" %}
-    </div>
-    <div class="govuk-grid-column-one-third">
-      {% include "../partials/homepage/help.njk" %}
-    </div>
+  <div class="govuk-width-container dps-homepage-flex-container">
+    {% include "../partials/homepage/whats-new.njk" %}
+    {% include "../partials/homepage/help.njk" %}
   </div>
 
 {% endblock %}
