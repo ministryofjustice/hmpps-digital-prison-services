@@ -12,27 +12,3 @@
   }
 }
 @include hmpps-width-x;
-
-// FIXME remove after all sections are complete
-.tbd {
-  border: 3px dashed $govuk-border-colour;
-  border-radius: 20px;
-  background-color: rgba(govuk-colour("light-grey"), .5);
-  min-height: 300px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  color: govuk-colour("mid-grey");
-  margin: 15px 0;
-
-  .govuk-grid-row & {
-    margin: 15px -15px;
-  }
-
-  pre {
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
-}

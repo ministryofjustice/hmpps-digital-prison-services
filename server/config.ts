@@ -207,4 +207,9 @@ export default {
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   todayCacheTTL: Number(get('TODAY_CACHE_TTL', 0, requiredInProduction)),
+  contentful: {
+    host: get('CONTENTFUL_HOST', ''), // This is only required for Cypress testing
+    spaceId: get('CONTENTFUL_SPACE_ID', 'spaceId', requiredInProduction),
+    accessToken: get('CONTENTFUL_ACCESS_TOKEN', 'token', requiredInProduction),
+  },
 }

@@ -7,12 +7,17 @@ import { KeyWorkerPrisonStatus } from '../data/interfaces/keyWorkerPrisonStatus'
 import HomepageService from '../services/homepageService'
 import HmppsCache from '../middleware/hmppsCache'
 import { userHasRoles } from '../utils/utils'
+import ContentfulService from '../services/contentfulService'
 
 /**
- * Parse requests for case notes routes and orchestrate response
+ * Parse requests for homepage routes and orchestrate response
  */
 export default class HomepageController {
-  constructor(private readonly homepageService: HomepageService, private readonly todayCache: HmppsCache) {}
+  constructor(
+    private readonly homepageService: HomepageService,
+    private readonly todayCache: HmppsCache,
+    private readonly contentfulService: ContentfulService,
+  ) {}
 
   public displayHomepage(): RequestHandler {
     return async (req: Request & CustomRequest, res: Response, next: NextFunction) => {
@@ -38,6 +43,10 @@ export default class HomepageController {
           heading: task.heading,
           description: task.description,
         }))
+      // Whats new Section - filter to active caseload if post has been marked for specific prisons
+      const whatsNewPosts = (await this.contentfulService.getWhatsNewPosts({ limit: 3 })).filter(
+        post => !post.prisons || post.prisons.includes(activeCaseLoadId),
+      )
 
       res.render('pages/index', {
         errors,
@@ -46,6 +55,7 @@ export default class HomepageController {
         services,
         globalPreset: !!errors?.length && userHasGlobal,
         ...todayData,
+        whatsNewPosts,
       })
     }
   }

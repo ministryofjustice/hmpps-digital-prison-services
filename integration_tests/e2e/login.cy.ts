@@ -13,6 +13,7 @@ context('SignIn', () => {
     cy.task('stubRollCount')
     cy.task('stubRollCountUnassigned')
     cy.task('stubMovements')
+    cy.task('stubWhatsNewPosts')
   })
 
   it('Unauthenticated user directed to auth', () => {

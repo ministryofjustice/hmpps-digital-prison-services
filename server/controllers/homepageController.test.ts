@@ -4,6 +4,8 @@ import config from '../config'
 import HomepageService from '../services/homepageService'
 import { todayDataMock } from '../mocks/todayDataMock'
 import HmppsCache from '../middleware/hmppsCache'
+import ContentfulService from '../services/contentfulService'
+import { whatsNewPostsMock } from '../mocks/whatsNewPostsMock'
 
 let req: any
 let res: any
@@ -13,6 +15,7 @@ jest.mock('../services/homepageService.ts')
 
 describe('Homepage Controller', () => {
   let homepageService: HomepageService
+  let contentfulService: ContentfulService
 
   beforeEach(() => {
     req = {
@@ -39,7 +42,10 @@ describe('Homepage Controller', () => {
     homepageService = new HomepageService(null, null, null)
     homepageService.getTodaySection = jest.fn(async () => todayDataMock)
 
-    controller = new HomepageController(homepageService, new HmppsCache(1))
+    contentfulService = new ContentfulService()
+    contentfulService.getWhatsNewPosts = jest.fn(async () => whatsNewPostsMock)
+
+    controller = new HomepageController(homepageService, new HmppsCache(1), contentfulService)
   })
 
   describe('Display homepage', () => {
@@ -47,6 +53,7 @@ describe('Homepage Controller', () => {
       await controller.displayHomepage()(req, res)
 
       expect(controller['homepageService'].getTodaySection).toHaveBeenCalled()
+      expect(controller['contentfulService'].getWhatsNewPosts).toHaveBeenCalled()
       expect(res.render).toHaveBeenCalledWith('pages/index', {
         errors: undefined,
         userHasGlobal: true,
@@ -61,6 +68,7 @@ describe('Homepage Controller', () => {
         ],
         searchViewAllUrl: `${config.serviceUrls.digitalPrisons}/prisoner-search?keywords=&location=${res.locals.user.activeCaseLoadId}`,
         ...todayDataMock,
+        whatsNewPosts: whatsNewPostsMock,
       })
     })
 
@@ -83,6 +91,7 @@ describe('Homepage Controller', () => {
         ],
         searchViewAllUrl: `${config.serviceUrls.digitalPrisons}/prisoner-search?keywords=&location=${res.locals.user.activeCaseLoadId}`,
         ...todayDataMock,
+        whatsNewPosts: whatsNewPostsMock,
       })
     })
   })

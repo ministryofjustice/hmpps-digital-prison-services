@@ -3,6 +3,7 @@ import UserService from './userService'
 import HomepageService from './homepageService'
 import HmppsCache from '../middleware/hmppsCache'
 import config from '../config'
+import ContentfulService from './contentfulService'
 
 export const services = () => {
   const {
@@ -21,12 +22,15 @@ export const services = () => {
     keyWorkerApiClientBuilder,
   )
 
+  const contentfulService = new ContentfulService()
+
   return {
     dataAccess,
     applicationInfo,
     userService,
     homepageService,
     todayCache,
+    contentfulService,
   }
 }
 

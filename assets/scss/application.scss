@@ -7,6 +7,9 @@ $govuk-page-width: $moj-page-width;
 @import 'govuk/all';
 @import 'moj/all';
 
-@import './pages/homepage';
 @import './components/header-bar';
+@import './components/whats-new';
+@import './pages/homepage';
+@import './pages/whats-new';
+@import './pages/whats-new-post';
 @import 'assets/scss/local';
