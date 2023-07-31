@@ -1,0 +1,14 @@
+.dps-homepage-help {
+  h3 {
+    font-size: 19px;
+    margin: 30px 0 15px 0;
+
+    &:first-of-type {
+      margin-top: 25px;
+    }
+  }
+
+  p + p {
+    margin-top: 30px
+  }
+}
