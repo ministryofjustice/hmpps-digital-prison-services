@@ -29,6 +29,17 @@ export default class IndexPage extends Page {
     }
   }
 
+  services = () => {
+    const servicesSection = (): PageElement => cy.get('[data-qa="homepage-services-section"]')
+
+    return {
+      heading: () => servicesSection().find('[data-qa="homepage-services-heading"]'),
+      serviceOne: () => servicesSection().find('.hmpps-services > :nth-child(1)'),
+      serviceTwo: () => servicesSection().find('.hmpps-services > :nth-child(2)'),
+      serviceThree: () => servicesSection().find('.hmpps-services > :nth-child(3)'),
+    }
+  }
+
   today = () => {
     const todaySection = (): PageElement => cy.get('[data-qa=homepage-today-section]')
 

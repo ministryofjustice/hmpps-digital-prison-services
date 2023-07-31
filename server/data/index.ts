@@ -12,6 +12,10 @@ import config, { ApiConfig } from '../config'
 import RestClient, { RestClientBuilder as CreateRestClientBuilder } from './restClient'
 import PrisonApiRestClient from './prisonApiClient'
 import { PrisonApiClient } from './interfaces/prisonApiClient'
+import { WhereAboutsApiClient } from './interfaces/whereAboutsApiClient'
+import WhereAboutsApiRestClient from './whereAboutsApiClient'
+import { KeyWorkerApiClient } from './interfaces/keyWorkerApiClient'
+import KeyWorkerApiRestClient from './keyWorkerApiClient'
 
 const applicationInfo = applicationInfoSupplier()
 initialiseAppInsights()
@@ -36,6 +40,16 @@ export const dataAccess = {
     HmppsAuthClient,
   ),
   prisonApiClientBuilder: restClientBuilder<PrisonApiClient>('Prison API', config.apis.prisonApi, PrisonApiRestClient),
+  whereAboutsApiClientBuilder: restClientBuilder<WhereAboutsApiClient>(
+    'Whereabouts API',
+    config.apis.whereabouts,
+    WhereAboutsApiRestClient,
+  ),
+  keyWorkerApiClientBuilder: restClientBuilder<KeyWorkerApiClient>(
+    'Keyworker API',
+    config.apis.keyworker,
+    KeyWorkerApiRestClient,
+  ),
   systemToken: systemTokenBuilder(new TokenStore(createRedisClient())),
 }
 

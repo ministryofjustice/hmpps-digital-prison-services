@@ -53,6 +53,15 @@ context('Homepage', () => {
     })
   })
 
+  context('Services - with global search', () => {
+    it('should display h3', () => {
+      const page = Page.verifyOnPage(IndexPage)
+      page.services().heading().should('be.visible')
+      page.services().serviceOne().should('be.visible')
+      page.services().serviceTwo().should('be.visible')
+    })
+  })
+
   context('Today', () => {
     it('should display today data', () => {
       const page = Page.verifyOnPage(IndexPage)
@@ -113,5 +122,15 @@ context('Homepage - no global search', () => {
     page.search().locationField().should('be.visible').and('contain.text', 'All')
     page.search().locationField().children().should('have.length', 3)
     page.search().viewAllLink().should('be.visible').and('contain.text', 'Leeds (HMP)')
+  })
+
+  context('Services - no global search', () => {
+    it('should display h3', () => {
+      const page = Page.verifyOnPage(IndexPage)
+      page.services().heading().should('be.visible')
+      page.services().serviceOne().should('be.visible')
+      page.services().serviceTwo().should('not.exist')
+      page.services().serviceThree().should('not.exist')
+    })
   })
 })

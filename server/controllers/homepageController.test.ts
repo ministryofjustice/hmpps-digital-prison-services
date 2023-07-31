@@ -39,7 +39,7 @@ describe('Homepage Controller', () => {
       redirect: jest.fn(),
     }
 
-    homepageService = new HomepageService(null)
+    homepageService = new HomepageService(null, null, null)
     homepageService.getTodaySection = jest.fn(async () => todayDataMock)
 
     contentfulService = new ContentfulService()
@@ -58,6 +58,14 @@ describe('Homepage Controller', () => {
         errors: undefined,
         userHasGlobal: true,
         globalPreset: false,
+        services: [
+          {
+            description: 'Search for someone in any establishment, or who has been released.',
+            heading: 'Global search',
+            href: 'http://localhost:3001/global-search',
+            id: 'global-search',
+          },
+        ],
         searchViewAllUrl: `${config.serviceUrls.digitalPrisons}/prisoner-search?keywords=&location=${res.locals.user.activeCaseLoadId}`,
         ...todayDataMock,
         whatsNewPosts: whatsNewPostsMock,
@@ -73,6 +81,14 @@ describe('Homepage Controller', () => {
         errors: [{ text: 'error', href: '#name' }],
         userHasGlobal: true,
         globalPreset: true,
+        services: [
+          {
+            description: 'Search for someone in any establishment, or who has been released.',
+            heading: 'Global search',
+            href: 'http://localhost:3001/global-search',
+            id: 'global-search',
+          },
+        ],
         searchViewAllUrl: `${config.serviceUrls.digitalPrisons}/prisoner-search?keywords=&location=${res.locals.user.activeCaseLoadId}`,
         ...todayDataMock,
         whatsNewPosts: whatsNewPostsMock,
