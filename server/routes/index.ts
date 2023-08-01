@@ -28,6 +28,12 @@ export default function routes(services: Services): Router {
   get('/', homepageController.displayHomepage())
   post('/search', homepageController.search())
 
+  get('/dps-services-store', async (req, res, next) => {
+    res.setHeader('Content-Type', 'application/json')
+    const dpsServices = await homepageController.getServices(req, res, next)
+    res.end(JSON.stringify(dpsServices))
+  })
+
   router.use(whatsNewRouter(services))
 
   return router
