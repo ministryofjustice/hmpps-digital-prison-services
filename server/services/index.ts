@@ -1,3 +1,4 @@
+import { ApolloClient, InMemoryCache } from '@apollo/client/core'
 import { dataAccess } from '../data'
 import UserService from './userService'
 import HomepageService from './homepageService'
@@ -22,7 +23,21 @@ export const services = () => {
     keyWorkerApiClientBuilder,
   )
 
-  const contentfulService = new ContentfulService()
+  const apolloClient = new ApolloClient({
+    cache: new InMemoryCache(),
+    uri: `${config.contentful.host}/content/v1/spaces/${config.contentful.spaceId}/environments/master`,
+    headers: {
+      Authorization: `Bearer ${config.contentful.accessToken}`,
+    },
+    ssrMode: true,
+    defaultOptions: {
+      watchQuery: {
+        fetchPolicy: 'cache-and-network',
+      },
+    },
+  })
+
+  const contentfulService = new ContentfulService(apolloClient)
 
   return {
     dataAccess,

@@ -1,50 +1,77 @@
-import * as contentful from 'contentful'
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
-import { Document } from '@contentful/rich-text-types'
-import config from '../config'
-import { WhatsNewPost } from '../data/interfaces/whatsNewPost'
+import { ApolloClient, gql } from '@apollo/client/core'
+import { WhatsNewData } from '../data/interfaces/whatsNewData'
+import { WhatsNewPost, WhatsNewPostApollo } from '../data/interfaces/whatsNewPost'
 
 export default class ContentfulService {
-  contentfulApiClient: contentful.ContentfulClientApi<undefined>
-
-  constructor() {
-    this.contentfulApiClient = contentful.createClient({
-      host: config.contentful.host,
-      insecure: !!config.contentful.host,
-      basePath: config.contentful.host ? '/contentful' : '',
-      space: config.contentful.spaceId,
-      accessToken: config.contentful.accessToken,
-    })
-  }
+  constructor(private readonly apolloClient: ApolloClient<unknown>) {}
 
   /**
    * Get list of `whatsNewPost` entries.
    *
    * Ordered by `date` descending (latest first)
    *
-   * @param options
+   * @param currentPage
+   * @param pageSize
+   * @param offset
+   * @param activeCaseLoadId
    */
-  public async getWhatsNewPosts(options?: { limit: number }): Promise<WhatsNewPost[]> {
-    const entries = await this.contentfulApiClient.getEntries({
-      content_type: 'whatsNewPost',
-      order: ['-fields.date'],
-      limit: options?.limit,
-    })
+  public async getWhatsNewPosts(
+    currentPage: number,
+    pageSize: number,
+    offset: number,
+    activeCaseLoadId: string,
+  ): Promise<WhatsNewData> {
+    const filter = { OR: [{ prisons_exists: false }, { prisons_contains_some: activeCaseLoadId }] }
 
-    if (!entries.items?.length) {
-      return []
+    const getWhatsNewPostsQuery = gql`
+      query Posts($limit: Int!, $skip: Int!, $condition: WhatsNewPostFilter!) {
+        whatsNewPostCollection(limit: $limit, skip: $skip, where: $condition, order: date_DESC) {
+          total
+          limit
+          skip
+          items {
+            title
+            slug
+            summary
+            date
+          }
+        }
+      }
+    `
+
+    const { items, total } = (
+      await this.apolloClient.query({
+        query: getWhatsNewPostsQuery,
+        variables: { limit: pageSize, skip: offset, condition: filter },
+      })
+    ).data.whatsNewPostCollection
+
+    const totalPages = Math.ceil(total / pageSize)
+    const pages = [...Array.from({ length: totalPages }, (_, i) => i + 1)].map(page => {
+      return {
+        text: `${page}`,
+        href: `?page=${page}`,
+        selected: currentPage === page,
+      }
+    })
+    const pagination = {
+      itemDescription: 'post',
+      previous: currentPage > 1 ? { href: `?page=${currentPage - 1}`, text: 'Previous' } : undefined,
+      next: currentPage < totalPages ? { href: `?page=${currentPage + 1}`, text: 'Next' } : undefined,
+      page: currentPage,
+      offset,
+      pageSize,
+      totalPages,
+      totalElements: total,
+      elementsOnPage: 10,
+      pages,
     }
-    return entries.items.map(
-      ({ fields }) =>
-        <WhatsNewPost>{
-          title: fields.title,
-          summary: fields.summary,
-          slug: fields.slug,
-          body: documentToHtmlString(fields.body as Document),
-          date: fields.date,
-          prisons: fields.prisons,
-        },
-    )
+
+    return {
+      whatsNewPosts: items,
+      pagination,
+    }
   }
 
   /**
@@ -53,24 +80,38 @@ export default class ContentfulService {
    * @param slug
    */
   public async getWhatsNewPost(slug: string): Promise<WhatsNewPost> {
-    const entries = await this.contentfulApiClient.getEntries({
-      content_type: 'whatsNewPost',
-      'fields.slug': slug,
-    })
+    const filter = { slug }
 
-    if (!entries.items?.length) {
-      throw new Error('Not found')
+    const getWhatsNewPostQuery = gql`
+      query PostWithSlug($condition: WhatsNewPostFilter!) {
+        whatsNewPostCollection(limit: 1, where: $condition) {
+          items {
+            title
+            slug
+            summary
+            date
+            body {
+              json
+            }
+          }
+        }
+      }
+    `
+
+    const { items } = (
+      await this.apolloClient.query({
+        query: getWhatsNewPostQuery,
+        variables: { condition: filter },
+      })
+    ).data.whatsNewPostCollection
+
+    if (!items?.length) {
+      throw new Error('Whats new post not found')
     }
 
-    const { fields } = entries.items[0]
-
-    return <WhatsNewPost>{
-      title: fields.title,
-      summary: fields.summary,
-      slug: fields.slug,
-      body: documentToHtmlString(fields.body as Document),
-      date: fields.date,
-      prisons: fields.prisons,
-    }
+    return items.map((post: WhatsNewPostApollo) => ({
+      ...post,
+      body: documentToHtmlString(post.body.json),
+    }))[0]
   }
 }

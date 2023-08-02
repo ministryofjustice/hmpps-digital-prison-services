@@ -1,70 +1,47 @@
+import { ApolloClient, InMemoryCache } from '@apollo/client/core'
 import ContentfulService from './contentfulService'
-import { contentfulWhatsNewPostEntriesMock } from '../mocks/whatsNewPostsMock'
+import {
+  whatsNewPostCollectionMock,
+  whatsNewPostMock,
+  whatsNewPostsCollectionMock,
+  whatsNewPostsMock,
+} from '../mocks/whatsNewPostsMock'
 
 describe('ContentfulService', () => {
   let contentfulService: ContentfulService
 
   beforeEach(() => {
-    contentfulService = new ContentfulService()
+    contentfulService = new ContentfulService(new ApolloClient<unknown>({ cache: new InMemoryCache() }))
   })
 
   it('should get whats new posts', async () => {
-    const contentfulSpy = jest
-      .spyOn<any, string>(contentfulService['contentfulApiClient'], 'getEntries')
-      .mockReturnValue(contentfulWhatsNewPostEntriesMock)
-    const posts = await contentfulService.getWhatsNewPosts({ limit: 3 })
+    const apolloSpy = jest
+      .spyOn<any, string>(contentfulService['apolloClient'], 'query')
+      .mockResolvedValue(whatsNewPostsCollectionMock)
 
-    expect(contentfulSpy).toHaveBeenCalledWith({
-      content_type: 'whatsNewPost',
-      order: ['-fields.date'],
-      limit: 3,
-    })
-    expect(posts).toEqual([
-      {
-        title: 'title',
-        summary: 'summary',
-        slug: 'slug',
-        body: '<p>body</p>',
-        date: '2023-07-27',
-        prisons: ['LEI'],
-      },
-      {
-        title: 'title',
-        summary: 'summary',
-        slug: 'slug',
-        body: '<p>body</p>',
-        date: '2023-07-27',
-        prisons: ['LEI'],
-      },
-      {
-        title: 'title',
-        summary: 'summary',
-        slug: 'slug',
-        body: '<p>body</p>',
-        date: '2023-07-27',
-        prisons: ['LEI'],
-      },
-    ])
+    const whatsNewData = await contentfulService.getWhatsNewPosts(1, 3, 0, 'LEI')
+
+    expect(apolloSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        variables: {
+          limit: 3,
+          skip: 0,
+          condition: { OR: [{ prisons_exists: false }, { prisons_contains_some: 'LEI' }] },
+        },
+      }),
+    )
+    expect(whatsNewData.whatsNewPosts).toEqual(whatsNewPostsMock)
   })
 
   it('should get whats new post', async () => {
-    const contentfulSpy = jest
-      .spyOn<any, string>(contentfulService['contentfulApiClient'], 'getEntries')
-      .mockReturnValue(contentfulWhatsNewPostEntriesMock)
-    const slug = 'example-post'
+    const apolloSpy = jest
+      .spyOn<any, string>(contentfulService['apolloClient'], 'query')
+      .mockResolvedValue(whatsNewPostCollectionMock)
+    const slug = 'whats-new-one'
+
     const post = await contentfulService.getWhatsNewPost(slug)
 
-    expect(contentfulSpy).toHaveBeenCalledWith({
-      content_type: 'whatsNewPost',
-      'fields.slug': slug,
-    })
-    expect(post).toEqual({
-      title: 'title',
-      summary: 'summary',
-      slug: 'slug',
-      body: '<p>body</p>',
-      date: '2023-07-27',
-      prisons: ['LEI'],
-    })
+    expect(apolloSpy).toHaveBeenCalled()
+    expect(post).toEqual(whatsNewPostMock)
   })
 })

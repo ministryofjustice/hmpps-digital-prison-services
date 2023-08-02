@@ -10,15 +10,15 @@ export default class WhatsNewController {
   public displayWhatsNewList(): RequestHandler {
     return async (req: Request, res: Response, next: NextFunction) => {
       const { activeCaseLoadId } = res.locals.user
+      const pageSize = 10
+      const currentPage = +req.query.page || 1
+      const skip = (currentPage - 1) * pageSize
 
-      // Whats new Section - filter to active caseload if post has been marked for specific prisons
-      const whatsNewPosts = (await this.contentfulService.getWhatsNewPosts()).filter(
-        post => !post.prisons || post.prisons.includes(activeCaseLoadId),
-      )
+      const whatsNewData = await this.contentfulService.getWhatsNewPosts(currentPage, pageSize, skip, activeCaseLoadId)
 
       res.render('pages/whatsNew', {
         pageTitle: "What's new",
-        whatsNewPosts,
+        ...whatsNewData,
       })
     }
   }

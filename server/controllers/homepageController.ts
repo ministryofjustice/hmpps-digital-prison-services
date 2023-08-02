@@ -42,9 +42,7 @@ export default class HomepageController {
           description: task.description,
         }))
       // Whats new Section - filter to active caseload if post has been marked for specific prisons
-      const whatsNewPosts = (await this.contentfulService.getWhatsNewPosts({ limit: 3 })).filter(
-        post => !post.prisons || post.prisons.includes(activeCaseLoadId),
-      )
+      const whatsNewData = await this.contentfulService.getWhatsNewPosts(1, 3, 0, activeCaseLoadId)
 
       res.render('pages/index', {
         errors,
@@ -53,7 +51,7 @@ export default class HomepageController {
         services,
         globalPreset: !!errors?.length && userHasGlobal,
         ...todayData,
-        whatsNewPosts,
+        whatsNewPosts: whatsNewData.whatsNewPosts,
       })
     }
   }

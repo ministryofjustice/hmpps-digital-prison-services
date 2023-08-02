@@ -91,6 +91,7 @@
     ]
   },
   "dependencies": {
+    "@apollo/client": "^3.7.17",
     "@contentful/rich-text-html-renderer": "^16.1.0",
     "@contentful/rich-text-types": "^16.2.0",
     "@ministryofjustice/frontend": "^1.8.0",

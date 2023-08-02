@@ -1,5 +1,5 @@
 import { Document } from '@contentful/rich-text-types'
-import { WhatsNewPost } from '../data/interfaces/whatsNewPost'
+import { WhatsNewPost, WhatsNewPostApollo } from '../data/interfaces/whatsNewPost'
 
 // eslint-disable-next-line import/prefer-default-export
 export const whatsNewPostsMock: WhatsNewPost[] = [
@@ -7,89 +7,85 @@ export const whatsNewPostsMock: WhatsNewPost[] = [
     title: 'Whats new one',
     slug: 'whats-new-one',
     summary: 'Summary',
-    body: 'Content',
     date: '2023-07-27',
-    prisons: undefined,
   },
   {
     title: 'Whats new two',
     slug: 'whats-new-two',
     summary: 'Summary',
-    body: 'Content',
     date: '2023-07-25',
-    prisons: undefined,
   },
   {
     title: 'Whats new three',
     slug: 'whats-new-three',
     summary: 'Summary',
-    body: 'Content',
     date: '2023-07-21',
-    prisons: undefined,
   },
 ]
 
-export const contentfulWhatsNewPostEntriesMock = {
-  items: [
-    {
-      fields: {
-        title: 'title',
-        summary: 'summary',
-        slug: 'slug',
-        body: {
-          data: {},
-          content: [
-            {
-              data: {},
-              content: [{ data: {}, marks: [], value: 'body', nodeType: 'text' }],
-              nodeType: 'paragraph',
-            },
-          ],
-          nodeType: 'document',
-        } as unknown as Document,
-        date: '2023-07-27',
-        prisons: ['LEI'],
-      },
+export const whatsNewPostMock: WhatsNewPost = {
+  title: 'Whats new one',
+  slug: 'whats-new-one',
+  summary: 'Summary',
+  body: '<p>Content</p>',
+  date: '2023-07-27',
+}
+
+export const whatsNewPostsApolloMock: WhatsNewPostApollo[] = [
+  {
+    title: 'Whats new one',
+    slug: 'whats-new-one',
+    summary: 'Summary',
+    date: '2023-07-27',
+  },
+  {
+    title: 'Whats new two',
+    slug: 'whats-new-two',
+    summary: 'Summary',
+    date: '2023-07-25',
+  },
+  {
+    title: 'Whats new three',
+    slug: 'whats-new-three',
+    summary: 'Summary',
+    date: '2023-07-21',
+  },
+]
+
+export const whatsNewPostApolloMock: WhatsNewPostApollo[] = [
+  {
+    title: 'Whats new one',
+    slug: 'whats-new-one',
+    summary: 'Summary',
+    body: {
+      json: {
+        data: {},
+        content: [
+          {
+            data: {},
+            content: [{ data: {}, marks: [], value: 'Content', nodeType: 'text' }],
+            nodeType: 'paragraph',
+          },
+        ],
+        nodeType: 'document',
+      } as unknown as Document,
     },
-    {
-      fields: {
-        title: 'title',
-        summary: 'summary',
-        slug: 'slug',
-        body: {
-          data: {},
-          content: [
-            {
-              data: {},
-              content: [{ data: {}, marks: [], value: 'body', nodeType: 'text' }],
-              nodeType: 'paragraph',
-            },
-          ],
-          nodeType: 'document',
-        } as unknown as Document,
-        date: '2023-07-27',
-        prisons: ['LEI'],
-      },
+    date: '2023-07-27',
+  },
+]
+
+export const whatsNewPostsCollectionMock = {
+  data: {
+    whatsNewPostCollection: {
+      items: whatsNewPostsApolloMock,
     },
-    {
-      fields: {
-        title: 'title',
-        summary: 'summary',
-        slug: 'slug',
-        body: {
-          data: {},
-          content: [
-            {
-              data: {},
-              content: [{ data: {}, marks: [], value: 'body', nodeType: 'text' }],
-              nodeType: 'paragraph',
-            },
-          ],
-          nodeType: 'document',
-        } as unknown as Document,
-        date: '2023-07-27',
-        prisons: ['LEI'],
-      },
+  },
+}
+
+export const whatsNewPostCollectionMock = {
+  data: {
+    whatsNewPostCollection: {
+      items: whatsNewPostApolloMock,
     },
-  ],
+  },
 }
