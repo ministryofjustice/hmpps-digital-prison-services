@@ -1,3 +1,4 @@
+import { ApolloClient, InMemoryCache } from '@apollo/client/core'
 import { Role } from '../enums/role'
 import HomepageController from './homepageController'
 import config from '../config'
@@ -6,6 +7,7 @@ import { todayDataMock } from '../mocks/todayDataMock'
 import HmppsCache from '../middleware/hmppsCache'
 import ContentfulService from '../services/contentfulService'
 import { whatsNewPostsMock } from '../mocks/whatsNewPostsMock'
+import { whatsNewDataMock } from '../mocks/whatsNewDataMock'
 
 let req: any
 let res: any
@@ -42,8 +44,8 @@ describe('Homepage Controller', () => {
     homepageService = new HomepageService(null, null, null)
     homepageService.getTodaySection = jest.fn(async () => todayDataMock)
 
-    contentfulService = new ContentfulService()
-    contentfulService.getWhatsNewPosts = jest.fn(async () => whatsNewPostsMock)
+    contentfulService = new ContentfulService(new ApolloClient({ cache: new InMemoryCache() }))
+    contentfulService.getWhatsNewPosts = jest.fn(async () => whatsNewDataMock)
 
     controller = new HomepageController(homepageService, new HmppsCache(1), contentfulService)
   })

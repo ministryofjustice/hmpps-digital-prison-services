@@ -1,3 +1,4 @@
+{% from '../macros/hmppsPagination.njk' import hmppsPagination %}
 {% extends "../partials/layout.njk" %}
 {% set mainClasses = "govuk-body govuk-main-wrapper--auto-spacing" %}
 {% set breadCrumbs = [
@@ -6,11 +7,11 @@
         href:  "/"
     }
 ] %}
-
 {%  block content %}
     <h1>What's new in DPS</h1>
     <div class="dps-whats-new">
         <div class="whats-new-list">
+            {{ hmppsPagination(pagination) }}
             {% for post in whatsNewPosts %}
                 <article class="whats-new-post">
                     <div class="whats-new-post__date">{{ post.date | formatDate('long') }}</div>
@@ -18,6 +19,7 @@
                     <div class="whats-new-post__summary">{{ post.summary }}</div>
                 </article>
             {% endfor %}
+            {{ hmppsPagination(pagination) }}
         </div>
         <aside class="whats-new-related-content">
             <h2>Related content</h2>

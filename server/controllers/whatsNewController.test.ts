@@ -1,7 +1,10 @@
+import { ApolloClient, InMemoryCache } from '@apollo/client/core'
 import { Role } from '../enums/role'
 import ContentfulService from '../services/contentfulService'
 import { whatsNewPostsMock } from '../mocks/whatsNewPostsMock'
 import WhatsNewController from './whatsNewController'
+import { whatsNewDataMock } from '../mocks/whatsNewDataMock'
+import { paginationMock } from '../mocks/paginationMock'
 
 let req: any
 let res: any
@@ -20,6 +23,9 @@ describe('Whats New Controller', () => {
       params: {
         slug: 'example-post',
       },
+      query: {
+        page: '1',
+      },
       path: '/',
       flash: jest.fn(),
     }
@@ -37,8 +43,8 @@ describe('Whats New Controller', () => {
       redirect: jest.fn(),
     }
 
-    contentfulService = new ContentfulService()
-    contentfulService.getWhatsNewPosts = jest.fn(async () => whatsNewPostsMock)
+    contentfulService = new ContentfulService(new ApolloClient({ cache: new InMemoryCache() }))
+    contentfulService.getWhatsNewPosts = jest.fn(async () => whatsNewDataMock)
     contentfulService.getWhatsNewPost = jest.fn(async slug => {
       if (slug) return whatsNewPostsMock[0]
       return whatsNewPostsMock[0]
@@ -55,6 +61,7 @@ describe('Whats New Controller', () => {
       expect(res.render).toHaveBeenCalledWith('pages/whatsNew', {
         pageTitle: "What's new",
         whatsNewPosts: whatsNewPostsMock,
+        pagination: paginationMock,
       })
     })
   })

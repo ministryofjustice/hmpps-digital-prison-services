@@ -91,9 +91,9 @@ context('Homepage', () => {
       page.whatsNew().heading().should('be.visible').and('contain.text', "What's new in DPS")
       page.whatsNew().whatsNewPost().should('have.length', 3)
       page.whatsNew().whatsNewPost().first().find('.whats-new-post__date').should('have.text', '27 July 2023')
-      page.whatsNew().whatsNewPost().first().find('a').should('have.text', 'title')
-      page.whatsNew().whatsNewPost().first().find('a').should('have.attr', 'href', '/whats-new/slug')
-      page.whatsNew().whatsNewPost().first().find('.whats-new-post__summary').should('have.text', 'summary')
+      page.whatsNew().whatsNewPost().first().find('a').should('have.text', 'Whats new one')
+      page.whatsNew().whatsNewPost().first().find('a').should('have.attr', 'href', '/whats-new/whats-new-one')
+      page.whatsNew().whatsNewPost().first().find('.whats-new-post__summary').should('have.text', 'Summary')
     })
   })
 

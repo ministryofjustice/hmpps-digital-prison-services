@@ -80,6 +80,7 @@ generic-service:
     WARRANT_FOLDER_URL: https://manage-a-warrant-folder-dev.hmpps.service.justice.gov.uk/
     MANAGE_OFFENCES_URL: https://manage-offences-dev.hmpps.service.justice.gov.uk
     TODAY_CACHE_TTL: 10
+    CONTENTFUL_HOST: https://graphql.contentful.com
 
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service-dev

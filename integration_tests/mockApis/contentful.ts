@@ -1,11 +1,11 @@
 import { stubFor } from './wiremock'
-import { contentfulWhatsNewPostEntriesMock } from '../../server/mocks/whatsNewPostsMock'
+import { whatsNewPostCollectionMock, whatsNewPostsCollectionMock } from '../../server/mocks/whatsNewPostsMock'
 
 export default {
-  stubWhatsNewPosts: () => {
+  stubWhatsNewPosts: (list = true) => {
     return stubFor({
       request: {
-        method: 'GET',
+        method: 'POST',
         urlPattern: '/contentful/.*',
       },
       response: {
@@ -13,7 +13,7 @@ export default {
         headers: {
           'Content-Type': 'application/json;charset=UTF-8',
         },
-        jsonBody: contentfulWhatsNewPostEntriesMock,
+        jsonBody: list ? whatsNewPostsCollectionMock : whatsNewPostCollectionMock,
       },
     })
   },
