@@ -5,7 +5,7 @@ import HomepageService from '../services/homepageService'
 import HmppsCache from '../middleware/hmppsCache'
 import { userHasRoles } from '../utils/utils'
 import ContentfulService from '../services/contentfulService'
-import { getTasks } from '../data/dpsServicesDataStore'
+import ApiController from './apiController'
 
 /**
  * Parse requests for homepage routes and orchestrate response
@@ -31,7 +31,9 @@ export default class HomepageController {
         this.homepageService.getTodaySection(res.locals.clientToken, activeCaseLoadId),
       )
 
-      const servicesData = await this.getServices(req, res, next)
+      const apiController = new ApiController(this.homepageService)
+
+      const servicesData = await apiController.getDpsServices(res)
 
       const services = servicesData
         .filter(task => task.enabled)
@@ -74,40 +76,5 @@ export default class HomepageController {
       }
       return res.redirect(`${config.serviceUrls.digitalPrisons}/global-search/results?searchText=${name}`)
     }
-  }
-
-  public async getServices(req: Request, res: Response, next: NextFunction) {
-    const { whereaboutsMaintenanceMode } = config.app
-    const { keyworkerMaintenanceMode } = config.app
-    const { activeCaseLoadId } = res.locals.user
-
-    let whereaboutsConfig
-    if (whereaboutsMaintenanceMode) {
-      whereaboutsConfig = { enabled: false }
-    } else {
-      whereaboutsConfig = await this.homepageService
-        .getWhereaboutsConfig(res.locals.clientToken, activeCaseLoadId)
-        ?.catch(() => null)
-    }
-
-    let keyworkerPrisonStatus
-    if (keyworkerMaintenanceMode) {
-      keyworkerPrisonStatus = { migrated: false } // this can be empty because we're using the feature flag in getTasks
-    } else {
-      keyworkerPrisonStatus = await this.homepageService
-        .getPrisonMigrationStatus(res.locals.clientToken, activeCaseLoadId)
-        ?.catch(() => null)
-    }
-
-    const allServices = getTasks(
-      res.locals.user.activeCaseLoadId,
-      res.locals.user.locations,
-      res.locals.user.staffId,
-      whereaboutsConfig,
-      keyworkerPrisonStatus,
-      res.locals.user.userRoles,
-    )
-
-    return allServices
   }
 }

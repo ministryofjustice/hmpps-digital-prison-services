@@ -9,7 +9,7 @@ import { getTasks } from '../data/dpsServicesDataStore'
 export default class ApiController {
   constructor(private readonly homepageService: HomepageService) {}
 
-  public async getServices(res: Response) {
+  public async getDpsServices(res: Response) {
     const { whereaboutsMaintenanceMode } = config.app
     const { keyworkerMaintenanceMode } = config.app
     const { activeCaseLoadId } = res.locals.user

@@ -330,8 +330,8 @@ export const getTasks = (
       description: 'View people due to leave this establishment for court appearances, transfers or being released.',
       href: `${config.serviceUrls.digitalPrisons}/manage-prisoner-whereabouts/scheduled-moves`,
       enabled:
-        config.apis.activities.enabled_prisons.split(',').includes(activeCaseLoadId) &&
-        config.apis.appointments.enabled_prisons.split(',').includes(activeCaseLoadId),
+        config.apis.activities.enabled_prisons?.split(',').includes(activeCaseLoadId) &&
+        config.apis.appointments.enabled_prisons?.split(',').includes(activeCaseLoadId),
     },
     {
       id: 'view-covid-units',

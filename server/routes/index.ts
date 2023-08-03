@@ -33,7 +33,7 @@ export default function routes(services: Services): Router {
 
   get('/api/dps-services', async (req, res, next) => {
     res.setHeader('Content-Type', 'application/json')
-    const dpsServices = await apiController.getServices(res)
+    const dpsServices = await apiController.getDpsServices(res)
     res.end(JSON.stringify(dpsServices))
   })
 
