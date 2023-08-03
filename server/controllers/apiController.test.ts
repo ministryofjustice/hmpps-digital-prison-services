@@ -3,7 +3,6 @@ import HomepageService from '../services/homepageService'
 import ApiController from './apiController'
 import { dpsServicesDataStoreMockB } from '../mocks/dpsServicesDataStoreMock'
 
-let req: any
 let res: any
 let controller: any
 
@@ -13,16 +12,6 @@ describe('API Controller', () => {
   let homePageService: HomepageService
 
   beforeEach(() => {
-    req = {
-      headers: {
-        referer: 'http://referer',
-      },
-      params: {
-        slug: 'example-post',
-      },
-      path: '/',
-      flash: jest.fn(),
-    }
     res = {
       locals: {
         clientToken: 'CLIENT_TOKEN',
