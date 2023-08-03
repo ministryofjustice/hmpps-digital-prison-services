@@ -4,6 +4,7 @@ import auth from './integration_tests/mockApis/auth'
 import tokenVerification from './integration_tests/mockApis/tokenVerification'
 import prison from './integration_tests/mockApis/prison'
 import contentful from './integration_tests/mockApis/contentful'
+import dps from './integration_tests/mockApis/dps'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -26,6 +27,7 @@ export default defineConfig({
         ...tokenVerification,
         ...prison,
         ...contentful,
+        ...dps,
       })
     },
     baseUrl: 'http://localhost:3007',
