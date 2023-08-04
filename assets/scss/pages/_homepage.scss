@@ -80,6 +80,9 @@
     display: grid;
     @media (max-width: 642px) {
       grid-template-columns: auto;
+      .hmpps-service-item img {
+        margin-top: -15px;
+      }
     }
     @media (min-width: 643px) and (max-width: 846px) {
       grid-template-columns: auto auto;
