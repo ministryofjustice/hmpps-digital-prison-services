@@ -15,5 +15,9 @@ export default abstract class Page {
 
   signOut = (): PageElement => cy.get('[data-qa=signOut]')
 
-  manageDetails = (): PageElement => cy.get('[data-qa=manageDetails]')
+  manageDetails = (): PageElement => cy.get('[data-qa=manage-account-link]')
+
+  changeCaseloadItem = (): PageElement => cy.get('.hmpps-header__caseload')
+
+  changeCaseload = (): PageElement => cy.get('[data-qa=change-caseload-link]')
 }

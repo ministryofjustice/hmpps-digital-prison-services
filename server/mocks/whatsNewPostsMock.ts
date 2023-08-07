@@ -77,6 +77,9 @@ export const whatsNewPostApolloMock: WhatsNewPostApollo[] = [
 export const whatsNewPostsCollectionMock = {
   data: {
     whatsNewPostCollection: {
+      total: 3,
+      limit: 3,
+      skip: 0,
       items: whatsNewPostsApolloMock,
     },
   },
