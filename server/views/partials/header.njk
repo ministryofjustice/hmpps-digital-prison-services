@@ -47,11 +47,11 @@
   </div>
 </header>
 
+{% if phaseName %}
 <div class="govuk-phase-banner">
-  {% if phaseName %}
     {{ govukTag({
       text: phaseName,
       classes: 'govuk-!-margin-right-1 ' + phaseNameColour
     }) }}
-  {% endif %}
 </div>
+{% endif %}
