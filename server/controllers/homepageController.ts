@@ -21,6 +21,9 @@ export default class HomepageController {
     return async (req: Request, res: Response, next: NextFunction) => {
       const { activeCaseLoadId } = res.locals.user
 
+      // Outage Banner - filtered to active caseload if banner has been marked for specific prisons
+      const outageBanner = await this.contentfulService.getOutageBanner(activeCaseLoadId)
+
       // Search Section
       const errors = req.flash('errors')
       const userHasGlobal = userHasRoles([Role.GlobalSearch], res.locals.user.userRoles)
@@ -43,7 +46,7 @@ export default class HomepageController {
           heading: task.heading,
           description: task.description,
         }))
-      // Whats new Section - filter to active caseload if post has been marked for specific prisons
+      // Whats new Section - filtered to active caseload if post has been marked for specific prisons
       const whatsNewData = await this.contentfulService.getWhatsNewPosts(1, 3, 0, activeCaseLoadId)
 
       res.render('pages/index', {
@@ -54,6 +57,7 @@ export default class HomepageController {
         globalPreset: !!errors?.length && userHasGlobal,
         ...todayData,
         whatsNewPosts: whatsNewData.whatsNewPosts,
+        outageBanner,
       })
     }
   }

@@ -7,6 +7,8 @@ export default class IndexPage extends Page {
 
   headerUserName = (): PageElement => cy.get('[data-qa=header-user-name]')
 
+  outageBanner = (): PageElement => cy.get('.dps-outage-banner')
+
   hero = () => {
     const dpsHeader = (): PageElement => cy.get('.dps-header')
 

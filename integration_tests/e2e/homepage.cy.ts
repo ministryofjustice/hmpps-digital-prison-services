@@ -16,12 +16,20 @@ context('Homepage', () => {
     cy.task('stubRollCountUnassigned')
     cy.task('stubMovements')
     cy.task('stubWhatsNewPosts')
+    cy.task('stubOutageBanner')
     cy.signIn()
     cy.visit('/')
   })
 
   it('Homepage is visible', () => {
     Page.verifyOnPage(IndexPage)
+  })
+
+  context('Outage Banner', () => {
+    it('should display outage banner', () => {
+      const page = Page.verifyOnPage(IndexPage)
+      page.outageBanner().should('contain.text', 'Banner')
+    })
   })
 
   context('Hero', () => {
@@ -120,6 +128,7 @@ context('Homepage - no global search', () => {
     cy.task('stubRollCountUnassigned')
     cy.task('stubMovements')
     cy.task('stubWhatsNewPosts')
+    cy.task('stubOutageBanner')
     cy.signIn()
     cy.visit('/')
   })

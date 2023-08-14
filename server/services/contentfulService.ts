@@ -2,6 +2,7 @@ import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
 import { ApolloClient, gql } from '@apollo/client/core'
 import { WhatsNewData } from '../data/interfaces/whatsNewData'
 import { WhatsNewPost, WhatsNewPostApollo } from '../data/interfaces/whatsNewPost'
+import { OutageBannerApollo } from '../data/interfaces/outageBanner'
 
 export default class ContentfulService {
   constructor(private readonly apolloClient: ApolloClient<unknown>) {}
@@ -113,5 +114,41 @@ export default class ContentfulService {
       ...post,
       body: documentToHtmlString(post.body.json),
     }))[0]
+  }
+
+  /**
+   * Get `outageBanner` entry.
+   */
+  public async getOutageBanner(activeCaseLoadId: string): Promise<string> {
+    const filter = { OR: [{ prisons_exists: false }, { prisons_contains_some: activeCaseLoadId }] }
+
+    const getOutageBannerQuery = gql`
+      query OutageBanner($condition: OutageBannerFilter!) {
+        outageBannerCollection(limit: 1, order: sys_publishedAt_DESC, where: $condition) {
+          items {
+            text {
+              json
+            }
+            prisons
+          }
+        }
+      }
+    `
+
+    const { items } = (
+      await this.apolloClient.query({
+        query: getOutageBannerQuery,
+        variables: { condition: filter },
+      })
+    ).data.outageBannerCollection
+
+    if (!items?.length) {
+      return undefined
+    }
+
+    return items.map((outageBanner: OutageBannerApollo) => ({
+      ...outageBanner,
+      text: documentToHtmlString(outageBanner.text.json),
+    }))[0]?.text
   }
 }
