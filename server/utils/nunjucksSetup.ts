@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
+import path from 'path'
 import nunjucks from 'nunjucks'
 import express from 'express'
-import path from 'path'
 import {
   addDefaultSelectedValue,
   asSelectItem,
