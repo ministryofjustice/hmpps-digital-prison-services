@@ -3,6 +3,24 @@
   margin-left: auto;
   margin-right: auto;
 
+  .dps-outage-banner {
+    min-height: 70px;
+    background-color: rgba(govuk-colour('red'), .2);
+
+    div {
+      padding: 22px 0;
+    }
+
+    p {
+      font-weight: 300;
+      margin: 0;
+
+      a:link, a:visited {
+        color: $govuk-text-colour;
+      }
+    }
+  }
+
   header.dps-header {
     background-color: rgba(govuk-colour("light-blue"), .2);
     padding: 25px 0;

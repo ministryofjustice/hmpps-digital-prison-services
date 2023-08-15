@@ -46,6 +46,7 @@ describe('Homepage Controller', () => {
 
     contentfulService = new ContentfulService(new ApolloClient({ cache: new InMemoryCache() }))
     contentfulService.getWhatsNewPosts = jest.fn(async () => whatsNewDataMock)
+    contentfulService.getOutageBanner = jest.fn(async () => 'Banner')
 
     controller = new HomepageController(homepageService, new HmppsCache(1), contentfulService)
   })
@@ -56,6 +57,7 @@ describe('Homepage Controller', () => {
 
       expect(controller['homepageService'].getTodaySection).toHaveBeenCalled()
       expect(controller['contentfulService'].getWhatsNewPosts).toHaveBeenCalled()
+      expect(controller['contentfulService'].getOutageBanner).toHaveBeenCalled()
       expect(res.render).toHaveBeenCalledWith('pages/index', {
         errors: undefined,
         userHasGlobal: true,
@@ -71,6 +73,7 @@ describe('Homepage Controller', () => {
         searchViewAllUrl: `${config.serviceUrls.digitalPrisons}/prisoner-search?keywords=&location=${res.locals.user.activeCaseLoadId}`,
         ...todayDataMock,
         whatsNewPosts: whatsNewPostsMock,
+        outageBanner: 'Banner',
       })
     })
 
@@ -94,6 +97,7 @@ describe('Homepage Controller', () => {
         searchViewAllUrl: `${config.serviceUrls.digitalPrisons}/prisoner-search?keywords=&location=${res.locals.user.activeCaseLoadId}`,
         ...todayDataMock,
         whatsNewPosts: whatsNewPostsMock,
+        outageBanner: 'Banner',
       })
     })
   })

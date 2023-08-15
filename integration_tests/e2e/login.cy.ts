@@ -16,6 +16,7 @@ context('SignIn', () => {
     cy.task('stubRollCountUnassigned')
     cy.task('stubMovements')
     cy.task('stubWhatsNewPosts')
+    cy.task('stubOutageBanner')
     cy.task('changeCaseload')
   })
 
