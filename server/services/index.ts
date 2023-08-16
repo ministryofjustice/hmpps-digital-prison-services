@@ -5,6 +5,7 @@ import HomepageService from './homepageService'
 import HmppsCache from '../middleware/hmppsCache'
 import config from '../config'
 import ContentfulService from './contentfulService'
+import ComponentService from './componentService'
 
 export const services = () => {
   const {
@@ -12,6 +13,7 @@ export const services = () => {
     prisonApiClientBuilder,
     whereAboutsApiClientBuilder,
     keyWorkerApiClientBuilder,
+    componentApiClientBuilder,
     applicationInfo,
   } = dataAccess
 
@@ -22,6 +24,7 @@ export const services = () => {
     whereAboutsApiClientBuilder,
     keyWorkerApiClientBuilder,
   )
+  const componentService = new ComponentService(componentApiClientBuilder)
 
   const apolloClient = new ApolloClient({
     cache: new InMemoryCache(),
@@ -46,6 +49,7 @@ export const services = () => {
     homepageService,
     todayCache,
     contentfulService,
+    componentService,
   }
 }
 

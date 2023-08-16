@@ -19,6 +19,7 @@ import type { Services } from './services'
 import populateClientToken from './middleware/populateClientToken'
 import setUpPageNotFound from './middleware/setUpPageNotFound'
 import setUpPhaseName from './middleware/setUpPhaseName'
+import getFrontendComponents from './middleware/frontEndComponents'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -40,6 +41,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpCsrf())
   app.use(setUpCurrentUser(services))
   app.use(populateClientToken())
+  app.use(getFrontendComponents(services))
 
   app.use(routes(services))
 
