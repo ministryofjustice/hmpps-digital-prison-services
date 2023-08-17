@@ -3,6 +3,12 @@
   margin-left: auto;
   margin-right: auto;
 
+  &.govuk-width-container {
+    max-width: unset;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   .dps-outage-banner {
     min-height: 70px;
     background-color: rgba(govuk-colour('red'), .2);

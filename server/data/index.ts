@@ -16,6 +16,8 @@ import { WhereAboutsApiClient } from './interfaces/whereAboutsApiClient'
 import WhereAboutsApiRestClient from './whereAboutsApiClient'
 import { KeyWorkerApiClient } from './interfaces/keyWorkerApiClient'
 import KeyWorkerApiRestClient from './keyWorkerApiClient'
+import { ComponentApiClient } from './interfaces/componentApiClient'
+import ComponentApiRestClient from './componentApiClient'
 
 const applicationInfo = applicationInfoSupplier()
 initialiseAppInsights()
@@ -49,6 +51,11 @@ export const dataAccess = {
     'Keyworker API',
     config.apis.keyworker,
     KeyWorkerApiRestClient,
+  ),
+  componentApiClientBuilder: restClientBuilder<ComponentApiClient>(
+    'Component API',
+    config.apis.frontendComponents,
+    ComponentApiRestClient,
   ),
   systemToken: systemTokenBuilder(new TokenStore(createRedisClient())),
 }

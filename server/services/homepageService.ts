@@ -36,9 +36,8 @@ export default class HomepageService {
   }
 
   public async getPrisonMigrationStatus(clientToken: string, activeCaseLoadId: string) {
-    const prisonMigrationStatus = await this.keyWorkerApiClientBuilder(clientToken).getPrisonMigrationStatus(
-      activeCaseLoadId,
-    )
+    const prisonMigrationStatus =
+      await this.keyWorkerApiClientBuilder(clientToken).getPrisonMigrationStatus(activeCaseLoadId)
     return prisonMigrationStatus
   }
 }
