@@ -5,6 +5,7 @@ import type { Services } from '../services'
 import HomepageController from '../controllers/homepageController'
 import whatsNewRouter from './whatsNewRouter'
 import ApiController from '../controllers/apiController'
+import getFrontendComponents from '../middleware/frontEndComponents'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function routes(services: Services): Router {
@@ -28,7 +29,7 @@ export default function routes(services: Services): Router {
 
   const apiController = new ApiController(services.homepageService)
 
-  get('/', homepageController.displayHomepage())
+  get('/', getFrontendComponents(services), homepageController.displayHomepage())
   post('/search', homepageController.search())
 
   get('/api/dps-services', async (req, res, next) => {
