@@ -2,12 +2,14 @@
   @include govuk-responsive-padding(3, 'top');
   @include govuk-responsive-padding(3, 'bottom');
   background-color: govuk-colour('black');
+  color: govuk-colour('white');
 
   &__container {
     @include govuk-width-container;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    min-height: 40px;
   }
 
   &__logo {
