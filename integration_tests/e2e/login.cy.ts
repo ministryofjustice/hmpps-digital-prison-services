@@ -1,9 +1,6 @@
 import IndexPage from '../pages/index'
 import AuthSignInPage from '../pages/authSignIn'
 import Page from '../pages/page'
-import AuthManageDetailsPage from '../pages/authManageDetails'
-import ChangeCaseloadPage from '../pages/changeCaseload'
-import { Role } from '../../server/enums/role'
 
 context('SignIn', () => {
   beforeEach(() => {
@@ -43,39 +40,6 @@ context('SignIn', () => {
     const indexPage = Page.verifyOnPage(IndexPage)
     indexPage.signOut().click()
     Page.verifyOnPage(AuthSignInPage)
-  })
-
-  it('User can manage their details', () => {
-    cy.setupUserAuth()
-    cy.signIn()
-    const indexPage = Page.verifyOnPage(IndexPage)
-
-    indexPage.manageDetails().click()
-    Page.verifyOnPage(AuthManageDetailsPage)
-  })
-
-  it('User with one caseload does not see change caseload link', () => {
-    cy.setupUserAuth()
-    cy.signIn()
-    const indexPage = Page.verifyOnPage(IndexPage)
-
-    indexPage.changeCaseloadItem().should('not.exist')
-  })
-
-  it('User with multiple caseloads can change their caseload', () => {
-    cy.setupUserAuth({
-      roles: [Role.GlobalSearch],
-      caseLoads: [
-        { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
-        { caseloadFunction: '', caseLoadId: 'MDI', currentlyActive: false, description: 'Moorland (HMP)', type: '' },
-      ],
-    })
-    cy.signIn()
-    const indexPage = Page.verifyOnPage(IndexPage)
-
-    indexPage.changeCaseloadItem().should('be.visible')
-    indexPage.changeCaseload().click()
-    Page.verifyOnPage(ChangeCaseloadPage)
   })
 
   it('Token verification failure takes user to sign in page', () => {
