@@ -63,6 +63,6 @@
   {% if feComponents.footer %}
     {{ feComponents.footer | safe }}
   {% else %}
-    {{ govukFooter({}) }}
+    {% include "./footer.njk" %}
   {% endif %}
 {% endblock %}

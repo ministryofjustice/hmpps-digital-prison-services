@@ -40,7 +40,7 @@ generic-service:
     SOC_API_URL: https://manage-soc-cases-api-preprod.hmpps.service.justice.gov.uk/
     OFFENDER_SEARCH_API_URL: https://prisoner-offender-search-preprod.prison.service.justice.gov.uk
     SUPPORT_URL: https://support-preprod.hmpps.service.justice.gov.uk/
-    SYSTEM_PHASE: PRE-PRODUCTION
+    ENVIRONMENT_NAME: PRE-PRODUCTION
     BVL_URL: https://book-video-link-preprod.prison.service.justice.gov.uk
     MOIC_URL: https://preprod.moic.service.justice.gov.uk
     OMIC_URL: https://preprod.manage-key-workers.service.justice.gov.uk

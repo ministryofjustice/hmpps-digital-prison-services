@@ -10,6 +10,7 @@ export default function populateCurrentUser(userService: UserService): RequestHa
         const user = res.locals.user && (await userService.getUser(res.locals.user.token))
         if (user) {
           res.locals.user = { ...user, ...res.locals.user }
+          res.locals.isPrisonUser = res.locals.user.authSource === 'nomis'
         } else {
           logger.info('No user available')
         }

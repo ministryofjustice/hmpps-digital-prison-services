@@ -220,5 +220,5 @@ export default {
     spaceId: get('CONTENTFUL_SPACE_ID', 'spaceId', requiredInProduction),
     accessToken: get('CONTENTFUL_ACCESS_TOKEN', 'token', requiredInProduction),
   },
-  phaseName: get('SYSTEM_PHASE', ''),
+  environmentName: get('ENVIRONMENT_NAME', ''),
 }
