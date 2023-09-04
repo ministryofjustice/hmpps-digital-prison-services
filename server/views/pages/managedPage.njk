@@ -1,0 +1,19 @@
+{% extends "../partials/layout.njk" %}
+{% set mainClasses = "govuk-body govuk-main-wrapper--auto-spacing" %}
+{% set breadCrumbs = [
+    {
+        text: 'Digital Prison Services',
+        href:  "/"
+    }
+] %}
+
+{%  block content %}
+    <article class="hmpps-managed-page">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h1>{{ managedPage.title }}</h1>
+                <pre role="article" class="hmpps-managed-page__body govuk-body">{{ managedPage.content | safe }}</pre>
+            </div>
+        </div>
+    </article>
+{% endblock %}

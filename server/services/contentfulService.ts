@@ -3,6 +3,7 @@ import { ApolloClient, gql } from '@apollo/client/core'
 import { WhatsNewData } from '../data/interfaces/whatsNewData'
 import { WhatsNewPost, WhatsNewPostApollo } from '../data/interfaces/whatsNewPost'
 import { OutageBannerApollo } from '../data/interfaces/outageBanner'
+import { ManagedPage, ManagedPageApollo } from '../data/interfaces/managedPage'
 
 export default class ContentfulService {
   constructor(private readonly apolloClient: ApolloClient<unknown>) {}
@@ -150,5 +151,42 @@ export default class ContentfulService {
       ...outageBanner,
       text: documentToHtmlString(outageBanner.text.json),
     }))[0]?.text
+  }
+
+  /**
+   * Get `managedPage` by `slug`.
+   */
+  public async getManagedPage(slug: string): Promise<ManagedPage> {
+    const filter = { slug }
+
+    const getManagedPageBySlugQuery = gql`
+      query ManagedPageBySlug($condition: ManagedPageFilter!) {
+        managedPageCollection(limit: 1, where: $condition) {
+          items {
+            title
+            slug
+            content {
+              json
+            }
+          }
+        }
+      }
+    `
+
+    const { items } = (
+      await this.apolloClient.query({
+        query: getManagedPageBySlugQuery,
+        variables: { condition: filter },
+      })
+    ).data.managedPageCollection
+
+    if (!items?.length) {
+      throw new Error('Page not found')
+    }
+
+    return items.map((page: ManagedPageApollo) => ({
+      ...page,
+      content: documentToHtmlString(page.content.json),
+    }))[0]
   }
 }

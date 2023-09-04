@@ -6,6 +6,7 @@ import {
   whatsNewPostsCollectionMock,
   whatsNewPostsMock,
 } from '../mocks/whatsNewPostsMock'
+import { managedPagesCollectionMock, managedPagesMock } from '../mocks/managedPagesMock'
 
 describe('ContentfulService', () => {
   let contentfulService: ContentfulService
@@ -43,5 +44,16 @@ describe('ContentfulService', () => {
 
     expect(apolloSpy).toHaveBeenCalled()
     expect(post).toEqual(whatsNewPostMock)
+  })
+
+  it('should get managed page', async () => {
+    const apolloSpy = jest
+      .spyOn<any, string>(contentfulService['apolloClient'], 'query')
+      .mockResolvedValue(managedPagesCollectionMock)
+
+    const pages = await contentfulService.getManagedPage('title-one')
+
+    expect(apolloSpy).toHaveBeenCalled()
+    expect(pages).toEqual(managedPagesMock[0])
   })
 })
