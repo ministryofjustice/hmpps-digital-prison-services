@@ -6,8 +6,8 @@ import HomepageController from '../controllers/homepageController'
 import whatsNewRouter from './whatsNewRouter'
 import ApiController from '../controllers/apiController'
 import getFrontendComponents from '../middleware/frontEndComponents'
+import managedPageRouter from './managedPageRouter'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function routes(services: Services): Router {
   const router = Router()
   const get = (path: string | string[], ...handlers: RequestHandler[]) =>
@@ -31,6 +31,8 @@ export default function routes(services: Services): Router {
 
   get('/', getFrontendComponents(services), homepageController.displayHomepage())
   post('/search', homepageController.search())
+
+  router.use(managedPageRouter(services))
 
   get('/api/dps-services', async (req, res, next) => {
     res.setHeader('Content-Type', 'application/json')
