@@ -1,5 +1,6 @@
 import Component from './component'
+import AvailableComponent from './AvailableComponent'
 
 export interface ComponentApiClient {
-  getComponent(component: 'header' | 'footer', userToken: string): Promise<Component>
+  getComponents<T extends AvailableComponent[]>(component: T, userToken: string): Promise<Record<T[number], Component>>
 }
