@@ -40,7 +40,7 @@ export default function routes(services: Services): Router {
     res.end(JSON.stringify(dpsServices))
   })
 
-  router.use(whatsNewRouter(services))
+  router.use('/whats-new', getFrontendComponents(services), whatsNewRouter(services))
 
   return router
 }
