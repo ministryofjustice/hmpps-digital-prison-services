@@ -16,3 +16,10 @@
 .govuk-link {
   text-underline-offset: .1em;
 }
+
+// Print styles
+@include govuk-media-query($media-type: print) {
+  .govuk-template {
+    background-color: govuk-colour('white');
+  }
+}
