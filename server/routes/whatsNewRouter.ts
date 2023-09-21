@@ -14,8 +14,8 @@ export default function whatsNewRouter(services: Services): Router {
 
   const whatsNewController = new WhatsNewController(services.contentfulService)
 
-  get('/whats-new', whatsNewController.displayWhatsNewList())
-  get('/whats-new/:slug', whatsNewController.displayWhatsNewPost())
+  get('/', whatsNewController.displayWhatsNewList())
+  get('/:slug', whatsNewController.displayWhatsNewPost())
 
   return router
 }
