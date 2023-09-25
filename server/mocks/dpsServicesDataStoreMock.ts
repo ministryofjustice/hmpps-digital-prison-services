@@ -1,5 +1,3 @@
-// const enabled = (val: boolean)=> { return val}
-
 function enabled(val: boolean | undefined) {
   return val
 }
