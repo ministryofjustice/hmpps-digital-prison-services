@@ -46,14 +46,14 @@ export const getTasks = (
       heading: 'Global search',
       description: 'Search for someone in any establishment, or who has been released.',
       href: `${config.serviceUrls.digitalPrisons}/global-search`,
-      enabled: userHasRoles([Role.GlobalSearch], userRoles),
+      enabled: () => userHasRoles([Role.GlobalSearch], userRoles),
     },
     {
       id: 'key-worker-allocations',
       heading: 'My key worker allocation',
       description: 'View your key worker cases.',
       href: `${config.apis.omic.url}/key-worker/${staffId}`,
-      enabled: config.apis.omic.url && userHasRoles(['KW'], userRoles),
+      enabled: () => config.apis.omic.url && userHasRoles(['KW'], userRoles),
     },
     {
       id: 'manage-prisoner-whereabouts',
@@ -61,7 +61,7 @@ export const getTasks = (
       description: 'View unlock lists, all appointments and COVID units, manage attendance and add bulk appointments.',
       href: `${config.serviceUrls.digitalPrisons}/manage-prisoner-whereabouts`,
       roles: [] as string[],
-      enabled:
+      enabled: () =>
         whereaboutsConfig?.enabled &&
         !config.apis.activities.enabled_prisons.split(',').includes(activeCaseLoadId) &&
         !config.apis.appointments.enabled_prisons.split(',').includes(activeCaseLoadId),
@@ -71,7 +71,7 @@ export const getTasks = (
       heading: 'Change someone’s cell',
       description: 'Complete a cell move and view the 7 day history of all cell moves completed in your establishment.',
       href: `${config.serviceUrls.digitalPrisons}/change-someones-cell`,
-      enabled: userHasRoles([Role.CellMove], userRoles),
+      enabled: () => userHasRoles([Role.CellMove], userRoles),
     },
     {
       id: 'check-my-diary',
@@ -79,7 +79,7 @@ export const getTasks = (
       description: 'View your prison staff detail (staff rota) from home.',
       href: config.apis.checkMyDiary.ui_url,
       roles: [] as string[],
-      enabled: config.apis.checkMyDiary.ui_url,
+      enabled: () => config.apis.checkMyDiary.ui_url,
     },
     {
       id: 'incentives',
@@ -87,7 +87,7 @@ export const getTasks = (
       description: 'See prisoner incentive information by residential location and view incentive data visualisations.',
       href: config.apis.incentives.ui_url,
       roles: [] as string[],
-      enabled:
+      enabled: () =>
         config.apis.incentives.ui_url &&
         (userHasRoles(['MAINTAIN_INCENTIVE_LEVELS'], userRoles) || locations?.length > 0),
     },
@@ -97,14 +97,15 @@ export const getTasks = (
       description: 'Manage and view incident reports and statements.',
       href: config.apis.useOfForce.ui_url,
       roles: [] as string[],
-      enabled: config.apis.useOfForce.ui_url && config.apis.useOfForce.prisons.split(',').includes(activeCaseLoadId),
+      enabled: () =>
+        config.apis.useOfForce.ui_url && config.apis.useOfForce.prisons.split(',').includes(activeCaseLoadId),
     },
     {
       id: 'pathfinder',
       heading: 'Pathfinder',
       description: 'Manage your Pathfinder caseloads.',
       href: config.apis.pathfinder.ui_url,
-      enabled:
+      enabled: () =>
         config.apis.pathfinder.ui_url &&
         userHasRoles(
           [
@@ -129,7 +130,7 @@ export const getTasks = (
       heading: 'Home Detention Curfew',
       description: 'Create and manage Home Detention Curfew.',
       href: config.applications.licences.url,
-      enabled:
+      enabled: () =>
         config.applications.licences.url &&
         userHasRoles(
           ['NOMIS_BATCHLOAD', 'LICENCE_CA', 'LICENCE_DM', 'LICENCE_RO', 'LICENCE_VARY', 'LICENCE_READONLY'],
@@ -142,21 +143,21 @@ export const getTasks = (
       description: 'View the roll broken down by residential unit and see who is arriving and leaving.',
       href: `${config.serviceUrls.digitalPrisons}/establishment-roll`,
       roles: [] as string[],
-      enabled: Boolean(locations?.length > 0),
+      enabled: () => Boolean(locations?.length > 0),
     },
     {
       id: 'manage-key-workers',
       heading: 'Manage key workers',
       description: 'Add and remove key workers from prisoners and manage individuals.',
       href: config.apis.omic.url,
-      enabled: isManageKeyWorkers,
+      enabled: () => isManageKeyWorkers,
     },
     {
       id: 'pom',
       heading: 'View POM cases',
       description: 'Keep track of your allocations. If you allocate cases, you also can do that here.',
       href: config.applications.moic.url,
-      enabled: config.applications.moic.url && userHasRoles(['ALLOC_MGR', 'ALLOC_CASE_MGR'], userRoles),
+      enabled: () => config.applications.moic.url && userHasRoles(['ALLOC_MGR', 'ALLOC_CASE_MGR'], userRoles),
     },
     {
       id: 'manage-users',
@@ -164,7 +165,7 @@ export const getTasks = (
       description:
         'As a Local System Administrator (LSA) or administrator, manage accounts and groups for service users.',
       href: config.applications.manageaccounts.url,
-      enabled:
+      enabled: () =>
         config.applications.manageaccounts.url &&
         userHasRoles(
           ['MAINTAIN_ACCESS_ROLES', 'MAINTAIN_ACCESS_ROLES_ADMIN', 'MAINTAIN_OAUTH_USERS', 'AUTH_GROUP_MANAGER'],
@@ -176,7 +177,7 @@ export const getTasks = (
       heading: 'Categorisation',
       description: 'View a prisoner’s category and complete either a first time categorisation or a recategorisation.',
       href: config.apis.categorisation.ui_url,
-      enabled:
+      enabled: () =>
         config.apis.categorisation.ui_url &&
         userHasRoles(
           ['CREATE_CATEGORISATION', 'CREATE_RECATEGORISATION', 'APPROVE_CATEGORISATION', 'CATEGORISATION_SECURITY'],
@@ -189,21 +190,21 @@ export const getTasks = (
       description:
         'Schedule secure movement for prisoners in custody, via approved transport suppliers, between locations across England and Wales.',
       href: config.applications.pecs.url,
-      enabled: config.applications.pecs.url && userHasRoles(['PECS_OCA', 'PECS_PRISON'], userRoles),
+      enabled: () => config.applications.pecs.url && userHasRoles(['PECS_OCA', 'PECS_PRISON'], userRoles),
     },
     {
       id: 'soc',
       heading: 'Manage SOC cases',
       description: 'Manage your Serious and Organised Crime (SOC) caseload.',
       href: config.apis.soc.ui_url,
-      enabled: config.apis.soc.ui_url && userHasRoles(['SOC_CUSTODY', 'SOC_COMMUNITY', 'SOC_HQ'], userRoles),
+      enabled: () => config.apis.soc.ui_url && userHasRoles(['SOC_CUSTODY', 'SOC_COMMUNITY', 'SOC_HQ'], userRoles),
     },
     {
       id: 'pin-phones',
       heading: 'Prisoner communication monitoring service',
       description: 'Access to the Prisoner communication monitoring service.',
       href: config.apis.pinPhones.ui_url,
-      enabled:
+      enabled: () =>
         config.apis.pinPhones.ui_url &&
         userHasRoles(['PCMS_ANALYST', 'PCMS_AUTHORISING_OFFICER', 'PCMS_GLOBAL_ADMIN', 'PCMS_AUDIT'], userRoles),
     },
@@ -212,7 +213,7 @@ export const getTasks = (
       heading: 'Adjudications',
       description: 'Place a prisoner on report after an incident, view reports and manage adjudications.',
       href: config.apis.manageAdjudications.ui_url,
-      enabled:
+      enabled: () =>
         config.apis.manageAdjudications.ui_url &&
         config.apis.manageAdjudications.enabled_prisons.split(',').includes(activeCaseLoadId),
     },
@@ -221,14 +222,14 @@ export const getTasks = (
       heading: 'Manage prison visits',
       description: 'Book, view and cancel a prisoner’s social visits.',
       href: config.apis.managePrisonVisits.ui_url,
-      enabled: config.apis.managePrisonVisits.ui_url && userHasRoles(['MANAGE_PRISON_VISITS'], userRoles),
+      enabled: () => config.apis.managePrisonVisits.ui_url && userHasRoles(['MANAGE_PRISON_VISITS'], userRoles),
     },
     {
       id: 'legacy-prison-visit',
       heading: 'Online visit requests',
       description: 'Respond to online social visit requests.',
       href: config.apis.legacyPrisonVisits.ui_url,
-      enabled: config.apis.legacyPrisonVisits.ui_url && userHasRoles(['PVB_REQUESTS'], userRoles),
+      enabled: () => config.apis.legacyPrisonVisits.ui_url && userHasRoles(['PVB_REQUESTS'], userRoles),
     },
     {
       id: 'secure-social-video-calls',
@@ -236,14 +237,15 @@ export const getTasks = (
       description:
         'Manage and monitor secure social video calls with prisoners. Opens the Prison Video Calls application.',
       href: config.apis.secureSocialVideoCalls.ui_url,
-      enabled: config.apis.secureSocialVideoCalls.ui_url && userHasRoles(['SOCIAL_VIDEO_CALLS'], userRoles),
+      enabled: () => config.apis.secureSocialVideoCalls.ui_url && userHasRoles(['SOCIAL_VIDEO_CALLS'], userRoles),
     },
     {
       id: 'check-rule39-mail',
       heading: 'Check Rule 39 mail',
       description: 'Scan barcodes on mail from law firms and other approved senders.',
       href: config.applications.sendLegalMail.url,
-      enabled: config.applications.sendLegalMail.url && userHasRoles(['SLM_SCAN_BARCODE', 'SLM_ADMIN'], userRoles),
+      enabled: () =>
+        config.applications.sendLegalMail.url && userHasRoles(['SLM_SCAN_BARCODE', 'SLM_ADMIN'], userRoles),
     },
     {
       id: 'welcome-people-into-prison',
@@ -252,7 +254,7 @@ export const getTasks = (
         'View prisoners booked to arrive today, add them to the establishment roll, and manage reception tasks for recent arrivals.',
       href: config.apis.welcomePeopleIntoPrison.url,
       roles: [] as string[],
-      enabled:
+      enabled: () =>
         config.apis.welcomePeopleIntoPrison.url &&
         config.apis.welcomePeopleIntoPrison.enabled_prisons.split(',').includes(activeCaseLoadId),
     },
@@ -264,7 +266,7 @@ export const getTasks = (
         : 'Access to the new Mercury submission form for those establishments enrolled in the private beta',
       href: config.apis.mercurySubmit.url,
       roles: [] as string[],
-      enabled:
+      enabled: () =>
         config.apis.mercurySubmit.url &&
         (isMercurySubmitLive() ||
           (config.apis.mercurySubmit.privateBetaDate &&
@@ -277,7 +279,7 @@ export const getTasks = (
       description:
         'View your restricted patients, move someone to a secure hospital, or remove someone from the restricted patients service.',
       href: config.apis.manageRestrictedPatients.ui_url,
-      enabled:
+      enabled: () =>
         config.apis.manageRestrictedPatients.ui_url &&
         userHasRoles(
           [
@@ -294,7 +296,7 @@ export const getTasks = (
       heading: 'Create and vary a licence',
       description: 'Create and vary standard determinate licences and post sentence supervision orders.',
       href: config.apis.createAndVaryALicence.url,
-      enabled:
+      enabled: () =>
         config.apis.createAndVaryALicence.url &&
         config.apis.createAndVaryALicence.enabled_prisons.split(',').includes(activeCaseLoadId) &&
         userHasRoles(['LICENCE_CA', 'LICENCE_DM', 'LICENCE_RO', 'LICENCE_ACO', 'LICENCE_ADMIN'], userRoles),
@@ -304,7 +306,7 @@ export const getTasks = (
       heading: 'Allocate people to activities',
       description: 'Set up and edit activities. Allocate people, remove them, and edit allocations.',
       href: config.apis.activities.url,
-      enabled:
+      enabled: () =>
         config.apis.activities.url && config.apis.activities.enabled_prisons.split(',').includes(activeCaseLoadId),
     },
     {
@@ -312,7 +314,7 @@ export const getTasks = (
       heading: 'Schedule and edit appointments',
       description: 'Create one-to-one and group appointments. Edit existing appointments and print movement slips.',
       href: config.apis.appointments.url,
-      enabled:
+      enabled: () =>
         config.apis.appointments.url && config.apis.appointments.enabled_prisons.split(',').includes(activeCaseLoadId),
     },
     {
@@ -320,7 +322,7 @@ export const getTasks = (
       heading: 'View prisoners unaccounted for',
       description: 'View all prisoners not marked as attended or not attended.',
       href: `${config.serviceUrls.digitalPrisons}/manage-prisoner-whereabouts/prisoners-unaccounted-for`,
-      enabled:
+      enabled: () =>
         config.apis.activities.enabled_prisons.split(',').includes(activeCaseLoadId) &&
         config.apis.appointments.enabled_prisons.split(',').includes(activeCaseLoadId),
     },
@@ -329,7 +331,7 @@ export const getTasks = (
       heading: 'People due to leave',
       description: 'View people due to leave this establishment for court appearances, transfers or being released.',
       href: `${config.serviceUrls.digitalPrisons}/manage-prisoner-whereabouts/scheduled-moves`,
-      enabled:
+      enabled: () =>
         config.apis.activities.enabled_prisons.split(',').includes(activeCaseLoadId) &&
         config.apis.appointments.enabled_prisons.split(',').includes(activeCaseLoadId),
     },
@@ -338,7 +340,7 @@ export const getTasks = (
       heading: 'View COVID units',
       description: 'View who is in each COVID unit in your establishment.',
       href: `${config.serviceUrls.digitalPrisons}/current-covid-units`,
-      enabled:
+      enabled: () =>
         userHasRoles(['PRISON'], userRoles) &&
         config.apis.activities.enabled_prisons.split(',').includes(activeCaseLoadId) &&
         config.apis.appointments.enabled_prisons.split(',').includes(activeCaseLoadId),
@@ -348,14 +350,14 @@ export const getTasks = (
       heading: 'Historical Prisoner Application',
       description: 'This service allows users to view historical prisoner information.',
       href: config.apis.historicalPrisonerApplication.ui_url,
-      enabled: config.apis.historicalPrisonerApplication.ui_url && userHasRoles(['HPA_USER'], userRoles),
+      enabled: () => config.apis.historicalPrisonerApplication.ui_url && userHasRoles(['HPA_USER'], userRoles),
     },
     {
       id: 'get-someone-ready-to-work',
       heading: 'Get someone ready to work',
       description: 'Record what support a prisoner needs to get work. View who has been assessed as ready to work.',
       href: `${config.apis.getSomeoneReadyForWork.ui_url}?sort=releaseDate&order=descending`,
-      enabled:
+      enabled: () =>
         config.apis.getSomeoneReadyForWork.ui_url &&
         userHasRoles(['WORK_READINESS_VIEW', 'WORK_READINESS_EDIT'], userRoles),
     },
@@ -364,10 +366,8 @@ export const getTasks = (
       heading: 'Manage offences',
       description: 'This service allows you to maintain offence reference data.',
       href: config.apis.manageOffences.ui_url,
-      enabled: userHasRoles(
-        ['MANAGE_OFFENCES_ADMIN', 'UPDATE_OFFENCE_SCHEDULES', 'NOMIS_OFFENCE_ACTIVATOR'],
-        userRoles,
-      ),
+      enabled: () =>
+        userHasRoles(['MANAGE_OFFENCES_ADMIN', 'UPDATE_OFFENCE_SCHEDULES', 'NOMIS_OFFENCE_ACTIVATOR'], userRoles),
     },
   ].sort((a, b) => (a.heading < b.heading ? -1 : 1))
 }
