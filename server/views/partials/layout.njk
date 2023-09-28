@@ -18,7 +18,7 @@
           crossorigin="anonymous"></script>
   <link href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css" rel="stylesheet" nonce="{{ cspNonce }}" crossorigin>
 
-  {% if feComponents.jsInclude %}
+  {% if feComponents.jsIncludes %}
     {% for js in feComponents.jsIncludes %}
       <script src="{{ js }}" nonce="{{ cspNonce }}"></script>
     {% endfor %}
