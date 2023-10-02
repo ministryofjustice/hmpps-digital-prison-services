@@ -39,7 +39,7 @@ export default class HomepageController {
       const servicesData = await apiController.getDpsServices(res)
 
       const services = servicesData
-        .filter(task => task.enabled)
+        .filter(task => task.enabled())
         .map(task => ({
           id: task.id,
           href: task.href,

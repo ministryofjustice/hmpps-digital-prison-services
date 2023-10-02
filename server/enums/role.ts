@@ -24,4 +24,5 @@ export enum Role {
   PrisonUser = 'ROLE_PRISON',
   ReceptionUser = 'ROLE_PRISON_RECEPTION',
   CellMove = 'ROLE_CELL_MOVE',
+  KeyWorker = 'KW',
 }
