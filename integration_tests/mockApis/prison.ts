@@ -85,4 +85,20 @@ export default {
       },
     })
   },
+
+  stubGetStaffRoles: () => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: `/prison/api/staff/231232/LEI/roles`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: movementsMock,
+      },
+    })
+  },
 }

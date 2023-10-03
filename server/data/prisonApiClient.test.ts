@@ -4,6 +4,7 @@ import PrisonApiClient from './prisonApiClient'
 import restClientBuilder from '.'
 import { ApplicationInfo } from '../applicationInfo'
 import { locationMock } from '../mocks/locationMock'
+import { mockStaffRoles } from '../mocks/staffRolesMock'
 
 jest.mock('./tokenStore')
 jest.mock('../applicationInfo.ts', () => {
@@ -64,6 +65,16 @@ describe('prisonApiClient', () => {
 
       const output = await prisonApiClient.getUserLocations()
       expect(output).toEqual(locationMock)
+    })
+  })
+
+  describe('getStaffRoles', () => {
+    it('Should return data from the API', async () => {
+      const staffNumber = 12345
+      const agencyId = 'Agency'
+      mockSuccessfulPrisonApiCall(`/api/staff/${staffNumber}/${agencyId}/roles`, mockStaffRoles)
+      const output = await prisonApiClient.getStaffRoles(staffNumber, agencyId)
+      expect(output).toEqual(mockStaffRoles)
     })
   })
 })

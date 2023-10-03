@@ -105,25 +105,7 @@ export const getTasks = (
       heading: 'Pathfinder',
       description: 'Manage your Pathfinder caseloads.',
       href: config.apis.pathfinder.ui_url,
-      enabled: () =>
-        config.apis.pathfinder.ui_url &&
-        userHasRoles(
-          [
-            'PF_ADMIN',
-            'PF_USER',
-            'PF_STD_PRISON',
-            'PF_STD_PROBATION',
-            'PF_APPROVAL',
-            'PF_STD_PRISON_RO',
-            'PF_STD_PROBATION_RO',
-            'PF_POLICE',
-            'PF_HQ',
-            'PF_PSYCHOLOGIST',
-            'PF_NATIONAL_READER',
-            'PF_LOCAL_READER',
-          ],
-          userRoles,
-        ),
+      enabled: () => config.apis.pathfinder.ui_url && userHasRoles([], userRoles),
     },
     {
       id: 'hdc-licences',

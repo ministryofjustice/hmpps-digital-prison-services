@@ -17,6 +17,7 @@ context('Homepage', () => {
     cy.task('stubMovements')
     cy.task('stubWhatsNewPosts')
     cy.task('stubOutageBanner')
+    cy.task('stubGetStaffRoles')
     cy.signIn()
     cy.visit('/')
   })
@@ -129,6 +130,8 @@ context('Homepage - no global search', () => {
     cy.task('stubMovements')
     cy.task('stubWhatsNewPosts')
     cy.task('stubOutageBanner')
+    cy.task('stubGetStaffRoles')
+
     cy.signIn()
     cy.visit('/')
   })

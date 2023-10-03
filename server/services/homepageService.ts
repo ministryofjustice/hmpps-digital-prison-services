@@ -40,4 +40,9 @@ export default class HomepageService {
       await this.keyWorkerApiClientBuilder(clientToken).getPrisonMigrationStatus(activeCaseLoadId)
     return prisonMigrationStatus
   }
+
+  public async getStaffRoles(clientToken: string, activeCaseLoadId: string, staffId: number) {
+    const staffRoles = await this.prisonApiClientBuilder(clientToken).getStaffRoles(staffId, activeCaseLoadId)
+    return staffRoles
+  }
 }

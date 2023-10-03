@@ -4,6 +4,7 @@ import { CaseLoad } from './interfaces/caseLoad'
 import { Location } from './interfaces/location'
 import { BlockRollCount } from './interfaces/blockRollCount'
 import { Movements } from './interfaces/movements'
+import { StaffRole } from './interfaces/staffRole'
 
 export default class PrisonApiRestClient implements PrisonApiClient {
   constructor(private restClient: RestClient) {}
@@ -29,5 +30,9 @@ export default class PrisonApiRestClient implements PrisonApiClient {
 
   async getMovements(prisonId: string): Promise<Movements> {
     return this.get<Movements>({ path: `/api/movements/rollcount/${prisonId}/movements` })
+  }
+
+  async getStaffRoles(staffId: number, agencyId: string): Promise<StaffRole[]> {
+    return this.get<StaffRole[]>({ path: `/api/staff/${staffId}/${agencyId}/roles` })
   }
 }
