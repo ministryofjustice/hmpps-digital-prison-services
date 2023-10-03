@@ -4,6 +4,7 @@ import { Location } from '../../server/data/interfaces/location'
 import { locationsMock } from '../../server/mocks/locationMock'
 import { assignedRollCountMock, unassignedRollCountMock } from '../../server/mocks/rollCountMock'
 import { movementsMock } from '../../server/mocks/movementsMock'
+import { mockStaffRoles } from '../../server/mocks/staffRolesMock'
 
 export default {
   stubUserCaseLoads: (caseLoads: CaseLoad[] = []) => {
@@ -97,7 +98,7 @@ export default {
         headers: {
           'Content-Type': 'application/json;charset=UTF-8',
         },
-        jsonBody: movementsMock,
+        jsonBody: mockStaffRoles,
       },
     })
   },

@@ -9,4 +9,5 @@ Cypress.Commands.add('setupUserAuth', ({ roles, caseLoads, activeCaseLoadId = 'L
   cy.task('stubUserCaseLoads', caseLoads)
   cy.task('stubAuthUser', { activeCaseLoadId })
   cy.task('stubUserLocations', locations)
+  cy.task('stubGetStaffRoles')
 })
