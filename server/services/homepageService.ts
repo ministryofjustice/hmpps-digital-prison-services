@@ -41,8 +41,7 @@ export default class HomepageService {
     return prisonMigrationStatus
   }
 
-  public async getStaffRoles(clientToken: string, activeCaseLoadId: string, staffId: number) {
-    const staffRoles = await this.prisonApiClientBuilder(clientToken).getStaffRoles(staffId, activeCaseLoadId)
-    return staffRoles
+  public getStaffRoles(clientToken: string, activeCaseLoadId: string, staffId: number) {
+    return this.prisonApiClientBuilder(clientToken).getStaffRoles(staffId, activeCaseLoadId)
   }
 }
