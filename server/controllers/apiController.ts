@@ -32,13 +32,21 @@ export default class ApiController {
         ?.catch(() => null)
     }
 
+    const staffRoles = await this.homepageService.getStaffRoles(
+      res.locals.clientToken,
+      activeCaseLoadId,
+      res.locals.user.staffId,
+    )
+
+    const roleCodes = [...res.locals.user.userRoles, ...staffRoles.map(staffRole => staffRole.role)]
+
     const allServices = getTasks(
       res.locals.user.activeCaseLoadId,
       res.locals.user.locations,
       res.locals.user.staffId,
       whereaboutsConfig,
       keyworkerPrisonStatus,
-      res.locals.user.userRoles,
+      roleCodes,
     )
 
     return allServices

@@ -129,6 +129,7 @@ context('Homepage - no global search', () => {
     cy.task('stubMovements')
     cy.task('stubWhatsNewPosts')
     cy.task('stubOutageBanner')
+
     cy.signIn()
     cy.visit('/')
   })

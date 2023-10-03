@@ -4,6 +4,7 @@ import { Location } from '../../server/data/interfaces/location'
 import { locationsMock } from '../../server/mocks/locationMock'
 import { assignedRollCountMock, unassignedRollCountMock } from '../../server/mocks/rollCountMock'
 import { movementsMock } from '../../server/mocks/movementsMock'
+import { mockStaffRoles } from '../../server/mocks/staffRolesMock'
 
 export default {
   stubUserCaseLoads: (caseLoads: CaseLoad[] = []) => {
@@ -82,6 +83,22 @@ export default {
           'Content-Type': 'application/json;charset=UTF-8',
         },
         jsonBody: movementsMock,
+      },
+    })
+  },
+
+  stubGetStaffRoles: () => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: `/prison/api/staff/231232/LEI/roles`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: mockStaffRoles,
       },
     })
   },
