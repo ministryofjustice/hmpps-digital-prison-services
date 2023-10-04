@@ -71,7 +71,7 @@ export function getUserRoles(): RequestHandler {
       if (res.locals.user) {
         const { authorities: roles = [] } = jwtDecode(res.locals.user.token) as { authorities?: string[] }
         if (roles) {
-          res.locals.user.userRoles = roles
+          res.locals.user.userRoles = roles.map(role => role.substring(role.indexOf('_') + 1))
         } else {
           logger.info('No user roles available')
         }
