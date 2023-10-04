@@ -28,5 +28,11 @@ export default function whatsNewRouter(services: Services): Router {
   )
   get('/cookies-policy', getFrontendComponents(services), managedPageController.displayManagedPage('cookies-policy'))
 
+  router.use(
+    '/learn-more-about-dps',
+    getFrontendComponents(services),
+    managedPageController.displayManagedPage('learn-more-about-dps'),
+  )
+
   return router
 }
