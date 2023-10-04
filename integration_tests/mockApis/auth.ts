@@ -144,7 +144,7 @@ export default {
   getSignInUrl,
   stubAuthPing: ping,
   stubSignIn: (
-    userRoles: string[] = [Role.PrisonUser],
+    userRoles: string[] = [`ROLE_${Role.PrisonUser}`],
   ): Promise<[Response, Response, Response, Response, Response, Response]> =>
     Promise.all([
       favicon(),

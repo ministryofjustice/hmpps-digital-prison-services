@@ -26,6 +26,7 @@ export default class HomepageController {
 
       // Search Section
       const errors = req.flash('errors')
+
       const userHasGlobal = userHasRoles([Role.GlobalSearch], res.locals.user.userRoles)
       const searchViewAllUrl = `${config.serviceUrls.digitalPrisons}/prisoner-search?keywords=&location=${activeCaseLoadId}`
 
