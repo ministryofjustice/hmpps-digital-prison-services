@@ -108,10 +108,9 @@ context('Homepage', () => {
   context('Help', () => {
     it('should display help info', () => {
       const page = Page.verifyOnPage(IndexPage)
-      page.help().heading().should('be.visible').and('contain.text', 'Get help using DPS')
-      page.help().subHeading1().should('be.visible').and('contain.text', 'Training')
-      page.help().subHeading2().should('be.visible').and('contain.text', 'Contact the helpdesk')
-      page.help().subHeading3().should('be.visible').and('contain.text', 'Tell us what you think')
+      page.help().heading().should('be.visible').and('contain.text', 'Get help with DPS')
+      page.help().subHeading1().should('be.visible').and('contain.text', 'Contact the helpdesk')
+      page.help().subHeading2().should('be.visible').and('contain.text', 'Tell us what you think')
     })
   })
 })
