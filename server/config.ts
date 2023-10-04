@@ -209,6 +209,12 @@ export default {
       },
       agent: new AgentConfig(Number(get('COMPONENT_API_TIMEOUT_SECONDS', 20000))),
     },
+    learningAndWorkProgress: {
+      ui_url: get('LEARNING_AND_WORK_PROGRESS_URL', 'http://localhost:3002', requiredInProduction),
+    },
+    prepareSomeoneForRelease: {
+      ui_url: get('PREPARE_SOMEONE_FOR_RELEASE_URL', 'http://localhost:3002', requiredInProduction),
+    },
   },
   serviceUrls: {
     digitalPrisons: get('DIGITAL_PRISONS_URL', 'http://localhost:3001', requiredInProduction),

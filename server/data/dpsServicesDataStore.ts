@@ -369,5 +369,22 @@ export const getTasks = (
       enabled: () =>
         userHasRoles(['MANAGE_OFFENCES_ADMIN', 'UPDATE_OFFENCE_SCHEDULES', 'NOMIS_OFFENCE_ACTIVATOR'], userRoles),
     },
+    {
+      id: 'learning-and-work-progress',
+      heading: 'Learning and work progress',
+      description: 'View and manage learning and work history, support needs, goals and progress.',
+      href: config.apis.learningAndWorkProgress.ui_url,
+      enabled: () =>
+        config.apis.learningAndWorkProgress.ui_url &&
+        userHasRoles(['EDUCATION_WORK_PLAN_EDITOR', 'EDUCATION_WORK_PLAN_VIEWER'], userRoles),
+    },
+    {
+      id: 'prepare-someone-for-release',
+      heading: 'Prepare someone for release',
+      description: 'Search for people with resettlement needs. View and manage their information and support.',
+      href: config.apis.prepareSomeoneForRelease.ui_url,
+      enabled: () =>
+        config.apis.prepareSomeoneForRelease.ui_url && userHasRoles(['RESETTLEMENT_PASSPORT_EDIT'], userRoles),
+    },
   ].sort((a, b) => (a.heading < b.heading ? -1 : 1))
 }
