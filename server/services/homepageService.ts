@@ -30,15 +30,12 @@ export default class HomepageService {
     }
   }
 
-  public async getWhereaboutsConfig(clientToken: string, activeCaseLoadId: string) {
-    const whereAboutsConfig = await this.whereAboutsApiClientBuilder(clientToken).getWhereaboutsConfig(activeCaseLoadId)
-    return whereAboutsConfig
+  public getWhereaboutsConfig(clientToken: string, activeCaseLoadId: string) {
+    return this.whereAboutsApiClientBuilder(clientToken).getWhereaboutsConfig(activeCaseLoadId)
   }
 
-  public async getPrisonMigrationStatus(clientToken: string, activeCaseLoadId: string) {
-    const prisonMigrationStatus =
-      await this.keyWorkerApiClientBuilder(clientToken).getPrisonMigrationStatus(activeCaseLoadId)
-    return prisonMigrationStatus
+  public getPrisonMigrationStatus(clientToken: string, activeCaseLoadId: string) {
+    return this.keyWorkerApiClientBuilder(clientToken).getPrisonMigrationStatus(activeCaseLoadId)
   }
 
   public getStaffRoles(clientToken: string, activeCaseLoadId: string, staffId: number) {
