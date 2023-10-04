@@ -71,7 +71,6 @@ export default class IndexPage extends Page {
       heading: () => helpSection().find('h2'),
       subHeading1: () => helpSection().find('h3:nth-of-type(1)'),
       subHeading2: () => helpSection().find('h3:nth-of-type(2)'),
-      subHeading3: () => helpSection().find('h3:nth-of-type(3)'),
     }
   }
 }
