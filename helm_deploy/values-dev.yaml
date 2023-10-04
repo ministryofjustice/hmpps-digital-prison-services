@@ -82,6 +82,9 @@ generic-service:
     COMPONENT_API_URL: https://frontend-components-dev.hmpps.service.justice.gov.uk
     TODAY_CACHE_TTL: 10
     CONTENTFUL_HOST: https://graphql.contentful.com
+    WELCOME_PEOPLE_INTO_PRISON_ENABLED_PRISONS: "BFI,BNI,BWI,CDI,DMI,EXI,EYI,HEI,HLI,LCI,LEI,LII,LPI,LWI,MHI,NMI,NWI,PNI,PVI,WCI,WSI,WWI,STI"
+    LEARNING_AND_WORK_PROGRESS_URL: https://ciag-induction-dev.hmpps.service.justice.gov.uk
+    PREPARE_SOMEONE_FOR_RELEASE_URL: https://resettlement-passport-ui-dev.hmpps.service.justice.gov.uk
 
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service-dev
