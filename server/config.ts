@@ -186,7 +186,7 @@ export default {
       ui_url: process.env.MANAGE_OFFENCES_URL,
     },
     whereabouts: {
-      url: process.env.WHEREABOUTS_ENDPOINT_URL || 'http://localhost:8082/',
+      url: process.env.WHEREABOUTS_ENDPOINT_URL || 'http://localhost:8082',
       timeout: {
         response: Number(get('API_WHEREABOUTS_ENDPOINT_TIMEOUT_SECONDS', 20000)),
         deadline: Number(get('API_WHEREABOUTS_ENDPOINT_TIMEOUT_SECONDS', 20000)),
