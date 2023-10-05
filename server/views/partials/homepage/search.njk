@@ -4,69 +4,71 @@
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 <section class="dps-homepage-search" data-qa="homepage-search-section">
     <div class="govuk-width-container">
-        <h2>Search for a prisoner</h2>
         <form method="post" action="/search" novalidate autocomplete="off">
-            <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-            {% if userHasGlobal %}
-                {{ govukRadios({
-                    classes: "govuk-radios--inline govuk-radios--small",
-                    name: "searchType",
-                    items: [
-                        {
-                            id: "search-type-local",
-                            value: "local",
-                            text: "In " + user.activeCaseLoad.description,
-                            checked: not globalPreset
+            <fieldset class="govuk-fieldset">
+                <legend><h2>Search for a prisoner</h2></legend>
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                {% if userHasGlobal %}
+                    {{ govukRadios({
+                        classes: "govuk-radios--inline govuk-radios--small",
+                        name: "searchType",
+                        items: [
+                            {
+                                id: "search-type-local",
+                                value: "local",
+                                text: "In " + user.activeCaseLoad.description,
+                                checked: not globalPreset
+                            },
+                            {
+                                id: "search-type-global",
+                                value: "global",
+                                text: "In any establishment (global)",
+                                checked: globalPreset
+                            }
+                        ],
+                        attributes: { "data-qa": "local-global-radios"}
+                    }) }}
+                {% endif %}
+                <div class="govuk-form-group govuk-form-group--inline govuk-!-margin-bottom-3">
+                    {{ govukInput({
+                        label: {
+                            text: "Name or prison number"
                         },
-                        {
-                            id: "search-type-global",
-                            value: "global",
-                            text: "In any establishment (global)",
-                            checked: globalPreset
-                        }
-                    ],
-                    attributes: { "data-qa": "local-global-radios"}
-                }) }}
-            {% endif %}
-            <div class="govuk-form-group govuk-form-group--inline govuk-!-margin-bottom-3">
-                {{ govukInput({
-                    label: {
-                        text: "Name or prison number"
-                    },
-                    id: "name",
-                    name: "name",
-                    formGroup: {
-                        classes: "govuk-form-group__item"
-                    },
-                    classes: "hmpps-width-20",
-                    errorMessage: errors | findError('name')
-                }) }}
-                {{ govukSelect({
-                    id: "location",
-                    name: "location",
-                    label: {
-                        text: "Residential location"
-                    },
-                    formGroup: {
-                        classes: "govuk-form-group__item"
-                    },
-                    items: user.locations | asSelectItems('description', 'locationPrefix') | addDefaultSelectedValue('All', user.activeCaseLoadId)
-                }) }}
+                        id: "name",
+                        name: "name",
+                        formGroup: {
+                            classes: "govuk-form-group__item"
+                        },
+                        classes: "hmpps-width-20",
+                        errorMessage: errors | findError('name')
+                    }) }}
+                    {{ govukSelect({
+                        id: "location",
+                        name: "location",
+                        label: {
+                            text: "Residential location"
+                        },
+                        formGroup: {
+                            classes: "govuk-form-group__item"
+                        },
+                        items: user.locations | asSelectItems('description', 'locationPrefix') | addDefaultSelectedValue('All', user.activeCaseLoadId)
+                    }) }}
 
-                <div class="govuk-form-group__button">
-                {{ govukButton({
-                    text: "Search",
-                    type: "submit",
-                    preventDoubleClick: true,
-                    attributes: { "data-qa": "homepage-search-button" }
-                }) }}
+                    <div class="govuk-form-group__button">
+                    {{ govukButton({
+                        text: "Search",
+                        type: "submit",
+                        preventDoubleClick: true,
+                        attributes: { "data-qa": "homepage-search-button" }
+                    }) }}
+                    </div>
                 </div>
-            </div>
 
-            <div class="govuk-form-group">
-                <a data-qa="search-view-all-link" href="{{ searchViewAllUrl }}" class="govuk-link govuk-link--no-visited-state">All prisoners in
-                    {{ user.activeCaseLoad.description }}</a>
-            </div>
+                <div class="govuk-form-group">
+                    <a data-qa="search-view-all-link" href="{{ searchViewAllUrl }}" class="govuk-link govuk-link--no-visited-state">All prisoners in
+                        {{ user.activeCaseLoad.description }}</a>
+                </div>
+            </fieldset>
         </form>
     </div>
 </section>
