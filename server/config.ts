@@ -227,4 +227,7 @@ export default {
     accessToken: get('CONTENTFUL_ACCESS_TOKEN', 'token', requiredInProduction),
   },
   environmentName: get('ENVIRONMENT_NAME', ''),
+  analytics: {
+    tagManagerContainerId: get('TAG_MANAGER_CONTAINER_ID', ''),
+  },
 }
