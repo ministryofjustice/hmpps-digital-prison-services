@@ -1,0 +1,346 @@
+{
+  "id" : 1,
+  "name" : "Name",
+  "description" : "Description",
+  "lastModifiedDate" : "2023-10-05T10:41:52Z",
+  "lastModifiedAgent" : "structurizr-javascript",
+  "properties" : {
+    "structurizr.dsl" : "d29ya3NwYWNlIHsKICAgIG1vZGVsIHsKCiAgICAgICAgdXNlciA9IHBlcnNvbiAiIFByaXNvbiBTdGFmZiBVc2VyIiAiU29tZW9uZSB3aG8gbmVlZHMgYWNjZXNzIHRvIHByaXNvbmVyIGluZm9ybWF0aW9uIHRvIGNhcnJ5IG91dCB0aGVpciBkdXRpZXMiCiAgICAgICAgCiAgICAgICAgRFBTSG9tZVBhZ2UgPSBzb2Z0d2FyZVN5c3RlbSAiRFBTIEhvbWVwYWdlIFNlcnZpY2UiIHsKICAgICAgICAgICAgdGFncyAiSE1QUFMgRGlnaXRhbCBTZXJ2aWNlIiAKICAgICAgICAgICAgRFBTSG9tZVBhZ2VVSSA9IGNvbnRhaW5lciAiRFBTIFVJIHNlcnZpY2UiCiAgICAgICAgfQoKICAgICAgICBITVBQU0RpZ2l0YWxTZXJ2aWNlcyA9IHNvZnR3YXJlU3lzdGVtICJITVBQUyBEaWdpdGFsIFNlcnZpY2VzIiB7CiAgICAgICAgICAgIHRhZ3MgIkhNUFBTIERpZ2l0YWwgU2VydmljZSIgCiAgICAgICAgICAgIERpZ2l0YWxQcmlzb25TZXJ2aWNlcyA9IGNvbnRhaW5lciAiRGlnaXRhbCBQcmlzb24gU2VydmljZXMiCiAgICAgICAgfQoKICAgICAgICBITVBQU0F1dGggPSBzb2Z0d2FyZVN5c3RlbSAiSE1QUFMgQXV0aCIgIkF1dGhlbnRpY2F0aW9uIGFuZCBBdXRob3JpemF0aW9uIHNlcnZlciJ7CiAgICAgICAgICAgIHRhZ3MgIkhNUFBTIERpZ2l0YWwgU2VydmljZSIgCiAgICAgICAgICAgIHRva2VuVmVyaWZpY2F0aW9uQVBJID0gY29udGFpbmVyICJUb2tlbiBWZXJpZmljYXRpb24gQVBJIgogICAgICAgIH0KCiAgICAgICAgRXh0ZXJuYWxTeXN0ZW1zID0gc29mdHdhcmVTeXN0ZW0gIkV4dGVybmFsIFN5c3RlbXMiIHsKICAgICAgICAgICAgdGFncyAiRXh0ZXJuYWwgU3lzdGVtIgogICAgICAgICAgICBDb250ZW50ZnVsQVBJID0gY29udGFpbmVyICJDb250ZW50ZnVsIEFQSSIKICAgICAgICB9CgogICAgICAgIE5PTUlTID0gc29mdHdhcmVTeXN0ZW0gIk5PTUlTIiB7CiAgICAgICAgICAgIHRhZ3MgIkxlZ2FjeSBTeXN0ZW0iCiAgICAgICAgICAgIHByaXNvbkFwaSA9IGNvbnRhaW5lciAiUHJpc29uIEFQSSIKICAgICAgICAgICAgZGF0YWJhc2UgID0gY29udGFpbmVyICJOT01JUyBEQiIgIk5vbWlzIERCIiAiT3JhY2xlIiAiRGF0YWJhc2UiCgogICAgICAgICAgICBwcmlzb25BcGkgLT4gZGF0YWJhc2UgInJlYWRzIgogICAgICAgIH0KCiAgICAgICAgdXNlciAtPiBEUFNIb21lUGFnZSAidXNlcyIKICAgICAgICBEUFNIb21lUGFnZSAtPiBEaWdpdGFsUHJpc29uU2VydmljZXMgImlzIGEgbGFuZGluZyBwYWdlIGZvciIKICAgICAgICBEaWdpdGFsUHJpc29uU2VydmljZXMgLT4gcHJpc29uQXBpICJjb25zdW1lcyIKICAgICAgICBEUFNIb21lUGFnZSAtPiBFeHRlcm5hbFN5c3RlbXMgIkFjY2Vzc2VzIENvbnRlbnRmdWwgY29udGVudCIKICAgICAgICAKCiAgICB9CiAgICB2aWV3cyB7CgogICAgICAgIHN5c3RlbUNvbnRleHQgRFBTSG9tZVBhZ2UgIkRQU0hvbWVQYWdlIiB7CiAgICAgICAgICAgIGluY2x1ZGUgKgogICAgICAgICAgICBhdXRvTGF5b3V0CiAgICAgICAgfQoKCiAgICAgICAgY29udGFpbmVyIE5PTUlTICJOT01JUyIgewogICAgICAgICAgICBpbmNsdWRlICoKICAgICAgICAgICAgYXV0b0xheW91dAogICAgICAgIH0KCiAgICAgICAgY29udGFpbmVyIEhNUFBTRGlnaXRhbFNlcnZpY2VzICJITVBQU0RpZ2l0YWxTZXJ2aWNlcyIgewogICAgICAgICAgICBpbmNsdWRlICoKICAgICAgICAgICAgYXV0b0xheW91dAogICAgICAgIH0KCgogICAgc3R5bGVzIHsKCiAgICAgICAgICAgIGVsZW1lbnQgIlNvZnR3YXJlIFN5c3RlbSIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAjMTE2OGJkCiAgICAgICAgICAgICAgICBjb2xvciAjZmZmZmZmCiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIGVsZW1lbnQgIkxlZ2FjeSBTeXN0ZW0iIHsKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgI2NjY2NjYwogICAgICAgICAgICAgICAgY29sb3IgIzAwMDAwMAogICAgICAgICAgICB9ICAKICAgICAgICAgICAgZWxlbWVudCAiRXh0ZXJuYWwgU3lzdGVtIiB7CiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICMzNTk4RUUKICAgICAgICAgICAgICAgIGNvbG9yICMwMDAwMDAKICAgICAgICAgICAgfSAgICAgICAgICAgICAKICAgICAgICAgICAgZWxlbWVudCAiUGVyc29uIiB7CiAgICAgICAgICAgICAgICBzaGFwZSBwZXJzb24KICAgICAgICAgICAgICAgIGJhY2tncm91bmQgIzA4NDI3YgogICAgICAgICAgICAgICAgY29sb3IgI2ZmZmZmZgogICAgICAgICAgICB9CgogICAgICAgICAgICBlbGVtZW50ICJOT01JUyBEQiIgewogICAgICAgICAgICAgICAgc2hhcGUgQ3lsaW5kZXIKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgI2NjY2NjYwogICAgICAgICAgICAgICAgY29sb3IgIzAwMDAwMAogICAgICAgICAgICB9CiAgICAgICAgCiAgICAgICAgfQogICAgfQp9Cg=="
+  },
+  "configuration" : { },
+  "model" : {
+    "people" : [ {
+      "id" : "1",
+      "tags" : "Element,Person",
+      "properties" : {
+        "structurizr.dsl.identifier" : "user"
+      },
+      "name" : "Prison Staff User",
+      "description" : "Someone who needs access to prisoner information to carry out their duties",
+      "relationships" : [ {
+        "id" : "14",
+        "tags" : "Relationship",
+        "properties" : {
+          "structurizr.dsl.identifier" : "955d5ce8-cc42-4c17-a8b6-3b20ea3b506f"
+        },
+        "sourceId" : "1",
+        "destinationId" : "2",
+        "description" : "uses"
+      } ],
+      "location" : "Unspecified"
+    } ],
+    "softwareSystems" : [ {
+      "id" : "8",
+      "tags" : "Element,Software System,External System",
+      "properties" : {
+        "structurizr.dsl.identifier" : "externalsystems"
+      },
+      "name" : "External Systems",
+      "location" : "Unspecified",
+      "containers" : [ {
+        "id" : "9",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "contentfulapi"
+        },
+        "name" : "Contentful API",
+        "documentation" : { }
+      } ],
+      "documentation" : { }
+    }, {
+      "id" : "10",
+      "tags" : "Element,Software System,Legacy System",
+      "properties" : {
+        "structurizr.dsl.identifier" : "nomis"
+      },
+      "name" : "NOMIS",
+      "location" : "Unspecified",
+      "containers" : [ {
+        "id" : "11",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "prisonapi"
+        },
+        "name" : "Prison API",
+        "relationships" : [ {
+          "id" : "13",
+          "tags" : "Relationship",
+          "properties" : {
+            "structurizr.dsl.identifier" : "1aa14020-fac3-463a-9e81-bb7259fa9f32"
+          },
+          "sourceId" : "11",
+          "destinationId" : "12",
+          "description" : "reads"
+        } ],
+        "documentation" : { }
+      }, {
+        "id" : "12",
+        "tags" : "Element,Container,Database",
+        "properties" : {
+          "structurizr.dsl.identifier" : "database"
+        },
+        "name" : "NOMIS DB",
+        "description" : "Nomis DB",
+        "technology" : "Oracle",
+        "documentation" : { }
+      } ],
+      "documentation" : { }
+    }, {
+      "id" : "2",
+      "tags" : "Element,Software System,HMPPS Digital Service",
+      "properties" : {
+        "structurizr.dsl.identifier" : "dpshomepage"
+      },
+      "name" : "DPS Homepage Service",
+      "relationships" : [ {
+        "id" : "21",
+        "tags" : "Relationship",
+        "properties" : {
+          "structurizr.dsl.identifier" : "b2c26fd3-a031-4ac8-8c68-6ddc22826822"
+        },
+        "sourceId" : "2",
+        "destinationId" : "8",
+        "description" : "Accesses Contentful content"
+      }, {
+        "id" : "15",
+        "tags" : "Relationship",
+        "properties" : {
+          "structurizr.dsl.identifier" : "58e43999-c483-4c50-9d8e-89ed61284df3"
+        },
+        "sourceId" : "2",
+        "destinationId" : "5",
+        "description" : "is a landing page for"
+      }, {
+        "id" : "16",
+        "sourceId" : "2",
+        "destinationId" : "4",
+        "description" : "is a landing page for",
+        "linkedRelationshipId" : "15"
+      } ],
+      "location" : "Unspecified",
+      "containers" : [ {
+        "id" : "3",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "dpshomepageui"
+        },
+        "name" : "DPS UI service",
+        "documentation" : { }
+      } ],
+      "documentation" : { }
+    }, {
+      "id" : "4",
+      "tags" : "Element,Software System,HMPPS Digital Service",
+      "properties" : {
+        "structurizr.dsl.identifier" : "hmppsdigitalservices"
+      },
+      "name" : "HMPPS Digital Services",
+      "relationships" : [ {
+        "id" : "20",
+        "sourceId" : "4",
+        "destinationId" : "10",
+        "description" : "consumes",
+        "linkedRelationshipId" : "17"
+      }, {
+        "id" : "19",
+        "sourceId" : "4",
+        "destinationId" : "11",
+        "description" : "consumes",
+        "linkedRelationshipId" : "17"
+      } ],
+      "location" : "Unspecified",
+      "containers" : [ {
+        "id" : "5",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "digitalprisonservices"
+        },
+        "name" : "Digital Prison Services",
+        "relationships" : [ {
+          "id" : "18",
+          "sourceId" : "5",
+          "destinationId" : "10",
+          "description" : "consumes",
+          "linkedRelationshipId" : "17"
+        }, {
+          "id" : "17",
+          "tags" : "Relationship",
+          "properties" : {
+            "structurizr.dsl.identifier" : "3c559f55-2621-4aef-9511-551d823f4f19"
+          },
+          "sourceId" : "5",
+          "destinationId" : "11",
+          "description" : "consumes"
+        } ],
+        "documentation" : { }
+      } ],
+      "documentation" : { }
+    }, {
+      "id" : "6",
+      "tags" : "Element,Software System,HMPPS Digital Service",
+      "properties" : {
+        "structurizr.dsl.identifier" : "hmppsauth"
+      },
+      "name" : "HMPPS Auth",
+      "description" : "Authentication and Authorization server",
+      "location" : "Unspecified",
+      "containers" : [ {
+        "id" : "7",
+        "tags" : "Element,Container",
+        "properties" : {
+          "structurizr.dsl.identifier" : "tokenverificationapi"
+        },
+        "name" : "Token Verification API",
+        "documentation" : { }
+      } ],
+      "documentation" : { }
+    } ]
+  },
+  "documentation" : { },
+  "views" : {
+    "systemContextViews" : [ {
+      "key" : "DPSHomePage",
+      "order" : 1,
+      "softwareSystemId" : "2",
+      "dimensions" : {
+        "width" : 1600,
+        "height" : 2000
+      },
+      "automaticLayout" : {
+        "implementation" : "Graphviz",
+        "rankDirection" : "TopBottom",
+        "rankSeparation" : 300,
+        "nodeSeparation" : 300,
+        "edgeSeparation" : 0,
+        "vertices" : false
+      },
+      "enterpriseBoundaryVisible" : true,
+      "elements" : [ {
+        "id" : "1",
+        "x" : 600,
+        "y" : 200
+      }, {
+        "id" : "2",
+        "x" : 575,
+        "y" : 900
+      }, {
+        "id" : "4",
+        "x" : 200,
+        "y" : 1500
+      }, {
+        "id" : "8",
+        "x" : 950,
+        "y" : 1500
+      } ],
+      "relationships" : [ {
+        "id" : "16"
+      }, {
+        "id" : "14"
+      }, {
+        "id" : "21"
+      } ]
+    } ],
+    "containerViews" : [ {
+      "key" : "HMPPSDigitalServices",
+      "order" : 3,
+      "softwareSystemId" : "4",
+      "dimensions" : {
+        "width" : 1020,
+        "height" : 1900
+      },
+      "automaticLayout" : {
+        "implementation" : "Graphviz",
+        "rankDirection" : "TopBottom",
+        "rankSeparation" : 300,
+        "nodeSeparation" : 300,
+        "edgeSeparation" : 0,
+        "vertices" : false
+      },
+      "externalSoftwareSystemBoundariesVisible" : true,
+      "elements" : [ {
+        "id" : "2",
+        "x" : 285,
+        "y" : 199
+      }, {
+        "id" : "5",
+        "x" : 285,
+        "y" : 799
+      }, {
+        "id" : "10",
+        "x" : 285,
+        "y" : 1399
+      } ],
+      "relationships" : [ {
+        "id" : "18"
+      }, {
+        "id" : "15"
+      } ]
+    }, {
+      "key" : "NOMIS",
+      "order" : 2,
+      "softwareSystemId" : "10",
+      "dimensions" : {
+        "width" : 890,
+        "height" : 1991
+      },
+      "automaticLayout" : {
+        "implementation" : "Graphviz",
+        "rankDirection" : "TopBottom",
+        "rankSeparation" : 300,
+        "nodeSeparation" : 300,
+        "edgeSeparation" : 0,
+        "vertices" : false
+      },
+      "externalSoftwareSystemBoundariesVisible" : true,
+      "elements" : [ {
+        "id" : "11",
+        "x" : 219,
+        "y" : 799
+      }, {
+        "id" : "12",
+        "x" : 219,
+        "y" : 1399
+      }, {
+        "id" : "4",
+        "x" : 219,
+        "y" : 199
+      } ],
+      "relationships" : [ {
+        "id" : "13"
+      }, {
+        "id" : "19"
+      } ]
+    } ],
+    "configuration" : {
+      "branding" : { },
+      "styles" : {
+        "elements" : [ {
+          "tag" : "Software System",
+          "background" : "#1168bd",
+          "color" : "#ffffff"
+        }, {
+          "tag" : "Legacy System",
+          "background" : "#cccccc",
+          "color" : "#000000"
+        }, {
+          "tag" : "External System",
+          "background" : "#3598ee",
+          "color" : "#000000"
+        }, {
+          "tag" : "Person",
+          "background" : "#08427b",
+          "color" : "#ffffff",
+          "shape" : "Person"
+        }, {
+          "tag" : "NOMIS DB",
+          "background" : "#cccccc",
+          "color" : "#000000",
+          "shape" : "Cylinder"
+        } ]
+      },
+      "terminology" : { },
+      "metadataSymbols" : "SquareBrackets",
+      "lastSavedView" : "HMPPSDigitalServices"
+    }
+  }
+}
