@@ -50,6 +50,7 @@ generic-service:
       SESSION_SECRET: "SESSION_SECRET"
       CONTENTFUL_SPACE_ID: "CONTENTFUL_SPACE_ID"
       CONTENTFUL_ACCESS_TOKEN: "CONTENTFUL_ACCESS_TOKEN"
+      TAG_MANAGER_CONTAINER_ID: "TAG_MANAGER_CONTAINER_ID"
     elasticache-redis:
       REDIS_HOST: "primary_endpoint_address"
       REDIS_AUTH_TOKEN: "auth_token"

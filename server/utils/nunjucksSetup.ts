@@ -53,6 +53,12 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   njkEnv.addGlobal('userHasRoles', userHasRoles)
   njkEnv.addGlobal('userHasAllRoles', userHasAllRoles)
 
+  // Expose the google tag manager container ID to the nunjucks environment
+  const {
+    analytics: { tagManagerContainerId },
+  } = config
+  njkEnv.addGlobal('tagManagerContainerId', tagManagerContainerId.trim())
+
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('findError', findError)
   njkEnv.addFilter('addDefaultSelectedValue', addDefaultSelectedValue)
