@@ -67,7 +67,7 @@ export default class HomepageController {
     return async (req: Request, res: Response, next: NextFunction) => {
       const { searchType, name, location } = req.body
 
-      if (searchType === 'local') {
+      if (searchType === undefined || searchType === 'local') {
         return res.redirect(
           `${config.serviceUrls.digitalPrisons}/prisoner-search?keywords=${name}&location=${location}`,
         )
