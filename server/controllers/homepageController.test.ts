@@ -141,6 +141,18 @@ describe('Homepage Controller', () => {
   })
 
   describe('Search', () => {
+    it('should default to local search if no search type', async () => {
+      const name = 'John Saunders'
+      const location = 'LEI'
+      req.body = { name, location }
+
+      await controller.search()(req, res)
+
+      expect(res.redirect).toHaveBeenCalledWith(
+        `${config.serviceUrls.digitalPrisons}/prisoner-search?keywords=${name}&location=${location}`,
+      )
+    })
+
     it('should redirect to local search', async () => {
       const name = 'John Saunders'
       const location = 'LEI'
