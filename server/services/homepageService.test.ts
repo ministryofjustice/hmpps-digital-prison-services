@@ -1,4 +1,3 @@
-import PrisonApiRestClient from '../data/prisonApiClient'
 import { assignedRollCountMock, unassignedRollCountMock } from '../mocks/rollCountMock'
 import { movementsMock } from '../mocks/movementsMock'
 import HomepageService from './homepageService'
@@ -6,6 +5,7 @@ import { todayDataMock } from '../mocks/todayDataMock'
 import KeyWorkerApiRestClient from '../data/keyWorkerApiClient'
 import { RestClientBuilder } from '../data'
 import { WhereAboutsApiClient } from '../data/interfaces/whereAboutsApiClient'
+import { PrisonApiClient } from '../data/interfaces/prisonApiClient'
 
 jest.mock('../data/prisonApiClient')
 
@@ -14,19 +14,24 @@ const activeCaseLoadId = 'LEI'
 
 describe('Homepage service', () => {
   let service: HomepageService
-  let prisonApiClient: jest.Mocked<PrisonApiRestClient>
+  let prisonApiClient: PrisonApiClient
   let whereAboutsApiClient: RestClientBuilder<WhereAboutsApiClient>
   let keyWorkerApiClient: RestClientBuilder<KeyWorkerApiRestClient>
 
   describe('getTodaySection', () => {
     beforeEach(() => {
-      prisonApiClient = new PrisonApiRestClient(null) as jest.Mocked<PrisonApiRestClient>
-      prisonApiClient.getRollCount = jest.fn(async (prisonId, unassigned) => {
-        if (unassigned) {
-          return unassignedRollCountMock
-        }
-        return assignedRollCountMock
-      })
+      prisonApiClient = {
+        getUserCaseLoads: jest.fn(),
+        getRollCount: jest.fn(async (prisonId, unassigned) => {
+          if (unassigned) {
+            return unassignedRollCountMock
+          }
+          return assignedRollCountMock
+        }),
+        getMovements: jest.fn(),
+        getStaffRoles: jest.fn(),
+        getUserLocations: jest.fn(),
+      }
       prisonApiClient.getMovements = jest.fn(async prisonId => {
         if (prisonId) return movementsMock
         return movementsMock
@@ -45,6 +50,20 @@ describe('Homepage service', () => {
         ...todayDataMock,
         todayLastUpdated: expect.stringContaining(new Date().toISOString().slice(0, -5)),
       })
+    })
+
+    it('Should add people outside of the living unit to the totals', async () => {
+      const assignedRollCountWithLivingUnits = assignedRollCountMock.map(i => ({ ...i, outOfLivingUnits: 10 }))
+      const unassignedRollCountWithLivingUnits = unassignedRollCountMock.map(i => ({ ...i, outOfLivingUnits: 10 }))
+      prisonApiClient.getRollCount = jest.fn(async (prisonId, unassigned) => {
+        if (unassigned) {
+          return unassignedRollCountWithLivingUnits
+        }
+        return assignedRollCountWithLivingUnits
+      })
+      const todayData = await service.getTodaySection(token, activeCaseLoadId)
+      expect(todayData.unlockRollCount).toEqual(1095)
+      expect(todayData.currentPopulationCount).toEqual(1103)
     })
   })
 })

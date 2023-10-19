@@ -18,8 +18,8 @@ export default class HomepageService {
     ])
 
     const populationCount =
-      assignedRollCount.reduce((total, block) => total + block.currentlyInCell, 0) +
-      unassignedRollCount.reduce((total, block) => total + block.currentlyInCell, 0)
+      assignedRollCount.reduce((total, block) => total + block.currentlyInCell + block.outOfLivingUnits, 0) +
+      unassignedRollCount.reduce((total, block) => total + block.currentlyInCell + block.outOfLivingUnits, 0)
 
     return {
       unlockRollCount: populationCount - movements.in + movements.out,
