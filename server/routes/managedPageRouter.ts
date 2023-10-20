@@ -3,6 +3,7 @@ import { Services } from '../services'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import ManagedPageController from '../controllers/managedPageController'
 import getFrontendComponents from '../middleware/frontEndComponents'
+import config from '../config'
 
 export default function whatsNewRouter(services: Services): Router {
   const router = Router()
@@ -17,20 +18,28 @@ export default function whatsNewRouter(services: Services): Router {
 
   get(
     '/accessibility-statement',
-    getFrontendComponents(services),
+    getFrontendComponents(services, config.apis.frontendComponents.latest),
     managedPageController.displayManagedPage('accessibility-statement'),
   )
-  get('/privacy-policy', getFrontendComponents(services), managedPageController.displayManagedPage('privacy-policy'))
+  get(
+    '/privacy-policy',
+    getFrontendComponents(services, config.apis.frontendComponents.latest),
+    managedPageController.displayManagedPage('privacy-policy'),
+  )
   get(
     '/terms-and-conditions',
-    getFrontendComponents(services),
+    getFrontendComponents(services, config.apis.frontendComponents.latest),
     managedPageController.displayManagedPage('terms-and-conditions'),
   )
-  get('/cookies-policy', getFrontendComponents(services), managedPageController.displayManagedPage('cookies-policy'))
+  get(
+    '/cookies-policy',
+    getFrontendComponents(services, config.apis.frontendComponents.latest),
+    managedPageController.displayManagedPage('cookies-policy'),
+  )
 
   router.use(
     '/learn-more-about-dps',
-    getFrontendComponents(services),
+    getFrontendComponents(services, config.apis.frontendComponents.latest),
     managedPageController.displayManagedPage('learn-more-about-dps'),
   )
 

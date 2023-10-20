@@ -204,10 +204,11 @@ export default {
     frontendComponents: {
       url: get('COMPONENT_API_URL', 'http://localhost:8082', requiredInProduction),
       timeout: {
-        response: Number(get('COMPONENT_API_TIMEOUT_SECONDS', 20000)),
-        deadline: Number(get('COMPONENT_API_TIMEOUT_SECONDS', 20000)),
+        response: Number(get('COMPONENT_API_TIMEOUT_SECONDS', 3000)),
+        deadline: Number(get('COMPONENT_API_TIMEOUT_SECONDS', 3000)),
       },
-      agent: new AgentConfig(Number(get('COMPONENT_API_TIMEOUT_SECONDS', 20000))),
+      agent: new AgentConfig(Number(get('COMPONENT_API_TIMEOUT_SECONDS', 3000))),
+      latest: get('COMPONENT_API_LATEST', 'false') === 'true',
     },
     learningAndWorkProgress: {
       ui_url: get('LEARNING_AND_WORK_PROGRESS_URL', 'http://localhost:3002', requiredInProduction),

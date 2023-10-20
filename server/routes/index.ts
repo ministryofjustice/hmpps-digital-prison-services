@@ -7,6 +7,7 @@ import whatsNewRouter from './whatsNewRouter'
 import ApiController from '../controllers/apiController'
 import getFrontendComponents from '../middleware/frontEndComponents'
 import managedPageRouter from './managedPageRouter'
+import config from '../config'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -29,7 +30,7 @@ export default function routes(services: Services): Router {
 
   const apiController = new ApiController(services.homepageService)
 
-  get('/', getFrontendComponents(services), homepageController.displayHomepage())
+  get('/', getFrontendComponents(services, config.apis.frontendComponents.latest), homepageController.displayHomepage())
   post('/search', homepageController.search())
 
   router.use(managedPageRouter(services))
@@ -40,7 +41,11 @@ export default function routes(services: Services): Router {
     res.end(JSON.stringify(dpsServices))
   })
 
-  router.use('/whats-new', getFrontendComponents(services), whatsNewRouter(services))
+  router.use(
+    '/whats-new',
+    getFrontendComponents(services, config.apis.frontendComponents.latest),
+    whatsNewRouter(services),
+  )
 
   return router
 }
