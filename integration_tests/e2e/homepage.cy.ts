@@ -83,9 +83,9 @@ context('Homepage', () => {
       page.today().populationCard().find('.today-card__count').contains(todayDataMock.currentPopulationCount)
       page.today().populationCard().find('a').contains('Establishment roll')
 
-      page.today().inTodayCard().should('be.visible').find('h3').contains('In today')
+      page.today().inTodayCard().should('be.visible').find('h3').contains('Arrived today')
       page.today().inTodayCard().find('.today-card__count').contains(todayDataMock.inTodayCount)
-      page.today().inTodayCard().find('a').contains('People in today')
+      page.today().inTodayCard().find('a').contains('Arrived today')
 
       page.today().outTodayCard().should('be.visible').find('h3').contains('Out today')
       page.today().outTodayCard().find('.today-card__count').contains(todayDataMock.outTodayCount)
