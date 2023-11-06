@@ -5,6 +5,12 @@ generic-service:
   ingress:
     host: dps.prison.service.justice.gov.uk
 
+  autoscaling:
+    enabled: true
+    minReplicas: 4
+    maxReplicas: 8
+    targetCPUUtilizationPercentage: 95
+
   env:
     INGRESS_URL: https://dps.prison.service.justice.gov.uk
 
