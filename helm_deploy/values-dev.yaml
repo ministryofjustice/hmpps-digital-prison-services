@@ -78,4 +78,4 @@ generic-service:
     COMPONENT_API_LATEST: true
 
 generic-prometheus-alerts:
-  alertSeverity: digital-prison-service-dev
+  alertSeverity: hmpps-digital-prison-services-non-prod
