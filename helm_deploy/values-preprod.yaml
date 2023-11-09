@@ -6,6 +6,8 @@ generic-service:
 
   ingress:
     host: dps-preprod.prison.service.justice.gov.uk
+    modsecurity_enabled: true
+    modsecurity_github_team: "connect-dps"
 
   env:
     INGRESS_URL: https://dps-preprod.prison.service.justice.gov.uk
@@ -17,7 +19,7 @@ generic-service:
     HMPPS_COOKIE_NAME: hmpps-session-preprod
     OAUTH_ENDPOINT_URL: https://sign-in-preprod.hmpps.service.justice.gov.uk/auth
     TODAY_CACHE_TTL: 10
-    
+
     # Maintainance mode
     KEYWORKER_MAINTENANCE_MODE: false
     WHEREABOUTS_MAINTENANCE_MODE: false
@@ -73,7 +75,7 @@ generic-service:
     APPOINTMENTS_ENABLED_PRISONS: "RSI"
     WELCOME_PEOPLE_INTO_PRISON_ENABLED_PRISONS: "BFI,BNI,BWI,CDI,DMI,EXI,EYI,HEI,HLI,LCI,LEI,LII,LPI,LWI,MHI,NMI,NWI,PNI,PVI,WCI,WSI,WWI,STI"
     COMPONENT_API_LATEST: true
-    
+
   allowlist:
     office: "217.33.148.210/32"
     quantum: "62.25.109.197/32"
