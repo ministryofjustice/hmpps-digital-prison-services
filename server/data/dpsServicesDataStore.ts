@@ -312,7 +312,7 @@ export const getTasks = (
     },
     {
       id: 'appointments',
-      heading: 'Schedule and edit appointments and other stuff',
+      heading: 'Schedule and edit appointments',
       description: 'Create and manage appointments. Print movement slips.',
       href: config.apis.appointments.url,
       enabled: () =>
