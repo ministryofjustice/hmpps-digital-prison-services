@@ -106,6 +106,10 @@
     .hmpps-service-item {
       position: relative;
 
+      &__header {
+        width: calc(100% - 15px);
+      }
+
       a:before {
         content: "";
         display: block;

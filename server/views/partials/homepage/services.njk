@@ -4,8 +4,8 @@
         {% for service in services %}
             <div class="hmpps-service-item">
                 <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible govuk-!-static-margin-top-0" />
-                <div class="govuk-grid-row">
-                    <div class="govuk-grid-column-three-quarters"><a href="{{ service.href }} " class="govuk-link govuk-!-font-weight-bold govuk-link--no-visited-state">{{ service.heading}}</a></div>
+                <div class="hmpps-service-item__header">
+                    <a href="{{ service.href }} " class="govuk-link govuk-!-font-weight-bold govuk-link--no-visited-state">{{ service.heading}}</a>
                 </div>
                 <p class="govuk-!-static-margin-top-3 govuk-!-static-margin-bottom-0">{{ service.description}}</p>
             </div>                
