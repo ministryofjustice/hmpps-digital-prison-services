@@ -75,7 +75,7 @@ export const getTasks = (
     },
     {
       id: 'check-my-diary',
-      heading: 'Check My Diary',
+      heading: 'Check my diary',
       description: 'View your prison staff detail (staff rota) from home.',
       href: config.apis.checkMyDiary.ui_url,
       roles: [] as string[],
