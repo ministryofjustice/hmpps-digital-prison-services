@@ -40,7 +40,7 @@ export const dpsServicesDataStoreMockA = [
   },
   {
     id: 'check-my-diary',
-    heading: 'Check My Diary',
+    heading: 'Check my diary',
     description: 'View your prison staff detail (staff rota) from home.',
     href: undefined as string,
     roles: [] as string[],
@@ -293,7 +293,7 @@ export const dpsServicesDataStoreMockB = [
   },
   {
     id: 'check-my-diary',
-    heading: 'Check My Diary',
+    heading: 'Check my diary',
     description: 'View your prison staff detail (staff rota) from home.',
     href: undefined as string,
     roles: [] as string[],
