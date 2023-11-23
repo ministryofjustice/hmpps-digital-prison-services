@@ -135,7 +135,7 @@ export const dpsServicesDataStoreMockA = [
   {
     id: 'manage-prisoner-whereabouts',
     heading: 'Manage prisoner whereabouts',
-    description: 'View unlock lists, all appointments and COVID units, manage attendance and add bulk appointments.',
+    description: 'View unlock lists, all appointments, manage attendance and add bulk appointments.',
     href: 'http://localhost:3001/manage-prisoner-whereabouts',
     roles: [] as string[],
     enabled: () => enabled(false),
@@ -388,7 +388,7 @@ export const dpsServicesDataStoreMockB = [
   {
     id: 'manage-prisoner-whereabouts',
     heading: 'Manage prisoner whereabouts',
-    description: 'View unlock lists, all appointments and COVID units, manage attendance and add bulk appointments.',
+    description: 'View unlock lists, all appointments, manage attendance and add bulk appointments.',
     href: 'http://localhost:3001/manage-prisoner-whereabouts',
     roles: [] as string[],
     enabled: () => enabled(undefined),
