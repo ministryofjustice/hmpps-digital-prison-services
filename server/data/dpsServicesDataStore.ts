@@ -58,7 +58,7 @@ export const getTasks = (
     {
       id: 'manage-prisoner-whereabouts',
       heading: 'Prisoner whereabouts',
-      description: 'View unlock lists, all appointments and COVID units, manage attendance and add bulk appointments.',
+      description: 'View unlock lists, all appointments, manage attendance and add bulk appointments.',
       href: `${config.serviceUrls.digitalPrisons}/manage-prisoner-whereabouts`,
       roles: [] as string[],
       enabled: () =>
@@ -333,6 +333,7 @@ export const getTasks = (
       description: 'View who is in each COVID unit in your establishment.',
       href: `${config.serviceUrls.digitalPrisons}/current-covid-units`,
       enabled: () =>
+        config.app.covidUnitsEnabled &&
         userHasRoles(['PRISON'], userRoles) &&
         config.apis.activities.enabled_prisons.split(',').includes(activeCaseLoadId) &&
         config.apis.appointments.enabled_prisons.split(',').includes(activeCaseLoadId),

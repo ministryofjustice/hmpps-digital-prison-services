@@ -76,6 +76,7 @@ export default {
   app: {
     whereaboutsMaintenanceMode: process.env.WHEREABOUTS_MAINTENANCE_MODE === 'true' || false,
     keyworkerMaintenanceMode: process.env.KEYWORKER_MAINTENANCE_MODE === 'true' || false,
+    covidUnitsEnabled: process.env.COVID_UNITS_ENABLED === 'true' || false,
   },
   apis: {
     hmppsAuth: {
