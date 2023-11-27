@@ -53,6 +53,9 @@
     {% endfor %}
   {% endif %}
 
+  {% block headIcons %}
+      <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="/assets/images/favicon.ico" type="image/x-icon" />
+  {% endblock %}
 {% endblock %}
 
 {% block pageTitle %}{{ pageTitle + ' - ' + applicationName if pageTitle else applicationName }}{% endblock %}
