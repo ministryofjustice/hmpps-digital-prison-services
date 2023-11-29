@@ -1,4 +1,3 @@
----
 # Per environment values which override defaults in hmpps-digital-prison-services/values.yaml
 
 generic-service:
@@ -8,6 +7,11 @@ generic-service:
     host: dps-dev.prison.service.justice.gov.uk
     modsecurity_enabled: true
     modsecurity_github_team: "connect-dps"
+    modsecurity_snippet: |
+      SecRuleEngine On
+      SecRuleRemoveById 949110
+      SecRuleRemoveById 942440
+      SecRuleRemoveById 920300
 
   env:
     INGRESS_URL: https://dps-dev.prison.service.justice.gov.uk
