@@ -7,6 +7,11 @@ generic-service:
     host: dps-preprod.prison.service.justice.gov.uk
     modsecurity_enabled: true
     modsecurity_github_team: "connect-dps"
+    modsecurity_snippet: |
+      SecRuleEngine On
+      SecRuleRemoveById 949110
+      SecRuleRemoveById 942440
+      SecRuleRemoveById 920300
 
   env:
     INGRESS_URL: https://dps-preprod.prison.service.justice.gov.uk
@@ -83,10 +88,10 @@ generic-service:
     sscl-newcastle: 62.172.79.105/32
     sscl-newport: 217.38.237.212/32
     groups:
-      - internal
-      - prisons
-      - private_prisons
-      - police
+    - internal
+    - prisons
+    - private_prisons
+    - police
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-digital-prison-services-non-prod
