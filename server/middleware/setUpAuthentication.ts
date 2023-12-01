@@ -28,7 +28,7 @@ export default function setUpAuth(): Router {
   }
   const authFailure: ErrorRequestHandler = (err, req, res, next) => {
     logger.error(`Passport auth error: ${err}`)
-    res.redirect('/autherror')
+    req.session.destroy(() => res.redirect('/autherror'))
   }
 
   router.get(
