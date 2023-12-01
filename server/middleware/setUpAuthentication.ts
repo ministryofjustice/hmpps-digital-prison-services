@@ -1,9 +1,10 @@
-import type { Router } from 'express'
+import type { ErrorRequestHandler, RequestHandler, Router } from 'express'
 import express from 'express'
 import passport from 'passport'
 import flash from 'connect-flash'
 import config from '../config'
 import auth from '../authentication/auth'
+import logger from '../../logger'
 
 const router = express.Router()
 
@@ -21,11 +22,22 @@ export default function setUpAuth(): Router {
 
   router.get('/sign-in', passport.authenticate('oauth2'))
 
-  router.get('/sign-in/callback', (req, res, next) =>
+  const authSuccess: RequestHandler = (req, res) => {
+    const redirectUrl = req.session.returnTo || '/'
+    res.redirect(redirectUrl)
+  }
+  const authFailure: ErrorRequestHandler = (err, req, res, next) => {
+    logger.error(`Passport auth error: ${err}`)
+    res.redirect('/autherror')
+  }
+
+  router.get(
+    '/sign-in/callback',
     passport.authenticate('oauth2', {
-      successReturnToOrRedirect: req.session.returnTo || '/',
-      failureRedirect: '/autherror',
-    })(req, res, next),
+      failWithError: true,
+    }),
+    authSuccess,
+    authFailure,
   )
 
   const authUrl = config.apis.hmppsAuth.externalUrl
