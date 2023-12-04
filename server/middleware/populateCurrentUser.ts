@@ -22,7 +22,6 @@ export default function populateCurrentUser(userService: UserService): RequestHa
     }
   }
 }
-
 export function getUserCaseLoads(userService: UserService): RequestHandler {
   return async (req, res, next) => {
     try {

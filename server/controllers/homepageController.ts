@@ -6,6 +6,7 @@ import HmppsCache from '../middleware/hmppsCache'
 import { userHasRoles } from '../utils/utils'
 import ContentfulService from '../services/contentfulService'
 import ApiController from './apiController'
+import { Service } from '../data/interfaces/component'
 
 /**
  * Parse requests for homepage routes and orchestrate response
@@ -16,6 +17,21 @@ export default class HomepageController {
     private readonly todayCache: HmppsCache,
     private readonly contentfulService: ContentfulService,
   ) {}
+
+  private async getServiceData(res: Response): Promise<Service[]> {
+    if (res.locals.feComponentsMeta?.services) return res.locals.feComponentsMeta.services
+
+    const apiController = new ApiController(this.homepageService)
+    const servicesData = await apiController.getDpsServices(res)
+    return servicesData
+      .filter(task => task.enabled())
+      .map(task => ({
+        id: task.id,
+        href: task.href,
+        heading: task.heading,
+        description: task.description,
+      }))
+  }
 
   public displayHomepage(): RequestHandler {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -35,18 +51,8 @@ export default class HomepageController {
         this.homepageService.getTodaySection(res.locals.clientToken, activeCaseLoadId),
       )
 
-      const apiController = new ApiController(this.homepageService)
+      const services = await this.getServiceData(res)
 
-      const servicesData = await apiController.getDpsServices(res)
-
-      const services = servicesData
-        .filter(task => task.enabled())
-        .map(task => ({
-          id: task.id,
-          href: task.href,
-          heading: task.heading,
-          description: task.description,
-        }))
       // Whats new Section - filtered to active caseload if post has been marked for specific prisons
       const whatsNewData = await this.contentfulService.getWhatsNewPosts(1, 3, 0, activeCaseLoadId)
 
