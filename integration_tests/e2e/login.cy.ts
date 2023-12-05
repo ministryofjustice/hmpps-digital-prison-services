@@ -28,14 +28,14 @@ context('SignIn', () => {
   })
 
   it('User name visible in header', () => {
-    cy.setupUserAuth()
+    cy.setupUserAuth({ roles: [`ROLE_PRISON`] })
     cy.signIn()
     const indexPage = Page.verifyOnPage(IndexPage)
     indexPage.headerUserName().should('contain.text', 'J. Smith')
   })
 
   it('User can log out', () => {
-    cy.setupUserAuth()
+    cy.setupUserAuth({ roles: [`ROLE_PRISON`] })
     cy.signIn()
     const indexPage = Page.verifyOnPage(IndexPage)
     indexPage.signOut().click()
@@ -43,7 +43,7 @@ context('SignIn', () => {
   })
 
   it('Token verification failure takes user to sign in page', () => {
-    cy.setupUserAuth()
+    cy.setupUserAuth({ roles: [`ROLE_PRISON`] })
     cy.signIn()
     Page.verifyOnPage(IndexPage)
     cy.task('stubVerifyToken', false)
@@ -53,7 +53,7 @@ context('SignIn', () => {
   })
 
   it('Token verification failure clears user session', () => {
-    cy.setupUserAuth()
+    cy.setupUserAuth({ roles: [`ROLE_PRISON`] })
     cy.signIn()
     const indexPage = Page.verifyOnPage(IndexPage)
     cy.task('stubVerifyToken', false)
