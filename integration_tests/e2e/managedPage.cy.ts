@@ -6,7 +6,7 @@ context('Managed Page', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.setupUserAuth({
-      roles: [`ROLE_${Role.GlobalSearch}`],
+      roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`],
       caseLoads: [
         { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
       ],

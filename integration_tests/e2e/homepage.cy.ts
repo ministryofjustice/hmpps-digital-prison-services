@@ -7,7 +7,7 @@ context('Homepage', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.setupUserAuth({
-      roles: [`ROLE_${Role.GlobalSearch}`],
+      roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`],
       caseLoads: [
         { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
       ],
@@ -119,6 +119,7 @@ context('Homepage - no global search', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.setupUserAuth({
+      roles: [`ROLE_PRISON`],
       caseLoads: [
         { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
       ],
