@@ -47,7 +47,7 @@ generic-service:
     GET_SOMEONE_READY_FOR_WORK_URL: https://get-ready-for-work-dev.hmpps.service.justice.gov.uk
     HISTORICAL_PRISONER_APPLICATION_URL: https://hpa-stage.hmpps.dsd.io
     INCENTIVES_URL: https://incentives-ui-dev.hmpps.service.justice.gov.uk
-    LEARNING_AND_WORK_PROGRESS_URL: https://ciag-induction-dev.hmpps.service.justice.gov.uk
+    LEARNING_AND_WORK_PROGRESS_URL: https://learning-and-work-progress-dev.hmpps.service.justice.gov.uk
     LEGACY_PRISON_VISITS_URL: https://prison-visits-booking-staff-dev.apps.live.cloud-platform.service.justice.gov.uk
     LICENCES_URL: https://licences-dev.prison.service.justice.gov.uk
     MANAGE_ADJUDICATIONS_URL: https://manage-adjudications-dev.hmpps.service.justice.gov.uk
