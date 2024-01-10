@@ -94,7 +94,7 @@
     "@apollo/client": "^3.8.7",
     "@contentful/rich-text-html-renderer": "^16.3.0",
     "@contentful/rich-text-types": "^16.3.0",
-    "@ministryofjustice/frontend": "^2.0.0-beta.1",
+    "@ministryofjustice/frontend": "^2.0.0",
     "agentkeepalive": "^4.5.0",
     "applicationinsights": "^2.9.1",
     "body-parser": "^1.20.2",
