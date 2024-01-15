@@ -32,7 +32,7 @@ generic-service:
     COMPONENT_API_URL: https://frontend-components-preprod.hmpps.service.justice.gov.uk
     KEYWORKER_API_URL: https://keyworker-api-preprod.prison.service.justice.gov.uk
     PATHFINDER_ENDPOINT_API_URL: https://preprod-api.pathfinder.service.justice.gov.uk
-    PRISON_API_URL: https://api-preprod.prison.service.justice.gov.uk
+    PRISON_API_URL: https://prison-api-preprod.prison.service.justice.gov.uk
     SOC_API_URL: https://manage-soc-cases-api-preprod.hmpps.service.justice.gov.uk
     TOKEN_VERIFICATION_API_URL: https://token-verification-api-preprod.prison.service.justice.gov.uk
     WHEREABOUTS_ENDPOINT_URL: https://whereabouts-api-preprod.service.justice.gov.uk
