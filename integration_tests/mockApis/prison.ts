@@ -87,14 +87,14 @@ export default {
     })
   },
 
-  stubGetStaffRoles: () => {
+  stubGetStaffRoles: (status = 200) => {
     return stubFor({
       request: {
         method: 'GET',
         urlPattern: `/prison/api/staff/231232/LEI/roles`,
       },
       response: {
-        status: 200,
+        status,
         headers: {
           'Content-Type': 'application/json;charset=UTF-8',
         },

@@ -67,4 +67,25 @@ context('SignIn', () => {
 
     indexPage.headerUserName().contains('B. Brown')
   })
+
+  it('Page shown ok when roles are not found', () => {
+    cy.setupUserAuth({ roles: [`ROLE_PRISON`] })
+    cy.task('stubGetStaffRoles', 403)
+    cy.signIn()
+    Page.verifyOnPage(IndexPage)
+  })
+
+  it('Page shown ok when roles call is unauthorised', () => {
+    cy.setupUserAuth({ roles: [`ROLE_PRISON`] })
+    cy.task('stubGetStaffRoles', 404)
+    cy.signIn()
+    Page.verifyOnPage(IndexPage)
+  })
+
+  it('Error page shown when roles call returns an unexpected error', () => {
+    cy.setupUserAuth({ roles: [`ROLE_PRISON`] })
+    cy.task('stubGetStaffRoles', 500)
+    cy.signIn({ failOnStatusCode: false, redirectPath: '/' })
+    cy.contains('Internal Server Error')
+  })
 })

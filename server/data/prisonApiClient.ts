@@ -33,6 +33,14 @@ export default class PrisonApiRestClient implements PrisonApiClient {
   }
 
   async getStaffRoles(staffId: number, agencyId: string): Promise<StaffRole[]> {
-    return this.get<StaffRole[]>({ path: `/api/staff/${staffId}/${agencyId}/roles` })
+    try {
+      return await this.get<StaffRole[]>({ path: `/api/staff/${staffId}/${agencyId}/roles` })
+    } catch (error) {
+      if (error.status === 403 || error.status === 404) {
+        // can happen for CADM (central admin) users
+        return []
+      }
+      throw error
+    }
   }
 }
