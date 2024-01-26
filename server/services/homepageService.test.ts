@@ -31,6 +31,7 @@ describe('Homepage service', () => {
         getMovements: jest.fn(),
         getStaffRoles: jest.fn(),
         getUserLocations: jest.fn(),
+        setActiveCaseload: jest.fn(),
       }
       prisonApiClient.getMovements = jest.fn(async prisonId => {
         if (prisonId) return movementsMock

@@ -144,3 +144,29 @@ context('Homepage - no global search', () => {
     page.search().viewAllLink().should('be.visible').and('contain.text', 'Leeds (HMP)')
   })
 })
+
+context('Homepage - no active caseload', () => {
+  beforeEach(() => {
+    cy.task('reset')
+    cy.setupUserAuth({
+      roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`],
+      caseLoads: [
+        { caseloadFunction: '', caseLoadId: 'MOR', currentlyActive: false, description: 'Moorland', type: '' },
+      ],
+    })
+    cy.task('stubRollCount', 'MOR')
+    cy.task('stubRollCountUnassigned', 'MOR')
+    cy.task('stubMovements', 'MOR')
+    cy.task('stubWhatsNewPosts')
+    cy.task('stubOutageBanner')
+    cy.task('stubSetActiveCaseload')
+
+    cy.signIn()
+    cy.visit('/')
+  })
+
+  it('should set the first caseload as active', () => {
+    const page = Page.verifyOnPage(IndexPage)
+    page.search().viewAllLink().should('be.visible').and('contain.text', 'Moorland')
+  })
+})

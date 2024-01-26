@@ -30,4 +30,8 @@ export default class UserService {
   getUserLocations(token: string): Promise<Location[]> {
     return this.prisonApiClientBuilder(token).getUserLocations()
   }
+
+  setActiveCaseload(token: string, caseLoad: CaseLoad): Promise<Record<string, string>> {
+    return this.prisonApiClientBuilder(token).setActiveCaseload(caseLoad)
+  }
 }
