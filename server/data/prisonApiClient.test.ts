@@ -77,4 +77,22 @@ describe('prisonApiClient', () => {
       expect(output).toEqual(mockStaffRoles)
     })
   })
+
+  describe('setActiveCaseLoad', () => {
+    it('Should return data from the API', async () => {
+      const caseLoadMock = {
+        caseloadFunction: '',
+        caseLoadId: '',
+        currentlyActive: false,
+        description: 'Moorland',
+        type: '',
+      }
+      fakePrisonApi
+        .put('/api/users/me/activeCaseLoad')
+        .matchHeader('authorization', `Bearer ${token.access_token}`)
+        .reply(200, { body: 'RESPONSE' })
+      const output = await prisonApiClient.setActiveCaseload(caseLoadMock)
+      expect(output).toEqual({ body: 'RESPONSE' })
+    })
+  })
 })

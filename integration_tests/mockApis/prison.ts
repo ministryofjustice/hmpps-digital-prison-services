@@ -39,11 +39,11 @@ export default {
     })
   },
 
-  stubRollCount: () => {
+  stubRollCount: (prisonCode = 'LEI') => {
     return stubFor({
       request: {
         method: 'GET',
-        url: `/prison/api/movements/rollcount/LEI`,
+        url: `/prison/api/movements/rollcount/${prisonCode}`,
       },
       response: {
         status: 200,
@@ -55,11 +55,11 @@ export default {
     })
   },
 
-  stubRollCountUnassigned: () => {
+  stubRollCountUnassigned: (prisonCode = 'LEI') => {
     return stubFor({
       request: {
         method: 'GET',
-        url: `/prison/api/movements/rollcount/LEI?unassigned=true`,
+        url: `/prison/api/movements/rollcount/${prisonCode}?unassigned=true`,
       },
       response: {
         status: 200,
@@ -71,11 +71,11 @@ export default {
     })
   },
 
-  stubMovements: () => {
+  stubMovements: (prisonCode = 'LEI') => {
     return stubFor({
       request: {
         method: 'GET',
-        urlPattern: `/prison/api/movements/rollcount/LEI/movements`,
+        urlPattern: `/prison/api/movements/rollcount/${prisonCode}/movements`,
       },
       response: {
         status: 200,
@@ -99,6 +99,22 @@ export default {
           'Content-Type': 'application/json;charset=UTF-8',
         },
         jsonBody: mockStaffRoles,
+      },
+    })
+  },
+
+  stubSetActiveCaseload: (status = 200) => {
+    return stubFor({
+      request: {
+        method: 'PUT',
+        urlPattern: `/prison/api/users/me/activeCaseLoad`,
+      },
+      response: {
+        status,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: {},
       },
     })
   },

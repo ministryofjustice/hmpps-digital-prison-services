@@ -10,4 +10,5 @@ export interface PrisonApiClient {
   getRollCount(prisonId: string, unassigned?: boolean): Promise<BlockRollCount[]>
   getMovements(prisonId: string): Promise<Movements>
   getStaffRoles(staffId: number, agencyId: string): Promise<StaffRole[]>
+  setActiveCaseload(caseLoad: CaseLoad): Promise<Record<string, string>>
 }

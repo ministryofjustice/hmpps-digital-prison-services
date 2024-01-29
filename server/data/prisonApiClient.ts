@@ -13,6 +13,10 @@ export default class PrisonApiRestClient implements PrisonApiClient {
     return this.restClient.get<T>(args)
   }
 
+  private async put<T>(args: object): Promise<T> {
+    return this.restClient.put<T>(args)
+  }
+
   async getUserCaseLoads(): Promise<CaseLoad[]> {
     return this.get<CaseLoad[]>({ path: '/api/users/me/caseLoads', query: 'allCaseloads=true' })
   }
@@ -42,5 +46,9 @@ export default class PrisonApiRestClient implements PrisonApiClient {
       }
       throw error
     }
+  }
+
+  async setActiveCaseload(caseLoad: CaseLoad): Promise<Record<string, string>> {
+    return this.put<Record<string, string>>({ path: '/api/users/me/activeCaseLoad', data: caseLoad })
   }
 }
