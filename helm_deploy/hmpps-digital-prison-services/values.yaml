@@ -1,6 +1,7 @@
 ---
 generic-service:
   nameOverride: hmpps-digital-prison-services
+  productId: DPS019
 
   replicaCount: 4
 
