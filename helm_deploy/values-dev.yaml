@@ -21,7 +21,6 @@ generic-service:
     HMPPS_AUTH_URL: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
     HMPPS_COOKIE_DOMAIN: digital-dev.prison.service.justice.gov.uk
     HMPPS_COOKIE_NAME: hmpps-session-dev
-    OAUTH_ENDPOINT_URL: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
     TODAY_CACHE_TTL: 10
 
     # Maintainance mode
