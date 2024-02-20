@@ -66,6 +66,10 @@
       margin: 0 0 10px 0;
     }
 
+    .govuk-radios__label {
+      max-width: unset;
+    }
+
     .govuk-form-group {
       margin-bottom: 5px;
 
@@ -153,7 +157,7 @@
       margin-bottom: 5px;
     }
   }
-  
+
   .dps-homepage-today {
     h2 {
       font-size: 24px;
