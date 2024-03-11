@@ -66,6 +66,8 @@ generic-service:
     SOC_UI_URL: https://manage-soc-cases-dev.hmpps.service.justice.gov.uk
     USE_OF_FORCE_URL: https://dev.use-of-force.service.justice.gov.uk
     WELCOME_PEOPLE_INTO_PRISON_URL: https://welcome-dev.prison.service.justice.gov.uk
+    ACCREDITED_PROGRAMMES_URL: https://accredited-programmes-dev.hmpps.service.justice.gov.uk
+
 
     # Feature flags
     ACTIVITIES_ENABLED_PRISONS: "LEI,RSI,LPI"

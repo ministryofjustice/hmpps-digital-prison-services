@@ -379,5 +379,13 @@ export const getTasks = (
       enabled: () =>
         config.apis.prepareSomeoneForRelease.ui_url && userHasRoles(['RESETTLEMENT_PASSPORT_EDIT'], userRoles),
     },
+    {
+      id: 'accredited-programmes',
+      heading: 'Accredited Programmes',
+      description: 'Search for Accredited Programmes, find out where they’re running and start a referral.',
+      href: config.apis.accreditedProgrammes.ui_url,
+      enabled: () =>
+        config.apis.accreditedProgrammes.ui_url && userHasRoles(['ACP_REFERRER', 'ACP_PROGRAMME_TEAM'], userRoles),
+    },
   ].sort((a, b) => (a.heading < b.heading ? -1 : 1))
 }

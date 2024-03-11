@@ -219,6 +219,9 @@ export default {
     prepareSomeoneForRelease: {
       ui_url: get('PREPARE_SOMEONE_FOR_RELEASE_URL', 'http://localhost:3002', requiredInProduction),
     },
+    accreditedProgrammes: {
+      ui_url: get('ACCREDITED_PROGRAMMES_URL', 'http://localhost:3002', requiredInProduction),
+    },
   },
   serviceUrls: {
     digitalPrisons: get('DIGITAL_PRISONS_URL', 'http://localhost:3001', requiredInProduction),
