@@ -221,6 +221,7 @@ export default {
     },
     accreditedProgrammes: {
       ui_url: get('ACCREDITED_PROGRAMMES_URL', 'http://localhost:3002', requiredInProduction),
+      enabled: get('ACCREDITED_PROGRAMMES_ENABLED', 'false') === 'true',
     },
   },
   serviceUrls: {
