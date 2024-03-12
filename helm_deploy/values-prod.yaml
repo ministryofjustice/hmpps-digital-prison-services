@@ -69,7 +69,7 @@ generic-service:
     SOC_UI_URL: https://manage-soc-cases.hmpps.service.justice.gov.uk
     USE_OF_FORCE_URL: https://use-of-force.service.justice.gov.uk
     WELCOME_PEOPLE_INTO_PRISON_URL: https://welcome.prison.service.justice.gov.uk
-#    ACCREDITED_PROGRAMMES_URL: https://accredited-programmes.hmpps.service.justice.gov.uk
+    ACCREDITED_PROGRAMMES_URL: https://accredited-programmes.hmpps.service.justice.gov.uk
 
     # Feature flags
     ACTIVITIES_ENABLED_PRISONS: "RSI,LPI"
@@ -84,6 +84,7 @@ generic-service:
     WELCOME_PEOPLE_INTO_PRISON_ENABLED_PRISONS: "BFI,BNI,BWI,CDI,DMI,EXI,EYI,HEI,HLI,LCI,LEI,LII,LPI,LWI,MHI,NMI,NWI,PNI,PVI,WCI,WSI,WWI,STI"
     COMPONENT_API_LATEST: false
     COVID_UNITS_ENABLED: false
+    ACCREDITED_PROGRAMMES_ENABLED: false
 
   allowlist:
     sscl-blackpool: 31.121.5.27/32

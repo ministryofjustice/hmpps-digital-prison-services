@@ -385,7 +385,7 @@ export const getTasks = (
       description: 'Search for Accredited Programmes, find out where they’re running and start a referral.',
       href: config.apis.accreditedProgrammes.ui_url,
       enabled: () =>
-        config.apis.accreditedProgrammes.ui_url && userHasRoles(['ACP_REFERRER', 'ACP_PROGRAMME_TEAM'], userRoles),
+        config.apis.accreditedProgrammes.enabled && userHasRoles(['ACP_REFERRER', 'ACP_PROGRAMME_TEAM'], userRoles),
     },
   ].sort((a, b) => (a.heading < b.heading ? -1 : 1))
 }
