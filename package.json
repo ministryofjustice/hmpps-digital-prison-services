@@ -107,7 +107,7 @@
     "contentful": "^10.6.25",
     "csurf": "^1.11.0",
     "date-fns": "^3.3.1",
-    "express": "^4.18.3",
+    "express": "^4.19.2",
     "express-prom-bundle": "^7.0.0",
     "express-session": "^1.18.0",
     "govuk-frontend": "^5.2.0",
