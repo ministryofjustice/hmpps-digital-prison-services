@@ -24,6 +24,13 @@ context('Managed Page', () => {
       const page = Page.verifyOnPage(ManagedPage)
       page.whatsNew().title().should('have.text', 'Title 1')
       page.whatsNew().body().should('have.text', 'Content one')
+      page
+        .whatsNew()
+        .body()
+        .should(
+          'contain.html',
+          '<img src="http://localhost:8080/test.png" width="640" height="480" alt="Test description">',
+        )
     })
   })
 })

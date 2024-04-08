@@ -8,11 +8,13 @@ export interface WhatsNewPost {
   date: string
 }
 
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 export interface WhatsNewPostApollo {
   title: string
   slug: string
   body?: {
     json: Document
+    links?: any
   }
   summary: string
   date: string

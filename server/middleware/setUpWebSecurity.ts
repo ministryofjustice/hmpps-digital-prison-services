@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import express, { Router, Request, Response, NextFunction } from 'express'
+import express, { NextFunction, Request, Response, Router } from 'express'
 import helmet from 'helmet'
 import config from '../config'
 
@@ -30,13 +30,22 @@ export default function setUpWebSecurity(): Router {
     (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`,
   ]
   const formAction = [`'self' ${config.apis.hmppsAuth.externalUrl} ${config.serviceUrls.digitalPrisons}`]
-  const imgSrc = ["'self'", 'data:', '*.google-analytics.com', '*.analytics.google.com', '*.googletagmanager.com']
+  const imgSrc = [
+    "'self'",
+    'data:',
+    '*.google-analytics.com',
+    '*.analytics.google.com',
+    '*.googletagmanager.com',
+    '*.ctfassets.net',
+  ]
+  const mediaSrc = ["'self'", '*.ctfassets.net']
   const fontSrc = ["'self'"]
 
   if (config.apis.frontendComponents.url) {
     scriptSrc.push(config.apis.frontendComponents.url)
     styleSrc.push(config.apis.frontendComponents.url)
     imgSrc.push(config.apis.frontendComponents.url)
+    mediaSrc.push(config.apis.frontendComponents.url)
     fontSrc.push(config.apis.frontendComponents.url)
   }
 
@@ -63,9 +72,10 @@ export default function setUpWebSecurity(): Router {
           fontSrc,
           formAction,
           imgSrc,
+          mediaSrc,
         },
       },
-      crossOriginEmbedderPolicy: true,
+      crossOriginEmbedderPolicy: { policy: 'credentialless' },
     }),
   )
   return router

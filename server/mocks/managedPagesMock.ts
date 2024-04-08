@@ -2,7 +2,12 @@ import { Document } from '@contentful/rich-text-types'
 import { ManagedPage, ManagedPageApollo } from '../data/interfaces/managedPage'
 
 export const managedPagesMock: ManagedPage[] = [
-  { title: 'Title 1', slug: 'title-one', content: '<p>Content one</p>' },
+  {
+    title: 'Title 1',
+    slug: 'title-one',
+    content:
+      '<p>Content one<img src="http://localhost:8080/test.png" width="640" height="480" alt="Test description" /></p>',
+  },
   { title: 'Title 2', slug: 'title-two', content: '<p>Content two</p>' },
 ]
 
@@ -16,12 +21,45 @@ export const managedPagesApolloMock: ManagedPageApollo[] = [
         content: [
           {
             data: {},
-            content: [{ data: {}, marks: [], value: 'Content one', nodeType: 'text' }],
+            content: [
+              { data: {}, marks: [], value: 'Content one', nodeType: 'text' },
+              {
+                nodeType: 'embedded-asset-block',
+                data: {
+                  target: {
+                    sys: {
+                      id: '3bf9RIIvX9jvf1RZKmQZ1B',
+                      type: 'Link',
+                      linkType: 'Asset',
+                    },
+                  },
+                },
+                content: [],
+              },
+            ],
             nodeType: 'paragraph',
           },
         ],
         nodeType: 'document',
       } as unknown as Document,
+      links: {
+        assets: {
+          block: [
+            {
+              sys: {
+                id: '3bf9RIIvX9jvf1RZKmQZ1B',
+              },
+              __typename: 'Asset',
+              contentType: 'image/png',
+              url: 'http://localhost:8080/test.png',
+              title: 'Test image',
+              width: 640,
+              height: 480,
+              description: `Test description`,
+            },
+          ],
+        },
+      },
     },
   },
   {

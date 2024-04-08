@@ -6,10 +6,12 @@ export interface ManagedPage {
   content?: string
 }
 
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 export interface ManagedPageApollo {
   title: string
   slug: string
   content?: {
     json: Document
+    links?: any
   }
 }
