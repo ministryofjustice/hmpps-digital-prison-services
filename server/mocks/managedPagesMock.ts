@@ -5,8 +5,7 @@ export const managedPagesMock: ManagedPage[] = [
   {
     title: 'Title 1',
     slug: 'title-one',
-    content:
-      '<p>Content one<img src="http://localhost:8080/test.png" width="640" height="480" alt="Test description" /></p>',
+    content: '<p>Content one<img src="http://localhost:8080/test.png" alt="Test description" /></p>',
   },
   { title: 'Title 2', slug: 'title-two', content: '<p>Content two</p>' },
 ]
