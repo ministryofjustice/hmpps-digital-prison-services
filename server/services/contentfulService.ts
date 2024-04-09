@@ -1,10 +1,12 @@
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
 import { ApolloClient, gql } from '@apollo/client/core'
+import { BLOCKS, INLINES } from '@contentful/rich-text-types'
 import { WhatsNewData } from '../data/interfaces/whatsNewData'
 import { WhatsNewPost, WhatsNewPostApollo } from '../data/interfaces/whatsNewPost'
 import { OutageBannerApollo } from '../data/interfaces/outageBanner'
 import { ManagedPage, ManagedPageApollo } from '../data/interfaces/managedPage'
 
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 export default class ContentfulService {
   constructor(private readonly apolloClient: ApolloClient<unknown>) {}
 
@@ -94,6 +96,31 @@ export default class ContentfulService {
             date
             body {
               json
+              links {
+                assets {
+                  hyperlink {
+                    sys {
+                      id
+                    }
+                    contentType
+                    url
+                    title
+                    description
+                    fileName
+                  }
+                  block {
+                    sys {
+                      id
+                    }
+                    contentType
+                    url
+                    title
+                    width
+                    height
+                    description
+                  }
+                }
+              }
             }
           }
         }
@@ -113,7 +140,7 @@ export default class ContentfulService {
 
     return items.map((post: WhatsNewPostApollo) => ({
       ...post,
-      body: documentToHtmlString(post.body.json),
+      body: documentToHtmlString(post.body.json, this.renderOptions(post.body.links)),
     }))[0]
   }
 
@@ -167,6 +194,31 @@ export default class ContentfulService {
             slug
             content {
               json
+              links {
+                assets {
+                  hyperlink {
+                    sys {
+                      id
+                    }
+                    contentType
+                    url
+                    title
+                    description
+                    fileName
+                  }
+                  block {
+                    sys {
+                      id
+                    }
+                    contentType
+                    url
+                    title
+                    width
+                    height
+                    description
+                  }
+                }
+              }
             }
           }
         }
@@ -186,7 +238,43 @@ export default class ContentfulService {
 
     return items.map((page: ManagedPageApollo) => ({
       ...page,
-      content: documentToHtmlString(page.content.json),
+      content: documentToHtmlString(page.content.json, this.renderOptions(page.content.links)),
     }))[0]
+  }
+
+  private renderOptions(links: any) {
+    const hyperlinkMap: Map<any, any> = new Map(
+      links?.assets?.hyperlink?.map((hyperlink: any) => [hyperlink.sys.id, hyperlink]),
+    )
+    const blockMap: Map<any, any> = new Map(links?.assets?.block?.map((block: any) => [block.sys.id, block]))
+
+    return {
+      renderNode: {
+        [BLOCKS.EMBEDDED_ASSET]: (node: any) => {
+          // find the asset in the assetMap by ID
+          const asset = blockMap?.get(node.data.target.sys.id)
+
+          // render the asset based on contentType
+          if (asset.contentType.startsWith('image')) {
+            return `<img src="${asset.url}" width="${asset.width}" height="${asset.height}" alt="${asset.description}" />`
+          }
+
+          if (asset.contentType.startsWith('video')) {
+            return `<video width="640" controls aria-description="${asset.description}">
+                      <source src="${asset.url}" type="${asset.contentType}">
+                      <a href="${asset.url}" class="govuk-link">Download video - ${asset.title}</a>
+                    </video>`
+          }
+
+          return ''
+        },
+        [INLINES.ASSET_HYPERLINK]: (node: any) => {
+          // find the asset in the assetMap by ID
+          const asset = hyperlinkMap?.get(node.data.target.sys.id)
+
+          return `<a href="${asset.url}" aria-description="${asset.description}" class="govuk-link">${asset.title}</a>`
+        },
+      },
+    }
   }
 }
