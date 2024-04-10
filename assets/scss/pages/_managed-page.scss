@@ -9,5 +9,10 @@
   &__body {
     white-space: pre-wrap;
     word-wrap: break-word;
+
+    img,
+    video {
+      max-width: 100%;
+    }
   }
 }

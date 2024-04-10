@@ -256,11 +256,11 @@ export default class ContentfulService {
 
           // render the asset based on contentType
           if (asset.contentType.startsWith('image')) {
-            return `<img src="${asset.url}" width="${asset.width}" height="${asset.height}" alt="${asset.description}" />`
+            return `<img src="${asset.url}" alt="${asset.description}" />`
           }
 
           if (asset.contentType.startsWith('video')) {
-            return `<video width="640" controls aria-description="${asset.description}">
+            return `<video controls aria-description="${asset.description}">
                       <source src="${asset.url}" type="${asset.contentType}">
                       <a href="${asset.url}" class="govuk-link">Download video - ${asset.title}</a>
                     </video>`
