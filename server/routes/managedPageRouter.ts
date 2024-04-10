@@ -36,11 +36,6 @@ export default function whatsNewRouter(services: Services): Router {
     getFrontendComponents(services, config.apis.frontendComponents.latest),
     managedPageController.displayManagedPage('cookies-policy'),
   )
-  get(
-    '/test',
-    getFrontendComponents(services, config.apis.frontendComponents.latest),
-    managedPageController.displayManagedPage('test'),
-  )
 
   router.use(
     '/learn-more-about-dps',
