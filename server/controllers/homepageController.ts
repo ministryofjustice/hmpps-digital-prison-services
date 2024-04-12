@@ -44,12 +44,17 @@ export default class HomepageController {
       const errors = req.flash('errors')
 
       const userHasGlobal = userHasRoles([Role.GlobalSearch], res.locals.user.userRoles)
-      const searchViewAllUrl = `${config.serviceUrls.digitalPrisons}/prisoner-search?keywords=&location=${activeCaseLoadId}`
+      const searchViewAllUrl = activeCaseLoadId
+        ? `${config.serviceUrls.digitalPrisons}/prisoner-search?keywords=&location=${activeCaseLoadId}`
+        : ''
 
       // Today Section - wrapped with a caching function per prison to reduce API calls
-      const todayData = await this.todayCache.wrap(activeCaseLoadId, () =>
-        this.homepageService.getTodaySection(res.locals.clientToken, activeCaseLoadId),
-      )
+      let todayData = {}
+      if (activeCaseLoadId) {
+        todayData = await this.todayCache.wrap(activeCaseLoadId, () =>
+          this.homepageService.getTodaySection(res.locals.clientToken, activeCaseLoadId),
+        )
+      }
 
       const services = await this.getServiceData(res)
 
@@ -65,6 +70,7 @@ export default class HomepageController {
         ...todayData,
         whatsNewPosts: whatsNewData.whatsNewPosts,
         outageBanner,
+        userHasCaseLoad: Boolean(activeCaseLoadId),
       })
     }
   }

@@ -63,6 +63,7 @@ export const getTasks = (
       roles: [] as string[],
       enabled: () =>
         whereaboutsConfig?.enabled &&
+        activeCaseLoadId &&
         !config.apis.activities.enabled_prisons.split(',').includes(activeCaseLoadId) &&
         !config.apis.appointments.enabled_prisons.split(',').includes(activeCaseLoadId),
     },
@@ -98,7 +99,9 @@ export const getTasks = (
       href: config.apis.useOfForce.ui_url,
       roles: [] as string[],
       enabled: () =>
-        config.apis.useOfForce.ui_url && config.apis.useOfForce.prisons.split(',').includes(activeCaseLoadId),
+        activeCaseLoadId &&
+        config.apis.useOfForce.ui_url &&
+        config.apis.useOfForce.prisons.split(',').includes(activeCaseLoadId),
     },
     {
       id: 'pathfinder',
@@ -214,6 +217,7 @@ export const getTasks = (
       description: 'Place a prisoner on report after an incident, view reports and manage adjudications.',
       href: config.apis.manageAdjudications.ui_url,
       enabled: () =>
+        activeCaseLoadId &&
         config.apis.manageAdjudications.ui_url &&
         config.apis.manageAdjudications.enabled_prisons.split(',').includes(activeCaseLoadId),
     },
@@ -255,6 +259,7 @@ export const getTasks = (
       href: config.apis.welcomePeopleIntoPrison.url,
       roles: [] as string[],
       enabled: () =>
+        activeCaseLoadId &&
         config.apis.welcomePeopleIntoPrison.url &&
         config.apis.welcomePeopleIntoPrison.enabled_prisons.split(',').includes(activeCaseLoadId),
     },
@@ -269,7 +274,8 @@ export const getTasks = (
       enabled: () =>
         config.apis.mercurySubmit.url &&
         (isMercurySubmitLive() ||
-          (config.apis.mercurySubmit.privateBetaDate &&
+          (activeCaseLoadId &&
+            config.apis.mercurySubmit.privateBetaDate &&
             config.apis.mercurySubmit.privateBetaDate < Date.now() &&
             config.apis.mercurySubmit.enabled_prisons.split(',').includes(activeCaseLoadId))),
     },
@@ -297,6 +303,7 @@ export const getTasks = (
       description: 'Create and vary standard determinate licences and post sentence supervision orders.',
       href: config.apis.createAndVaryALicence.url,
       enabled: () =>
+        activeCaseLoadId &&
         config.apis.createAndVaryALicence.url &&
         config.apis.createAndVaryALicence.enabled_prisons.split(',').includes(activeCaseLoadId) &&
         userHasRoles(['LICENCE_CA', 'LICENCE_DM', 'LICENCE_RO', 'LICENCE_ACO', 'LICENCE_ADMIN'], userRoles),
@@ -308,7 +315,9 @@ export const getTasks = (
         'Create and edit activities. Log applications and manage waitlists. Allocate people and edit allocations. Print unlock lists and record attendance.',
       href: config.apis.activities.url,
       enabled: () =>
-        config.apis.activities.url && config.apis.activities.enabled_prisons.split(',').includes(activeCaseLoadId),
+        activeCaseLoadId &&
+        config.apis.activities.url &&
+        config.apis.activities.enabled_prisons.split(',').includes(activeCaseLoadId),
     },
     {
       id: 'appointments',
@@ -316,7 +325,9 @@ export const getTasks = (
       description: 'Create and manage appointments. Print movement slips.',
       href: config.apis.appointments.url,
       enabled: () =>
-        config.apis.appointments.url && config.apis.appointments.enabled_prisons.split(',').includes(activeCaseLoadId),
+        activeCaseLoadId &&
+        config.apis.appointments.url &&
+        config.apis.appointments.enabled_prisons.split(',').includes(activeCaseLoadId),
     },
     {
       id: 'view-people-due-to-leave',
@@ -324,6 +335,7 @@ export const getTasks = (
       description: 'View people due to leave this establishment for court appearances, transfers or being released.',
       href: `${config.serviceUrls.digitalPrisons}/manage-prisoner-whereabouts/scheduled-moves`,
       enabled: () =>
+        activeCaseLoadId &&
         config.apis.activities.enabled_prisons.split(',').includes(activeCaseLoadId) &&
         config.apis.appointments.enabled_prisons.split(',').includes(activeCaseLoadId),
     },
@@ -333,6 +345,7 @@ export const getTasks = (
       description: 'View who is in each COVID unit in your establishment.',
       href: `${config.serviceUrls.digitalPrisons}/current-covid-units`,
       enabled: () =>
+        activeCaseLoadId &&
         config.app.covidUnitsEnabled &&
         userHasRoles(['PRISON'], userRoles) &&
         config.apis.activities.enabled_prisons.split(',').includes(activeCaseLoadId) &&

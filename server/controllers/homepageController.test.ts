@@ -12,6 +12,8 @@ import { whatsNewDataMock } from '../mocks/whatsNewDataMock'
 import { mockStaffRoles } from '../mocks/staffRolesMock'
 import { CaseLoad } from '../data/interfaces/caseLoad'
 
+const staffId = 487023
+const activeCaseLoadId = 'LEI'
 const req = {
   headers: {
     referer: 'http://referer',
@@ -21,19 +23,8 @@ const req = {
   body: {},
 }
 
-const res: Partial<Response> = {
-  locals: {
-    clientToken: 'CLIENT_TOKEN',
-    user: {
-      userRoles: [Role.GlobalSearch, Role.KeyWorker],
-      staffId: 487023,
-      caseLoads: [] as CaseLoad[],
-      token: 'USER_TOKEN',
-    },
-  },
-  render: jest.fn(),
-  redirect: jest.fn(),
-}
+let res: Partial<Response> = {}
+
 let controller: any
 
 jest.mock('../services/homepageService.ts')
@@ -43,6 +34,23 @@ describe('Homepage Controller', () => {
   let contentfulService: ContentfulService
 
   beforeEach(() => {
+    res = {
+      locals: {
+        clientToken: 'CLIENT_TOKEN',
+        user: {
+          userRoles: [Role.GlobalSearch, Role.KeyWorker],
+          staffId,
+          caseLoads: [
+            { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
+          ] as CaseLoad[],
+          token: 'USER_TOKEN',
+          activeCaseLoadId,
+        },
+      },
+      render: jest.fn(),
+      redirect: jest.fn(),
+    }
+
     homepageService = new HomepageService(null, null, null)
     homepageService.getTodaySection = jest.fn(async () => todayDataMock)
 
@@ -63,7 +71,8 @@ describe('Homepage Controller', () => {
       inTodayCount: 17,
       outTodayCount: 9,
       outageBanner: 'Banner',
-      searchViewAllUrl: 'http://localhost:3001/prisoner-search?keywords=&location=undefined',
+      userHasCaseLoad: true,
+      searchViewAllUrl: `http://localhost:3001/prisoner-search?keywords=&location=${activeCaseLoadId}`,
       services: [
         {
           description: 'Search for someone in any establishment, or who has been released.',
@@ -74,7 +83,7 @@ describe('Homepage Controller', () => {
         {
           description: 'View your key worker cases.',
           heading: 'My key worker allocation',
-          href: `${config.apis.omic.url}/key-worker/${res.locals.user.staffId}`,
+          href: `${config.apis.omic.url}/key-worker/${staffId}`,
           id: 'key-worker-allocations',
         },
       ],
@@ -168,6 +177,7 @@ describe('Homepage Controller', () => {
         ...todayDataMock,
         whatsNewPosts: whatsNewPostsMock,
         outageBanner: 'Banner',
+        userHasCaseLoad: true,
       })
     })
   })
@@ -219,6 +229,28 @@ describe('Homepage Controller', () => {
         text: 'Enter a prisoner’s name or prison number',
       })
       expect(res.redirect).toHaveBeenCalledWith('/')
+    })
+  })
+
+  describe('With no caseloads', () => {
+    beforeEach(() => {
+      res.locals = {
+        clientToken: 'CLIENT_TOKEN',
+        user: {
+          userRoles: [Role.GlobalSearch, Role.KeyWorker],
+          staffId: 487023,
+          caseLoads: [] as CaseLoad[],
+          token: 'USER_TOKEN',
+        },
+      }
+    })
+
+    it('Displays the home page', async () => {
+      await controller.displayHomepage()(req, res)
+      expect(controller['homepageService'].getTodaySection).not.toHaveBeenCalled()
+      expect(controller['contentfulService'].getWhatsNewPosts).toHaveBeenCalled()
+      expect(controller['contentfulService'].getOutageBanner).toHaveBeenCalled()
+      expect(res.render).toHaveBeenCalled()
     })
   })
 })

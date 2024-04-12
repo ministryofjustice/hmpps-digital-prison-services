@@ -12,11 +12,15 @@
 
   {% include "../partials/homepage/outageBanner.njk" %}
   {% include "../partials/homepage/hero.njk" %}
-  {% include "../partials/homepage/search.njk" %}
+  {% if userHasCaseLoad %}
+    {% include "../partials/homepage/search.njk" %}
+  {% endif %}
   <div class="govuk-width-container">
     {% include "../partials/homepage/services.njk" %}
-    <hr class="today-section-break">
-    {% include "../partials/homepage/today.njk" %}
+    {% if userHasCaseLoad %}
+      <hr class="today-section-break">
+      {% include "../partials/homepage/today.njk" %}
+    {% endif %}
   </div>
   <hr class="today-section-break--blue govuk-width-container">
   <div class="govuk-width-container dps-homepage-flex-container">
