@@ -86,7 +86,7 @@ describe('format date', () => {
     ['[default]', '2023-01-20', undefined, '20 January 2023'],
     ['long', '2023-01-20', 'long', '20 January 2023'],
     ['short', '2023-01-20', 'short', '20/01/2023'],
-    ['full', '2023-01-20', 'full', 'Friday, 20 January 2023'],
+    ['full', '2023-01-20', 'full', 'Friday 20 January 2023'],
     ['medium', '2023-01-20', 'medium', '20 Jan 2023'],
   ])(
     '%s: formatDate(%s, %s)',
@@ -102,7 +102,7 @@ describe('format datetime', () => {
     ['[default]', '2023-01-20T12:13:14', undefined, '20 January 2023 12:13'],
     ['long', '2023-01-20T12:13:14', { style: 'long', separator: 'at' }, '20 January 2023 at 12:13'],
     ['short', '2023-01-20T12:13:14', { style: 'short' }, '20/01/2023 12:13'],
-    ['full at', '2023-01-20T12:13:14', { style: 'full', separator: 'at' }, 'Friday, 20 January 2023 at 12:13'],
+    ['full at', '2023-01-20T12:13:14', { style: 'full', separator: 'at' }, 'Friday 20 January 2023 at 12:13'],
     ['medium at', '2023-01-20T12:13:14', { style: 'medium', separator: 'at' }, '20 Jan 2023 at 12:13'],
     [
       'short on time first',
