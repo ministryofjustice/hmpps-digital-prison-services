@@ -7,7 +7,6 @@ import { StaffRole } from '../data/interfaces/staffRole'
 /**
  * Parse requests for API routes and orchestrate response
  */
-// TODO: ActiveCaseLoadId in here
 export default class ApiController {
   constructor(private readonly homepageService: HomepageService) {}
 
