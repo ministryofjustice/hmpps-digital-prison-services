@@ -170,3 +170,22 @@ context('Homepage - no active caseload', () => {
     page.search().viewAllLink().should('be.visible').and('contain.text', 'Moorland')
   })
 })
+
+context('Homepage - No caseloads', () => {
+  beforeEach(() => {
+    cy.task('reset')
+    cy.setupUserAuth({
+      roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`],
+      caseLoads: [],
+    })
+    cy.task('stubWhatsNewPosts')
+    cy.task('stubOutageBanner')
+
+    cy.signIn()
+    cy.visit('/')
+  })
+
+  it('Homepage is visible', () => {
+    Page.verifyOnPage(IndexPage)
+  })
+})

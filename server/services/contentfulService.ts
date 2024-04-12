@@ -24,9 +24,11 @@ export default class ContentfulService {
     currentPage: number,
     pageSize: number,
     offset: number,
-    activeCaseLoadId: string,
+    activeCaseLoadId: string | undefined,
   ): Promise<WhatsNewData> {
-    const filter = { OR: [{ prisons_exists: false }, { prisons_contains_some: activeCaseLoadId }] }
+    const filter = activeCaseLoadId
+      ? { OR: [{ prisons_exists: false }, { prisons_contains_some: activeCaseLoadId }] }
+      : { prisons_exists: false }
 
     const getWhatsNewPostsQuery = gql`
       query Posts($limit: Int!, $skip: Int!, $condition: WhatsNewPostFilter!) {
@@ -147,8 +149,10 @@ export default class ContentfulService {
   /**
    * Get `outageBanner` entry.
    */
-  public async getOutageBanner(activeCaseLoadId: string): Promise<string> {
-    const filter = { OR: [{ prisons_exists: false }, { prisons_contains_some: activeCaseLoadId }] }
+  public async getOutageBanner(activeCaseLoadId: string | undefined): Promise<string> {
+    const filter = activeCaseLoadId
+      ? { OR: [{ prisons_exists: false }, { prisons_contains_some: activeCaseLoadId }] }
+      : { prisons_exists: false }
 
     const getOutageBannerQuery = gql`
       query OutageBanner($condition: OutageBannerFilter!) {

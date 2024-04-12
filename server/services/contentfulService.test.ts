@@ -34,6 +34,26 @@ describe('ContentfulService', () => {
     expect(whatsNewData.whatsNewPosts).toEqual(whatsNewPostsMock)
   })
 
+  it('should get whats new posts without an active caseload id', async () => {
+    const apolloSpy = jest
+      .spyOn<any, string>(contentfulService['apolloClient'], 'query')
+      .mockResolvedValue(whatsNewPostsCollectionMock)
+
+    const whatsNewData = await contentfulService.getWhatsNewPosts(1, 3, 0, undefined)
+
+    expect(apolloSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        variables: {
+          limit: 3,
+          skip: 0,
+          condition: { prisons_exists: false },
+        },
+      }),
+    )
+
+    expect(whatsNewData.whatsNewPosts).toEqual(whatsNewPostsMock)
+  })
+
   it('should get whats new post', async () => {
     const apolloSpy = jest
       .spyOn<any, string>(contentfulService['apolloClient'], 'query')
@@ -55,5 +75,37 @@ describe('ContentfulService', () => {
 
     expect(apolloSpy).toHaveBeenCalled()
     expect(pages).toEqual(managedPagesMock[0])
+  })
+
+  it('Should get the outage banner for the users caseload', async () => {
+    const apolloSpy = jest
+      .spyOn<any, string>(contentfulService['apolloClient'], 'query')
+      .mockResolvedValue({ data: { outageBannerCollection: [] } })
+
+    await contentfulService.getOutageBanner('LEI')
+
+    expect(apolloSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        variables: {
+          condition: { OR: [{ prisons_exists: false }, { prisons_contains_some: 'LEI' }] },
+        },
+      }),
+    )
+  })
+
+  it('Should get the outage banner for the users without a caseload', async () => {
+    const apolloSpy = jest
+      .spyOn<any, string>(contentfulService['apolloClient'], 'query')
+      .mockResolvedValue({ data: { outageBannerCollection: [] } })
+
+    await contentfulService.getOutageBanner(undefined)
+
+    expect(apolloSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        variables: {
+          condition: { prisons_exists: false },
+        },
+      }),
+    )
   })
 })
