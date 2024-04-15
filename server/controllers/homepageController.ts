@@ -36,6 +36,8 @@ export default class HomepageController {
   public displayHomepage(): RequestHandler {
     return async (req: Request, res: Response, next: NextFunction) => {
       const { activeCaseLoadId } = res.locals.user
+      const userHasPrisonCaseLoad =
+        Boolean(activeCaseLoadId) && activeCaseLoadId !== '' && activeCaseLoadId !== 'CADM_I'
 
       // Outage Banner - filtered to active caseload if banner has been marked for specific prisons
       const outageBanner = await this.contentfulService.getOutageBanner(activeCaseLoadId)
@@ -50,7 +52,7 @@ export default class HomepageController {
 
       // Today Section - wrapped with a caching function per prison to reduce API calls
       let todayData = {}
-      if (activeCaseLoadId) {
+      if (userHasPrisonCaseLoad) {
         todayData = await this.todayCache.wrap(activeCaseLoadId, () =>
           this.homepageService.getTodaySection(res.locals.clientToken, activeCaseLoadId),
         )
@@ -70,7 +72,7 @@ export default class HomepageController {
         ...todayData,
         whatsNewPosts: whatsNewData.whatsNewPosts,
         outageBanner,
-        userHasCaseLoad: Boolean(activeCaseLoadId),
+        userHasPrisonCaseLoad,
       })
     }
   }
