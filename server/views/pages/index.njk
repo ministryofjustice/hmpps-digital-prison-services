@@ -12,12 +12,12 @@
 
   {% include "../partials/homepage/outageBanner.njk" %}
   {% include "../partials/homepage/hero.njk" %}
-  {% if userHasCaseLoad %}
+  {% if userHasPrisonCaseLoad %}
     {% include "../partials/homepage/search.njk" %}
   {% endif %}
   <div class="govuk-width-container">
     {% include "../partials/homepage/services.njk" %}
-    {% if userHasCaseLoad %}
+    {% if userHasPrisonCaseLoad %}
       <hr class="today-section-break">
       {% include "../partials/homepage/today.njk" %}
     {% endif %}

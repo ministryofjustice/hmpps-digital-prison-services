@@ -71,7 +71,7 @@ describe('Homepage Controller', () => {
       inTodayCount: 17,
       outTodayCount: 9,
       outageBanner: 'Banner',
-      userHasCaseLoad: true,
+      userHasPrisonCaseLoad: true,
       searchViewAllUrl: `http://localhost:3001/prisoner-search?keywords=&location=${activeCaseLoadId}`,
       services: [
         {
@@ -177,7 +177,7 @@ describe('Homepage Controller', () => {
         ...todayDataMock,
         whatsNewPosts: whatsNewPostsMock,
         outageBanner: 'Banner',
-        userHasCaseLoad: true,
+        userHasPrisonCaseLoad: true,
       })
     })
   })
@@ -232,24 +232,22 @@ describe('Homepage Controller', () => {
     })
   })
 
-  describe('With no caseloads', () => {
-    beforeEach(() => {
+  describe('With no prison case load', () => {
+    it.each([undefined, '', 'CADM_I'])('Displays the home page (caseload: %s)', async caseLoadId => {
       res.locals = {
         user: {
           userRoles: [Role.GlobalSearch, Role.KeyWorker],
           staffId: 487023,
           caseLoads: [] as CaseLoad[],
           token: 'USER_TOKEN',
+          activeCaseLoadId: caseLoadId,
         },
       }
-    })
-
-    it('Displays the home page', async () => {
       await controller.displayHomepage()(req, res)
       expect(controller['homepageService'].getTodaySection).not.toHaveBeenCalled()
       expect(controller['contentfulService'].getWhatsNewPosts).toHaveBeenCalled()
       expect(controller['contentfulService'].getOutageBanner).toHaveBeenCalled()
-      expect(res.render).toHaveBeenCalled()
+      expect(res.render).toHaveBeenCalledWith('pages/index', expect.objectContaining({ userHasPrisonCaseLoad: false }))
     })
   })
 })
