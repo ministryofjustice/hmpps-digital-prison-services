@@ -19,6 +19,7 @@ export declare global {
     interface Request {
       verified?: boolean
       id: string
+      middleware?: Record
       logout(done: (err: unknown) => void): void
       flash(type: string, message: unknown): number
     }

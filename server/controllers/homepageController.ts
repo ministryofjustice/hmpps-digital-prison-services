@@ -18,11 +18,11 @@ export default class HomepageController {
     private readonly contentfulService: ContentfulService,
   ) {}
 
-  private async getServiceData(res: Response): Promise<Service[]> {
+  private async getServiceData(req: Request, res: Response): Promise<Service[]> {
     if (res.locals.feComponentsMeta?.services) return res.locals.feComponentsMeta.services
 
     const apiController = new ApiController(this.homepageService)
-    const servicesData = await apiController.getDpsServices(res)
+    const servicesData = await apiController.getDpsServices(req, res)
     return servicesData
       .filter(task => task.enabled())
       .map(task => ({
@@ -52,11 +52,11 @@ export default class HomepageController {
       let todayData = {}
       if (activeCaseLoadId) {
         todayData = await this.todayCache.wrap(activeCaseLoadId, () =>
-          this.homepageService.getTodaySection(res.locals.clientToken, activeCaseLoadId),
+          this.homepageService.getTodaySection(req.middleware.clientToken, activeCaseLoadId),
         )
       }
 
-      const services = await this.getServiceData(res)
+      const services = await this.getServiceData(req, res)
 
       // Whats new Section - filtered to active caseload if post has been marked for specific prisons
       const whatsNewData = await this.contentfulService.getWhatsNewPosts(1, 3, 0, activeCaseLoadId)

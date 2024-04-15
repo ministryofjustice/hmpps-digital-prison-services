@@ -15,6 +15,7 @@ describe('Managed Page Controller', () => {
 
   beforeEach(() => {
     req = {
+      middleware: { clientToken: 'CLIENT_TOKEN' },
       headers: {
         referer: 'http://referer',
       },
@@ -29,7 +30,6 @@ describe('Managed Page Controller', () => {
     }
     res = {
       locals: {
-        clientToken: 'CLIENT_TOKEN',
         user: {
           userRoles: [Role.GlobalSearch],
           staffId: 487023,
