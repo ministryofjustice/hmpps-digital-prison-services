@@ -14,7 +14,6 @@ describe('API Controller', () => {
   beforeEach(() => {
     res = {
       locals: {
-        clientToken: 'CLIENT_TOKEN',
         user: {
           userRoles: [Role.GlobalSearch],
           staffId: 123,

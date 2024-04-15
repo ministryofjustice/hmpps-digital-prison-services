@@ -1,4 +1,4 @@
-import { Response } from 'express'
+import { Request, Response } from 'express'
 import config from '../config'
 import HomepageService from '../services/homepageService'
 import { getTasks } from '../data/dpsServicesDataStore'
@@ -10,7 +10,7 @@ import { StaffRole } from '../data/interfaces/staffRole'
 export default class ApiController {
   constructor(private readonly homepageService: HomepageService) {}
 
-  public async getDpsServices(res: Response) {
+  public async getDpsServices(req: Request, res: Response) {
     const { whereaboutsMaintenanceMode } = config.app
     const { keyworkerMaintenanceMode } = config.app
     const { activeCaseLoadId } = res.locals.user
@@ -20,7 +20,7 @@ export default class ApiController {
       whereaboutsConfig = { enabled: false }
     } else if (activeCaseLoadId) {
       whereaboutsConfig = await this.homepageService
-        .getWhereaboutsConfig(res.locals.clientToken, activeCaseLoadId)
+        .getWhereaboutsConfig(req.middleware.clientToken, activeCaseLoadId)
         ?.catch(() => null)
     }
 
@@ -29,14 +29,14 @@ export default class ApiController {
       keyworkerPrisonStatus = { migrated: false } // this can be empty because we're using the feature flag in getTasks
     } else if (activeCaseLoadId) {
       keyworkerPrisonStatus = await this.homepageService
-        .getPrisonMigrationStatus(res.locals.clientToken, activeCaseLoadId)
+        .getPrisonMigrationStatus(req.middleware.clientToken, activeCaseLoadId)
         ?.catch(() => null)
     }
 
     let staffRoles: StaffRole[] = []
     if (activeCaseLoadId) {
       staffRoles = await this.homepageService.getStaffRoles(
-        res.locals.clientToken,
+        req.middleware.clientToken,
         activeCaseLoadId,
         res.locals.user.staffId,
       )

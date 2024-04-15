@@ -15,6 +15,7 @@ import { CaseLoad } from '../data/interfaces/caseLoad'
 const staffId = 487023
 const activeCaseLoadId = 'LEI'
 const req = {
+  middleware: { clientToken: 'CLIENT_TOKEN' },
   headers: {
     referer: 'http://referer',
   },
@@ -36,7 +37,6 @@ describe('Homepage Controller', () => {
   beforeEach(() => {
     res = {
       locals: {
-        clientToken: 'CLIENT_TOKEN',
         user: {
           userRoles: [Role.GlobalSearch, Role.KeyWorker],
           staffId,
@@ -235,7 +235,6 @@ describe('Homepage Controller', () => {
   describe('With no caseloads', () => {
     beforeEach(() => {
       res.locals = {
-        clientToken: 'CLIENT_TOKEN',
         user: {
           userRoles: [Role.GlobalSearch, Role.KeyWorker],
           staffId: 487023,
