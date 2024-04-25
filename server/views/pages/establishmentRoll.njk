@@ -1,0 +1,145 @@
+{% extends "../partials/layout.njk" %}
+{% from "../macros/printLink.njk" import printLink %}
+{% from "../macros/establishmentRollStat.njk" import establishmentRollStat %}
+
+{% set pageTitle = "Establishment roll" %}
+{% set mainClasses = "govuk-body govuk-main-wrapper--auto-spacing" %}
+{% set todayStats = establishmentRollCounts.todayStats %}
+
+{% set breadCrumbs = [
+    {
+        text: 'Digital Prison Services',
+        href:  config.serviceUrls.digitalPrisons
+    }
+] %}
+
+{% block content %}
+<div class="govuk-width-container govuk-!-margin-top-8">
+    <div class="govuk-!-margin-bottom-6">
+        <h1 class="govuk-heading-l govuk-!-margin-bottom-0">{{ pageTitle }} for {{ date | formatDate('full') }}</h1>
+        {{ printLink(align = "right") }}
+    </div>
+    <div class="govuk-grid-row govuk-!-margin-bottom-6">
+        <div class="govuk-grid-column-one-third">
+            {{
+                establishmentRollStat(
+                    heading = "Today’s unlock roll",
+                    value = todayStats.unlockRoll,
+                    qaTag = "unlock-roll"
+                )
+            }}
+        </div>
+
+        <div class="govuk-grid-column-one-third">
+            {{
+                establishmentRollStat(
+                    heading = "Current population",
+                    value = todayStats.currentRoll,
+                    qaTag = "current-roll"
+                )
+            }}
+        </div>
+    </div>
+    <div class="govuk-grid-row govuk-!-margin-bottom-2">
+        <div class="govuk-grid-column-one-third">
+            {{
+                establishmentRollStat(
+                    heading = "Arrived today",
+                    value = todayStats.inToday,
+                    href = config.serviceUrls.digitalPrisons+"/establishment-roll/in-today",
+                    qaTag = "in-today"
+                )
+            }}
+        </div>
+
+        <div class="govuk-grid-column-one-third">
+            {{
+                establishmentRollStat(
+                    heading = "In reception",
+                    value = todayStats.unassignedIn,
+                    href = config.serviceUrls.digitalPrisons+"/establishment-roll/in-reception",
+                    qaTag = "unassigned-in"
+                )
+            }}
+        </div>
+
+        <div class="govuk-grid-column-one-third">
+            {{
+                establishmentRollStat(
+                    heading = "Still to arrive",
+                    value = todayStats.enroute,
+                    href = config.serviceUrls.digitalPrisons+"/establishment-roll/en-route",
+                    qaTag = "enroute"
+                )
+            }}
+        </div>
+    </div>
+    <div class="govuk-grid-row govuk-!-margin-bottom-9">
+        <div class="govuk-grid-column-one-third">
+            {{
+                establishmentRollStat(
+                    heading = "Out today",
+                    value = todayStats.outToday,
+                    href = config.serviceUrls.digitalPrisons+"/establishment-roll/out-today",
+                    qaTag = "out-today"
+                )
+            }}
+        </div>
+
+        <div class="govuk-grid-column-one-third">
+            {{
+                establishmentRollStat(
+                    heading = "No cell allocated",
+                    value = todayStats.noCellAllocated,
+                    href = config.serviceUrls.digitalPrisons+"/establishment-roll/no-cell-allocated",
+                    qaTag = "no-cell-allocated"
+                )
+            }}
+        </div>
+    </div>
+
+    <table class="govuk-table establishment-roll__table">
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header"></th>
+                <th scope="col" class="govuk-table__header">Beds in use</th>
+                <th scope="col" class="govuk-table__header">Currently in cell</th>
+                <th scope="col" class="govuk-table__header">Currently out</th>
+                <th scope="col" class="govuk-table__header">Operational capacity</th>
+                <th scope="col" class="govuk-table__header">Net vacancies</th>
+                <th scope="col" class="govuk-table__header">Out of order</th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            {% for block in establishmentRollCounts.assignedRollBlocksCounts %}
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">{{ block.livingUnitDesc }}</td>
+                    <td class="govuk-table__cell">{{ block.bedsInUse }}</td>
+                    <td class="govuk-table__cell">{{ block.currentlyInCell }}</td>
+                    <td class="govuk-table__cell">
+                        {% if block.currentlyOut > 0 %}
+                            <a class="govuk-link" href="{{config.serviceUrls.digitalPrisons}}/establishment-roll/{{block.livingUnitId}}/currently-out">{{block.currentlyOut}}</a>
+                        {% else %} 0 {% endif %}
+                    </td>
+                    <td class="govuk-table__cell">{{ block.operationalCapacity }}</td>
+                    <td class="govuk-table__cell">{{ block.netVacancies }}</td>
+                    <td class="govuk-table__cell">{{ block.outOfOrder }}</td>
+                </tr>
+            {% endfor %}
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell govuk-!-font-weight-bold">Totals</td>
+                <td class="govuk-table__cell">{{ todayStats.bedsInUse }}</td>
+                <td class="govuk-table__cell">{{ todayStats.currentlyInCell }}</td>
+                <td class="govuk-table__cell">
+                    {% if todayStats.totalCurrentlyOut > 0 %}
+                        <a class="govuk-link" href="{{config.serviceUrls.digitalPrisons}}/establishment-roll/total-currently-out">{{todayStats.totalCurrentlyOut}}</a>
+                    {% else %} 0 {% endif %}
+                </td>
+                <td class="govuk-table__cell">{{ todayStats.operationalCapacity }}</td>
+                <td class="govuk-table__cell">{{ todayStats.netVacancies }}</td>
+                <td class="govuk-table__cell">{{ todayStats.outOfOrder }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

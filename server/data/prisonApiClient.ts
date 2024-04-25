@@ -5,35 +5,48 @@ import { Location } from './interfaces/location'
 import { BlockRollCount } from './interfaces/blockRollCount'
 import { Movements } from './interfaces/movements'
 import { StaffRole } from './interfaces/staffRole'
+import { OffenderCell } from './interfaces/offenderCell'
 
 export default class PrisonApiRestClient implements PrisonApiClient {
   constructor(private restClient: RestClient) {}
 
-  private async get<T>(args: object): Promise<T> {
+  private get<T>(args: object): Promise<T> {
     return this.restClient.get<T>(args)
   }
 
-  private async put<T>(args: object): Promise<T> {
+  private put<T>(args: object): Promise<T> {
     return this.restClient.put<T>(args)
   }
 
-  async getUserCaseLoads(): Promise<CaseLoad[]> {
+  getUserCaseLoads(): Promise<CaseLoad[]> {
     return this.get<CaseLoad[]>({ path: '/api/users/me/caseLoads', query: 'allCaseloads=true' })
   }
 
-  async getUserLocations(): Promise<Location[]> {
+  getUserLocations(): Promise<Location[]> {
     return this.get<Location[]>({ path: '/api/users/me/locations' })
   }
 
-  async getRollCount(prisonId: string, unassigned: boolean): Promise<BlockRollCount[]> {
+  getRollCount({ prisonId, unassigned }: { prisonId: string; unassigned?: boolean }): Promise<BlockRollCount[]> {
     return this.get<BlockRollCount[]>({
       path: `/api/movements/rollcount/${prisonId}`,
       query: unassigned ? 'unassigned=true' : '',
     })
   }
 
-  async getMovements(prisonId: string): Promise<Movements> {
+  getMovements(prisonId: string): Promise<Movements> {
     return this.get<Movements>({ path: `/api/movements/rollcount/${prisonId}/movements` })
+  }
+
+  getEnrouteRollCount(prisonId: string): Promise<number> {
+    return this.get<number>({ path: `/api/movements/rollcount/${prisonId}/enroute` })
+  }
+
+  getLocationsForPrison(prisonId: string): Promise<Location[]> {
+    return this.get<Location[]>({ path: `/api/agencies/${prisonId}/locations` })
+  }
+
+  getAttributesForLocation(locationId: number): Promise<OffenderCell> {
+    return this.get<OffenderCell>({ path: `/api/cell/${locationId}/attributes` })
   }
 
   async getStaffRoles(staffId: number, agencyId: string): Promise<StaffRole[]> {
@@ -48,7 +61,7 @@ export default class PrisonApiRestClient implements PrisonApiClient {
     }
   }
 
-  async setActiveCaseload(caseLoad: CaseLoad): Promise<Record<string, string>> {
+  setActiveCaseload(caseLoad: CaseLoad): Promise<Record<string, string>> {
     return this.put<Record<string, string>>({ path: '/api/users/me/activeCaseLoad', data: caseLoad })
   }
 }

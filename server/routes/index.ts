@@ -8,6 +8,7 @@ import ApiController from '../controllers/apiController'
 import getFrontendComponents from '../middleware/frontEndComponents'
 import managedPageRouter from './managedPageRouter'
 import config from '../config'
+import EstablishmentRollController from '../controllers/establishmentRollController'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -27,11 +28,16 @@ export default function routes(services: Services): Router {
     services.todayCache,
     services.contentfulService,
   )
-
+  const establishmentRollController = new EstablishmentRollController(services.establishmentRollService)
   const apiController = new ApiController(services.homepageService)
 
   get('/', getFrontendComponents(services, config.apis.frontendComponents.latest), homepageController.displayHomepage())
   post('/search', homepageController.search())
+  get(
+    '/establishment-roll',
+    getFrontendComponents(services, config.apis.frontendComponents.latest),
+    establishmentRollController.getEstablishmentRoll(),
+  )
 
   router.use(managedPageRouter(services))
 

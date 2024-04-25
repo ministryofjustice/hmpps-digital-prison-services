@@ -87,6 +87,54 @@ export default {
     })
   },
 
+  stubEnrouteRollCount: (prisonCode = 'LEI') => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: `/prison/api/movements/rollcount/${prisonCode}/enroute`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: 1,
+      },
+    })
+  },
+
+  stubGetLocationsForPrison: (prisonCode = 'LEI') => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: `/prison/api/agencies/${prisonCode}/locations`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: [{ description: 'CSWAP', locationId: 1 }],
+      },
+    })
+  },
+
+  getAttributesForLocation: (locationId = 1) => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: `/prison/api/cell/${locationId}/attributes`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: { noOfOccupants: 31 },
+      },
+    })
+  },
+
   stubGetStaffRoles: (status = 200) => {
     return stubFor({
       request: {
