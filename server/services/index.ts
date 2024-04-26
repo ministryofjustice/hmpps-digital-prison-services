@@ -6,6 +6,7 @@ import HmppsCache from '../middleware/hmppsCache'
 import config from '../config'
 import ContentfulService from './contentfulService'
 import ComponentService from './componentService'
+import EstablishmentRollService from './establishmentRollService'
 
 export const services = () => {
   const {
@@ -25,6 +26,7 @@ export const services = () => {
     keyWorkerApiClientBuilder,
   )
   const componentService = new ComponentService(componentApiClientBuilder)
+  const establishmentRollService = new EstablishmentRollService(prisonApiClientBuilder)
 
   const apolloClient = new ApolloClient({
     cache: new InMemoryCache(),
@@ -50,6 +52,7 @@ export const services = () => {
     todayCache,
     contentfulService,
     componentService,
+    establishmentRollService,
   }
 }
 

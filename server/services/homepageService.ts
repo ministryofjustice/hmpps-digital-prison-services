@@ -12,8 +12,8 @@ export default class HomepageService {
 
   public async getTodaySection(clientToken: string, activeCaseLoadId: string) {
     const [assignedRollCount, unassignedRollCount, movements] = await Promise.all([
-      this.prisonApiClientBuilder(clientToken).getRollCount(activeCaseLoadId),
-      this.prisonApiClientBuilder(clientToken).getRollCount(activeCaseLoadId, true),
+      this.prisonApiClientBuilder(clientToken).getRollCount({ prisonId: activeCaseLoadId }),
+      this.prisonApiClientBuilder(clientToken).getRollCount({ prisonId: activeCaseLoadId, unassigned: true }),
       this.prisonApiClientBuilder(clientToken).getMovements(activeCaseLoadId),
     ])
 

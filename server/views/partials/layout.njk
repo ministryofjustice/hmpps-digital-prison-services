@@ -60,7 +60,8 @@
 
 {% block beforeContent %}
   {{ govukBreadcrumbs({
-    items: breadCrumbs | default([])
+    items: breadCrumbs | default([]),
+    classes: 'govuk-!-display-none-print'
   }) }}
 {% endblock %}
 
@@ -79,6 +80,7 @@
   <body>, to avoid blocking the initial render. #}
   <script type="module" src="/assets/govukFrontendInit.js"></script>
   <script src="/assets/moj/all.js"></script>
+  <script src="/assets/printPage.js"></script>
 {% endblock %}
 
 {% block footer %}

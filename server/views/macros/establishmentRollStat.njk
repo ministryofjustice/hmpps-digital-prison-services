@@ -1,0 +1,12 @@
+{% macro establishmentRollStat(heading, value, href, qaTag) %}
+    <div class="establishment-roll__label-and-value">
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">{{ heading }}:</h2>
+        <p class="govuk-!-margin-bottom-0 govuk-!-font-size-24" data-qa="{{ qaTag }}">
+            {% if href and value > 0 %}
+                <a class="govuk-link" href="{{ href }}">{{ value }}</a>
+            {% else %}
+                {{ value}}
+            {% endif %}
+        </p>
+    </div>
+{% endmacro %}
