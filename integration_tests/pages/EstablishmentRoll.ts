@@ -17,5 +17,5 @@ export default class EstablishmentRollPage extends Page {
     noCellAllocated: (): PageElement => cy.get('[data-qa=no-cell-allocated]'),
   })
 
-  assignedRollCountFirstRow = (): PageElement => cy.get('table.establishment-roll__table tbody tr')
+  assignedRollCountRows = (): PageElement => cy.get('table.establishment-roll__table tbody tr')
 }

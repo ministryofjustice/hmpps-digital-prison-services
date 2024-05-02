@@ -154,7 +154,7 @@ context('Homepage - no active caseload', () => {
         { caseloadFunction: '', caseLoadId: 'MOR', currentlyActive: false, description: 'Moorland', type: '' },
       ],
     })
-    cy.task('stubRollCount', 'MOR')
+    cy.task('stubRollCount', { prisonCode: 'MOR' })
     cy.task('stubRollCountUnassigned', 'MOR')
     cy.task('stubMovements', 'MOR')
     cy.task('stubWhatsNewPosts')

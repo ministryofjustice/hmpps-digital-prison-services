@@ -1,6 +1,6 @@
 import EstablishmentRollService from './establishmentRollService'
 import prisonApiClientMock from '../test/mocks/prisonApiClientMock'
-import { assignedRollCountMock, unassignedRollCountMock } from '../mocks/rollCountMock'
+import { assignedRollCountWithSpursMock, unassignedRollCountMock } from '../mocks/rollCountMock'
 
 describe('establishmentRollService', () => {
   let establishmentRollService: EstablishmentRollService
@@ -9,7 +9,7 @@ describe('establishmentRollService', () => {
     establishmentRollService = new EstablishmentRollService(() => prisonApiClientMock)
     prisonApiClientMock.getRollCount = jest
       .fn()
-      .mockResolvedValueOnce(assignedRollCountMock)
+      .mockResolvedValueOnce(assignedRollCountWithSpursMock)
       .mockResolvedValueOnce(unassignedRollCountMock)
     prisonApiClientMock.getMovements = jest.fn().mockResolvedValue({ in: 4, out: 5 })
     prisonApiClientMock.getEnrouteRollCount = jest.fn().mockResolvedValue(3)
@@ -17,16 +17,22 @@ describe('establishmentRollService', () => {
     prisonApiClientMock.getAttributesForLocation = jest.fn().mockResolvedValue({ noOfOccupants: 31 })
   })
 
-  it('should return establishment roll counts', async () => {
+  it('should return nested establishment roll counts', async () => {
     const establishmentRollCounts = await establishmentRollService.getEstablishmentRollCounts('token', 'LEI')
 
-    expect(establishmentRollCounts.assignedRollBlocksCounts).toEqual(assignedRollCountMock)
+    expect(establishmentRollCounts.assignedRollBlocksCounts).toEqual([
+      {
+        ...assignedRollCountWithSpursMock[0],
+        spurs: [{ ...assignedRollCountWithSpursMock[1], landings: [assignedRollCountWithSpursMock[2]] }],
+      },
+      { ...assignedRollCountWithSpursMock[3], landings: [assignedRollCountWithSpursMock[4]] },
+    ])
   })
 
   it('should calculate unlock roll', async () => {
     const establishmentRollCounts = await establishmentRollService.getEstablishmentRollCounts('token', 'LEI')
 
-    expect(establishmentRollCounts.todayStats.unlockRoll).toEqual(1024)
+    expect(establishmentRollCounts.todayStats.unlockRoll).toEqual(1824)
   })
 
   it('should return inToday', async () => {
@@ -50,7 +56,7 @@ describe('establishmentRollService', () => {
   it('should return currentRoll by summing currentlyInCell, outOfLivingUnits an unassignedIn', async () => {
     const establishmentRollCounts = await establishmentRollService.getEstablishmentRollCounts('token', 'LEI')
 
-    expect(establishmentRollCounts.todayStats.currentRoll).toEqual(1023)
+    expect(establishmentRollCounts.todayStats.currentRoll).toEqual(1823)
   })
 
   it('should return enroute count from api', async () => {
@@ -75,25 +81,25 @@ describe('establishmentRollService', () => {
   it('should return total of currentlyOut from assigned counts', async () => {
     const establishmentRollCounts = await establishmentRollService.getEstablishmentRollCounts('token', 'LEI')
 
-    expect(establishmentRollCounts.todayStats.totalCurrentlyOut).toEqual(5)
+    expect(establishmentRollCounts.todayStats.totalCurrentlyOut).toEqual(10)
   })
 
   it('should return total of bedsInUse from assigned counts', async () => {
     const establishmentRollCounts = await establishmentRollService.getEstablishmentRollCounts('token', 'LEI')
 
-    expect(establishmentRollCounts.todayStats.bedsInUse).toEqual(332)
+    expect(establishmentRollCounts.todayStats.bedsInUse).toEqual(152)
   })
 
   it('should return total of currentlyInCell from assigned counts', async () => {
     const establishmentRollCounts = await establishmentRollService.getEstablishmentRollCounts('token', 'LEI')
 
-    expect(establishmentRollCounts.todayStats.currentlyInCell).toEqual(1000)
+    expect(establishmentRollCounts.todayStats.currentlyInCell).toEqual(1800)
   })
 
   it('should return total of netVacancies from assigned counts', async () => {
     const establishmentRollCounts = await establishmentRollService.getEstablishmentRollCounts('token', 'LEI')
 
-    expect(establishmentRollCounts.todayStats.netVacancies).toEqual(-20)
+    expect(establishmentRollCounts.todayStats.netVacancies).toEqual(-32)
   })
 
   it('should return total of outOfOrder from assigned counts', async () => {

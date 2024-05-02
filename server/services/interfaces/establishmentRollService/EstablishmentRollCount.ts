@@ -1,4 +1,4 @@
-import { BlockRollCount } from '../../data/interfaces/blockRollCount'
+import { BlockRollCount } from '../../../data/interfaces/blockRollCount'
 
 export default interface EstablishmentRollCount {
   todayStats: {
@@ -16,5 +16,16 @@ export default interface EstablishmentRollCount {
     netVacancies: number
     outOfOrder: number
   }
-  assignedRollBlocksCounts: BlockRollCount[]
+  assignedRollBlocksCounts: Wing[]
+}
+
+export interface Landing extends BlockRollCount {}
+
+export interface Spur extends BlockRollCount {
+  landings?: BlockRollCount[]
+}
+
+export interface Wing extends BlockRollCount {
+  spurs?: BlockRollCount[]
+  landings?: BlockRollCount[]
 }

@@ -13,6 +13,25 @@
     }
 ] %}
 
+{% macro blockRow(block, type, wing, lastInGroup) %}
+    <tr class="govuk-table__row establishment-roll__table__{{ "spur" if type==="SPUR" else ("landing" if type==="LANDING" else "wing") }}-row {{ 'last-in-group' if lastInGroup else '' }}"
+        id="{{ block.livingUnitId }}"
+        {% if wing %}data-wing-id="{{ wing }}" {% endif %}
+    >
+        <td class="govuk-table__cell">{{ block.livingUnitDesc }}</td>
+        <td class="govuk-table__cell">{{ block.bedsInUse }}</td>
+        <td class="govuk-table__cell">{{ block.currentlyInCell }}</td>
+        <td class="govuk-table__cell">
+            {% if block.currentlyOut > 0 %}
+                <a class="govuk-link" href="{{config.serviceUrls.digitalPrisons}}/establishment-roll/{{block.livingUnitId}}/currently-out">{{block.currentlyOut}}</a>
+            {% else %} 0 {% endif %}
+        </td>
+        <td class="govuk-table__cell">{{ block.operationalCapacity }}</td>
+        <td class="govuk-table__cell">{{ block.netVacancies }}</td>
+        <td class="govuk-table__cell">{{ block.outOfOrder }}</td>
+    </tr>
+{% endmacro %}
+
 {% block content %}
 <div class="govuk-width-container govuk-!-margin-top-8">
     <div class="govuk-!-margin-bottom-6">
@@ -111,22 +130,22 @@
             </tr>
         </thead>
         <tbody class="govuk-table__body">
-            {% for block in establishmentRollCounts.assignedRollBlocksCounts %}
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">{{ block.livingUnitDesc }}</td>
-                    <td class="govuk-table__cell">{{ block.bedsInUse }}</td>
-                    <td class="govuk-table__cell">{{ block.currentlyInCell }}</td>
-                    <td class="govuk-table__cell">
-                        {% if block.currentlyOut > 0 %}
-                            <a class="govuk-link" href="{{config.serviceUrls.digitalPrisons}}/establishment-roll/{{block.livingUnitId}}/currently-out">{{block.currentlyOut}}</a>
-                        {% else %} 0 {% endif %}
-                    </td>
-                    <td class="govuk-table__cell">{{ block.operationalCapacity }}</td>
-                    <td class="govuk-table__cell">{{ block.netVacancies }}</td>
-                    <td class="govuk-table__cell">{{ block.outOfOrder }}</td>
-                </tr>
+            {% for wing in establishmentRollCounts.assignedRollBlocksCounts %}
+                {{ blockRow(block=wing) }}
+
+                {% for spur in wing.spurs %}
+                    {{ blockRow(block=spur, type='SPUR', wing=wing.livingUnitId) }}
+                    {% for landing in spur.landings %}
+                        {{ blockRow(block=landing, type='LANDING', wing=wing.livingUnitId, lastInGroup=loop.index === spur.landings.length) }}
+                    {% endfor %}
+                {% endfor %}
+
+
+                {% for landing in wing.landings %}
+                    {{ blockRow(block=landing, type='LANDING', wing=wing.livingUnitId) }}
+                {% endfor %}
             {% endfor %}
-            <tr class="govuk-table__row">
+            <tr id="roll-table-totals-row" class="govuk-table__row">
                 <td class="govuk-table__cell govuk-!-font-weight-bold">Totals</td>
                 <td class="govuk-table__cell">{{ todayStats.bedsInUse }}</td>
                 <td class="govuk-table__cell">{{ todayStats.currentlyInCell }}</td>
@@ -142,4 +161,8 @@
         </tbody>
     </table>
 </div>
+{% endblock %}
+
+{% block pageScripts %}
+    <script src="/assets/js/establishment-roll.js"></script>
 {% endblock %}
