@@ -1,3 +1,4 @@
+import * as querystring from 'querystring'
 import RestClient from './restClient'
 import { PrisonApiClient } from './interfaces/prisonApiClient'
 import { CaseLoad } from './interfaces/caseLoad'
@@ -26,10 +27,13 @@ export default class PrisonApiRestClient implements PrisonApiClient {
     return this.get<Location[]>({ path: '/api/users/me/locations' })
   }
 
-  getRollCount({ prisonId, unassigned }: { prisonId: string; unassigned?: boolean }): Promise<BlockRollCount[]> {
+  getRollCount(
+    prisonId: string,
+    queryOptions: { unassigned?: boolean; wingOnly?: boolean } = {},
+  ): Promise<BlockRollCount[]> {
     return this.get<BlockRollCount[]>({
       path: `/api/movements/rollcount/${prisonId}`,
-      query: unassigned ? 'unassigned=true' : '',
+      query: querystring.stringify(queryOptions),
     })
   }
 

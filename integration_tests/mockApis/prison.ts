@@ -39,18 +39,18 @@ export default {
     })
   },
 
-  stubRollCount: (prisonCode = 'LEI') => {
+  stubRollCount: ({ prisonCode = 'LEI', payload = assignedRollCountMock, query = '' } = {}) => {
     return stubFor({
       request: {
         method: 'GET',
-        url: `/prison/api/movements/rollcount/${prisonCode}`,
+        url: `/prison/api/movements/rollcount/${prisonCode}${query}`,
       },
       response: {
         status: 200,
         headers: {
           'Content-Type': 'application/json;charset=UTF-8',
         },
-        jsonBody: assignedRollCountMock,
+        jsonBody: payload,
       },
     })
   },

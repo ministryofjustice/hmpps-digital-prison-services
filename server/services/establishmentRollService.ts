@@ -1,7 +1,8 @@
 import { RestClientBuilder } from '../data'
 import { PrisonApiClient } from '../data/interfaces/prisonApiClient'
 import { BlockRollCount } from '../data/interfaces/blockRollCount'
-import EstablishmentRollCount from './interfaces/EstablishmentRollCount'
+import EstablishmentRollCount from './interfaces/establishmentRollService/EstablishmentRollCount'
+import nestRollBlocks, { splitRollBlocks } from './utils/nestRollBlocks'
 
 const getTotals = (array: BlockRollCount[], figure: keyof BlockRollCount): number =>
   array.reduce<number>((accumulator, block) => accumulator + ((block[figure] as number) || 0), 0)
@@ -13,8 +14,8 @@ export default class EstablishmentRollService {
     const prisonApi = this.prisonApiClientBuilder(clientToken)
     const [assignedRollBlocksCounts, unassignedRollBlocksCount, movementsCount, enrouteCount, caseLoadLocations] =
       await Promise.all([
-        prisonApi.getRollCount({ prisonId: caseLoadId, unassigned: false }),
-        prisonApi.getRollCount({ prisonId: caseLoadId, unassigned: true }),
+        prisonApi.getRollCount(caseLoadId, { wingOnly: false }),
+        prisonApi.getRollCount(caseLoadId, { unassigned: true }),
         prisonApi.getMovements(caseLoadId),
         prisonApi.getEnrouteRollCount(caseLoadId),
         prisonApi.getLocationsForPrison(caseLoadId),
@@ -26,11 +27,14 @@ export default class EstablishmentRollService {
       ? await prisonApi.getAttributesForLocation(cellSwapLocation.locationId)
       : { noOfOccupants: 0 }
 
+    const wingsSpursLandingsAssigned = splitRollBlocks(assignedRollBlocksCounts)
+    const assignedWingsRollCount = wingsSpursLandingsAssigned.wings
+
     const unassignedIn =
       getTotals(unassignedRollBlocksCount, 'currentlyInCell') + getTotals(unassignedRollBlocksCount, 'outOfLivingUnits')
     const currentRoll =
-      getTotals(assignedRollBlocksCounts, 'currentlyInCell') +
-      getTotals(assignedRollBlocksCounts, 'outOfLivingUnits') +
+      getTotals(assignedWingsRollCount, 'currentlyInCell') +
+      getTotals(assignedWingsRollCount, 'outOfLivingUnits') +
       unassignedIn
 
     return {
@@ -42,14 +46,14 @@ export default class EstablishmentRollService {
         unassignedIn,
         enroute: enrouteCount,
         noCellAllocated: cellSwapDetails?.noOfOccupants ?? 0,
-        totalCurrentlyOut: getTotals(assignedRollBlocksCounts, 'currentlyOut') ?? 0,
-        bedsInUse: getTotals(assignedRollBlocksCounts, 'bedsInUse') ?? 0,
-        currentlyInCell: getTotals(assignedRollBlocksCounts, 'currentlyInCell') ?? 0,
-        operationalCapacity: getTotals(assignedRollBlocksCounts, 'operationalCapacity') ?? 0,
-        netVacancies: getTotals(assignedRollBlocksCounts, 'netVacancies') ?? 0,
-        outOfOrder: getTotals(assignedRollBlocksCounts, 'outOfOrder') ?? 0,
+        totalCurrentlyOut: getTotals(assignedWingsRollCount, 'currentlyOut') ?? 0,
+        bedsInUse: getTotals(assignedWingsRollCount, 'bedsInUse') ?? 0,
+        currentlyInCell: getTotals(assignedWingsRollCount, 'currentlyInCell') ?? 0,
+        operationalCapacity: getTotals(assignedWingsRollCount, 'operationalCapacity') ?? 0,
+        netVacancies: getTotals(assignedWingsRollCount, 'netVacancies') ?? 0,
+        outOfOrder: getTotals(assignedWingsRollCount, 'outOfOrder') ?? 0,
       },
-      assignedRollBlocksCounts,
+      assignedRollBlocksCounts: nestRollBlocks(wingsSpursLandingsAssigned),
     }
   }
 }

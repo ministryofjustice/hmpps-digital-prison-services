@@ -8,7 +8,7 @@ import { OffenderCell } from './offenderCell'
 export interface PrisonApiClient {
   getUserCaseLoads(): Promise<CaseLoad[]>
   getUserLocations(): Promise<Location[]>
-  getRollCount(options: { prisonId: string; unassigned?: boolean }): Promise<BlockRollCount[]>
+  getRollCount(prisonId: string, options?: { unassigned?: boolean; wingOnly?: boolean }): Promise<BlockRollCount[]>
   getEnrouteRollCount(prisonId: string): Promise<number>
   getLocationsForPrison(prisonId: string): Promise<Location[]>
   getAttributesForLocation(locationId: number): Promise<OffenderCell>
