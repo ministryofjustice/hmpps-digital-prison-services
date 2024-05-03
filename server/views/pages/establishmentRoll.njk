@@ -13,12 +13,18 @@
     }
 ] %}
 
-{% macro blockRow(block, type, wing, lastInGroup) %}
+{% macro blockRow(block, type, wing, spur, lastInGroup) %}
     <tr class="govuk-table__row establishment-roll__table__{{ "spur" if type==="SPUR" else ("landing" if type==="LANDING" else "wing") }}-row {{ 'last-in-group' if lastInGroup else '' }}"
         id="{{ block.livingUnitId }}"
         {% if wing %}data-wing-id="{{ wing }}" {% endif %}
     >
-        <td class="govuk-table__cell">{{ block.livingUnitDesc }}</td>
+        <td class="govuk-table__cell">
+            {% if type === "LANDING" %}
+                <a href="/establishment-roll/wing/{{ wing }}/{{ "spur/"+spur+"/" if spur }}landing/{{ block.livingUnitId }}">{{ block.livingUnitDesc | capitalize }}</a>
+            {% else %}
+                {{ block.livingUnitDesc | capitalize }}
+            {% endif %}
+        </td>
         <td class="govuk-table__cell">{{ block.bedsInUse }}</td>
         <td class="govuk-table__cell">{{ block.currentlyInCell }}</td>
         <td class="govuk-table__cell">
@@ -136,7 +142,7 @@
                 {% for spur in wing.spurs %}
                     {{ blockRow(block=spur, type='SPUR', wing=wing.livingUnitId) }}
                     {% for landing in spur.landings %}
-                        {{ blockRow(block=landing, type='LANDING', wing=wing.livingUnitId, lastInGroup=loop.index === spur.landings.length) }}
+                        {{ blockRow(block=landing, type='LANDING', wing=wing.livingUnitId, spur=spur.livingUnitId, lastInGroup=loop.index === spur.landings.length) }}
                     {% endfor %}
                 {% endfor %}
 
@@ -164,5 +170,5 @@
 {% endblock %}
 
 {% block pageScripts %}
-    <script src="/assets/js/establishment-roll.js"></script>
+    <script src="/assets/establishment-roll.js"></script>
 {% endblock %}

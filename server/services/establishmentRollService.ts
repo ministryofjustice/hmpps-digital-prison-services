@@ -3,6 +3,7 @@ import { PrisonApiClient } from '../data/interfaces/prisonApiClient'
 import { BlockRollCount } from '../data/interfaces/blockRollCount'
 import EstablishmentRollCount from './interfaces/establishmentRollService/EstablishmentRollCount'
 import nestRollBlocks, { splitRollBlocks } from './utils/nestRollBlocks'
+import { Location } from '../data/interfaces/location'
 
 const getTotals = (array: BlockRollCount[], figure: keyof BlockRollCount): number =>
   array.reduce<number>((accumulator, block) => accumulator + ((block[figure] as number) || 0), 0)
@@ -55,5 +56,20 @@ export default class EstablishmentRollService {
       },
       assignedRollBlocksCounts: nestRollBlocks(wingsSpursLandingsAssigned),
     }
+  }
+
+  public async getLandingRollCounts(clientToken: string, caseLoadId: string, landingId: number) {
+    const prisonApi = this.prisonApiClientBuilder(clientToken)
+    return prisonApi.getRollCount(caseLoadId, {
+      wingOnly: false,
+      showCells: true,
+      parentLocationId: landingId,
+    })
+  }
+
+  public getLocationInfo(clientToken: string, locationId: string): Promise<Location> {
+    const prisonApi = this.prisonApiClientBuilder(clientToken)
+
+    return prisonApi.getLocation(locationId)
   }
 }
