@@ -29,7 +29,7 @@ export default class PrisonApiRestClient implements PrisonApiClient {
 
   getRollCount(
     prisonId: string,
-    queryOptions: { unassigned?: boolean; wingOnly?: boolean } = {},
+    queryOptions: { unassigned?: boolean; wingOnly?: boolean; showCells?: boolean; parentLocationId?: number } = {},
   ): Promise<BlockRollCount[]> {
     return this.get<BlockRollCount[]>({
       path: `/api/movements/rollcount/${prisonId}`,
@@ -47,6 +47,10 @@ export default class PrisonApiRestClient implements PrisonApiClient {
 
   getLocationsForPrison(prisonId: string): Promise<Location[]> {
     return this.get<Location[]>({ path: `/api/agencies/${prisonId}/locations` })
+  }
+
+  getLocation(locationId: string): Promise<Location> {
+    return this.get<Location>({ path: `/api/locations/${locationId}` })
   }
 
   getAttributesForLocation(locationId: number): Promise<OffenderCell> {

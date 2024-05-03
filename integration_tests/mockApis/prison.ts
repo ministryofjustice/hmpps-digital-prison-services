@@ -1,7 +1,7 @@
 import { stubFor } from './wiremock'
 import { CaseLoad } from '../../server/data/interfaces/caseLoad'
 import { Location } from '../../server/data/interfaces/location'
-import { locationsMock } from '../../server/mocks/locationMock'
+import { locationMock, locationsMock } from '../../server/mocks/locationMock'
 import { assignedRollCountMock, unassignedRollCountMock } from '../../server/mocks/rollCountMock'
 import { movementsMock } from '../../server/mocks/movementsMock'
 import { mockStaffRoles } from '../../server/mocks/staffRolesMock'
@@ -115,6 +115,22 @@ export default {
           'Content-Type': 'application/json;charset=UTF-8',
         },
         jsonBody: [{ description: 'CSWAP', locationId: 1 }],
+      },
+    })
+  },
+
+  stubGetLocation: ({ locationId = 123, payload = locationMock } = {}) => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        url: `/prison/api/locations/${locationId}`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: payload,
       },
     })
   },
