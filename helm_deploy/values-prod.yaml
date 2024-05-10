@@ -38,6 +38,7 @@ generic-service:
     SOC_API_URL: https://manage-soc-cases-api.hmpps.service.justice.gov.uk
     TOKEN_VERIFICATION_API_URL: https://token-verification-api.prison.service.justice.gov.uk
     WHEREABOUTS_ENDPOINT_URL: https://whereabouts-api.service.justice.gov.uk
+    PRISONER_SEARCH_API_URL: https://prisoner-search.prison.service.justice.gov.uk
 
     # Service URLs
     ACTIVITIES_URL: https://activities.prison.service.justice.gov.uk/activities
@@ -70,6 +71,7 @@ generic-service:
     USE_OF_FORCE_URL: https://use-of-force.service.justice.gov.uk
     WELCOME_PEOPLE_INTO_PRISON_URL: https://welcome.prison.service.justice.gov.uk
     ACCREDITED_PROGRAMMES_URL: https://accredited-programmes.hmpps.service.justice.gov.uk
+    PRISONER_PROFILE_URL: https://prisoner.digital.prison.service.justice.gov.uk
 
     # Feature flags
     ACTIVITIES_ENABLED_PRISONS: "RSI,LPI"

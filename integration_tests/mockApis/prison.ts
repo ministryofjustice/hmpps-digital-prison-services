@@ -5,6 +5,7 @@ import { locationMock, locationsMock } from '../../server/mocks/locationMock'
 import { assignedRollCountMock, unassignedRollCountMock } from '../../server/mocks/rollCountMock'
 import { movementsMock } from '../../server/mocks/movementsMock'
 import { mockStaffRoles } from '../../server/mocks/staffRolesMock'
+import { movementsInMock } from '../../server/test/mocks/movementsInMock'
 
 export default {
   stubUserCaseLoads: (caseLoads: CaseLoad[] = []) => {
@@ -83,6 +84,23 @@ export default {
           'Content-Type': 'application/json;charset=UTF-8',
         },
         jsonBody: movementsMock,
+      },
+    })
+  },
+
+  stubMovementsIn: (prisonCode = 'LEI') => {
+    const today = new Date().toISOString().split('T')[0]
+    return stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: `/prison/api/movements/${prisonCode}/in/${today}`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: movementsInMock,
       },
     })
   },

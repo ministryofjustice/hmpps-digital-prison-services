@@ -7,6 +7,7 @@ import config from '../config'
 import ContentfulService from './contentfulService'
 import ComponentService from './componentService'
 import EstablishmentRollService from './establishmentRollService'
+import MovementsService from './movementsService'
 
 export const services = () => {
   const {
@@ -15,6 +16,7 @@ export const services = () => {
     whereAboutsApiClientBuilder,
     keyWorkerApiClientBuilder,
     componentApiClientBuilder,
+    prisonerSearchApiClientBuilder,
     applicationInfo,
   } = dataAccess
 
@@ -27,6 +29,7 @@ export const services = () => {
   )
   const componentService = new ComponentService(componentApiClientBuilder)
   const establishmentRollService = new EstablishmentRollService(prisonApiClientBuilder)
+  const movementsService = new MovementsService(prisonApiClientBuilder, prisonerSearchApiClientBuilder)
 
   const apolloClient = new ApolloClient({
     cache: new InMemoryCache(),
@@ -53,6 +56,7 @@ export const services = () => {
     contentfulService,
     componentService,
     establishmentRollService,
+    movementsService,
   }
 }
 

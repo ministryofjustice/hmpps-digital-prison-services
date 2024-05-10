@@ -1,8 +1,12 @@
 import { Request, RequestHandler, Response } from 'express'
 import EstablishmentRollService from '../services/establishmentRollService'
+import MovementsService from '../services/movementsService'
 
 export default class EstablishmentRollController {
-  constructor(private readonly establishmentRollService: EstablishmentRollService) {}
+  constructor(
+    private readonly establishmentRollService: EstablishmentRollService,
+    private readonly movementsService: MovementsService,
+  ) {}
 
   public getEstablishmentRoll(): RequestHandler {
     return async (req: Request, res: Response) => {
@@ -32,6 +36,17 @@ export default class EstablishmentRollController {
       ])
 
       res.render('pages/establishmentRollLanding', { landingRollCounts, wing, spur, landing })
+    }
+  }
+
+  public getArrivedToday(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { user } = res.locals
+      const { clientToken } = req.middleware
+
+      const arrivedPrisoners = await this.movementsService.getArrivedTodayPrisoners(clientToken, user.activeCaseLoadId)
+
+      res.render('pages/arrivingToday', { prisoners: arrivedPrisoners })
     }
   }
 }
