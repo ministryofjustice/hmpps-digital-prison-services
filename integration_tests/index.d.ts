@@ -1,5 +1,6 @@
 import { CaseLoad } from '../server/data/interfaces/caseLoad'
 import { Location } from '../server/data/interfaces/location'
+import { UserToken } from './mockApis/auth'
 
 declare global {
   namespace Cypress {
@@ -10,12 +11,12 @@ declare global {
        */
       signIn(options?: { failOnStatusCode?: boolean; redirectPath?: string }): Chainable<AUTWindow>
 
-      setupUserAuth(options?: {
-        roles?: string[]
-        caseLoads?: CaseLoad[]
-        activeCaseLoadId?: string
-        locations?: Location[]
-      }): Chainable<AUTWindow>
+      setupUserAuth(
+        options?: UserToken & {
+          caseLoads?: CaseLoad[]
+          locations?: Location[]
+        },
+      ): Chainable<AUTWindow>
     }
   }
 }

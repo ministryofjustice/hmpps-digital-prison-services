@@ -8,6 +8,7 @@ import errorHandler from '../../errorHandler'
 import * as auth from '../../authentication/auth'
 import type { Services } from '../../services'
 import type { ApplicationInfo } from '../../applicationInfo'
+import { PrisonUser } from '../../interfaces/prisonUser'
 
 jest.mock('../../applicationInfo.ts', () => {
   return {
@@ -46,8 +47,7 @@ function appSetup(services: Services, production: boolean, userSupplier: () => E
   app.use((req, res, next) => {
     req.user = userSupplier()
     req.flash = flashProvider
-    res.locals = {}
-    res.locals.user = { ...req.user }
+    res.locals = { user: { ...req.user } as PrisonUser }
     next()
   })
   app.use(express.json())

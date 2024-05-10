@@ -1,9 +1,8 @@
 import nock from 'nock'
 
 import config from '../config'
-import HmppsAuthClient, { systemTokenBuilder } from './hmppsAuthClient'
+import { systemTokenBuilder } from './hmppsAuthClient'
 import TokenStore from './tokenStore'
-import restClientBuilder from '.'
 import { ApplicationInfo } from '../applicationInfo'
 
 jest.mock('./tokenStore')
@@ -38,26 +37,6 @@ describe('hmppsAuthClient', () => {
   afterEach(() => {
     jest.resetAllMocks()
     nock.cleanAll()
-  })
-
-  describe('getUser', () => {
-    it('should return data from api', async () => {
-      const response = { data: 'data' }
-
-      fakeHmppsAuthApi
-        .get('/api/user/me')
-        .matchHeader('authorization', `Bearer ${token.access_token}`)
-        .reply(200, response)
-
-      const hmppsAuthClient = restClientBuilder(
-        'HMPPS Auth Client',
-        config.apis.hmppsAuth,
-        HmppsAuthClient,
-      )(token.access_token)
-
-      const output = await hmppsAuthClient.getUser()
-      expect(output).toEqual(response)
-    })
   })
 
   describe('getSystemClientToken', () => {

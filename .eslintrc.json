@@ -103,6 +103,7 @@
   "extends": ["airbnb-base", "plugin:prettier/recommended"],
 
   "rules": {
+    "import/prefer-default-export": "off",
     "no-unused-vars": [
       1,
       {

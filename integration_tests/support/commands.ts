@@ -6,18 +6,22 @@ Cypress.Commands.add('signIn', (options = { failOnStatusCode: true, redirectPath
 
 Cypress.Commands.add(
   'setupUserAuth',
-  ({
-    roles,
-    caseLoads = [
-      { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
-    ],
-    activeCaseLoadId = 'LEI',
-    locations,
-  } = {}) => {
-    cy.task('stubSignIn', roles)
-    cy.task('stubUserCaseLoads', caseLoads)
-    cy.task('stubAuthUser', { activeCaseLoadId })
-    cy.task('stubUserLocations', locations)
+  (
+    options = {
+      caseLoads: [
+        {
+          caseLoadId: 'LEI',
+          currentlyActive: true,
+          description: '',
+          type: '',
+          caseloadFunction: '',
+        },
+      ],
+    },
+  ) => {
+    cy.task('stubSignIn', options)
+    cy.task('stubUserCaseLoads', options.caseLoads)
+    cy.task('stubUserLocations', options.locations)
     cy.task('stubGetStaffRoles')
   },
 )
