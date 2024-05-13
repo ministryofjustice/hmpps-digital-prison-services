@@ -1,36 +1,69 @@
 import UserService from './userService'
-import HmppsAuthClient, { User } from '../data/hmppsAuthClient'
 import PrisonApiRestClient from '../data/prisonApiClient'
+import { CaseLoad } from '../data/interfaces/caseLoad'
+import { Location } from '../data/interfaces/location'
 
-jest.mock('../data/hmppsAuthClient')
+jest.mock('../data/prisonApiClient')
 
 const token = 'some token'
 
 describe('User service', () => {
-  let hmppsAuthClient: jest.Mocked<HmppsAuthClient>
   let prisonApiClient: jest.Mocked<PrisonApiRestClient>
   let userService: UserService
 
-  describe('getUser', () => {
-    beforeEach(() => {
-      hmppsAuthClient = new HmppsAuthClient(null) as jest.Mocked<HmppsAuthClient>
-      prisonApiClient = new PrisonApiRestClient(null) as jest.Mocked<PrisonApiRestClient>
-      userService = new UserService(
-        () => hmppsAuthClient,
-        () => prisonApiClient,
+  beforeEach(() => {
+    prisonApiClient = new PrisonApiRestClient(null) as jest.Mocked<PrisonApiRestClient>
+    userService = new UserService(() => prisonApiClient)
+  })
+
+  describe('getUserCaseLoads', () => {
+    it('retrieves list of user case loads', async () => {
+      const caseLoads = [{ caseLoadId: 'MDI' }] as CaseLoad[]
+      prisonApiClient.getUserCaseLoads.mockResolvedValue(caseLoads)
+
+      const result = await userService.getUserCaseLoads(token)
+
+      expect(result).toEqual(caseLoads)
+    })
+
+    it('propagates error', async () => {
+      prisonApiClient.getUserCaseLoads.mockRejectedValue(new Error('some error'))
+
+      await expect(userService.getUserCaseLoads(token)).rejects.toEqual(new Error('some error'))
+    })
+  })
+
+  describe('getUserLocations', () => {
+    it('retrieves list of user locations', async () => {
+      const locations = [{ locationId: 12345 }] as Location[]
+      prisonApiClient.getUserLocations.mockResolvedValue(locations)
+
+      const result = await userService.getUserLocations(token)
+
+      expect(result).toEqual(locations)
+    })
+
+    it('propagates error', async () => {
+      prisonApiClient.getUserLocations.mockRejectedValue(new Error('some error'))
+
+      await expect(userService.getUserLocations(token)).rejects.toEqual(new Error('some error'))
+    })
+  })
+
+  describe('setActiveCaseload', () => {
+    it('makes call to set active case load', async () => {
+      const caseLoad = { caseLoadId: 'MDI' } as CaseLoad
+      await userService.setActiveCaseload(token, caseLoad)
+
+      expect(prisonApiClient.setActiveCaseload).toHaveBeenCalledWith(caseLoad)
+    })
+
+    it('propagates error', async () => {
+      prisonApiClient.setActiveCaseload.mockRejectedValue(new Error('some error'))
+
+      await expect(userService.setActiveCaseload(token, { caseLoadId: 'MDI' } as CaseLoad)).rejects.toEqual(
+        new Error('some error'),
       )
-    })
-    it('Retrieves and formats user name', async () => {
-      hmppsAuthClient.getUser.mockResolvedValue({ name: 'john smith' } as User)
-
-      const result = await userService.getUser(token)
-
-      expect(result.displayName).toEqual('John Smith')
-    })
-    it('Propagates error', async () => {
-      hmppsAuthClient.getUser.mockRejectedValue(new Error('some error'))
-
-      await expect(userService.getUser(token)).rejects.toEqual(new Error('some error'))
     })
   })
 })

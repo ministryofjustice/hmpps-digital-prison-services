@@ -1,3 +1,5 @@
+import { PrisonUser } from '../../interfaces/prisonUser'
+
 export default {}
 
 declare module 'express-session' {
@@ -22,6 +24,10 @@ export declare global {
       middleware?: Record
       logout(done: (err: unknown) => void): void
       flash(type: string, message: unknown): number
+    }
+
+    interface Locals {
+      user: PrisonUser
     }
   }
 }

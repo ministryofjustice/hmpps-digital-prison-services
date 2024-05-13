@@ -11,6 +11,7 @@ import { whatsNewPostsMock } from '../mocks/whatsNewPostsMock'
 import { whatsNewDataMock } from '../mocks/whatsNewDataMock'
 import { mockStaffRoles } from '../mocks/staffRolesMock'
 import { CaseLoad } from '../data/interfaces/caseLoad'
+import { PrisonUser } from '../interfaces/prisonUser'
 
 const staffId = 487023
 const activeCaseLoadId = 'LEI'
@@ -45,7 +46,7 @@ describe('Homepage Controller', () => {
           ] as CaseLoad[],
           token: 'USER_TOKEN',
           activeCaseLoadId,
-        },
+        } as PrisonUser,
       },
       render: jest.fn(),
       redirect: jest.fn(),
@@ -241,7 +242,7 @@ describe('Homepage Controller', () => {
           caseLoads: [] as CaseLoad[],
           token: 'USER_TOKEN',
           activeCaseLoadId: caseLoadId,
-        },
+        } as PrisonUser,
       }
       await controller.displayHomepage()(req, res)
       expect(controller['homepageService'].getTodaySection).not.toHaveBeenCalled()

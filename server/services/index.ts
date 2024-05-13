@@ -11,7 +11,6 @@ import MovementsService from './movementsService'
 
 export const services = () => {
   const {
-    hmppsAuthClientBuilder,
     prisonApiClientBuilder,
     whereAboutsApiClientBuilder,
     keyWorkerApiClientBuilder,
@@ -21,7 +20,7 @@ export const services = () => {
   } = dataAccess
 
   const todayCache = new HmppsCache(config.todayCacheTTL)
-  const userService = new UserService(hmppsAuthClientBuilder, prisonApiClientBuilder)
+  const userService = new UserService(prisonApiClientBuilder)
   const homepageService = new HomepageService(
     prisonApiClientBuilder,
     whereAboutsApiClientBuilder,

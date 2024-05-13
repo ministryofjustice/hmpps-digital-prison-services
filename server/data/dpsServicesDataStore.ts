@@ -1,5 +1,6 @@
 import config from '../config'
 import { Role } from '../enums/role'
+import { Location } from './interfaces/location'
 import { userHasRoles } from '../utils/utils'
 import { KeyWorkerPrisonStatus } from './interfaces/keyWorkerPrisonStatus'
 import { WhereAboutsConfig } from './interfaces/whereAboutsConfig'
@@ -29,7 +30,7 @@ export const manageKeyWorkers = (keyworkerPrisonStatus: KeyWorkerPrisonStatus, u
 export const getTasks = (
   activeCaseLoadId: string,
   locations: Location[],
-  staffId: string,
+  staffId: number,
   whereaboutsConfig: WhereAboutsConfig,
   keyworkerPrisonStatus: KeyWorkerPrisonStatus,
   userRoles: string[],
