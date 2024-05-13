@@ -18,6 +18,7 @@ import { KeyWorkerApiClient } from './interfaces/keyWorkerApiClient'
 import KeyWorkerApiRestClient from './keyWorkerApiClient'
 import { ComponentApiClient } from './interfaces/componentApiClient'
 import ComponentApiRestClient from './componentApiClient'
+import PrisonerSearchRestClient from './prisonerSearchClient'
 
 const applicationInfo = applicationInfoSupplier()
 initialiseAppInsights()
@@ -58,6 +59,11 @@ export const dataAccess = {
     ComponentApiRestClient,
   ),
   systemToken: systemTokenBuilder(new TokenStore(createRedisClient())),
+  prisonerSearchApiClientBuilder: restClientBuilder<PrisonerSearchRestClient>(
+    'Prisoner Search API',
+    config.apis.prisonerSearchApi,
+    PrisonerSearchRestClient,
+  ),
 }
 
 export type DataAccess = typeof dataAccess

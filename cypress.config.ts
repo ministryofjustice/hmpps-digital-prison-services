@@ -5,6 +5,7 @@ import tokenVerification from './integration_tests/mockApis/tokenVerification'
 import prison from './integration_tests/mockApis/prison'
 import contentful from './integration_tests/mockApis/contentful'
 import dps from './integration_tests/mockApis/dps'
+import prisonerSearch from './integration_tests/mockApis/prisonerSearch'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -28,6 +29,7 @@ export default defineConfig({
         ...prison,
         ...contentful,
         ...dps,
+        ...prisonerSearch,
       })
     },
     baseUrl: 'http://localhost:3007',

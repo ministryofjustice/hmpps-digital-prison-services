@@ -9,6 +9,7 @@ import getFrontendComponents from '../middleware/frontEndComponents'
 import managedPageRouter from './managedPageRouter'
 import establishmentRollRouter from './establishmentRollRouter'
 import config from '../config'
+import apiRouter from './apiRouter'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -47,6 +48,8 @@ export default function routes(services: Services): Router {
     getFrontendComponents(services, config.apis.frontendComponents.latest),
     whatsNewRouter(services),
   )
+
+  router.use('/api', apiRouter())
 
   return router
 }

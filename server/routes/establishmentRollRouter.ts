@@ -15,7 +15,10 @@ export default function establishmentRollRouter(services: Services): Router {
       handlers.map(handler => asyncMiddleware(handler)),
     )
 
-  const establishmentRollController = new EstablishmentRollController(services.establishmentRollService)
+  const establishmentRollController = new EstablishmentRollController(
+    services.establishmentRollService,
+    services.movementsService,
+  )
 
   get('/', establishmentRollController.getEstablishmentRoll())
 
@@ -23,6 +26,8 @@ export default function establishmentRollRouter(services: Services): Router {
     ['/wing/:wingId/landing/:landingId', '/wing/:wingId/spur/:spurId/landing/:landingId'],
     establishmentRollController.getEstablishmentRollForLanding(),
   )
+
+  get('/arrived-today', establishmentRollController.getArrivedToday())
 
   return router
 }

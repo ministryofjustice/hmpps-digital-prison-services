@@ -102,6 +102,14 @@ export default {
       },
       agent: new AgentConfig(Number(get('PRISON_API_TIMEOUT_DEADLINE', 20000))),
     },
+    prisonerSearchApi: {
+      url: get('PRISONER_SEARCH_API_URL', 'http://localhost:8082', requiredInProduction),
+      timeout: {
+        response: Number(get('PRISONER_SEARCH_API_TIMEOUT_SECONDS', 20000)),
+        deadline: Number(get('PRISONER_SEARCH_API_TIMEOUT_SECONDS', 20000)),
+      },
+      agent: new AgentConfig(Number(get('PRISONER_SEARCH_API_TIMEOUT_DEADLINE', 20000))),
+    },
     tokenVerification: {
       url: get('TOKEN_VERIFICATION_API_URL', 'http://localhost:8100', requiredInProduction),
       timeout: {
@@ -226,6 +234,7 @@ export default {
   },
   serviceUrls: {
     digitalPrisons: get('DIGITAL_PRISONS_URL', 'http://localhost:3001', requiredInProduction),
+    prisonerProfile: get('PRISONER_PROFILE_URL', 'http://localhost:3002', requiredInProduction),
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   todayCacheTTL: Number(get('TODAY_CACHE_TTL', 0, requiredInProduction)),

@@ -11,6 +11,8 @@ $govuk-page-width: $moj-page-width;
 @import './components/header-bar';
 @import './components/whats-new';
 @import './components/print-link';
+@import './components/alert-flags';
+@import './components/results-table';
 @import './pages/help';
 @import './pages/homepage';
 @import './pages/managed-page';

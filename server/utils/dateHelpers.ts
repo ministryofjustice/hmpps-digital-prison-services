@@ -121,3 +121,9 @@ export const formatDateTime = (
   }
   return [dateStr, timeStr].join(options?.separator ? ` ${options?.separator} ` : ' ')
 }
+
+// time in format HH:mm:ss
+export const formatTime = (time: string): string => {
+  const [HH, mm] = time.split(':')
+  return `${HH}:${mm}`
+}

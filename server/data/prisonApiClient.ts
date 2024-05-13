@@ -1,4 +1,5 @@
 import * as querystring from 'querystring'
+import { Readable } from 'stream'
 import RestClient from './restClient'
 import { PrisonApiClient } from './interfaces/prisonApiClient'
 import { CaseLoad } from './interfaces/caseLoad'
@@ -7,6 +8,7 @@ import { BlockRollCount } from './interfaces/blockRollCount'
 import { Movements } from './interfaces/movements'
 import { StaffRole } from './interfaces/staffRole'
 import { OffenderCell } from './interfaces/offenderCell'
+import { OffenderIn } from './interfaces/offenderIn'
 
 export default class PrisonApiRestClient implements PrisonApiClient {
   constructor(private restClient: RestClient) {}
@@ -41,6 +43,10 @@ export default class PrisonApiRestClient implements PrisonApiClient {
     return this.get<Movements>({ path: `/api/movements/rollcount/${prisonId}/movements` })
   }
 
+  getMovementsIn(prisonId: string, movementDate: string): Promise<OffenderIn[]> {
+    return this.get<OffenderIn[]>({ path: `/api/movements/${prisonId}/in/${movementDate.split('T')[0]}` })
+  }
+
   getEnrouteRollCount(prisonId: string): Promise<number> {
     return this.get<number>({ path: `/api/movements/rollcount/${prisonId}/enroute` })
   }
@@ -71,5 +77,11 @@ export default class PrisonApiRestClient implements PrisonApiClient {
 
   setActiveCaseload(caseLoad: CaseLoad): Promise<Record<string, string>> {
     return this.put<Record<string, string>>({ path: '/api/users/me/activeCaseLoad', data: caseLoad })
+  }
+
+  async getPrisonerImage(prisonerNumber: string, fullSizeImage: boolean): Promise<Readable> {
+    return this.restClient.stream({
+      path: `/api/bookings/offenderNo/${prisonerNumber}/image/data?fullSizeImage=${fullSizeImage}`,
+    })
   }
 }

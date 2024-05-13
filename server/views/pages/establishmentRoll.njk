@@ -148,7 +148,7 @@
 
 
                 {% for landing in wing.landings %}
-                    {{ blockRow(block=landing, type='LANDING', wing=wing.livingUnitId) }}
+                    {{ blockRow(block=landing, type='LANDING', wing=wing.livingUnitId, lastInGroup=loop.index === wing.landings.length) }}
                 {% endfor %}
             {% endfor %}
             <tr id="roll-table-totals-row" class="govuk-table__row">
