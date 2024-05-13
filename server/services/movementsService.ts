@@ -10,7 +10,10 @@ export default class MovementsService {
     private readonly prisonerSearchClientBuilder: RestClientBuilder<PrisonerSearchClient>,
   ) {}
 
-  public async getArrivedTodayPrisoners(clientToken: string, caseLoadId: string): Promise<PrisonerWithAlerts[]> {
+  public async getArrivedTodayPrisoners(
+    clientToken: string,
+    caseLoadId: string,
+  ): Promise<(PrisonerWithAlerts & { movementTime: string; arrivedFrom: string })[]> {
     const prisonApi = this.prisonApiClientBuilder(clientToken)
     const prisonerSearchClient = this.prisonerSearchClientBuilder(clientToken)
 
@@ -27,6 +30,31 @@ export default class MovementsService {
           ...prisoner,
           movementTime: prisonerMovement?.movementTime,
           arrivedFrom: prisonerMovement?.fromAgencyDescription || prisonerMovement?.fromCity,
+          alertFlags: mapAlerts(prisoner),
+        }
+      })
+  }
+
+  public async getOutTodayPrisoners(
+    clientToken: string,
+    caseLoadId: string,
+  ): Promise<(PrisonerWithAlerts & { timeOut: string; reasonDescription: string })[]> {
+    const prisonApi = this.prisonApiClientBuilder(clientToken)
+    const prisonerSearchClient = this.prisonerSearchClientBuilder(clientToken)
+
+    const movements = await prisonApi.getMovementsOut(caseLoadId, new Date().toISOString())
+
+    if (!movements || !movements?.length) return []
+    const prisoners = await prisonerSearchClient.getPrisonersById(movements.map(movement => movement.offenderNo))
+
+    return prisoners
+      .sort((a, b) => a.lastName.localeCompare(b.lastName, 'en', { ignorePunctuation: true }))
+      .map(prisoner => {
+        const prisonerMovement = movements.find(movement => movement.offenderNo === prisoner.prisonerNumber)
+        return {
+          ...prisoner,
+          timeOut: prisonerMovement?.timeOut,
+          reasonDescription: prisonerMovement.reasonDescription,
           alertFlags: mapAlerts(prisoner),
         }
       })

@@ -3,6 +3,7 @@ import MovementsService from './movementsService'
 import prisonerSearchApiClientMock from '../test/mocks/prisonerSearchApiClientMock'
 import { movementsInMock } from '../test/mocks/movementsInMock'
 import { prisonerSearchMock } from '../test/mocks/prisonerSearchMock'
+import { movementsOutMock } from '../test/mocks/movementsOutMock'
 
 describe('movementsService', () => {
   let movementsService: MovementsService
@@ -24,26 +25,13 @@ describe('movementsService', () => {
 
       expect(result).toEqual([
         {
+          ...prisonerSearchMock[0],
           alertFlags: [],
-          alerts: [],
           arrivedFrom: 'Cookham Wood',
-          cellLocation: '1-1-1',
-          dateOfBirth: '1980-01-01',
-          ethnicity: '',
-          firstName: 'Eddie',
-          gender: '',
-          lastName: 'Shannon',
-          maritalStatus: '',
-          mostSeriousOffence: '',
           movementTime: '10:30:00',
-          nationality: '',
-          prisonerNumber: 'A1234AB',
-          religion: '',
-          restrictedPatient: false,
-          status: '',
-          youthOffender: false,
         },
         {
+          ...prisonerSearchMock[1],
           alertFlags: [
             {
               alertCodes: ['HID'],
@@ -52,31 +40,8 @@ describe('movementsService', () => {
               label: 'Hidden disability',
             },
           ],
-          alerts: [
-            {
-              active: true,
-              alertCode: 'HID',
-              alertType: 'Hidden disability',
-              expired: false,
-            },
-          ],
           arrivedFrom: 'Leeds',
-          category: 'A',
-          cellLocation: '1-1-1',
-          dateOfBirth: '1980-01-01',
-          ethnicity: '',
-          firstName: 'John',
-          gender: '',
-          lastName: 'Smith',
-          maritalStatus: '',
-          mostSeriousOffence: '',
           movementTime: '10:00:00',
-          nationality: '',
-          prisonerNumber: 'A1234AA',
-          religion: '',
-          restrictedPatient: false,
-          status: '',
-          youthOffender: false,
         },
       ])
     })
@@ -86,6 +51,48 @@ describe('movementsService', () => {
       prisonerSearchApiClientMock.getPrisonersById = jest.fn().mockResolvedValue(prisonerSearchMock)
 
       const result = await movementsService.getArrivedTodayPrisoners('token', 'LEI')
+      expect(prisonerSearchApiClientMock.getPrisonersById).toBeCalledTimes(0)
+
+      expect(result).toEqual([])
+    })
+  })
+
+  describe('getOutTodayPrisoners', () => {
+    it('should return prisoners from movements api', async () => {
+      prisonApiClientMock.getMovementsOut = jest.fn().mockResolvedValue(movementsOutMock)
+      prisonerSearchApiClientMock.getPrisonersById = jest.fn().mockResolvedValue(prisonerSearchMock)
+
+      const result = await movementsService.getOutTodayPrisoners('token', 'LEI')
+      expect(prisonerSearchApiClientMock.getPrisonersById).toHaveBeenCalledWith(['A1234AA', 'A1234AB'])
+
+      expect(result).toEqual([
+        {
+          ...prisonerSearchMock[0],
+          alertFlags: [],
+          reasonDescription: 'Another transfer',
+          timeOut: '11:00:00',
+        },
+        {
+          ...prisonerSearchMock[1],
+          alertFlags: [
+            {
+              alertCodes: ['HID'],
+              alertIds: ['HID'],
+              classes: 'alert-status alert-status--medical',
+              label: 'Hidden disability',
+            },
+          ],
+          reasonDescription: 'Transfer',
+          timeOut: '10:00:00',
+        },
+      ])
+    })
+
+    it('should return empty api if no incoming prisoners', async () => {
+      prisonApiClientMock.getMovementsOut = jest.fn().mockResolvedValue([])
+      prisonerSearchApiClientMock.getPrisonersById = jest.fn().mockResolvedValue(prisonerSearchMock)
+
+      const result = await movementsService.getOutTodayPrisoners('token', 'LEI')
       expect(prisonerSearchApiClientMock.getPrisonersById).toBeCalledTimes(0)
 
       expect(result).toEqual([])

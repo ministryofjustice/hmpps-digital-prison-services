@@ -2,9 +2,9 @@
     {% if alerts.length %}
         <ul class="alerts-list">
             {% for alert in alerts %}
-            <li class="{{ alert.classes }}">
-                {{ alert.label }}
-                </li>{% if newLine %}<br>{% endif %}
+                <li class="{{ alert.classes }}">
+                    {{ alert.label }}
+                </li>
             {% endfor %}
         </ul>
     {% endif %}
