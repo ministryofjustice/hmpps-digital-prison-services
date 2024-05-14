@@ -6,6 +6,7 @@ import { Movements } from './movements'
 import { StaffRole } from './staffRole'
 import { OffenderCell } from './offenderCell'
 import { OffenderIn } from './offenderIn'
+import { OffenderOut } from './offenderOut'
 
 export interface PrisonApiClient {
   getUserCaseLoads(): Promise<CaseLoad[]>
@@ -20,6 +21,7 @@ export interface PrisonApiClient {
   getAttributesForLocation(locationId: number): Promise<OffenderCell>
   getMovements(prisonId: string): Promise<Movements>
   getMovementsIn(prisonId: string, movementDate: string): Promise<OffenderIn[]>
+  getMovementsOut(prisonId: string, movementDate: string): Promise<OffenderOut[]>
   getStaffRoles(staffId: number, agencyId: string): Promise<StaffRole[]>
   setActiveCaseload(caseLoad: CaseLoad): Promise<Record<string, string>>
   getPrisonerImage(offenderNumber: string, fullSizeImage: boolean): Promise<Readable>

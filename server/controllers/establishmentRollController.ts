@@ -49,4 +49,15 @@ export default class EstablishmentRollController {
       res.render('pages/arrivingToday', { prisoners: arrivedPrisoners })
     }
   }
+
+  public getOutToday(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { user } = res.locals
+      const { clientToken } = req.middleware
+
+      const prisonersOutToday = await this.movementsService.getOutTodayPrisoners(clientToken, user.activeCaseLoadId)
+
+      res.render('pages/outToday', { prisoners: prisonersOutToday })
+    }
+  }
 }

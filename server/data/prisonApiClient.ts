@@ -9,6 +9,7 @@ import { Movements } from './interfaces/movements'
 import { StaffRole } from './interfaces/staffRole'
 import { OffenderCell } from './interfaces/offenderCell'
 import { OffenderIn } from './interfaces/offenderIn'
+import { OffenderOut } from './interfaces/offenderOut'
 
 export default class PrisonApiRestClient implements PrisonApiClient {
   constructor(private restClient: RestClient) {}
@@ -45,6 +46,10 @@ export default class PrisonApiRestClient implements PrisonApiClient {
 
   getMovementsIn(prisonId: string, movementDate: string): Promise<OffenderIn[]> {
     return this.get<OffenderIn[]>({ path: `/api/movements/${prisonId}/in/${movementDate.split('T')[0]}` })
+  }
+
+  getMovementsOut(prisonId: string, movementDate: string): Promise<OffenderOut[]> {
+    return this.get<OffenderOut[]>({ path: `/api/movements/${prisonId}/out/${movementDate.split('T')[0]}` })
   }
 
   getEnrouteRollCount(prisonId: string): Promise<number> {
