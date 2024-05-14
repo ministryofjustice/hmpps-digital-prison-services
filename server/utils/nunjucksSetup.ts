@@ -6,13 +6,14 @@ import {
   addDefaultSelectedValue,
   asSelectItem,
   findError,
+  formatName,
   initialiseName,
   prisonerBelongsToUsersCaseLoad,
   userHasAllRoles,
   userHasRoles,
 } from './utils'
 import { ApplicationInfo } from '../applicationInfo'
-import { formatDate, formatDateTime, formatTime } from './dateHelpers'
+import { formatDate, formatDateTime, formatTime, toUnixTimeStamp } from './dateHelpers'
 import config from '../config'
 
 const production = process.env.NODE_ENV === 'production'
@@ -66,4 +67,6 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   njkEnv.addFilter('formatDate', formatDate)
   njkEnv.addFilter('formatDateTime', formatDateTime)
   njkEnv.addFilter('formatTime', formatTime)
+  njkEnv.addFilter('formatName', formatName)
+  njkEnv.addFilter('toUnixTimeStamp', toUnixTimeStamp)
 }

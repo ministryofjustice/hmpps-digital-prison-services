@@ -7,6 +7,7 @@ import { movementsMock } from '../../server/mocks/movementsMock'
 import { mockStaffRoles } from '../../server/mocks/staffRolesMock'
 import { movementsInMock } from '../../server/test/mocks/movementsInMock'
 import { movementsOutMock } from '../../server/test/mocks/movementsOutMock'
+import { movementsEnRouteMock } from '../../server/test/mocks/movementsEnRouteMock'
 
 export default {
   stubUserCaseLoads: (caseLoads: CaseLoad[] = []) => {
@@ -119,6 +120,22 @@ export default {
           'Content-Type': 'application/json;charset=UTF-8',
         },
         jsonBody: movementsOutMock,
+      },
+    })
+  },
+
+  stubMovementsEnRoute: (prisonCode = 'LEI') => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: `/prison/api/movements/${prisonCode}/enroute`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: movementsEnRouteMock,
       },
     })
   },

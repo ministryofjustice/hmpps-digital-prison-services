@@ -3,6 +3,7 @@ import {
   asSelectItem,
   convertToTitleCase,
   findError,
+  formatName,
   initialiseName,
   prisonerBelongsToUsersCaseLoad,
   userHasAllRoles,
@@ -170,4 +171,53 @@ describe('asSelectItem', () => {
   it('should return list of SelectItems with supplied text only', () => {
     expect(asSelectItem(nonSelectItems, 'code')).toEqual(selectItems2)
   })
+})
+
+describe('format name', () => {
+  it.each([
+    ['All names proper (no options)', 'John', 'James', 'Smith', undefined, 'John James Smith'],
+    ['All names lower (no options)', 'john', 'james', 'smith', undefined, 'John James Smith'],
+    ['All names upper (no options)', 'JOHN', 'JAMES', 'SMITH', undefined, 'John James Smith'],
+    ['No middle names (no options)', 'JOHN', undefined, 'Smith', undefined, 'John Smith'],
+    [
+      'Multiple middle names (no options)',
+      'John',
+      'James GORDON william',
+      'Smith',
+      undefined,
+      'John James Gordon William Smith',
+    ],
+    ['Hyphen (no options)', 'John', undefined, 'SMITH-JONES', undefined, 'John Smith-Jones'],
+    ['Apostrophe (no options)', 'JOHN', 'JAMES', "O'sullivan", undefined, "John James O'Sullivan"],
+    [
+      'All names (LastCommaFirstMiddle)',
+      'John',
+      'James',
+      'Smith',
+      { style: 'lastCommaFirstMiddle' },
+      'Smith, John James',
+    ],
+    [
+      'First and last names (LastCommaFirstMiddle)',
+      'John',
+      undefined,
+      'Smith',
+      { style: 'lastCommaFirstMiddle' },
+      'Smith, John',
+    ],
+    ['All names (LastCommaFirst)', 'John', 'James', 'Smith', { style: 'lastCommaFirst' }, 'Smith, John'],
+    ['First name and last name (LastCommaFirst)', 'John', undefined, 'Smith', { style: 'firstLast' }, 'John Smith'],
+  ])(
+    '%s: formatName(%s, %s, %s, %s)',
+    (
+      _: string,
+      firstName: string,
+      middleNames: string,
+      lastName: string,
+      options: { style: 'firstMiddleLast' | 'lastCommaFirstMiddle' | 'lastCommaFirst' | 'firstLast' },
+      expected: string,
+    ) => {
+      expect(formatName(firstName, middleNames, lastName, options)).toEqual(expected)
+    },
+  )
 })
