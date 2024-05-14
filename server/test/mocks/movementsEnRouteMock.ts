@@ -1,0 +1,41 @@
+import { OffenderMovement } from '../../data/interfaces/offenderMovement'
+
+// eslint-disable-next-line import/prefer-default-export
+export const movementsEnRouteMock: OffenderMovement[] = [
+  {
+    offenderNo: 'A1234AA',
+    dateOfBirth: '1980-01-01',
+    firstName: 'John',
+    lastName: 'Smith',
+    bookingId: 0,
+    fromAgency: 'LEI',
+    fromAgencyDescription: 'Leeds',
+    toAgency: 'Moorland',
+    toAgencyDescription: 'MLD',
+    movementType: 'TRN',
+    movementTypeDescription: 'Transfer',
+    movementReason: 'NTRN',
+    movementReasonDescription: 'Normal Transfer',
+    directionCode: 'IN',
+    movementTime: '10:00',
+    movementDate: '2023-12-25',
+  },
+  {
+    offenderNo: 'A1234AB',
+    dateOfBirth: '1980-01-01',
+    firstName: 'Eddie',
+    lastName: 'Shannon',
+    bookingId: 0,
+    fromAgency: 'LEI',
+    fromAgencyDescription: 'Leeds',
+    toAgency: 'Moorland',
+    toAgencyDescription: 'MLD',
+    movementType: 'TRN',
+    movementTypeDescription: 'Transfer',
+    movementReason: 'NTRN',
+    movementReasonDescription: 'Normal Transfer',
+    directionCode: 'IN',
+    movementTime: '11:00',
+    movementDate: '2023-12-25',
+  },
+]

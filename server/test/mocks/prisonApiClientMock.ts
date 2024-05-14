@@ -14,6 +14,7 @@ const prisonApiClientMock: PrisonApiClient = {
   getMovementsIn: jest.fn(),
   getPrisonerImage: jest.fn(),
   getMovementsOut: jest.fn(),
+  getMovementsEnRoute: jest.fn(),
 }
 
 export default prisonApiClientMock

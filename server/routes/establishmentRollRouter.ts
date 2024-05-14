@@ -29,6 +29,7 @@ export default function establishmentRollRouter(services: Services): Router {
 
   get('/arrived-today', establishmentRollController.getArrivedToday())
   get('/out-today', establishmentRollController.getOutToday())
+  get('/en-route', establishmentRollController.getEnRoute())
 
   return router
 }

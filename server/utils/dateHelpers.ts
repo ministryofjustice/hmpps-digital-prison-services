@@ -127,3 +127,8 @@ export const formatTime = (time: string): string => {
   const [HH, mm] = time.split(':')
   return `${HH}:${mm}`
 }
+
+export const toUnixTimeStamp = (isoDate: string, time: string): number => {
+  const fullDate = time ? `${isoDate}T${time}` : isoDate
+  return new Date(fullDate).getTime()
+}
