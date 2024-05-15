@@ -2,9 +2,9 @@
 {% from "../macros/printLink.njk" import printLink %}
 {% from "../macros/establishmentRollStat.njk" import establishmentRollStat %}
 
-{% set wingDesc = wing.userDescription if wing.userDescription else wing.description | capitalize %}
-{% set spurDesc = (spur.userDescription if spur.userDescription else spur.description | capitalize) if spur else "" %}
-{% set landingDesc = landing.userDescription if landing.userDescription else landing.description | capitalize %}
+{% set wingDesc = wing.userDescription if wing.userDescription else wing.description %}
+{% set spurDesc = (spur.userDescription if spur.userDescription else spur.description) if spur else "" %}
+{% set landingDesc = landing.userDescription if landing.userDescription else landing.description %}
 {% set pageTitle = wingDesc + " - " + (spurDesc + " - " if spurDesc else "") + landingDesc %}
 {% set mainClasses = "govuk-body govuk-main-wrapper--auto-spacing" %}
 {% set todayStats = establishmentRollCounts.todayStats %}
@@ -44,7 +44,7 @@
                 <tbody class="govuk-table__body">
                     {% for cell in landingRollCounts %}
                         <tr class="govuk-table__row" id="{{ cell.livingUnitId }}">
-                            <td class="govuk-table__cell">{{ cell.livingUnitDesc | capitalize }}</td>
+                            <td class="govuk-table__cell">{{ cell.livingUnitDesc }}</td>
                             <td class="govuk-table__cell">{{ cell.bedsInUse }}</td>
                             <td class="govuk-table__cell">{{ cell.currentlyInCell }}</td>
                             <td class="govuk-table__cell">

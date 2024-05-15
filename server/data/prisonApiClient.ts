@@ -11,6 +11,7 @@ import { OffenderCell } from './interfaces/offenderCell'
 import { OffenderIn } from './interfaces/offenderIn'
 import { OffenderOut } from './interfaces/offenderOut'
 import { OffenderMovement } from './interfaces/offenderMovement'
+import { OffenderInReception } from './interfaces/offenderInReception'
 
 export default class PrisonApiRestClient implements PrisonApiClient {
   constructor(private restClient: RestClient) {}
@@ -21,6 +22,10 @@ export default class PrisonApiRestClient implements PrisonApiClient {
 
   private put<T>(args: object): Promise<T> {
     return this.restClient.put<T>(args)
+  }
+
+  private async post<T>(args: object): Promise<T> {
+    return this.restClient.post<T>(args)
   }
 
   getUserCaseLoads(): Promise<CaseLoad[]> {
@@ -45,6 +50,10 @@ export default class PrisonApiRestClient implements PrisonApiClient {
     return this.get<Movements>({ path: `/api/movements/rollcount/${prisonId}/movements` })
   }
 
+  getRecentMovements(prisonerNumbers: string[]): Promise<OffenderMovement[]> {
+    return this.post<OffenderMovement[]>({ path: `/api/movements/offenders`, data: prisonerNumbers })
+  }
+
   getMovementsIn(prisonId: string, movementDate: string): Promise<OffenderIn[]> {
     return this.get<OffenderIn[]>({ path: `/api/movements/${prisonId}/in/${movementDate.split('T')[0]}` })
   }
@@ -55,6 +64,10 @@ export default class PrisonApiRestClient implements PrisonApiClient {
 
   getMovementsEnRoute(prisonId: string): Promise<OffenderMovement[]> {
     return this.get<OffenderMovement[]>({ path: `/api/movements/${prisonId}/enroute` })
+  }
+
+  getMovementsInReception(prisonId: string): Promise<OffenderInReception[]> {
+    return this.get<OffenderInReception[]>({ path: `/api/movements/rollcount/${prisonId}/in-reception` })
   }
 
   getEnrouteRollCount(prisonId: string): Promise<number> {

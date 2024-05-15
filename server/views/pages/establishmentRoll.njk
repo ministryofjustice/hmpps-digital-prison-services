@@ -20,9 +20,9 @@
     >
         <td class="govuk-table__cell">
             {% if type === "LANDING" %}
-                <a href="/establishment-roll/wing/{{ wing }}/{{ "spur/"+spur+"/" if spur }}landing/{{ block.livingUnitId }}">{{ block.livingUnitDesc | capitalize }}</a>
+                <a href="/establishment-roll/wing/{{ wing }}/{{ "spur/"+spur+"/" if spur }}landing/{{ block.livingUnitId }}">{{ block.livingUnitDesc }}</a>
             {% else %}
-                {{ block.livingUnitDesc | capitalize }}
+                {{ block.livingUnitDesc }}
             {% endif %}
         </td>
         <td class="govuk-table__cell">{{ block.bedsInUse }}</td>
