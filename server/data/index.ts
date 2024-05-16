@@ -7,7 +7,6 @@ import { buildAppInsightsClient, initialiseAppInsights } from '../utils/azureApp
 import applicationInfoSupplier from '../applicationInfo'
 import { systemTokenBuilder } from './hmppsAuthClient'
 import { createRedisClient } from './redisClient'
-import TokenStore from './tokenStore'
 import config, { ApiConfig } from '../config'
 import RestClient, { RestClientBuilder as CreateRestClientBuilder } from './restClient'
 import PrisonApiRestClient from './prisonApiClient'
@@ -19,6 +18,8 @@ import KeyWorkerApiRestClient from './keyWorkerApiClient'
 import { ComponentApiClient } from './interfaces/componentApiClient'
 import ComponentApiRestClient from './componentApiClient'
 import PrisonerSearchRestClient from './prisonerSearchClient'
+import RedisTokenStore from './tokenStore/redisTokenStore'
+import InMemoryTokenStore from './tokenStore/inMemoryTokenStore'
 
 const applicationInfo = applicationInfoSupplier()
 initialiseAppInsights()
@@ -53,7 +54,9 @@ export const dataAccess = {
     config.apis.frontendComponents,
     ComponentApiRestClient,
   ),
-  systemToken: systemTokenBuilder(new TokenStore(createRedisClient())),
+  systemToken: systemTokenBuilder(
+    config.redis.enabled ? new RedisTokenStore(createRedisClient()) : new InMemoryTokenStore(),
+  ),
   prisonerSearchApiClientBuilder: restClientBuilder<PrisonerSearchRestClient>(
     'Prisoner Search API',
     config.apis.prisonerSearchApi,

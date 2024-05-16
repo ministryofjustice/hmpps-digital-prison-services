@@ -26,12 +26,7 @@ environment instances of the above dependencies (redis being the exception, a lo
 
 Here's the process.
 
-1/ Run redis locally using Docker:
-```
-docker-compose pull && docker-compose up
-```
-
-2/ Create a .env file with environment variables pointing to the development environment
+1/ Create a .env file with environment variables pointing to the development environment
 <details>
 <summary>Click here for an example of the .env file</summary>
 <br>
@@ -97,12 +92,12 @@ PRISONER_PROFILE_URL=https://prisoner-dev.digital.prison.service.justice.gov.uk
 ```
 </details>
 
-3/ And then, to build the assets and start the app with nodemon:
+2/ And then, to build the assets and start the app with nodemon:
 ```
 npm run start:dev
 ```
 
-4/ To access the service, navigate in a web browser to http://localhost:3000
+3/ To access the service, navigate in a web browser to http://localhost:3000
 
 ### Run linter
 

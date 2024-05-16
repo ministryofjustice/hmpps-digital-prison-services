@@ -2,10 +2,10 @@ import nock from 'nock'
 
 import config from '../config'
 import { systemTokenBuilder } from './hmppsAuthClient'
-import TokenStore from './tokenStore'
 import { ApplicationInfo } from '../applicationInfo'
+import TokenStore from './tokenStore/redisTokenStore'
 
-jest.mock('./tokenStore')
+jest.mock('./tokenStore/redisTokenStore')
 jest.mock('../applicationInfo.ts', () => {
   return {
     __esModule: true,
@@ -19,6 +19,8 @@ jest.mock('../applicationInfo.ts', () => {
     }),
   }
 })
+
+jest.mock('./tokenStore/redisTokenStore')
 
 const tokenStore = new TokenStore(null) as jest.Mocked<TokenStore>
 
