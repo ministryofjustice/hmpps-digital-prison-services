@@ -5,6 +5,8 @@ import { movementsInMock } from '../test/mocks/movementsInMock'
 import { prisonerSearchMock } from '../test/mocks/prisonerSearchMock'
 import { movementsOutMock } from '../test/mocks/movementsOutMock'
 import { movementsEnRouteMock } from '../test/mocks/movementsEnRouteMock'
+import { movementsInReceptionMock } from '../test/mocks/movementsInReceptionMock'
+import { movementsRecentMock } from '../test/mocks/movementsRecentMock'
 
 describe('movementsService', () => {
   let movementsService: MovementsService
@@ -141,6 +143,52 @@ describe('movementsService', () => {
 
       const result = await movementsService.getEnRoutePrisoners('token', 'LEI')
       expect(prisonerSearchApiClientMock.getPrisonersById).toBeCalledTimes(0)
+
+      expect(result).toEqual([])
+    })
+  })
+
+  describe('getInReceptionPrisoners', () => {
+    it('should return prisoners from movements api', async () => {
+      prisonApiClientMock.getMovementsInReception = jest.fn().mockResolvedValue(movementsInReceptionMock)
+      prisonerSearchApiClientMock.getPrisonersById = jest.fn().mockResolvedValue(prisonerSearchMock)
+      prisonApiClientMock.getRecentMovements = jest.fn().mockResolvedValue(movementsRecentMock)
+
+      const result = await movementsService.getInReceptionPrisoners('token', 'LEI')
+      expect(prisonerSearchApiClientMock.getPrisonersById).toHaveBeenCalledWith(['A1234AA', 'A1234AB'])
+      expect(prisonApiClientMock.getRecentMovements).toHaveBeenCalledWith(['A1234AA', 'A1234AB'])
+
+      expect(result).toEqual([
+        {
+          ...prisonerSearchMock[0],
+          from: 'Leeds',
+          timeArrived: '11:00',
+          alertFlags: [],
+        },
+        {
+          ...prisonerSearchMock[1],
+          alertFlags: [
+            {
+              alertCodes: ['HID'],
+              alertIds: ['HID'],
+              classes: 'alert-status alert-status--medical',
+              label: 'Hidden disability',
+            },
+          ],
+          from: 'Leicester',
+          timeArrived: '10:00',
+        },
+      ])
+    })
+
+    it('should return empty api if no incoming prisoners', async () => {
+      prisonApiClientMock.getMovementsInReception = jest.fn().mockResolvedValue([])
+      prisonerSearchApiClientMock.getPrisonersById = jest.fn().mockResolvedValue(prisonerSearchMock)
+      prisonApiClientMock.getRecentMovements = jest.fn().mockResolvedValue(movementsRecentMock)
+
+      const result = await movementsService.getInReceptionPrisoners('token', 'LEI')
+      expect(prisonerSearchApiClientMock.getPrisonersById).toBeCalledTimes(0)
+      expect(prisonApiClientMock.getRecentMovements).toBeCalledTimes(0)
 
       expect(result).toEqual([])
     })

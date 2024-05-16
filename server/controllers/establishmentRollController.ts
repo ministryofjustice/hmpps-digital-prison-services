@@ -71,4 +71,15 @@ export default class EstablishmentRollController {
       res.render('pages/enRoute', { prisoners: prisonersEnRoute, prison: user.activeCaseLoad.description })
     }
   }
+
+  public getInReception(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { user } = res.locals
+      const { clientToken } = req.middleware
+
+      const prisonersEnRoute = await this.movementsService.getInReceptionPrisoners(clientToken, user.activeCaseLoadId)
+
+      res.render('pages/inReception', { prisoners: prisonersEnRoute, prison: user.activeCaseLoad.description })
+    }
+  }
 }

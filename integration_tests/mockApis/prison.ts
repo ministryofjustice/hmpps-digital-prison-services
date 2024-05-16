@@ -8,6 +8,8 @@ import { mockStaffRoles } from '../../server/mocks/staffRolesMock'
 import { movementsInMock } from '../../server/test/mocks/movementsInMock'
 import { movementsOutMock } from '../../server/test/mocks/movementsOutMock'
 import { movementsEnRouteMock } from '../../server/test/mocks/movementsEnRouteMock'
+import { movementsInReceptionMock } from '../../server/test/mocks/movementsInReceptionMock'
+import { movementsRecentMock } from '../../server/test/mocks/movementsRecentMock'
 
 export default {
   stubUserCaseLoads: (caseLoads: CaseLoad[] = []) => {
@@ -136,6 +138,38 @@ export default {
           'Content-Type': 'application/json;charset=UTF-8',
         },
         jsonBody: movementsEnRouteMock,
+      },
+    })
+  },
+
+  stubMovementsInReception: (prisonCode = 'LEI') => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: `/prison/api/movements/rollcount/${prisonCode}/in-reception`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: movementsInReceptionMock,
+      },
+    })
+  },
+
+  stubRecentMovements: () => {
+    return stubFor({
+      request: {
+        method: 'POST',
+        urlPattern: `/prison/api/movements/offenders`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: movementsRecentMock,
       },
     })
   },
