@@ -5,7 +5,6 @@ import { ApplicationInfo } from '../applicationInfo'
 import { KeyWorkerApiClient } from './interfaces/keyWorkerApiClient'
 import KeyWorkerApiRestClient from './keyWorkerApiClient'
 
-jest.mock('./tokenStore')
 jest.mock('../applicationInfo.ts', () => {
   return {
     __esModule: true,

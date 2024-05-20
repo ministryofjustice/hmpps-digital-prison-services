@@ -6,7 +6,6 @@ import { ApplicationInfo } from '../applicationInfo'
 import { locationMock } from '../mocks/locationMock'
 import { mockStaffRoles } from '../mocks/staffRolesMock'
 
-jest.mock('./tokenStore')
 jest.mock('../applicationInfo.ts', () => {
   return {
     __esModule: true,

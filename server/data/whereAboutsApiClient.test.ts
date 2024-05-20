@@ -5,7 +5,6 @@ import { ApplicationInfo } from '../applicationInfo'
 import { WhereAboutsApiClient } from './interfaces/whereAboutsApiClient'
 import WhereAboutsApiRestClient from './whereAboutsApiClient'
 
-jest.mock('./tokenStore')
 jest.mock('../applicationInfo.ts', () => {
   return {
     __esModule: true,
