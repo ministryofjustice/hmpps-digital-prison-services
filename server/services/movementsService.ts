@@ -3,6 +3,9 @@ import { PrisonApiClient } from '../data/interfaces/prisonApiClient'
 import { PrisonerSearchClient } from '../data/interfaces/prisonerSearchClient'
 import { mapAlerts } from './utils/alertFlagLabels'
 import { PrisonerWithAlerts } from './interfaces/establishmentRollService/PrisonerWithAlerts'
+import { stripAgencyPrefix } from '../utils/utils'
+import { Prisoner } from '../data/interfaces/prisoner'
+import { BedAssignment } from '../data/interfaces/bedAssignment'
 
 export default class MovementsService {
   constructor(
@@ -115,5 +118,55 @@ export default class MovementsService {
           timeArrived: recentMovement?.movementTime,
         }
       })
+  }
+
+  public async getNoCellAllocatedPrisoners(
+    clientToken: string,
+    caseLoadId: string,
+  ): Promise<(Prisoner & { movedBy: string; previousCell: string; timeOut: string })[]> {
+    const prisonApi = this.prisonApiClientBuilder(clientToken)
+    const prisonerSearchClient = this.prisonerSearchClientBuilder(clientToken)
+
+    const { content: cellSwapPrisoners } = await prisonerSearchClient.getCswapPrisonersInEstablishment(caseLoadId)
+    if (!cellSwapPrisoners?.length) return []
+
+    const prisonersWithLocations: {
+      prisoner: Prisoner
+      currentLocation: BedAssignment
+      previousLocation: BedAssignment
+    }[] = await Promise.all(
+      cellSwapPrisoners.map(async prisoner => {
+        const { content: cellHistory } = await prisonApi.getOffenderCellHistory(prisoner.bookingId)
+
+        const cellHistoryDescendingSequence = cellHistory.sort(
+          (left, right) => right.bedAssignmentHistorySequence - left.bedAssignmentHistorySequence,
+        )
+        const currentLocation = cellHistoryDescendingSequence[0]
+        const previousLocation = cellHistoryDescendingSequence[1]
+
+        return {
+          prisoner,
+          currentLocation,
+          previousLocation,
+        }
+      }),
+    )
+
+    const allStaffUsernames = prisonersWithLocations.map(prisoner => prisoner.currentLocation.movementMadeBy)
+    const allStaffDetails = allStaffUsernames.length
+      ? await prisonApi.getUserDetailsList([...new Set(allStaffUsernames)])
+      : []
+
+    return prisonersWithLocations.map(prisonerWithLocations => {
+      const { currentLocation, previousLocation, prisoner } = prisonerWithLocations
+      const movementMadeBy = allStaffDetails.find(staffUser => staffUser.username === currentLocation.movementMadeBy)
+
+      return {
+        ...prisoner,
+        movedBy: movementMadeBy ? `${movementMadeBy.firstName} ${movementMadeBy.lastName}` : '',
+        previousCell: stripAgencyPrefix(previousLocation.description, caseLoadId),
+        timeOut: previousLocation.assignmentEndDateTime,
+      }
+    })
   }
 }

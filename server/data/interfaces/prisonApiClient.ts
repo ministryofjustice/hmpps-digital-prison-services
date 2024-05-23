@@ -9,6 +9,9 @@ import { OffenderIn } from './offenderIn'
 import { OffenderOut } from './offenderOut'
 import { OffenderMovement } from './offenderMovement'
 import { OffenderInReception } from './offenderInReception'
+import { PagedList } from './pagedList'
+import { BedAssignment } from './bedAssignment'
+import { UserDetail } from './userDetail'
 
 export interface PrisonApiClient {
   getUserCaseLoads(): Promise<CaseLoad[]>
@@ -30,4 +33,6 @@ export interface PrisonApiClient {
   getStaffRoles(staffId: number, agencyId: string): Promise<StaffRole[]>
   setActiveCaseload(caseLoad: CaseLoad): Promise<Record<string, string>>
   getPrisonerImage(offenderNumber: string, fullSizeImage: boolean): Promise<Readable>
+  getOffenderCellHistory(bookingId: number, params?: { page: number; size: number }): Promise<PagedList<BedAssignment>>
+  getUserDetailsList(usernames: string[]): Promise<UserDetail[]>
 }

@@ -132,3 +132,7 @@ export const toUnixTimeStamp = (isoDate: string, time: string): number => {
   const fullDate = time ? `${isoDate}T${time}` : isoDate
   return new Date(fullDate).getTime()
 }
+
+export const timeFromDate = (isoString: string): string => {
+  return formatTime(isoString.split('T')[1].split('.')[0])
+}

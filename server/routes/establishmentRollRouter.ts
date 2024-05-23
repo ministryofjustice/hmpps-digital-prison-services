@@ -31,6 +31,7 @@ export default function establishmentRollRouter(services: Services): Router {
   get('/out-today', establishmentRollController.getOutToday())
   get('/en-route', establishmentRollController.getEnRoute())
   get('/in-reception', establishmentRollController.getInReception())
+  get('/no-cell-allocated', establishmentRollController.getUnallocated())
 
   return router
 }

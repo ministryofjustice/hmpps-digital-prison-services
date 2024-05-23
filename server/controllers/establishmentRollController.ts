@@ -1,6 +1,8 @@
 import { Request, RequestHandler, Response } from 'express'
 import EstablishmentRollService from '../services/establishmentRollService'
 import MovementsService from '../services/movementsService'
+import { userHasRoles } from '../utils/utils'
+import { Role } from '../enums/role'
 
 export default class EstablishmentRollController {
   constructor(
@@ -80,6 +82,23 @@ export default class EstablishmentRollController {
       const prisonersEnRoute = await this.movementsService.getInReceptionPrisoners(clientToken, user.activeCaseLoadId)
 
       res.render('pages/inReception', { prisoners: prisonersEnRoute, prison: user.activeCaseLoad.description })
+    }
+  }
+
+  public getUnallocated(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { user } = res.locals
+      const { clientToken } = req.middleware
+
+      const unallocatedPrisoners = await this.movementsService.getNoCellAllocatedPrisoners(
+        clientToken,
+        user.activeCaseLoadId,
+      )
+
+      res.render('pages/noCellAllocated', {
+        prisoners: unallocatedPrisoners,
+        userCanAllocateCell: userHasRoles([Role.CellMove], user.userRoles),
+      })
     }
   }
 }

@@ -235,6 +235,7 @@ export default {
   serviceUrls: {
     digitalPrisons: get('DIGITAL_PRISONS_URL', 'http://localhost:3001', requiredInProduction),
     prisonerProfile: get('PRISONER_PROFILE_URL', 'http://localhost:3002', requiredInProduction),
+    changeSomeonesCell: get('CHANGE_SOMEONES_CELL_URL', 'http://localhost:3002', requiredInProduction),
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   todayCacheTTL: Number(get('TODAY_CACHE_TTL', 0, requiredInProduction)),

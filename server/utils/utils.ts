@@ -135,3 +135,15 @@ export const formatName = (
     .join(' ')
     .replace(/(^\w)|([\s'-]+\w)/g, letter => letter.toUpperCase())
 }
+
+export const stripAgencyPrefix = (location: string, agency: string): string => {
+  const parts = location && location.split('-')
+  if (parts && parts.length > 0) {
+    const index = parts.findIndex(p => p === agency)
+    if (index >= 0) {
+      return location.substring(parts[index].length + 1, location.length)
+    }
+  }
+
+  return null
+}
