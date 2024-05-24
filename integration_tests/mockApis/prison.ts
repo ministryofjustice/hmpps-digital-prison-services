@@ -10,6 +10,9 @@ import { movementsOutMock } from '../../server/test/mocks/movementsOutMock'
 import { movementsEnRouteMock } from '../../server/test/mocks/movementsEnRouteMock'
 import { movementsInReceptionMock } from '../../server/test/mocks/movementsInReceptionMock'
 import { movementsRecentMock } from '../../server/test/mocks/movementsRecentMock'
+import { offenderCellHistoryMock } from '../../server/test/mocks/offenderCellHistoryMock'
+import { userDetailsMock } from '../../server/test/mocks/userDetailsMock'
+import { pagedListMock } from '../../server/test/mocks/pagedListMock'
 
 export default {
   stubUserCaseLoads: (caseLoads: CaseLoad[] = []) => {
@@ -266,6 +269,38 @@ export default {
           'Content-Type': 'application/json;charset=UTF-8',
         },
         jsonBody: {},
+      },
+    })
+  },
+
+  stubGetOffenderCellHistory: (bookingId = 123) => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        url: `/prison/api/bookings/${bookingId}/cell-history?page=0&size=2000`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: pagedListMock(offenderCellHistoryMock),
+      },
+    })
+  },
+
+  getUserDetailsList: () => {
+    return stubFor({
+      request: {
+        method: 'POST',
+        url: '/prison/api/users/list',
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: userDetailsMock,
       },
     })
   },

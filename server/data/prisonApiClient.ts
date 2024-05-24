@@ -12,6 +12,9 @@ import { OffenderIn } from './interfaces/offenderIn'
 import { OffenderOut } from './interfaces/offenderOut'
 import { OffenderMovement } from './interfaces/offenderMovement'
 import { OffenderInReception } from './interfaces/offenderInReception'
+import { UserDetail } from './interfaces/userDetail'
+import { BedAssignment } from './interfaces/bedAssignment'
+import { PagedList } from './interfaces/pagedList'
 
 export default class PrisonApiRestClient implements PrisonApiClient {
   constructor(private restClient: RestClient) {}
@@ -102,9 +105,23 @@ export default class PrisonApiRestClient implements PrisonApiClient {
     return this.put<Record<string, string>>({ path: '/api/users/me/activeCaseLoad', data: caseLoad })
   }
 
-  async getPrisonerImage(prisonerNumber: string, fullSizeImage: boolean): Promise<Readable> {
+  getPrisonerImage(prisonerNumber: string, fullSizeImage: boolean): Promise<Readable> {
     return this.restClient.stream({
       path: `/api/bookings/offenderNo/${prisonerNumber}/image/data?fullSizeImage=${fullSizeImage}`,
     })
+  }
+
+  getOffenderCellHistory(
+    bookingId: number,
+    pagedParams: { page: number; size: number } = { page: 0, size: 2000 },
+  ): Promise<PagedList<BedAssignment>> {
+    return this.get<PagedList<BedAssignment>>({
+      path: `/api/bookings/${bookingId}/cell-history`,
+      query: querystring.stringify(pagedParams),
+    })
+  }
+
+  getUserDetailsList(usernames: string[]): Promise<UserDetail[]> {
+    return this.post<UserDetail[]>({ path: '/api/users/list', data: usernames })
   }
 }

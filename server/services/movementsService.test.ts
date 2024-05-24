@@ -7,6 +7,9 @@ import { movementsOutMock } from '../test/mocks/movementsOutMock'
 import { movementsEnRouteMock } from '../test/mocks/movementsEnRouteMock'
 import { movementsInReceptionMock } from '../test/mocks/movementsInReceptionMock'
 import { movementsRecentMock } from '../test/mocks/movementsRecentMock'
+import { offenderCellHistory2Mock, offenderCellHistoryMock } from '../test/mocks/offenderCellHistoryMock'
+import { userDetailsMock } from '../test/mocks/userDetailsMock'
+import { pagedListMock } from '../test/mocks/pagedListMock'
 
 describe('movementsService', () => {
   let movementsService: MovementsService
@@ -189,6 +192,54 @@ describe('movementsService', () => {
       const result = await movementsService.getInReceptionPrisoners('token', 'LEI')
       expect(prisonerSearchApiClientMock.getPrisonersById).toBeCalledTimes(0)
       expect(prisonApiClientMock.getRecentMovements).toBeCalledTimes(0)
+
+      expect(result).toEqual([])
+    })
+  })
+
+  describe('getNoCellAllocatedPrisoners', () => {
+    it('should search for prisoners with CSWAP living unit and embellish with movements', async () => {
+      prisonerSearchApiClientMock.getCswapPrisonersInEstablishment = jest
+        .fn()
+        .mockResolvedValue(pagedListMock(prisonerSearchMock))
+
+      prisonApiClientMock.getOffenderCellHistory = jest
+        .fn()
+        .mockResolvedValueOnce(pagedListMock(offenderCellHistoryMock))
+        .mockResolvedValueOnce(pagedListMock(offenderCellHistory2Mock))
+      prisonApiClientMock.getUserDetailsList = jest.fn().mockResolvedValue(userDetailsMock)
+
+      const result = await movementsService.getNoCellAllocatedPrisoners('token', 'MDI')
+      expect(prisonApiClientMock.getOffenderCellHistory).toHaveBeenCalledTimes(2)
+      expect(prisonApiClientMock.getOffenderCellHistory).toHaveBeenCalledWith(123)
+      expect(prisonApiClientMock.getOffenderCellHistory).toHaveBeenCalledWith(456)
+      expect(prisonApiClientMock.getUserDetailsList).toHaveBeenCalledWith(['ESHANNON', 'CWADDLE'])
+
+      expect(result).toEqual([
+        {
+          ...prisonerSearchMock[0],
+          movedBy: 'Edwin Shannon',
+          previousCell: '1-1-2',
+          timeOut: '2021-01-01T00:00:00',
+        },
+        {
+          ...prisonerSearchMock[1],
+          movedBy: 'Chris Waddle',
+          previousCell: '2-1-3',
+          timeOut: '2021-01-01T00:00:00',
+        },
+      ])
+    })
+
+    it('should return empty api if no CSWAP prisoners', async () => {
+      prisonerSearchApiClientMock.getCswapPrisonersInEstablishment = jest.fn().mockResolvedValue({ content: [] })
+
+      prisonApiClientMock.getOffenderCellHistory = jest.fn().mockResolvedValue(offenderCellHistoryMock)
+      prisonApiClientMock.getUserDetailsList = jest.fn().mockResolvedValue(userDetailsMock)
+
+      const result = await movementsService.getNoCellAllocatedPrisoners('token', 'LEI')
+      expect(prisonApiClientMock.getOffenderCellHistory).toBeCalledTimes(0)
+      expect(prisonApiClientMock.getUserDetailsList).toBeCalledTimes(0)
 
       expect(result).toEqual([])
     })

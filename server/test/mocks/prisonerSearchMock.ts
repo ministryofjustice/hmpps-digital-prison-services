@@ -1,9 +1,9 @@
 import { Prisoner } from '../../data/interfaces/prisoner'
 
-// eslint-disable-next-line import/prefer-default-export
 export const prisonerSearchMock: Prisoner[] = [
   {
     prisonerNumber: 'A1234AA',
+    bookingId: 123,
     firstName: 'John',
     lastName: 'Smith',
     dateOfBirth: '1980-01-01',
@@ -29,6 +29,7 @@ export const prisonerSearchMock: Prisoner[] = [
   },
   {
     prisonerNumber: 'A1234AB',
+    bookingId: 456,
     firstName: 'Eddie',
     lastName: 'Shannon',
     dateOfBirth: '1980-01-01',

@@ -22,6 +22,5 @@ Cypress.Commands.add(
     cy.task('stubSignIn', options)
     cy.task('stubUserCaseLoads', options.caseLoads)
     cy.task('stubUserLocations', options.locations)
-    cy.task('stubGetStaffRoles')
   },
 )
