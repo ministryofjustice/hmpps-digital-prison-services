@@ -198,7 +198,7 @@ describe('movementsService', () => {
   })
 
   describe('getNoCellAllocatedPrisoners', () => {
-    it('should search for prisoners with CSWAP living unit and embellish with movements', async () => {
+    beforeEach(() => {
       prisonerSearchApiClientMock.getCswapPrisonersInEstablishment = jest
         .fn()
         .mockResolvedValue(pagedListMock(prisonerSearchMock))
@@ -208,7 +208,9 @@ describe('movementsService', () => {
         .mockResolvedValueOnce(pagedListMock(offenderCellHistoryMock))
         .mockResolvedValueOnce(pagedListMock(offenderCellHistory2Mock))
       prisonApiClientMock.getUserDetailsList = jest.fn().mockResolvedValue(userDetailsMock)
+    })
 
+    it('should search for prisoners with CSWAP living unit and return result for each prisoner', async () => {
       const result = await movementsService.getNoCellAllocatedPrisoners('token', 'MDI')
       expect(prisonApiClientMock.getOffenderCellHistory).toHaveBeenCalledTimes(2)
       expect(prisonApiClientMock.getOffenderCellHistory).toHaveBeenCalledWith(123)
@@ -216,18 +218,47 @@ describe('movementsService', () => {
       expect(prisonApiClientMock.getUserDetailsList).toHaveBeenCalledWith(['ESHANNON', 'CWADDLE'])
 
       expect(result).toEqual([
-        {
-          ...prisonerSearchMock[0],
+        expect.objectContaining(prisonerSearchMock[0]),
+        expect.objectContaining(prisonerSearchMock[1]),
+      ])
+    })
+
+    it('should add the name of the staff member who made the most recent move', async () => {
+      const result = await movementsService.getNoCellAllocatedPrisoners('token', 'MDI')
+
+      expect(result).toEqual([
+        expect.objectContaining({
           movedBy: 'Edwin Shannon',
-          previousCell: '1-1-2',
-          timeOut: '2021-01-01T00:00:00',
-        },
-        {
-          ...prisonerSearchMock[1],
+        }),
+        expect.objectContaining({
           movedBy: 'Chris Waddle',
+        }),
+      ])
+    })
+
+    it('should add the previous cell from the penultimate cell', async () => {
+      const result = await movementsService.getNoCellAllocatedPrisoners('token', 'MDI')
+
+      expect(result).toEqual([
+        expect.objectContaining({
+          previousCell: '1-1-2',
+        }),
+        expect.objectContaining({
           previousCell: '2-1-3',
-          timeOut: '2021-01-01T00:00:00',
-        },
+        }),
+      ])
+    })
+
+    it('should add the timeOut from the penultimate cell', async () => {
+      const result = await movementsService.getNoCellAllocatedPrisoners('token', 'MDI')
+
+      expect(result).toEqual([
+        expect.objectContaining({
+          timeOut: '2021-02-01T00:00:00',
+        }),
+        expect.objectContaining({
+          timeOut: '2021-02-01T00:00:00',
+        }),
       ])
     })
 
