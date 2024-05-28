@@ -3,11 +3,13 @@ import EstablishmentRollService from '../services/establishmentRollService'
 import MovementsService from '../services/movementsService'
 import { userHasRoles } from '../utils/utils'
 import { Role } from '../enums/role'
+import LocationService from '../services/locationsService'
 
 export default class EstablishmentRollController {
   constructor(
     private readonly establishmentRollService: EstablishmentRollService,
     private readonly movementsService: MovementsService,
+    private readonly locationService: LocationService,
   ) {}
 
   public getEstablishmentRoll(): RequestHandler {
@@ -32,9 +34,9 @@ export default class EstablishmentRollController {
 
       const [landingRollCounts, wing, spur, landing] = await Promise.all([
         this.establishmentRollService.getLandingRollCounts(clientToken, user.activeCaseLoadId, Number(landingId)),
-        this.establishmentRollService.getLocationInfo(clientToken, wingId),
-        spurId ? this.establishmentRollService.getLocationInfo(clientToken, spurId) : null,
-        this.establishmentRollService.getLocationInfo(clientToken, landingId),
+        this.locationService.getLocationInfo(clientToken, wingId),
+        spurId ? this.locationService.getLocationInfo(clientToken, spurId) : null,
+        this.locationService.getLocationInfo(clientToken, landingId),
       ])
 
       res.render('pages/establishmentRollLanding', { landingRollCounts, wing, spur, landing })
@@ -98,6 +100,23 @@ export default class EstablishmentRollController {
       res.render('pages/noCellAllocated', {
         prisoners: unallocatedPrisoners,
         userCanAllocateCell: userHasRoles([Role.CellMove], user.userRoles),
+      })
+    }
+  }
+
+  public getCurrentlyOut(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { livingUnitId } = req.params
+      const { clientToken } = req.middleware
+
+      const [prisonersCurrentlyOut, location] = await Promise.all([
+        this.movementsService.getOffendersCurrentlyOutOfLivingUnit(clientToken, livingUnitId),
+        this.locationService.getLocationInfo(clientToken, livingUnitId),
+      ])
+
+      res.render('pages/currentlyOut', {
+        prisoners: prisonersCurrentlyOut,
+        location,
       })
     }
   }

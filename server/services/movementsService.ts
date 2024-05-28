@@ -169,4 +169,34 @@ export default class MovementsService {
       }
     })
   }
+
+  public async getOffendersCurrentlyOutOfLivingUnit(
+    clientToken: string,
+    livingUnitId: string,
+  ): Promise<(PrisonerWithAlerts & { currentLocation: string; movementComment?: string })[]> {
+    const prisonApi = this.prisonApiClientBuilder(clientToken)
+    const prisonerSearchClient = this.prisonerSearchClientBuilder(clientToken)
+
+    const outPrisoners = await prisonApi.getPrisonersCurrentlyOutOfLivingUnit(livingUnitId)
+    const prisonerNumbers = outPrisoners.map(prisoner => prisoner.offenderNo)
+    if (!outPrisoners || !outPrisoners?.length) return []
+
+    const [prisoners, recentMovements] = await Promise.all([
+      prisonerSearchClient.getPrisonersById(prisonerNumbers),
+      prisonApi.getRecentMovements(prisonerNumbers),
+    ])
+
+    return prisoners
+      .sort((a, b) => a.lastName.localeCompare(b.lastName, 'en', { ignorePunctuation: true }))
+      .map(prisoner => {
+        const recentMovement = recentMovements.find(movement => movement.offenderNo === prisoner.prisonerNumber)
+
+        return {
+          ...prisoner,
+          alertFlags: mapAlerts(prisoner),
+          currentLocation: recentMovement?.toCity,
+          movementComment: recentMovement?.commentText,
+        }
+      })
+  }
 }

@@ -2,7 +2,8 @@
 {% from "../macros/alertFlags.njk" import alertFlags %}
 {% from "../macros/categoryFlag.njk" import categoryFlag %}
 
-{% set pageTitle = "In reception"%}
+{% set locationName = location.userDescription if location.userDescription else location.description %}
+{% set pageTitle = "Currently out - " + locationName %}
 {% set mainClasses = "govuk-body govuk-main-wrapper--auto-spacing" %}
 
 {% set breadCrumbs = [
@@ -24,16 +25,17 @@
 
     <div class="govuk-grid-row govuk-!-margin-bottom-9">
         <div class="govuk-grid-column-full results-table results-table__results">
-            <table class="govuk-table in-reception-roll__table" data-module="moj-sortable-table">
+            <table class="govuk-table currently-out-roll__table" data-module="moj-sortable-table">
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Picture</span></th>
                         <th scope="col" class="govuk-table__header govuk-!-font-size-16" aria-sort="ascending">Name</th>
                         <th scope="col" class="govuk-table__header govuk-!-font-size-16">Prison number</th>
                         <th scope="col" class="govuk-table__header govuk-!-font-size-16">Date of birth</th>
-                        <th scope="col" class="govuk-table__header govuk-!-font-size-16" aria-sort="none">Time arrived</th>
-                        <th scope="col" class="govuk-table__header govuk-!-font-size-16">Arrived from</th>
+                        <th scope="col" class="govuk-table__header govuk-!-font-size-16">Location</th>
                         <th scope="col" class="govuk-table__header govuk-!-font-size-16">Alert flags</th>
+                        <th scope="col" class="govuk-table__header govuk-!-font-size-16">Current location</th>
+                        <th scope="col" class="govuk-table__header govuk-!-font-size-16">Comment</th>
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
@@ -44,9 +46,10 @@
                             <td class="govuk-table__cell" data-sort-value="{{ prisonerName }}" ><a href="{{ config.serviceUrls.prisonerProfile }}/prisoner/{{ prisoner.prisonerNumber }}" class="govuk-link">{{ prisonerName }}</a></td>
                             <td class="govuk-table__cell">{{ prisoner.prisonerNumber }}</td>
                             <td class="govuk-table__cell">{{ prisoner.dateOfBirth | formatDate('short')}}</td>
-                            <td class="govuk-table__cell">{{ prisoner.timeArrived | formatTime }}</td>
-                            <td class="govuk-table__cell">{{ prisoner.from }}</td>
+                            <td class="govuk-table__cell">{{ prisoner.cellLocation }}</td>
                             <td class="govuk-table__cell">{{ alertFlags(prisoner.alertFlags) }}{{categoryFlag("", prisoner.category) | safe}}</td>
+                            <td class="govuk-table__cell">{{ prisoner.currentLocation }}</td>
+                            <td class="govuk-table__cell">{{ prisoner.movementComment }}</td>
                         </tr>
                     {% endfor %}
 

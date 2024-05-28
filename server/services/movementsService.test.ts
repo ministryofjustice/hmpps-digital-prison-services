@@ -275,4 +275,79 @@ describe('movementsService', () => {
       expect(result).toEqual([])
     })
   })
+
+  describe('getOffendersCurrentlyOutOfLivingUnit', () => {
+    beforeEach(() => {
+      prisonApiClientMock.getPrisonersCurrentlyOutOfLivingUnit = jest.fn().mockResolvedValue(movementsOutMock)
+      prisonerSearchApiClientMock.getPrisonersById = jest.fn().mockResolvedValue(prisonerSearchMock)
+      prisonApiClientMock.getRecentMovements = jest.fn().mockResolvedValue(movementsRecentMock)
+    })
+
+    it('should search for prisoners for prisoners from getPrisonersCurrentlyOutOfLivingUnit', async () => {
+      const result = await movementsService.getOffendersCurrentlyOutOfLivingUnit('token', 'MDI')
+      expect(prisonerSearchApiClientMock.getPrisonersById).toHaveBeenCalledWith(['A1234AA', 'A1234AB'])
+      expect(prisonApiClientMock.getRecentMovements).toHaveBeenCalledWith(['A1234AA', 'A1234AB'])
+
+      expect(result).toEqual([
+        expect.objectContaining(prisonerSearchMock[0]),
+        expect.objectContaining(prisonerSearchMock[1]),
+      ])
+    })
+
+    it('should decorate the alertFlags for each prisoner', async () => {
+      const result = await movementsService.getOffendersCurrentlyOutOfLivingUnit('token', 'MDI')
+
+      expect(result).toEqual([
+        expect.objectContaining({
+          alertFlags: [],
+        }),
+        expect.objectContaining({
+          alertFlags: [
+            {
+              alertCodes: ['HID'],
+              alertIds: ['HID'],
+              classes: 'alert-status alert-status--medical',
+              label: 'Hidden disability',
+            },
+          ],
+        }),
+      ])
+    })
+
+    it('should add the currentLocation from latest movement toCity', async () => {
+      const result = await movementsService.getOffendersCurrentlyOutOfLivingUnit('token', 'MDI')
+
+      expect(result).toEqual([
+        expect.objectContaining({
+          currentLocation: 'Sheffield',
+        }),
+        expect.objectContaining({
+          currentLocation: 'Doncaster',
+        }),
+      ])
+    })
+
+    it('should add the movementComment from latest movement commentText', async () => {
+      const result = await movementsService.getOffendersCurrentlyOutOfLivingUnit('token', 'MDI')
+
+      expect(result).toEqual([
+        expect.objectContaining({
+          movementComment: 'Some Sheffield comment',
+        }),
+        expect.objectContaining({
+          movementComment: 'Some Doncaster comment',
+        }),
+      ])
+    })
+
+    it('should return empty api if no currently out prisoners', async () => {
+      prisonApiClientMock.getPrisonersCurrentlyOutOfLivingUnit = jest.fn().mockResolvedValue([])
+
+      const result = await movementsService.getOffendersCurrentlyOutOfLivingUnit('token', 'LEI')
+      expect(prisonerSearchApiClientMock.getPrisonersById).toBeCalledTimes(0)
+      expect(prisonApiClientMock.getRecentMovements).toBeCalledTimes(0)
+
+      expect(result).toEqual([])
+    })
+  })
 })

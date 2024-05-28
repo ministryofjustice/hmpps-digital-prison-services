@@ -18,6 +18,7 @@ export default function establishmentRollRouter(services: Services): Router {
   const establishmentRollController = new EstablishmentRollController(
     services.establishmentRollService,
     services.movementsService,
+    services.locationsService,
   )
 
   get('/', establishmentRollController.getEstablishmentRoll())
@@ -32,6 +33,7 @@ export default function establishmentRollRouter(services: Services): Router {
   get('/en-route', establishmentRollController.getEnRoute())
   get('/in-reception', establishmentRollController.getInReception())
   get('/no-cell-allocated', establishmentRollController.getUnallocated())
+  get('/:livingUnitId/currently-out', establishmentRollController.getCurrentlyOut())
 
   return router
 }

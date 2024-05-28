@@ -8,6 +8,7 @@ import ContentfulService from './contentfulService'
 import ComponentService from './componentService'
 import EstablishmentRollService from './establishmentRollService'
 import MovementsService from './movementsService'
+import LocationService from './locationsService'
 
 export const services = () => {
   const {
@@ -29,6 +30,7 @@ export const services = () => {
   const componentService = new ComponentService(componentApiClientBuilder)
   const establishmentRollService = new EstablishmentRollService(prisonApiClientBuilder)
   const movementsService = new MovementsService(prisonApiClientBuilder, prisonerSearchApiClientBuilder)
+  const locationsService = new LocationService(prisonApiClientBuilder)
 
   const apolloClient = new ApolloClient({
     cache: new InMemoryCache(),
@@ -56,6 +58,7 @@ export const services = () => {
     componentService,
     establishmentRollService,
     movementsService,
+    locationsService,
   }
 }
 

@@ -9,6 +9,8 @@ export interface OffenderMovement {
   fromAgencyDescription: string
   toAgency: string
   toAgencyDescription: string
+  toCity: string
+  commentText?: string
   movementType: 'CRT' | 'ADM' | 'REL' | 'TAP' | 'TRN'
   movementTypeDescription: string
   movementReason: string
