@@ -20,6 +20,7 @@ const prisonApiClientMock: PrisonApiClient = {
   getOffenderCellHistory: jest.fn(),
   getUserDetailsList: jest.fn(),
   getPrisonersCurrentlyOutOfLivingUnit: jest.fn(),
+  getPrisonersCurrentlyOutOfPrison: jest.fn(),
 }
 
 export default prisonApiClientMock

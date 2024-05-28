@@ -33,6 +33,7 @@ export default function establishmentRollRouter(services: Services): Router {
   get('/en-route', establishmentRollController.getEnRoute())
   get('/in-reception', establishmentRollController.getInReception())
   get('/no-cell-allocated', establishmentRollController.getUnallocated())
+  get('/total-currently-out', establishmentRollController.getTotalCurrentlyOut())
   get('/:livingUnitId/currently-out', establishmentRollController.getCurrentlyOut())
 
   return router

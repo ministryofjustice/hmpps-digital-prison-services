@@ -3,7 +3,7 @@
 {% from "../macros/categoryFlag.njk" import categoryFlag %}
 
 {% set locationName = location.userDescription if location.userDescription else location.description %}
-{% set pageTitle = "Currently out - " + locationName %}
+{% set pageTitle = "Currently out - " + locationName if location else "Total currently out"%}
 {% set mainClasses = "govuk-body govuk-main-wrapper--auto-spacing" %}
 
 {% set breadCrumbs = [

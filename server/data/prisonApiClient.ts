@@ -128,4 +128,8 @@ export default class PrisonApiRestClient implements PrisonApiClient {
   getPrisonersCurrentlyOutOfLivingUnit(livingUnitId: string): Promise<OffenderOut[]> {
     return this.get<OffenderOut[]>({ path: `/api/movements/livingUnit/${livingUnitId}/currently-out` })
   }
+
+  getPrisonersCurrentlyOutOfPrison(prisonId: string): Promise<OffenderOut[]> {
+    return this.get<OffenderOut[]>({ path: `/api/movements/agency/${prisonId}/currently-out` })
+  }
 }

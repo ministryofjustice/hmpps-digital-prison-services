@@ -120,4 +120,21 @@ export default class EstablishmentRollController {
       })
     }
   }
+
+  public getTotalCurrentlyOut(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { user } = res.locals
+      const { clientToken } = req.middleware
+
+      const prisonersCurrentlyOut = await this.movementsService.getOffendersCurrentlyOutTotal(
+        clientToken,
+        user.activeCaseLoadId,
+      )
+
+      res.render('pages/currentlyOut', {
+        prisoners: prisonersCurrentlyOut,
+        location: null,
+      })
+    }
+  }
 }

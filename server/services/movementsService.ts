@@ -6,6 +6,7 @@ import { PrisonerWithAlerts } from './interfaces/establishmentRollService/Prison
 import { stripAgencyPrefix } from '../utils/utils'
 import { Prisoner } from '../data/interfaces/prisoner'
 import { BedAssignment } from '../data/interfaces/bedAssignment'
+import { OffenderMovement } from '../data/interfaces/offenderMovement'
 
 export default class MovementsService {
   constructor(
@@ -21,8 +22,8 @@ export default class MovementsService {
     const prisonerSearchClient = this.prisonerSearchClientBuilder(clientToken)
 
     const movements = await prisonApi.getMovementsIn(caseLoadId, new Date().toISOString())
-
     if (!movements || !movements?.length) return []
+
     const prisoners = await prisonerSearchClient.getPrisonersById(movements.map(movement => movement.offenderNo))
 
     return prisoners
@@ -46,8 +47,8 @@ export default class MovementsService {
     const prisonerSearchClient = this.prisonerSearchClientBuilder(clientToken)
 
     const movements = await prisonApi.getMovementsOut(caseLoadId, new Date().toISOString())
-
     if (!movements || !movements?.length) return []
+
     const prisoners = await prisonerSearchClient.getPrisonersById(movements.map(movement => movement.offenderNo))
 
     return prisoners
@@ -71,8 +72,8 @@ export default class MovementsService {
     const prisonerSearchClient = this.prisonerSearchClientBuilder(clientToken)
 
     const movements = await prisonApi.getMovementsEnRoute(caseLoadId)
-
     if (!movements || !movements?.length) return []
+
     const prisoners = await prisonerSearchClient.getPrisonersById(movements.map(movement => movement.offenderNo))
 
     return prisoners
@@ -98,9 +99,9 @@ export default class MovementsService {
     const prisonerSearchClient = this.prisonerSearchClientBuilder(clientToken)
 
     const movements = await prisonApi.getMovementsInReception(caseLoadId)
-    const prisonerNumbers = movements.map(movement => movement.offenderNo)
-
     if (!movements || !movements?.length) return []
+
+    const prisonerNumbers = movements.map(movement => movement.offenderNo)
     const [prisoners, recentMovements] = await Promise.all([
       prisonerSearchClient.getPrisonersById(prisonerNumbers),
       prisonApi.getRecentMovements(prisonerNumbers),
@@ -178,14 +179,43 @@ export default class MovementsService {
     const prisonerSearchClient = this.prisonerSearchClientBuilder(clientToken)
 
     const outPrisoners = await prisonApi.getPrisonersCurrentlyOutOfLivingUnit(livingUnitId)
-    const prisonerNumbers = outPrisoners.map(prisoner => prisoner.offenderNo)
     if (!outPrisoners || !outPrisoners?.length) return []
+    const prisonerNumbers = outPrisoners.map(prisoner => prisoner.offenderNo)
 
     const [prisoners, recentMovements] = await Promise.all([
       prisonerSearchClient.getPrisonersById(prisonerNumbers),
       prisonApi.getRecentMovements(prisonerNumbers),
     ])
 
+    return this.mapCurrentlyOutPrisoners(prisoners, recentMovements)
+  }
+
+  public async getOffendersCurrentlyOutTotal(
+    clientToken: string,
+    caseLoadId: string,
+  ): Promise<(PrisonerWithAlerts & { currentLocation: string; movementComment?: string })[]> {
+    const prisonApi = this.prisonApiClientBuilder(clientToken)
+    const prisonerSearchClient = this.prisonerSearchClientBuilder(clientToken)
+
+    const outPrisoners = await prisonApi.getPrisonersCurrentlyOutOfPrison(caseLoadId)
+    if (!outPrisoners || !outPrisoners?.length) return []
+    const prisonerNumbers = outPrisoners.map(prisoner => prisoner.offenderNo)
+
+    const [prisoners, recentMovements] = await Promise.all([
+      prisonerSearchClient.getPrisonersById(prisonerNumbers),
+      prisonApi.getRecentMovements(prisonerNumbers),
+    ])
+
+    return this.mapCurrentlyOutPrisoners(prisoners, recentMovements)
+  }
+
+  private mapCurrentlyOutPrisoners(
+    prisoners: Prisoner[],
+    recentMovements: OffenderMovement[],
+  ): (PrisonerWithAlerts & {
+    currentLocation: string
+    movementComment?: string
+  })[] {
     return prisoners
       .sort((a, b) => a.lastName.localeCompare(b.lastName, 'en', { ignorePunctuation: true }))
       .map(prisoner => {

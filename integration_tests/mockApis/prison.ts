@@ -161,6 +161,22 @@ export default {
     })
   },
 
+  stubOutTotal: (prisonCode = 'LEI') => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: `/prison/api/movements/agency/${prisonCode}/currently-out`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: movementsOutMock,
+      },
+    })
+  },
+
   stubMovementsInReception: (prisonCode = 'LEI') => {
     return stubFor({
       request: {
