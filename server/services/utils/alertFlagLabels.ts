@@ -28,7 +28,9 @@ export const alertFlagLabels = [
     classes: 'alert-status alert-status--medical',
     label: 'Hidden disability',
   },
-  { alertCodes: ['XEL'], classes: 'alert-status alert-status--elist', label: 'E-list' },
+  { alertCodes: ['XEL'], classes: 'alert-status alert-status--security', label: 'E-list' },
+  { alertCodes: ['XELH'], classes: 'alert-status alert-status--security', label: 'E-list heightened' },
+  { alertCodes: ['XER'], classes: 'alert-status alert-status--security', label: 'Escape risk' },
   {
     alertCodes: ['XRF'],
     classes: 'alert-status alert-status--security',
