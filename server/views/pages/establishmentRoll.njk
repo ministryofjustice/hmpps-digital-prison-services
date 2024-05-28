@@ -29,7 +29,7 @@
         <td class="govuk-table__cell">{{ block.currentlyInCell }}</td>
         <td class="govuk-table__cell">
             {% if block.currentlyOut > 0 %}
-                <a class="govuk-link" href="{{config.serviceUrls.digitalPrisons}}/establishment-roll/{{block.livingUnitId}}/currently-out">{{block.currentlyOut}}</a>
+                <a class="govuk-link" href="/establishment-roll/{{block.livingUnitId}}/currently-out">{{block.currentlyOut}}</a>
             {% else %} 0 {% endif %}
         </td>
         <td class="govuk-table__cell">{{ block.operationalCapacity }}</td>
@@ -71,7 +71,7 @@
                 establishmentRollStat(
                     heading = "Arrived today",
                     value = todayStats.inToday,
-                    href = config.serviceUrls.digitalPrisons+"/establishment-roll/in-today",
+                    href = "/establishment-roll/in-today",
                     qaTag = "in-today"
                 )
             }}
@@ -82,7 +82,7 @@
                 establishmentRollStat(
                     heading = "In reception",
                     value = todayStats.unassignedIn,
-                    href = config.serviceUrls.digitalPrisons+"/establishment-roll/in-reception",
+                    href = "/establishment-roll/in-reception",
                     qaTag = "unassigned-in"
                 )
             }}
@@ -93,7 +93,7 @@
                 establishmentRollStat(
                     heading = "Still to arrive",
                     value = todayStats.enroute,
-                    href = config.serviceUrls.digitalPrisons+"/establishment-roll/en-route",
+                    href = "/establishment-roll/en-route",
                     qaTag = "enroute"
                 )
             }}
@@ -105,7 +105,7 @@
                 establishmentRollStat(
                     heading = "Out today",
                     value = todayStats.outToday,
-                    href = config.serviceUrls.digitalPrisons+"/establishment-roll/out-today",
+                    href = "/establishment-roll/out-today",
                     qaTag = "out-today"
                 )
             }}
@@ -116,7 +116,7 @@
                 establishmentRollStat(
                     heading = "No cell allocated",
                     value = todayStats.noCellAllocated,
-                    href = config.serviceUrls.digitalPrisons+"/establishment-roll/no-cell-allocated",
+                    href = "/establishment-roll/no-cell-allocated",
                     qaTag = "no-cell-allocated"
                 )
             }}

@@ -19,6 +19,7 @@ export const movementsEnRouteMock: OffenderMovement[] = [
     directionCode: 'IN',
     movementTime: '10:00',
     movementDate: '2023-12-25',
+    toCity: 'Doncaster',
   },
   {
     offenderNo: 'A1234AB',
@@ -37,5 +38,6 @@ export const movementsEnRouteMock: OffenderMovement[] = [
     directionCode: 'IN',
     movementTime: '11:00',
     movementDate: '2023-12-25',
+    toCity: 'Sheffield',
   },
 ]

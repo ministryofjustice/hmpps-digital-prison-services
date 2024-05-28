@@ -124,4 +124,8 @@ export default class PrisonApiRestClient implements PrisonApiClient {
   getUserDetailsList(usernames: string[]): Promise<UserDetail[]> {
     return this.post<UserDetail[]>({ path: '/api/users/list', data: usernames })
   }
+
+  getPrisonersCurrentlyOutOfLivingUnit(livingUnitId: string): Promise<OffenderOut[]> {
+    return this.get<OffenderOut[]>({ path: `/api/movements/livingUnit/${livingUnitId}/currently-out` })
+  }
 }

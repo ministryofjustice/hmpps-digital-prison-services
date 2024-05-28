@@ -1,7 +1,6 @@
 import EstablishmentRollService from './establishmentRollService'
 import prisonApiClientMock from '../test/mocks/prisonApiClientMock'
 import { assignedRollCountWithSpursMock, unassignedRollCountMock } from '../mocks/rollCountMock'
-import { locationMock } from '../mocks/locationMock'
 
 describe('establishmentRollService', () => {
   let establishmentRollService: EstablishmentRollService
@@ -126,16 +125,6 @@ describe('establishmentRollService', () => {
       })
 
       expect(landingRollCounts).toEqual(assignedRollCountWithSpursMock)
-    })
-  })
-
-  describe('getLocationInfo', () => {
-    it('should call api and return response', async () => {
-      prisonApiClientMock.getLocation = jest.fn().mockResolvedValueOnce(locationMock)
-
-      const locationInfo = await establishmentRollService.getLocationInfo('token', 'loc')
-
-      expect(locationInfo).toEqual(locationMock)
     })
   })
 })

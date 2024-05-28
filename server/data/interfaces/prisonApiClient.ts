@@ -35,4 +35,5 @@ export interface PrisonApiClient {
   getPrisonerImage(offenderNumber: string, fullSizeImage: boolean): Promise<Readable>
   getOffenderCellHistory(bookingId: number, params?: { page: number; size: number }): Promise<PagedList<BedAssignment>>
   getUserDetailsList(usernames: string[]): Promise<UserDetail[]>
+  getPrisonersCurrentlyOutOfLivingUnit(livingUnitId: string): Promise<OffenderOut[]>
 }
