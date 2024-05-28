@@ -24,12 +24,13 @@ export default class HomepageController {
     const apiController = new ApiController(this.homepageService)
     const servicesData = await apiController.getDpsServices(req, res)
     return servicesData
-      .filter(task => task.enabled())
-      .map(task => ({
-        id: task.id,
-        href: task.href,
-        heading: task.heading,
-        description: task.description,
+      .filter(service => service.enabled())
+      .map(service => ({
+        id: service.id,
+        href: service.href,
+        heading: service.heading,
+        description: service.description,
+        navEnabled: true,
       }))
   }
 

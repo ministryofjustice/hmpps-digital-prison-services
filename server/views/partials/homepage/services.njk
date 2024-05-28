@@ -2,13 +2,15 @@
     <h2 id="homepage-services" class="govuk-!-font-size-24" data-qa="homepage-services-heading">Services</h2>
     <div class="hmpps-services">
         {% for service in services %}
+            {% if service.navEnabled %}
             <div class="hmpps-service-item">
                 <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible govuk-!-static-margin-top-0" />
                 <div class="hmpps-service-item__header">
                     <a href="{{ service.href }} " class="govuk-link govuk-!-font-weight-bold govuk-link--no-visited-state">{{ service.heading}}</a>
                 </div>
                 <p class="govuk-!-static-margin-top-3 govuk-!-static-margin-bottom-0">{{ service.description}}</p>
-            </div>                
+            </div>
+            {% endif %}
         {% endfor %}
     </div>
 </section>
