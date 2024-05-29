@@ -1,6 +1,6 @@
 import Page from '../pages/page'
 import { Role } from '../../server/enums/role'
-import CurrentlyOutPage from '../pages/currentlyOut'
+import TotalOutPage from '../pages/totalOut'
 
 context('Currently Out Page', () => {
   beforeEach(() => {
@@ -11,20 +11,20 @@ context('Currently Out Page', () => {
         { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
       ],
     })
-    cy.task('stubOutToday', '123')
+    cy.task('stubOutTotal')
     cy.task('stubPostSearchPrisonersById')
     cy.task('stubRecentMovements')
     cy.task('stubGetLocation')
-    cy.signIn({ redirectPath: '/establishment-roll/123/currently-out' })
-    cy.visit('/establishment-roll/123/currently-out')
+    cy.signIn({ redirectPath: '/establishment-roll/total-currently-out' })
+    cy.visit('/establishment-roll/total-currently-out')
   })
 
   it('Page is visible', () => {
-    Page.verifyOnPage(CurrentlyOutPage)
+    Page.verifyOnPage(TotalOutPage)
   })
 
   it('should display a table row for each prisoner en-route', () => {
-    const page = Page.verifyOnPage(CurrentlyOutPage)
+    const page = Page.verifyOnPage(TotalOutPage)
     page.currentlyOutRows().should('have.length', 2)
 
     page.currentlyOutRows().first().find('td').eq(1).should('contain.text', 'Shannon, Eddie')
@@ -37,7 +37,7 @@ context('Currently Out Page', () => {
   })
 
   it('should display alerts and category if cat A', () => {
-    const page = Page.verifyOnPage(CurrentlyOutPage)
+    const page = Page.verifyOnPage(TotalOutPage)
     page.currentlyOutRows().should('have.length', 2)
 
     page.currentlyOutRows().eq(1).find('td').eq(5).should('contain.text', 'Hidden disability')

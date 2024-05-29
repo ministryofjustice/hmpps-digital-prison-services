@@ -36,4 +36,5 @@ export interface PrisonApiClient {
   getOffenderCellHistory(bookingId: number, params?: { page: number; size: number }): Promise<PagedList<BedAssignment>>
   getUserDetailsList(usernames: string[]): Promise<UserDetail[]>
   getPrisonersCurrentlyOutOfLivingUnit(livingUnitId: string): Promise<OffenderOut[]>
+  getPrisonersCurrentlyOutOfPrison(prisonId: string): Promise<OffenderOut[]>
 }
