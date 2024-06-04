@@ -100,6 +100,7 @@ describe('Homepage Controller', () => {
           title: 'Whats new three',
         },
       ],
+      establishmentRollExcluded: false,
     }
 
     describe('With no feComponentsMeta', () => {
@@ -160,6 +161,7 @@ describe('Homepage Controller', () => {
         whatsNewPosts: whatsNewPostsMock,
         outageBanner: 'Banner',
         userHasPrisonCaseLoad: true,
+        establishmentRollExcluded: false,
       })
     })
   })

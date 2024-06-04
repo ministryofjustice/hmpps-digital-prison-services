@@ -254,4 +254,7 @@ export default {
   analytics: {
     tagManagerContainerId: get('TAG_MANAGER_CONTAINER_ID', ''),
   },
+  features: {
+    establishmentRollExcluded: get('ESTABLISHMENT_ROLL_EXCLUDED', '', requiredInProduction),
+  },
 }
