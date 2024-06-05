@@ -5,7 +5,6 @@ import HomepageService from './homepageService'
 import HmppsCache from '../middleware/hmppsCache'
 import config from '../config'
 import ContentfulService from './contentfulService'
-import ComponentService from './componentService'
 import EstablishmentRollService from './establishmentRollService'
 import MovementsService from './movementsService'
 import LocationService from './locationsService'
@@ -15,7 +14,6 @@ export const services = () => {
     prisonApiClientBuilder,
     whereAboutsApiClientBuilder,
     keyWorkerApiClientBuilder,
-    componentApiClientBuilder,
     prisonerSearchApiClientBuilder,
     applicationInfo,
   } = dataAccess
@@ -27,7 +25,6 @@ export const services = () => {
     whereAboutsApiClientBuilder,
     keyWorkerApiClientBuilder,
   )
-  const componentService = new ComponentService(componentApiClientBuilder)
   const establishmentRollService = new EstablishmentRollService(prisonApiClientBuilder)
   const movementsService = new MovementsService(prisonApiClientBuilder, prisonerSearchApiClientBuilder)
   const locationsService = new LocationService(prisonApiClientBuilder)
@@ -55,7 +52,6 @@ export const services = () => {
     homepageService,
     todayCache,
     contentfulService,
-    componentService,
     establishmentRollService,
     movementsService,
     locationsService,
