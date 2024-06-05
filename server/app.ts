@@ -1,5 +1,6 @@
 import express from 'express'
 
+import dpsComponents from '@ministryofjustice/hmpps-connect-dps-components'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
 import { appInsightsMiddleware } from './utils/azureAppInsights'
@@ -19,6 +20,8 @@ import type { Services } from './services'
 import populateClientToken from './middleware/populateClientToken'
 import setUpPageNotFound from './middleware/setUpPageNotFound'
 import setUpEnvironmentName from './middleware/setUpEnvironmentName'
+import logger from '../logger'
+import config from './config'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -41,6 +44,14 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpCurrentUser(services))
   app.use(populateClientToken())
 
+  app.get(
+    /^(?!\/api).*/,
+    dpsComponents.getPageComponents({
+      logger,
+      includeMeta: true,
+      dpsUrl: config.serviceUrls.digitalPrisons,
+    }),
+  )
   app.use(routes(services))
 
   app.use(setUpPageNotFound)
