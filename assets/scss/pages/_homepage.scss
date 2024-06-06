@@ -11,7 +11,7 @@
 
   .dps-outage-banner {
     min-height: 70px;
-    background-color: rgba(govuk-colour('red'), .2);
+    background-color: rgba(govuk-colour('red'), 0.2);
 
     div {
       padding: 22px 0;
@@ -21,21 +21,22 @@
       font-weight: 300;
       margin: 0;
 
-      a:link, a:visited {
+      a:link,
+      a:visited {
         color: $govuk-text-colour;
       }
     }
   }
 
   header.dps-header {
-    background-color: rgba(govuk-colour("light-blue"), .2);
+    background-color: rgba(govuk-colour('light-blue'), 0.2);
     padding: 25px 0;
 
     div {
       position: relative;
 
       &::before {
-        content: url("/assets/images/dps-logo.svg");
+        content: url('/assets/images/dps-logo.svg');
         float: left;
         margin-right: 20px;
       }
@@ -58,7 +59,7 @@
   }
 
   .dps-homepage-search {
-    background-color: govuk-colour("light-grey");
+    background-color: govuk-colour('light-grey');
     padding: 25px 0;
 
     h2 {
@@ -100,7 +101,7 @@
     }
 
     .govuk-radios__label:before {
-      background-color: govuk-colour("white");
+      background-color: govuk-colour('white');
     }
   }
 
@@ -115,7 +116,7 @@
       }
 
       a:before {
-        content: "";
+        content: '';
         display: block;
         height: 8px;
         position: absolute;
@@ -129,12 +130,12 @@
 
       a:after {
         bottom: 0;
-        content: "";
+        content: '';
         display: block;
         left: 0;
         position: absolute;
         right: 0;
-        top: 0
+        top: 0;
       }
     }
     @media (max-width: 768px) {
@@ -148,7 +149,7 @@
     row-gap: govuk-spacing(4);
     .hmpps-service-item {
       li.hmpps-service-link::marker {
-        color: govuk-colour("blue");
+        color: govuk-colour('blue');
       }
       min-height: 120px;
     }
@@ -196,9 +197,9 @@
       }
 
       &__link {
-          padding-top: 15px;
-          border-top: 1px solid govuk-colour('mid-grey');
-          margin-top: auto;
+        padding-top: 15px;
+        border-top: 1px solid govuk-colour('mid-grey');
+        margin-top: auto;
       }
     }
   }
@@ -244,4 +245,9 @@
       }
     }
   }
+}
+
+.dps-homepage-services-outage {
+  border-color: govuk-colour('red');
+  background-color: govuk-colour('light-grey');
 }

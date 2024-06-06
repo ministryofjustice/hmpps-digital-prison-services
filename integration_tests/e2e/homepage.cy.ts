@@ -3,7 +3,7 @@ import IndexPage from '../pages'
 import { Role } from '../../server/enums/role'
 import { todayDataMock } from '../../server/mocks/todayDataMock'
 
-context('Homepage', () => {
+context('Homepage (with FE Components services)', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.setupUserAuth({
@@ -17,6 +17,7 @@ context('Homepage', () => {
     cy.task('stubMovements')
     cy.task('stubWhatsNewPosts')
     cy.task('stubOutageBanner')
+    cy.task('stubFeComponents')
     cy.signIn()
     cy.visit('/')
   })
@@ -61,7 +62,7 @@ context('Homepage', () => {
     })
   })
 
-  context('Services - with global search', () => {
+  context('Services - From FE Components', () => {
     it('should display h3', () => {
       const page = Page.verifyOnPage(IndexPage)
       page.services().heading().should('be.visible')
@@ -187,5 +188,29 @@ context('Homepage - No caseloads', () => {
 
   it('Homepage is visible', () => {
     Page.verifyOnPage(IndexPage)
+  })
+})
+
+context('Homepage (without FE Components services)', () => {
+  beforeEach(() => {
+    cy.task('reset')
+    cy.setupUserAuth({
+      roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`],
+      caseLoads: [
+        { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
+      ],
+    })
+    cy.task('stubRollCount')
+    cy.task('stubRollCountUnassigned')
+    cy.task('stubMovements')
+    cy.task('stubWhatsNewPosts')
+    cy.task('stubOutageBanner')
+    cy.signIn()
+    cy.visit('/')
+  })
+
+  it('Should show the services outage banner', () => {
+    const page = Page.verifyOnPage(IndexPage)
+    page.services().outageBanner().should('be.visible')
   })
 })

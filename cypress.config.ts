@@ -6,6 +6,7 @@ import prison from './integration_tests/mockApis/prison'
 import contentful from './integration_tests/mockApis/contentful'
 import dps from './integration_tests/mockApis/dps'
 import prisonerSearch from './integration_tests/mockApis/prisonerSearch'
+import feComponents from './integration_tests/mockApis/feComponents'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -30,6 +31,7 @@ export default defineConfig({
         ...contentful,
         ...dps,
         ...prisonerSearch,
+        ...feComponents,
       })
     },
     baseUrl: 'http://localhost:3007',
