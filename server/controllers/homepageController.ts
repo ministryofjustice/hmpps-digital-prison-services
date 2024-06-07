@@ -6,6 +6,7 @@ import HmppsCache from '../middleware/hmppsCache'
 import { userHasRoles } from '../utils/utils'
 import ContentfulService from '../services/contentfulService'
 import { Service } from '../data/interfaces/component'
+import defaultServices from '../utils/defaultServices'
 
 /**
  * Parse requests for homepage routes and orchestrate response
@@ -21,7 +22,7 @@ export default class HomepageController {
     if (res.locals.feComponentsMeta?.services)
       return { showServicesOutage: false, services: res.locals.feComponentsMeta.services }
 
-    return { showServicesOutage: true, services: [] }
+    return { showServicesOutage: true, services: defaultServices }
   }
 
   private async getTodayData(req: Request, userHasPrisonCaseLoad: boolean, activeCaseLoadId: string) {

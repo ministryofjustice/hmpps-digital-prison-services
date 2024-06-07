@@ -12,6 +12,7 @@ import { whatsNewDataMock } from '../mocks/whatsNewDataMock'
 import { mockStaffRoles } from '../mocks/staffRolesMock'
 import { CaseLoad } from '../data/interfaces/caseLoad'
 import { PrisonUser } from '../interfaces/prisonUser'
+import defaultServices from '../utils/defaultServices'
 
 const staffId = 487023
 const activeCaseLoadId = 'LEI'
@@ -75,7 +76,7 @@ describe('Homepage Controller', () => {
       userHasPrisonCaseLoad: true,
       searchViewAllUrl: `http://localhost:3001/prisoner-search?keywords=&location=${activeCaseLoadId}`,
       showServicesOutage: true,
-      services: [] as any,
+      services: defaultServices,
       todayLastUpdated: '2023-07-20T12:45',
       unlockRollCount: 1015,
       userHasGlobal: true,
@@ -153,7 +154,7 @@ describe('Homepage Controller', () => {
         userHasGlobal: true,
         globalPreset: true,
         showServicesOutage: true,
-        services: [],
+        services: defaultServices,
         searchViewAllUrl: `${config.serviceUrls.digitalPrisons}/prisoner-search?keywords=&location=${res.locals.user.activeCaseLoadId}`,
         ...todayDataMock,
         whatsNewPosts: whatsNewPostsMock,
