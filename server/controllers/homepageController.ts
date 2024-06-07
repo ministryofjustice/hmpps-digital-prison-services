@@ -5,8 +5,8 @@ import HomepageService from '../services/homepageService'
 import HmppsCache from '../middleware/hmppsCache'
 import { userHasRoles } from '../utils/utils'
 import ContentfulService from '../services/contentfulService'
-import ApiController from './apiController'
 import { Service } from '../data/interfaces/component'
+import defaultServices from '../utils/defaultServices'
 
 /**
  * Parse requests for homepage routes and orchestrate response
@@ -18,20 +18,21 @@ export default class HomepageController {
     private readonly contentfulService: ContentfulService,
   ) {}
 
-  private async getServiceData(req: Request, res: Response): Promise<Service[]> {
-    if (res.locals.feComponentsMeta?.services) return res.locals.feComponentsMeta.services
+  private async getServiceData(res: Response): Promise<{ showServicesOutage: boolean; services: Service[] }> {
+    if (res.locals.feComponentsMeta?.services)
+      return { showServicesOutage: false, services: res.locals.feComponentsMeta.services }
 
-    const apiController = new ApiController(this.homepageService)
-    const servicesData = await apiController.getDpsServices(req, res)
-    return servicesData
-      .filter(service => service.enabled())
-      .map(service => ({
-        id: service.id,
-        href: service.href,
-        heading: service.heading,
-        description: service.description,
-        navEnabled: true,
-      }))
+    return { showServicesOutage: true, services: defaultServices }
+  }
+
+  private async getTodayData(req: Request, userHasPrisonCaseLoad: boolean, activeCaseLoadId: string) {
+    if (userHasPrisonCaseLoad) {
+      return this.todayCache.wrap(activeCaseLoadId, () =>
+        this.homepageService.getTodaySection(req.middleware.clientToken, activeCaseLoadId),
+      )
+    }
+
+    return {}
   }
 
   public displayHomepage(): RequestHandler {
@@ -39,9 +40,6 @@ export default class HomepageController {
       const { activeCaseLoadId } = res.locals.user
       const userHasPrisonCaseLoad =
         Boolean(activeCaseLoadId) && activeCaseLoadId !== '' && activeCaseLoadId !== 'CADM_I'
-
-      // Outage Banner - filtered to active caseload if banner has been marked for specific prisons
-      const outageBanner = await this.contentfulService.getOutageBanner(activeCaseLoadId)
 
       // Search Section
       const errors = req.flash('errors')
@@ -52,17 +50,15 @@ export default class HomepageController {
         : ''
 
       // Today Section - wrapped with a caching function per prison to reduce API calls
-      let todayData = {}
-      if (userHasPrisonCaseLoad) {
-        todayData = await this.todayCache.wrap(activeCaseLoadId, () =>
-          this.homepageService.getTodaySection(req.middleware.clientToken, activeCaseLoadId),
-        )
-      }
 
-      const services = await this.getServiceData(req, res)
-
+      // Outage Banner - filtered to active caseload if banner has been marked for specific prisons
       // Whats new Section - filtered to active caseload if post has been marked for specific prisons
-      const whatsNewData = await this.contentfulService.getWhatsNewPosts(1, 3, 0, activeCaseLoadId)
+      const [outageBanner, { showServicesOutage, services }, whatsNewData, todayData] = await Promise.all([
+        this.contentfulService.getOutageBanner(activeCaseLoadId),
+        this.getServiceData(res),
+        this.contentfulService.getWhatsNewPosts(1, 3, 0, activeCaseLoadId),
+        this.getTodayData(req, userHasPrisonCaseLoad, activeCaseLoadId),
+      ])
 
       res.render('pages/index', {
         errors,
@@ -74,6 +70,7 @@ export default class HomepageController {
         whatsNewPosts: whatsNewData.whatsNewPosts,
         outageBanner,
         userHasPrisonCaseLoad,
+        showServicesOutage,
       })
     }
   }

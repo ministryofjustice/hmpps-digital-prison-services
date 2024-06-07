@@ -39,6 +39,7 @@ export default class IndexPage extends Page {
       serviceOne: () => servicesSection().find('.hmpps-services > :nth-child(1)'),
       serviceTwo: () => servicesSection().find('.hmpps-services > :nth-child(2)'),
       serviceThree: () => servicesSection().find('.hmpps-services > :nth-child(3)'),
+      outageBanner: () => servicesSection().find('[data-qa=homepage-services-outage-banner]'),
     }
   }
 

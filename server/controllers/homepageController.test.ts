@@ -12,6 +12,7 @@ import { whatsNewDataMock } from '../mocks/whatsNewDataMock'
 import { mockStaffRoles } from '../mocks/staffRolesMock'
 import { CaseLoad } from '../data/interfaces/caseLoad'
 import { PrisonUser } from '../interfaces/prisonUser'
+import defaultServices from '../utils/defaultServices'
 
 const staffId = 487023
 const activeCaseLoadId = 'LEI'
@@ -74,22 +75,8 @@ describe('Homepage Controller', () => {
       outageBanner: 'Banner',
       userHasPrisonCaseLoad: true,
       searchViewAllUrl: `http://localhost:3001/prisoner-search?keywords=&location=${activeCaseLoadId}`,
-      services: [
-        {
-          description: 'Search for someone in any establishment, or who has been released.',
-          heading: 'Global search',
-          href: `${config.serviceUrls.digitalPrisons}/global-search`,
-          id: 'global-search',
-          navEnabled: true,
-        },
-        {
-          description: 'View your key worker cases.',
-          heading: 'My key worker allocation',
-          href: `${config.apis.omic.url}/key-worker/${staffId}`,
-          id: 'key-worker-allocations',
-          navEnabled: true,
-        },
-      ],
+      showServicesOutage: true,
+      services: defaultServices,
       todayLastUpdated: '2023-07-20T12:45',
       unlockRollCount: 1015,
       userHasGlobal: true,
@@ -149,7 +136,11 @@ describe('Homepage Controller', () => {
         expect(controller['homepageService'].getTodaySection).toHaveBeenCalled()
         expect(controller['contentfulService'].getWhatsNewPosts).toHaveBeenCalled()
         expect(controller['contentfulService'].getOutageBanner).toHaveBeenCalled()
-        expect(res.render).toHaveBeenCalledWith('pages/index', { ...defaultOutput, services: feComponentsServices })
+        expect(res.render).toHaveBeenCalledWith('pages/index', {
+          ...defaultOutput,
+          showServicesOutage: false,
+          services: feComponentsServices,
+        })
       })
     })
 
@@ -162,22 +153,8 @@ describe('Homepage Controller', () => {
         errors: [{ text: 'error', href: '#name' }],
         userHasGlobal: true,
         globalPreset: true,
-        services: [
-          {
-            description: 'Search for someone in any establishment, or who has been released.',
-            heading: 'Global search',
-            href: `${config.serviceUrls.digitalPrisons}/global-search`,
-            id: 'global-search',
-            navEnabled: true,
-          },
-          {
-            description: 'View your key worker cases.',
-            heading: 'My key worker allocation',
-            href: `${config.apis.omic.url}/key-worker/${res.locals.user.staffId}`,
-            id: 'key-worker-allocations',
-            navEnabled: true,
-          },
-        ],
+        showServicesOutage: true,
+        services: defaultServices,
         searchViewAllUrl: `${config.serviceUrls.digitalPrisons}/prisoner-search?keywords=&location=${res.locals.user.activeCaseLoadId}`,
         ...todayDataMock,
         whatsNewPosts: whatsNewPostsMock,

@@ -74,10 +74,4 @@ context('SignIn', () => {
     cy.signIn()
     Page.verifyOnPage(IndexPage)
   })
-
-  it('Error page shown when roles call returns an unexpected error', () => {
-    cy.task('stubGetStaffRoles', 500)
-    cy.signIn({ failOnStatusCode: false, redirectPath: '/' })
-    cy.contains('Internal Server Error')
-  })
 })
