@@ -15,6 +15,7 @@ import { OffenderInReception } from './interfaces/offenderInReception'
 import { UserDetail } from './interfaces/userDetail'
 import { BedAssignment } from './interfaces/bedAssignment'
 import { PagedList } from './interfaces/pagedList'
+import PrisonRollCount from './interfaces/prisonRollCount'
 
 export default class PrisonApiRestClient implements PrisonApiClient {
   constructor(private restClient: RestClient) {}
@@ -73,14 +74,6 @@ export default class PrisonApiRestClient implements PrisonApiClient {
     return this.get<OffenderInReception[]>({ path: `/api/movements/rollcount/${prisonId}/in-reception` })
   }
 
-  getEnrouteRollCount(prisonId: string): Promise<number> {
-    return this.get<number>({ path: `/api/movements/rollcount/${prisonId}/enroute` })
-  }
-
-  getLocationsForPrison(prisonId: string): Promise<Location[]> {
-    return this.get<Location[]>({ path: `/api/agencies/${prisonId}/locations` })
-  }
-
   getLocation(locationId: string): Promise<Location> {
     return this.get<Location>({ path: `/api/locations/${locationId}` })
   }
@@ -131,5 +124,9 @@ export default class PrisonApiRestClient implements PrisonApiClient {
 
   getPrisonersCurrentlyOutOfPrison(prisonId: string): Promise<OffenderOut[]> {
     return this.get<OffenderOut[]>({ path: `/api/movements/agency/${prisonId}/currently-out` })
+  }
+
+  getPrisonRollCount(prisonId: string): Promise<PrisonRollCount> {
+    return this.get<PrisonRollCount>({ path: `/api/prison/roll-count/${prisonId}` })
   }
 }

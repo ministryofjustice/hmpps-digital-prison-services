@@ -5,6 +5,8 @@
 {% set pageTitle = "Establishment roll" %}
 {% set mainClasses = "govuk-body govuk-main-wrapper--auto-spacing" %}
 {% set todayStats = establishmentRollCounts.todayStats %}
+{% set totals = establishmentRollCounts.totals %}
+{% set wings = establishmentRollCounts.wings %}
 
 {% set breadCrumbs = [
     {
@@ -15,26 +17,26 @@
 
 {% macro blockRow(block, type, wing, spur, lastInGroup) %}
     <tr class="govuk-table__row establishment-roll__table__{{ "spur" if type==="SPUR" else ("landing" if type==="LANDING" else "wing") }}-row {{ 'last-in-group' if lastInGroup else '' }}"
-        id="{{ block.livingUnitId }}"
+        id="{{ block.locationId }}"
         {% if wing %}data-wing-id="{{ wing }}" {% endif %}
     >
         <td class="govuk-table__cell">
             {% if type === "LANDING" %}
-                <a href="/establishment-roll/wing/{{ wing }}/{{ "spur/"+spur+"/" if spur }}landing/{{ block.livingUnitId }}">{{ block.livingUnitDesc }}</a>
+                <a href="/establishment-roll/wing/{{ wing }}/{{ "spur/"+spur+"/" if spur }}landing/{{ block.locationId }}">{{ block.localName or block.locationCode }}</a>
             {% else %}
-                {{ block.livingUnitDesc }}
+                {{ block.localName or block.locationCode }}
             {% endif %}
         </td>
-        <td class="govuk-table__cell">{{ block.bedsInUse }}</td>
-        <td class="govuk-table__cell">{{ block.currentlyInCell }}</td>
+        <td class="govuk-table__cell">{{ block.rollCount.bedsInUse }}</td>
+        <td class="govuk-table__cell">{{ block.rollCount.currentlyInCell }}</td>
         <td class="govuk-table__cell">
-            {% if block.currentlyOut > 0 %}
-                <a class="govuk-link" href="/establishment-roll/{{block.livingUnitId}}/currently-out">{{block.currentlyOut}}</a>
+            {% if block.rollCount.currentlyOut > 0 %}
+                <a class="govuk-link" href="/establishment-roll/{{block.locationId}}/currently-out">{{block.rollCount.currentlyOut}}</a>
             {% else %} 0 {% endif %}
         </td>
-        <td class="govuk-table__cell">{{ block.operationalCapacity }}</td>
-        <td class="govuk-table__cell">{{ block.netVacancies }}</td>
-        <td class="govuk-table__cell">{{ block.outOfOrder }}</td>
+        <td class="govuk-table__cell">{{ block.rollCount.workingCapacity }}</td>
+        <td class="govuk-table__cell">{{ block.rollCount.netVacancies }}</td>
+        <td class="govuk-table__cell">{{ block.rollCount.outOfOrder }}</td>
     </tr>
 {% endmacro %}
 
@@ -136,33 +138,35 @@
             </tr>
         </thead>
         <tbody class="govuk-table__body">
-            {% for wing in establishmentRollCounts.assignedRollBlocksCounts %}
+            {% for wing in wings %}
                 {{ blockRow(block=wing) }}
 
-                {% for spur in wing.spurs %}
-                    {{ blockRow(block=spur, type='SPUR', wing=wing.livingUnitId) }}
-                    {% for landing in spur.landings %}
-                        {{ blockRow(block=landing, type='LANDING', wing=wing.livingUnitId, spur=spur.livingUnitId, lastInGroup=loop.index === spur.landings.length) }}
-                    {% endfor %}
+                {% for subLocation in wing.subLocations %}
+                    {% set style = 'SPUR' if subLocation.subLocations.length else 'LANDING' %}
+
+                    {% if style === 'SPUR' %}
+                        {{ blockRow(block=subLocation, type='SPUR', wing=wing.locationId) }}
+                        {% for landing in subLocation.subLocations %}
+                            {{ blockRow(block=landing, type='LANDING', wing=wing.locationId, spur=subLocation.locationId, lastInGroup=loop.index === subLocation.subLocations.length) }}
+                        {% endfor %}
+                    {% else %}
+                        {{ blockRow(block=subLocation, type='LANDING', wing=wing.locationId, lastInGroup=loop.index === wing.subLocations.length) }}
+                    {% endif %}
                 {% endfor %}
 
-
-                {% for landing in wing.landings %}
-                    {{ blockRow(block=landing, type='LANDING', wing=wing.livingUnitId, lastInGroup=loop.index === wing.landings.length) }}
-                {% endfor %}
             {% endfor %}
             <tr id="roll-table-totals-row" class="govuk-table__row">
                 <td class="govuk-table__cell govuk-!-font-weight-bold">Totals</td>
-                <td class="govuk-table__cell">{{ todayStats.bedsInUse }}</td>
-                <td class="govuk-table__cell">{{ todayStats.currentlyInCell }}</td>
+                <td class="govuk-table__cell">{{ totals.bedsInUse }}</td>
+                <td class="govuk-table__cell">{{ totals.currentlyInCell }}</td>
                 <td class="govuk-table__cell">
-                    {% if todayStats.totalCurrentlyOut > 0 %}
-                        <a class="govuk-link" href="/establishment-roll/total-currently-out">{{todayStats.totalCurrentlyOut}}</a>
+                    {% if totals.currentlyOut > 0 %}
+                        <a class="govuk-link" href="/establishment-roll/total-currently-out">{{totals.currentlyOut}}</a>
                     {% else %} 0 {% endif %}
                 </td>
-                <td class="govuk-table__cell">{{ todayStats.operationalCapacity }}</td>
-                <td class="govuk-table__cell">{{ todayStats.netVacancies }}</td>
-                <td class="govuk-table__cell">{{ todayStats.outOfOrder }}</td>
+                <td class="govuk-table__cell">{{ totals.workingCapacity }}</td>
+                <td class="govuk-table__cell">{{ totals.netVacancies }}</td>
+                <td class="govuk-table__cell">{{ totals.outOfOrder }}</td>
             </tr>
         </tbody>
     </table>
