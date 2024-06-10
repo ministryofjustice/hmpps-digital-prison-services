@@ -13,6 +13,7 @@ import { movementsRecentMock } from '../../server/test/mocks/movementsRecentMock
 import { offenderCellHistoryMock } from '../../server/test/mocks/offenderCellHistoryMock'
 import { userDetailsMock } from '../../server/test/mocks/userDetailsMock'
 import { pagedListMock } from '../../server/test/mocks/pagedListMock'
+import { prisonRollCountMock } from '../../server/mocks/prisonRollCountMock'
 
 export default {
   stubUserCaseLoads: (caseLoads: CaseLoad[] = []) => {
@@ -52,6 +53,22 @@ export default {
       request: {
         method: 'GET',
         url: `/prison/api/movements/rollcount/${prisonCode}${query}`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: payload,
+      },
+    })
+  },
+
+  stubPrisonRollCount: ({ prisonCode = 'LEI', payload = prisonRollCountMock } = {}) => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        url: `/prison/api/prison/roll-count/${prisonCode}`,
       },
       response: {
         status: 200,

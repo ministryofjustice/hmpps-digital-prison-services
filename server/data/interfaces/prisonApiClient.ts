@@ -12,6 +12,7 @@ import { OffenderInReception } from './offenderInReception'
 import { PagedList } from './pagedList'
 import { BedAssignment } from './bedAssignment'
 import { UserDetail } from './userDetail'
+import PrisonRollCount from './prisonRollCount'
 
 export interface PrisonApiClient {
   getUserCaseLoads(): Promise<CaseLoad[]>
@@ -20,8 +21,6 @@ export interface PrisonApiClient {
     prisonId: string,
     options?: { unassigned?: boolean; wingOnly?: boolean; showCells?: boolean; parentLocationId?: number },
   ): Promise<BlockRollCount[]>
-  getEnrouteRollCount(prisonId: string): Promise<number>
-  getLocationsForPrison(prisonId: string): Promise<Location[]>
   getLocation(locationId: string): Promise<Location>
   getAttributesForLocation(locationId: number): Promise<OffenderCell>
   getMovements(prisonId: string): Promise<Movements>
@@ -37,4 +36,5 @@ export interface PrisonApiClient {
   getUserDetailsList(usernames: string[]): Promise<UserDetail[]>
   getPrisonersCurrentlyOutOfLivingUnit(livingUnitId: string): Promise<OffenderOut[]>
   getPrisonersCurrentlyOutOfPrison(prisonId: string): Promise<OffenderOut[]>
+  getPrisonRollCount(prisonId: string): Promise<PrisonRollCount>
 }

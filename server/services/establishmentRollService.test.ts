@@ -1,6 +1,7 @@
 import EstablishmentRollService from './establishmentRollService'
 import prisonApiClientMock from '../test/mocks/prisonApiClientMock'
-import { assignedRollCountWithSpursMock, unassignedRollCountMock } from '../mocks/rollCountMock'
+import { assignedRollCountWithSpursMock } from '../mocks/rollCountMock'
+import { prisonRollCountMock } from '../mocks/prisonRollCountMock'
 
 describe('establishmentRollService', () => {
   let establishmentRollService: EstablishmentRollService
@@ -11,105 +12,40 @@ describe('establishmentRollService', () => {
 
   describe('getEstablishmentRollCounts', () => {
     beforeEach(() => {
-      prisonApiClientMock.getRollCount = jest
-        .fn()
-        .mockResolvedValueOnce(assignedRollCountWithSpursMock)
-        .mockResolvedValueOnce(unassignedRollCountMock)
-      prisonApiClientMock.getMovements = jest.fn().mockResolvedValue({ in: 4, out: 5 })
-      prisonApiClientMock.getEnrouteRollCount = jest.fn().mockResolvedValue(3)
-      prisonApiClientMock.getLocationsForPrison = jest.fn().mockResolvedValue([])
-      prisonApiClientMock.getAttributesForLocation = jest.fn().mockResolvedValue({ noOfOccupants: 31 })
+      prisonApiClientMock.getPrisonRollCount = jest.fn().mockResolvedValueOnce(prisonRollCountMock)
     })
 
-    it('should return nested establishment roll counts', async () => {
+    it('should return data from API for the today stats', async () => {
       const establishmentRollCounts = await establishmentRollService.getEstablishmentRollCounts('token', 'LEI')
 
-      expect(establishmentRollCounts.assignedRollBlocksCounts).toEqual([
-        {
-          ...assignedRollCountWithSpursMock[0],
-          spurs: [{ ...assignedRollCountWithSpursMock[1], landings: [assignedRollCountWithSpursMock[2]] }],
-        },
-        { ...assignedRollCountWithSpursMock[3], landings: [assignedRollCountWithSpursMock[4]] },
-      ])
+      expect(establishmentRollCounts.todayStats).toEqual({
+        currentRoll: 200,
+        enroute: 500,
+        inToday: 300,
+        noCellAllocated: 700,
+        outToday: 600,
+        unassignedIn: 400,
+        unlockRoll: 100,
+      })
     })
 
-    it('should calculate unlock roll', async () => {
+    it('should return data from API for the total stats', async () => {
       const establishmentRollCounts = await establishmentRollService.getEstablishmentRollCounts('token', 'LEI')
 
-      expect(establishmentRollCounts.todayStats.unlockRoll).toEqual(1824)
+      expect(establishmentRollCounts.totals).toEqual({
+        bedsInUse: 10,
+        currentlyInCell: 20,
+        currentlyOut: 30,
+        netVacancies: 50,
+        outOfOrder: 60,
+        workingCapacity: 40,
+      })
     })
 
-    it('should return inToday', async () => {
+    it('should return wing data from API', async () => {
       const establishmentRollCounts = await establishmentRollService.getEstablishmentRollCounts('token', 'LEI')
 
-      expect(establishmentRollCounts.todayStats.inToday).toEqual(4)
-    })
-
-    it('should return outToday', async () => {
-      const establishmentRollCounts = await establishmentRollService.getEstablishmentRollCounts('token', 'LEI')
-
-      expect(establishmentRollCounts.todayStats.inToday).toEqual(4)
-    })
-
-    it('should return unassignedIn by summing currentlyInCell, outOfLivingUnits from unassigned roll call', async () => {
-      const establishmentRollCounts = await establishmentRollService.getEstablishmentRollCounts('token', 'LEI')
-
-      expect(establishmentRollCounts.todayStats.unassignedIn).toEqual(23)
-    })
-
-    it('should return currentRoll by summing currentlyInCell, outOfLivingUnits an unassignedIn', async () => {
-      const establishmentRollCounts = await establishmentRollService.getEstablishmentRollCounts('token', 'LEI')
-
-      expect(establishmentRollCounts.todayStats.currentRoll).toEqual(1823)
-    })
-
-    it('should return enroute count from api', async () => {
-      const establishmentRollCounts = await establishmentRollService.getEstablishmentRollCounts('token', 'LEI')
-
-      expect(establishmentRollCounts.todayStats.enroute).toEqual(3)
-    })
-
-    it('should return 0 for noCellAllocated if no CSWAP locations', async () => {
-      const establishmentRollCounts = await establishmentRollService.getEstablishmentRollCounts('token', 'LEI')
-
-      expect(establishmentRollCounts.todayStats.noCellAllocated).toEqual(0)
-    })
-
-    it('should call api for noCellAllocated if CSWAP location', async () => {
-      prisonApiClientMock.getLocationsForPrison = jest.fn().mockResolvedValue([{ description: 'CSWAP', locationId: 1 }])
-      const establishmentRollCounts = await establishmentRollService.getEstablishmentRollCounts('token', 'LEI')
-
-      expect(establishmentRollCounts.todayStats.noCellAllocated).toEqual(31)
-    })
-
-    it('should return total of currentlyOut from assigned counts', async () => {
-      const establishmentRollCounts = await establishmentRollService.getEstablishmentRollCounts('token', 'LEI')
-
-      expect(establishmentRollCounts.todayStats.totalCurrentlyOut).toEqual(10)
-    })
-
-    it('should return total of bedsInUse from assigned counts', async () => {
-      const establishmentRollCounts = await establishmentRollService.getEstablishmentRollCounts('token', 'LEI')
-
-      expect(establishmentRollCounts.todayStats.bedsInUse).toEqual(152)
-    })
-
-    it('should return total of currentlyInCell from assigned counts', async () => {
-      const establishmentRollCounts = await establishmentRollService.getEstablishmentRollCounts('token', 'LEI')
-
-      expect(establishmentRollCounts.todayStats.currentlyInCell).toEqual(1800)
-    })
-
-    it('should return total of netVacancies from assigned counts', async () => {
-      const establishmentRollCounts = await establishmentRollService.getEstablishmentRollCounts('token', 'LEI')
-
-      expect(establishmentRollCounts.todayStats.netVacancies).toEqual(-32)
-    })
-
-    it('should return total of outOfOrder from assigned counts', async () => {
-      const establishmentRollCounts = await establishmentRollService.getEstablishmentRollCounts('token', 'LEI')
-
-      expect(establishmentRollCounts.todayStats.outOfOrder).toEqual(0)
+      expect(establishmentRollCounts.wings).toEqual(prisonRollCountMock.locations)
     })
   })
 

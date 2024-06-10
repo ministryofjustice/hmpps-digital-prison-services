@@ -1,4 +1,4 @@
-import { BlockRollCount } from '../../../data/interfaces/blockRollCount'
+import PrisonRollCount, { ResidentialLocation } from '../../../data/interfaces/prisonRollCount'
 
 export default interface EstablishmentRollCount {
   todayStats: {
@@ -9,23 +9,7 @@ export default interface EstablishmentRollCount {
     unassignedIn: number
     enroute: number
     noCellAllocated: number
-    totalCurrentlyOut: number
-    bedsInUse: number
-    currentlyInCell: number
-    operationalCapacity: number
-    netVacancies: number
-    outOfOrder: number
   }
-  assignedRollBlocksCounts: Wing[]
-}
-
-export interface Landing extends BlockRollCount {}
-
-export interface Spur extends BlockRollCount {
-  landings?: BlockRollCount[]
-}
-
-export interface Wing extends BlockRollCount {
-  spurs?: BlockRollCount[]
-  landings?: BlockRollCount[]
+  totals: PrisonRollCount['totals']
+  wings: ResidentialLocation[]
 }
