@@ -129,4 +129,8 @@ export default class PrisonApiRestClient implements PrisonApiClient {
   getPrisonRollCount(prisonId: string): Promise<PrisonRollCount> {
     return this.get<PrisonRollCount>({ path: `/api/prison/roll-count/${prisonId}` })
   }
+
+  getPrisonRollCountForLocation(prisonId: string, locationId: string): Promise<PrisonRollCount> {
+    return this.get<PrisonRollCount>({ path: `/api/prison/roll-count/${prisonId}/cells-only/${locationId}` })
+  }
 }

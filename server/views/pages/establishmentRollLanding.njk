@@ -2,10 +2,7 @@
 {% from "../macros/printLink.njk" import printLink %}
 {% from "../macros/establishmentRollStat.njk" import establishmentRollStat %}
 
-{% set wingDesc = wing.userDescription if wing.userDescription else wing.description %}
-{% set spurDesc = (spur.userDescription if spur.userDescription else spur.description) if spur else "" %}
-{% set landingDesc = landing.userDescription if landing.userDescription else landing.description %}
-{% set pageTitle = wingDesc + " - " + (spurDesc + " - " if spurDesc else "") + landingDesc %}
+{% set pageTitle = wingName + " - " + (spurName + " - " if spurName else "") + landingName %}
 {% set mainClasses = "govuk-body govuk-main-wrapper--auto-spacing" %}
 {% set todayStats = establishmentRollCounts.todayStats %}
 
@@ -42,18 +39,18 @@
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
-                    {% for cell in landingRollCounts %}
-                        <tr class="govuk-table__row" id="{{ cell.livingUnitId }}">
-                            <td class="govuk-table__cell">{{ cell.livingUnitDesc }}</td>
-                            <td class="govuk-table__cell">{{ cell.bedsInUse }}</td>
-                            <td class="govuk-table__cell">{{ cell.currentlyInCell }}</td>
+                    {% for cell in cellRollCounts %}
+                        <tr class="govuk-table__row" id="{{ cell.locationId }}">
+                            <td class="govuk-table__cell">{{ cell.localName or cell.locationCode }}</td>
+                            <td class="govuk-table__cell">{{ cell.rollCount.bedsInUse }}</td>
+                            <td class="govuk-table__cell">{{ cell.rollCount.currentlyInCell }}</td>
                             <td class="govuk-table__cell">
-                                {% if cell.currentlyOut > 0 %}
-                                    <a class="govuk-link" href="{{config.serviceUrls.digitalPrisons}}/establishment-roll/{{cell.livingUnitId}}/currently-out">{{cell.currentlyOut}}</a>
+                                {% if cell.rollCount.currentlyOut > 0 %}
+                                    <a class="govuk-link" href="{{config.serviceUrls.digitalPrisons}}/establishment-roll/{{cell.locationId}}/currently-out">{{cell.rollCount.currentlyOut}}</a>
                                 {% else %} 0 {% endif %}
                             </td>
-                            <td class="govuk-table__cell">{{ cell.operationalCapacity }}</td>
-                            <td class="govuk-table__cell">{{ cell.netVacancies }}</td>
+                            <td class="govuk-table__cell">{{ cell.rollCount.workingCapacity }}</td>
+                            <td class="govuk-table__cell">{{ cell.rollCount.netVacancies }}</td>
                         </tr>
                     {% endfor %}
 

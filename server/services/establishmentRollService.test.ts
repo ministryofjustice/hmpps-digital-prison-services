@@ -1,7 +1,8 @@
 import EstablishmentRollService from './establishmentRollService'
 import prisonApiClientMock from '../test/mocks/prisonApiClientMock'
-import { assignedRollCountWithSpursMock } from '../mocks/rollCountMock'
 import { prisonRollCountMock } from '../mocks/prisonRollCountMock'
+import { prisonRollCountForWingNoSpurMock } from '../mocks/prisonRollCountForWingNoSpurMock'
+import { prisonRollCountForWingWithSpurMock } from '../mocks/prisonRollCountForWingWithSpurMock'
 
 describe('establishmentRollService', () => {
   let establishmentRollService: EstablishmentRollService
@@ -50,17 +51,116 @@ describe('establishmentRollService', () => {
   })
 
   describe('getLandingRollCounts', () => {
-    it('should call api and return response', async () => {
-      prisonApiClientMock.getRollCount = jest.fn().mockResolvedValueOnce(assignedRollCountWithSpursMock)
-
-      const landingRollCounts = await establishmentRollService.getLandingRollCounts('token', 'LEI', 123)
-      expect(prisonApiClientMock.getRollCount).toBeCalledWith('LEI', {
-        wingOnly: false,
-        showCells: true,
-        parentLocationId: 123,
+    describe('Two levels of hierarchy', () => {
+      beforeEach(() => {
+        prisonApiClientMock.getPrisonRollCountForLocation = jest
+          .fn()
+          .mockResolvedValue(prisonRollCountForWingNoSpurMock)
       })
 
-      expect(landingRollCounts).toEqual(assignedRollCountWithSpursMock)
+      it('should call api with wingId', async () => {
+        await establishmentRollService.getLandingRollCounts('token', 'LEI', '13075', '13076')
+        expect(prisonApiClientMock.getPrisonRollCountForLocation).toBeCalledWith('LEI', '13075')
+      })
+
+      it('should return the wing name', async () => {
+        const establishmentRollCounts = await establishmentRollService.getLandingRollCounts(
+          'token',
+          'LEI',
+          '13075',
+          '13076',
+        )
+        expect(establishmentRollCounts.wingName).toEqual('E')
+      })
+
+      it('should return the landing name', async () => {
+        const establishmentRollCounts = await establishmentRollService.getLandingRollCounts(
+          'token',
+          'LEI',
+          '13075',
+          '13076',
+        )
+        expect(establishmentRollCounts.landingName).toEqual('3')
+      })
+
+      it('should return the roll counts for cells within requested landing', async () => {
+        const establishmentRollCounts1 = await establishmentRollService.getLandingRollCounts(
+          'token',
+          'LEI',
+          '13075',
+          '13076',
+        )
+
+        const establishmentRollCounts2 = await establishmentRollService.getLandingRollCounts(
+          'token',
+          'LEI',
+          '13075',
+          '13104',
+        )
+
+        expect(establishmentRollCounts1.cellRollCounts).toEqual(
+          prisonRollCountForWingNoSpurMock.locations[0].subLocations[0].subLocations,
+        )
+        expect(establishmentRollCounts2.cellRollCounts).toEqual(
+          prisonRollCountForWingNoSpurMock.locations[0].subLocations[1].subLocations,
+        )
+      })
+    })
+
+    describe('Three levels of hierarchy', () => {
+      beforeEach(() => {
+        prisonApiClientMock.getPrisonRollCountForLocation = jest
+          .fn()
+          .mockResolvedValue(prisonRollCountForWingWithSpurMock)
+      })
+
+      it('should call api with wingId', async () => {
+        await establishmentRollService.getLandingRollCounts('token', 'HOI', '39255', '39270')
+        expect(prisonApiClientMock.getPrisonRollCountForLocation).toBeCalledWith('HOI', '39255')
+      })
+
+      it('should return the wing name', async () => {
+        const establishmentRollCounts = await establishmentRollService.getLandingRollCounts(
+          'token',
+          'HOI',
+          '39255',
+          '39270',
+        )
+        expect(establishmentRollCounts.wingName).toEqual('2')
+      })
+
+      it('should return the spur name', async () => {
+        const establishmentRollCounts = await establishmentRollService.getLandingRollCounts(
+          'token',
+          'HOI',
+          '39255',
+          '39270',
+        )
+        expect(establishmentRollCounts.spurName).toEqual('1')
+      })
+
+      it('should return the landing name', async () => {
+        const establishmentRollCounts = await establishmentRollService.getLandingRollCounts(
+          'token',
+          'HOI',
+          '39255',
+          '39270',
+        )
+        expect(establishmentRollCounts.landingName).toEqual('B')
+      })
+
+      it('should return the roll counts for cells within requested landing', async () => {
+        const establishmentRollCounts1 = await establishmentRollService.getLandingRollCounts(
+          'token',
+          'HOI',
+          '39255',
+          '39270',
+        )
+
+        expect(establishmentRollCounts1.cellRollCounts).toEqual(
+          prisonRollCountForWingWithSpurMock.locations[0].subLocations[0].subLocations[1].subLocations,
+        )
+      })
     })
   })
 })
