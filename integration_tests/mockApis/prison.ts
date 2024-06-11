@@ -14,6 +14,7 @@ import { offenderCellHistoryMock } from '../../server/test/mocks/offenderCellHis
 import { userDetailsMock } from '../../server/test/mocks/userDetailsMock'
 import { pagedListMock } from '../../server/test/mocks/pagedListMock'
 import { prisonRollCountMock } from '../../server/mocks/prisonRollCountMock'
+import { prisonRollCountForWingWithSpurMock } from '../../server/mocks/prisonRollCountForWingWithSpurMock'
 
 export default {
   stubUserCaseLoads: (caseLoads: CaseLoad[] = []) => {
@@ -69,6 +70,26 @@ export default {
       request: {
         method: 'GET',
         url: `/prison/api/prison/roll-count/${prisonCode}`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: payload,
+      },
+    })
+  },
+
+  stubPrisonRollCountForLanding: ({
+    prisonCode = 'LEI',
+    landingId = '123',
+    payload = prisonRollCountForWingWithSpurMock,
+  } = {}) => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        url: `/prison/api/prison/roll-count/${prisonCode}/cells-only/${landingId}`,
       },
       response: {
         status: 200,

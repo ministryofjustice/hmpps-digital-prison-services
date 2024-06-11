@@ -52,7 +52,7 @@ export const prisonRollCountMock: PrisonRollCount = {
           subLocations: [],
         },
         {
-          locationId: '12729',
+          locationId: '13137',
           locationType: 'LAND',
           locationCode: '2',
           fullLocationPath: 'B-2',
@@ -103,7 +103,7 @@ export const prisonRollCountMock: PrisonRollCount = {
           },
           subLocations: [
             {
-              locationId: '12729',
+              locationId: '39270',
               locationType: 'LAND',
               locationCode: 'C-1-1',
               fullLocationPath: 'C-1-1',

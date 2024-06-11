@@ -1,9 +1,9 @@
 import Page from '../pages/page'
 import EstablishmentRollPage from '../pages/EstablishmentRoll'
 import { Role } from '../../server/enums/role'
-import { assignedRollCountWithSpursMock } from '../../server/mocks/rollCountMock'
 import LandingRollPage from '../pages/LandingRoll'
-import { locationMock } from '../../server/mocks/locationMock'
+import { prisonRollCountForWingWithSpurMock } from '../../server/mocks/prisonRollCountForWingWithSpurMock'
+import { prisonRollCountForWingNoSpurMock } from '../../server/mocks/prisonRollCountForWingNoSpurMock'
 
 context('Establishment Roll Page', () => {
   beforeEach(() => {
@@ -87,13 +87,7 @@ context('Establishment Roll Page', () => {
   })
 
   it('should show link to landing pages when wing has spur', () => {
-    cy.task('stubGetLocation', { locationId: 20000, payload: { ...locationMock, description: 'WING 1' } })
-    cy.task('stubGetLocation', { locationId: 100, payload: { ...locationMock, description: 'Spur 1' } })
-    cy.task('stubGetLocation', { locationId: 12729, payload: { ...locationMock, description: 'Landing 1' } })
-    cy.task('stubRollCount', {
-      payload: assignedRollCountWithSpursMock,
-      query: '?wingOnly=false&showCells=true&parentLocationId=12729',
-    })
+    cy.task('stubPrisonRollCountForLanding', { landingId: '20000', payload: prisonRollCountForWingWithSpurMock })
 
     const page = Page.verifyOnPage(EstablishmentRollPage)
 
@@ -101,51 +95,42 @@ context('Establishment Roll Page', () => {
     wing2Reveal.click()
     page.assignedRollCountRows().eq(5).find('td').eq(0).find('a').click()
 
-    const landingPage = Page.verifyOnPageWithTitle(LandingRollPage, 'WING 1 - Spur 1 - Landing 1')
+    const landingPage = Page.verifyOnPageWithTitle(LandingRollPage, '2 - 1 - B')
 
-    landingPage.rollCountRows().should('have.length', 5)
+    landingPage.rollCountRows().should('have.length', 13)
 
-    landingPage.rollCountRows().eq(0).find('td').eq(0).should('contain.text', 'A')
-    landingPage.rollCountRows().eq(1).find('td').eq(0).should('contain.text', 'Spur A1')
-    landingPage.rollCountRows().eq(2).find('td').eq(0).should('contain.text', 'Landing A1X')
-    landingPage.rollCountRows().eq(3).find('td').eq(0).should('contain.text', 'B')
-    landingPage.rollCountRows().eq(4).find('td').eq(0).should('contain.text', 'LANDING BY')
+    landingPage.rollCountRows().eq(0).find('td').eq(0).should('contain.text', '013')
+    landingPage.rollCountRows().eq(1).find('td').eq(0).should('contain.text', '014')
+    landingPage.rollCountRows().eq(2).find('td').eq(0).should('contain.text', '015')
 
-    landingPage.rollCountRows().first().find('td').eq(1).should('contain.text', '76')
-    landingPage.rollCountRows().first().find('td').eq(2).should('contain.text', '900')
-    landingPage.rollCountRows().first().find('td').eq(3).should('contain.text', '5')
-    landingPage.rollCountRows().first().find('td').eq(4).should('contain.text', '60')
-    landingPage.rollCountRows().first().find('td').eq(5).should('contain.text', '-16')
+    landingPage.rollCountRows().first().find('td').eq(1).should('contain.text', '1')
+    landingPage.rollCountRows().first().find('td').eq(2).should('contain.text', '1')
+    landingPage.rollCountRows().first().find('td').eq(3).should('contain.text', '0')
+    landingPage.rollCountRows().first().find('td').eq(4).should('contain.text', '1')
+    landingPage.rollCountRows().first().find('td').eq(5).should('contain.text', '0')
   })
 
   it('should show link to landing pages when wing does not have spur', () => {
-    cy.task('stubGetLocation', { locationId: 10000, payload: { ...locationMock, description: 'WING 1' } })
-    cy.task('stubGetLocation', { locationId: 12714, payload: { ...locationMock, description: 'Landing 1' } })
-    cy.task('stubRollCount', {
-      payload: assignedRollCountWithSpursMock,
-      query: '?wingOnly=false&showCells=true&parentLocationId=12714',
-    })
+    cy.task('stubPrisonRollCountForLanding', { landingId: '10000', payload: prisonRollCountForWingNoSpurMock })
 
     const page = Page.verifyOnPage(EstablishmentRollPage)
 
     const wing2Reveal = page.assignedRollCountRows().eq(0).find('td').eq(0).find('a')
     wing2Reveal.click()
-    page.assignedRollCountRows().eq(1).find('td').eq(0).find('a').click()
+    page.assignedRollCountRows().eq(2).find('td').eq(0).find('a').click()
 
-    const landingPage = Page.verifyOnPageWithTitle(LandingRollPage, 'WING 1 - Landing 1')
+    const landingPage = Page.verifyOnPageWithTitle(LandingRollPage, 'E - 5')
 
-    landingPage.rollCountRows().should('have.length', 5)
+    landingPage.rollCountRows().should('have.length', 34)
 
-    landingPage.rollCountRows().eq(0).find('td').eq(0).should('contain.text', 'A')
-    landingPage.rollCountRows().eq(1).find('td').eq(0).should('contain.text', 'Spur A1')
-    landingPage.rollCountRows().eq(2).find('td').eq(0).should('contain.text', 'Landing A1X')
-    landingPage.rollCountRows().eq(3).find('td').eq(0).should('contain.text', 'B')
-    landingPage.rollCountRows().eq(4).find('td').eq(0).should('contain.text', 'LANDING BY')
+    landingPage.rollCountRows().eq(0).find('td').eq(0).should('contain.text', '003')
+    landingPage.rollCountRows().eq(1).find('td').eq(0).should('contain.text', '004')
+    landingPage.rollCountRows().eq(2).find('td').eq(0).should('contain.text', '005')
 
-    landingPage.rollCountRows().first().find('td').eq(1).should('contain.text', '76')
-    landingPage.rollCountRows().first().find('td').eq(2).should('contain.text', '900')
-    landingPage.rollCountRows().first().find('td').eq(3).should('contain.text', '5')
-    landingPage.rollCountRows().first().find('td').eq(4).should('contain.text', '60')
-    landingPage.rollCountRows().first().find('td').eq(5).should('contain.text', '-16')
+    landingPage.rollCountRows().first().find('td').eq(1).should('contain.text', '1')
+    landingPage.rollCountRows().first().find('td').eq(2).should('contain.text', '1')
+    landingPage.rollCountRows().first().find('td').eq(3).should('contain.text', '0')
+    landingPage.rollCountRows().first().find('td').eq(4).should('contain.text', '1')
+    landingPage.rollCountRows().first().find('td').eq(5).should('contain.text', '0')
   })
 })

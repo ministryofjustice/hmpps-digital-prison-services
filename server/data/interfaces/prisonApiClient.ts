@@ -37,4 +37,5 @@ export interface PrisonApiClient {
   getPrisonersCurrentlyOutOfLivingUnit(livingUnitId: string): Promise<OffenderOut[]>
   getPrisonersCurrentlyOutOfPrison(prisonId: string): Promise<OffenderOut[]>
   getPrisonRollCount(prisonId: string): Promise<PrisonRollCount>
+  getPrisonRollCountForLocation(prisonId: string, locationId: string): Promise<PrisonRollCount>
 }

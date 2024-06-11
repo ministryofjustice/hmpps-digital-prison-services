@@ -30,16 +30,16 @@ export default class EstablishmentRollController {
     return async (req: Request, res: Response) => {
       const { user } = res.locals
       const { clientToken } = req.middleware
-      const { landingId, wingId, spurId } = req.params
+      const { landingId, wingId } = req.params
 
-      const [landingRollCounts, wing, spur, landing] = await Promise.all([
-        this.establishmentRollService.getLandingRollCounts(clientToken, user.activeCaseLoadId, Number(landingId)),
-        this.locationService.getLocationInfo(clientToken, wingId),
-        spurId ? this.locationService.getLocationInfo(clientToken, spurId) : null,
-        this.locationService.getLocationInfo(clientToken, landingId),
-      ])
+      const rollCounts = await this.establishmentRollService.getLandingRollCounts(
+        clientToken,
+        user.activeCaseLoadId,
+        wingId,
+        landingId,
+      )
 
-      res.render('pages/establishmentRollLanding', { landingRollCounts, wing, spur, landing })
+      res.render('pages/establishmentRollLanding', rollCounts)
     }
   }
 

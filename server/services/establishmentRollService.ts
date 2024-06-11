@@ -24,12 +24,32 @@ export default class EstablishmentRollService {
     }
   }
 
-  public async getLandingRollCounts(clientToken: string, caseLoadId: string, landingId: number) {
+  public async getLandingRollCounts(clientToken: string, caseLoadId: string, wingId: string, landingId: string) {
     const prisonApi = this.prisonApiClientBuilder(clientToken)
-    return prisonApi.getRollCount(caseLoadId, {
-      wingOnly: false,
-      showCells: true,
-      parentLocationId: landingId,
-    })
+    const rollCountForWing = await prisonApi.getPrisonRollCountForLocation(caseLoadId, wingId)
+
+    const wing = rollCountForWing.locations[0]
+
+    const landingOnWing = rollCountForWing.locations[0].subLocations.find(location => location.locationId === landingId)
+    if (landingOnWing) {
+      return {
+        wingName: wing.localName || wing.locationCode,
+        landingName: landingOnWing.localName || landingOnWing.locationCode,
+        cellRollCounts: landingOnWing.subLocations,
+      }
+    }
+
+    const spur = wing.subLocations.find(location =>
+      location.subLocations.find(subLocation => subLocation.locationId === landingId),
+    )
+
+    const landing = spur?.subLocations.find(location => location.locationId === landingId)
+
+    return {
+      wingName: wing.localName || wing.locationCode,
+      spurName: spur?.localName || spur?.locationCode,
+      landingName: landing?.localName || landing?.locationCode,
+      cellRollCounts: landing.subLocations,
+    }
   }
 }
