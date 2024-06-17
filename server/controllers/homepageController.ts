@@ -71,6 +71,7 @@ export default class HomepageController {
         outageBanner,
         userHasPrisonCaseLoad,
         showServicesOutage,
+        establishmentRollExcluded: config.features.establishmentRollExcluded.split(',').includes(activeCaseLoadId),
       })
     }
   }

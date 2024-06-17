@@ -86,6 +86,7 @@ generic-service:
     COMPONENT_API_LATEST: true
     COVID_UNITS_ENABLED: false
     ACCREDITED_PROGRAMMES_ENABLED: true
+    ESTABLISHMENT_ROLL_EXCLUDED: ""
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-digital-prison-services-non-prod
