@@ -46,7 +46,7 @@
                             <td class="govuk-table__cell">{{ cell.rollCount.currentlyInCell }}</td>
                             <td class="govuk-table__cell">
                                 {% if cell.rollCount.currentlyOut > 0 %}
-                                    <a class="govuk-link" href="{{config.serviceUrls.digitalPrisons}}/establishment-roll/{{cell.locationId}}/currently-out">{{cell.rollCount.currentlyOut}}</a>
+                                    <a class="govuk-link" href="/establishment-roll/{{cell.locationId}}/currently-out">{{cell.rollCount.currentlyOut}}</a>
                                 {% else %} 0 {% endif %}
                             </td>
                             <td class="govuk-table__cell">{{ cell.rollCount.workingCapacity }}</td>

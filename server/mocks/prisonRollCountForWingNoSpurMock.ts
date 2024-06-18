@@ -1099,7 +1099,7 @@ export const prisonRollCountForWingNoSpurMock: PrisonRollCount = {
               rollCount: {
                 bedsInUse: 1,
                 currentlyInCell: 1,
-                currentlyOut: 0,
+                currentlyOut: 1,
                 workingCapacity: 1,
                 netVacancies: 0,
                 outOfOrder: 0,
