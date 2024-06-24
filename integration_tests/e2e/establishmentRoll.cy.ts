@@ -27,7 +27,7 @@ context('Establishment Roll Page', () => {
     const page = Page.verifyOnPage(EstablishmentRollPage)
     page.todaysStats().unlockRoll().should('contain.text', '100')
     page.todaysStats().currentPopulation().should('contain.text', '200')
-    page.todaysStats().arrivedToday().find('a[href="/establishment-roll/in-today"]').should('contain.text', '300')
+    page.todaysStats().arrivedToday().find('a[href="/establishment-roll/arrived-today"]').should('contain.text', '300')
     page.todaysStats().inReception().find('a[href="/establishment-roll/in-reception"]').should('contain.text', '400')
     page.todaysStats().stillToArrive().find('a[href="/establishment-roll/en-route"]').should('contain.text', '500')
     page.todaysStats().outToday().find('a[href="/establishment-roll/out-today"]').should('contain.text', '600')
