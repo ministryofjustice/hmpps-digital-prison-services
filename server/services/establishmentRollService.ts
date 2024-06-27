@@ -1,6 +1,7 @@
 import { RestClientBuilder } from '../data'
 import { PrisonApiClient } from '../data/interfaces/prisonApiClient'
 import EstablishmentRollCount from './interfaces/establishmentRollService/EstablishmentRollCount'
+import EstablishmentRollSummary from './interfaces/establishmentRollService/EstablishmentRollSummary'
 
 export default class EstablishmentRollService {
   constructor(private readonly prisonApiClientBuilder: RestClientBuilder<PrisonApiClient>) {}
@@ -51,5 +52,10 @@ export default class EstablishmentRollService {
       landingName: landing?.localName || landing?.locationCode,
       cellRollCounts: landing.subLocations,
     }
+  }
+
+  getEstablishmentRollSummary(clientToken: string, caseLoadId: string): Promise<EstablishmentRollSummary> {
+    const prisonApi = this.prisonApiClientBuilder(clientToken)
+    return prisonApi.getPrisonRollCountSummary(caseLoadId)
   }
 }

@@ -1,21 +1,19 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
 import { Role } from '../enums/role'
 import config from '../config'
-import HomepageService from '../services/homepageService'
-import HmppsCache from '../middleware/hmppsCache'
 import { userHasRoles } from '../utils/utils'
 import ContentfulService from '../services/contentfulService'
 import { Service } from '../data/interfaces/component'
 import defaultServices from '../utils/defaultServices'
+import EstablishmentRollService from '../services/establishmentRollService'
 
 /**
  * Parse requests for homepage routes and orchestrate response
  */
 export default class HomepageController {
   constructor(
-    private readonly homepageService: HomepageService,
-    private readonly todayCache: HmppsCache,
     private readonly contentfulService: ContentfulService,
+    private readonly establishmentRollService: EstablishmentRollService,
   ) {}
 
   private async getServiceData(res: Response): Promise<{ showServicesOutage: boolean; services: Service[] }> {
@@ -23,16 +21,6 @@ export default class HomepageController {
       return { showServicesOutage: false, services: res.locals.feComponentsMeta.services }
 
     return { showServicesOutage: true, services: defaultServices }
-  }
-
-  private async getTodayData(req: Request, userHasPrisonCaseLoad: boolean, activeCaseLoadId: string) {
-    if (userHasPrisonCaseLoad) {
-      return this.todayCache.wrap(activeCaseLoadId, () =>
-        this.homepageService.getTodaySection(req.middleware.clientToken, activeCaseLoadId),
-      )
-    }
-
-    return {}
   }
 
   public displayHomepage(): RequestHandler {
@@ -49,15 +37,15 @@ export default class HomepageController {
         ? `${config.serviceUrls.digitalPrisons}/prisoner-search?keywords=&location=${activeCaseLoadId}`
         : ''
 
-      // Today Section - wrapped with a caching function per prison to reduce API calls
-
       // Outage Banner - filtered to active caseload if banner has been marked for specific prisons
       // Whats new Section - filtered to active caseload if post has been marked for specific prisons
       const [outageBanner, { showServicesOutage, services }, whatsNewData, todayData] = await Promise.all([
         this.contentfulService.getOutageBanner(activeCaseLoadId),
         this.getServiceData(res),
         this.contentfulService.getWhatsNewPosts(1, 3, 0, activeCaseLoadId),
-        this.getTodayData(req, userHasPrisonCaseLoad, activeCaseLoadId),
+        userHasPrisonCaseLoad
+          ? this.establishmentRollService.getEstablishmentRollSummary(req.middleware.clientToken, activeCaseLoadId)
+          : {},
       ])
 
       res.render('pages/index', {
@@ -66,12 +54,11 @@ export default class HomepageController {
         searchViewAllUrl,
         services,
         globalPreset: !!errors?.length && userHasGlobal,
-        ...todayData,
+        todayData,
         whatsNewPosts: whatsNewData.whatsNewPosts,
         outageBanner,
         userHasPrisonCaseLoad,
         showServicesOutage,
-        establishmentRollExcluded: config.features.establishmentRollExcluded.split(',').includes(activeCaseLoadId),
       })
     }
   }

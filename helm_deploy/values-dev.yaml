@@ -21,7 +21,6 @@ generic-service:
     HMPPS_AUTH_URL: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
     HMPPS_COOKIE_DOMAIN: digital-dev.prison.service.justice.gov.uk
     HMPPS_COOKIE_NAME: hmpps-session-dev
-    TODAY_CACHE_TTL: 10
 
     # Maintainance mode
     KEYWORKER_MAINTENANCE_MODE: false
@@ -86,7 +85,6 @@ generic-service:
     COMPONENT_API_LATEST: true
     COVID_UNITS_ENABLED: false
     ACCREDITED_PROGRAMMES_ENABLED: true
-    ESTABLISHMENT_ROLL_EXCLUDED: ""
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-digital-prison-services-non-prod

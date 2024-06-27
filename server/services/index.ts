@@ -1,8 +1,6 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client/core'
 import { dataAccess } from '../data'
 import UserService from './userService'
-import HomepageService from './homepageService'
-import HmppsCache from '../middleware/hmppsCache'
 import config from '../config'
 import ContentfulService from './contentfulService'
 import EstablishmentRollService from './establishmentRollService'
@@ -10,21 +8,9 @@ import MovementsService from './movementsService'
 import LocationService from './locationsService'
 
 export const services = () => {
-  const {
-    prisonApiClientBuilder,
-    whereAboutsApiClientBuilder,
-    keyWorkerApiClientBuilder,
-    prisonerSearchApiClientBuilder,
-    applicationInfo,
-  } = dataAccess
+  const { prisonApiClientBuilder, prisonerSearchApiClientBuilder, applicationInfo } = dataAccess
 
-  const todayCache = new HmppsCache(config.todayCacheTTL)
   const userService = new UserService(prisonApiClientBuilder)
-  const homepageService = new HomepageService(
-    prisonApiClientBuilder,
-    whereAboutsApiClientBuilder,
-    keyWorkerApiClientBuilder,
-  )
   const establishmentRollService = new EstablishmentRollService(prisonApiClientBuilder)
   const movementsService = new MovementsService(prisonApiClientBuilder, prisonerSearchApiClientBuilder)
   const locationsService = new LocationService(prisonApiClientBuilder)
@@ -49,8 +35,6 @@ export const services = () => {
     dataAccess,
     applicationInfo,
     userService,
-    homepageService,
-    todayCache,
     contentfulService,
     establishmentRollService,
     movementsService,
