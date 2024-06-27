@@ -2,9 +2,7 @@ import { stubFor } from './wiremock'
 import { CaseLoad } from '../../server/data/interfaces/caseLoad'
 import { Location } from '../../server/data/interfaces/location'
 import { locationMock, locationsMock } from '../../server/mocks/locationMock'
-import { assignedRollCountMock, unassignedRollCountMock } from '../../server/mocks/rollCountMock'
 import { movementsMock } from '../../server/mocks/movementsMock'
-import { mockStaffRoles } from '../../server/mocks/staffRolesMock'
 import { movementsInMock } from '../../server/test/mocks/movementsInMock'
 import { movementsOutMock } from '../../server/test/mocks/movementsOutMock'
 import { movementsEnRouteMock } from '../../server/test/mocks/movementsEnRouteMock'
@@ -15,6 +13,7 @@ import { userDetailsMock } from '../../server/test/mocks/userDetailsMock'
 import { pagedListMock } from '../../server/test/mocks/pagedListMock'
 import { prisonRollCountMock } from '../../server/mocks/prisonRollCountMock'
 import { prisonRollCountForWingWithSpurMock } from '../../server/mocks/prisonRollCountForWingWithSpurMock'
+import { prisonEstablishmentRollSummaryMock } from '../../server/mocks/prisonRollCountSummaryMock'
 
 export default {
   stubUserCaseLoads: (caseLoads: CaseLoad[] = []) => {
@@ -49,22 +48,6 @@ export default {
     })
   },
 
-  stubRollCount: ({ prisonCode = 'LEI', payload = assignedRollCountMock, query = '' } = {}) => {
-    return stubFor({
-      request: {
-        method: 'GET',
-        url: `/prison/api/movements/rollcount/${prisonCode}${query}`,
-      },
-      response: {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
-        jsonBody: payload,
-      },
-    })
-  },
-
   stubPrisonRollCount: ({ prisonCode = 'LEI', payload = prisonRollCountMock } = {}) => {
     return stubFor({
       request: {
@@ -77,6 +60,22 @@ export default {
           'Content-Type': 'application/json;charset=UTF-8',
         },
         jsonBody: payload,
+      },
+    })
+  },
+
+  stubPrisonRollCountSummary: ({ prisonCode = 'LEI' } = {}) => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        url: `/prison/api/prison/roll-count/${prisonCode}/summary`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: { ...prisonEstablishmentRollSummaryMock, prisonId: prisonCode },
       },
     })
   },
@@ -97,22 +96,6 @@ export default {
           'Content-Type': 'application/json;charset=UTF-8',
         },
         jsonBody: payload,
-      },
-    })
-  },
-
-  stubRollCountUnassigned: (prisonCode = 'LEI') => {
-    return stubFor({
-      request: {
-        method: 'GET',
-        url: `/prison/api/movements/rollcount/${prisonCode}?unassigned=true`,
-      },
-      response: {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
-        jsonBody: unassignedRollCountMock,
       },
     })
   },
@@ -247,38 +230,6 @@ export default {
     })
   },
 
-  stubEnrouteRollCount: (prisonCode = 'LEI') => {
-    return stubFor({
-      request: {
-        method: 'GET',
-        urlPattern: `/prison/api/movements/rollcount/${prisonCode}/enroute`,
-      },
-      response: {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
-        jsonBody: 1,
-      },
-    })
-  },
-
-  stubGetLocationsForPrison: (prisonCode = 'LEI') => {
-    return stubFor({
-      request: {
-        method: 'GET',
-        urlPattern: `/prison/api/agencies/${prisonCode}/locations`,
-      },
-      response: {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
-        jsonBody: [{ description: 'CSWAP', locationId: 1 }],
-      },
-    })
-  },
-
   stubGetLocation: ({ locationId = 123, payload = locationMock } = {}) => {
     return stubFor({
       request: {
@@ -291,38 +242,6 @@ export default {
           'Content-Type': 'application/json;charset=UTF-8',
         },
         jsonBody: payload,
-      },
-    })
-  },
-
-  getAttributesForLocation: (locationId = 1) => {
-    return stubFor({
-      request: {
-        method: 'GET',
-        urlPattern: `/prison/api/cell/${locationId}/attributes`,
-      },
-      response: {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
-        jsonBody: { noOfOccupants: 31 },
-      },
-    })
-  },
-
-  stubGetStaffRoles: (status = 200) => {
-    return stubFor({
-      request: {
-        method: 'GET',
-        urlPattern: `/prison/api/staff/231232/LEI/roles`,
-      },
-      response: {
-        status,
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
-        jsonBody: mockStaffRoles,
       },
     })
   },

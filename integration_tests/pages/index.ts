@@ -48,7 +48,6 @@ export default class IndexPage extends Page {
 
     return {
       heading: () => todaySection().find('h2'),
-      lastUpdated: () => todaySection().find('.today-last-updated'),
       unlockRollCard: () => todaySection().find('[data-qa=today-unlock-roll-card]'),
       populationCard: () => todaySection().find('[data-qa=today-current-population-card]'),
       inTodayCard: () => todaySection().find('[data-qa=today-in-card]'),

@@ -7,11 +7,9 @@ context('SignIn', () => {
     cy.task('reset')
     cy.task('stubUserCaseLoads')
     cy.task('stubUserLocations')
-    cy.task('stubRollCount')
-    cy.task('stubRollCountUnassigned')
-    cy.task('stubMovements')
     cy.task('stubWhatsNewPosts')
     cy.task('stubOutageBanner')
+    cy.task('stubPrisonRollCountSummary')
     cy.task('changeCaseload')
     cy.setupUserAuth()
   })
@@ -61,17 +59,5 @@ context('SignIn', () => {
     cy.signIn()
 
     indexPage.headerUserName().contains('B. Brown')
-  })
-
-  it('Page shown ok when roles are not found', () => {
-    cy.task('stubGetStaffRoles', 403)
-    cy.signIn()
-    Page.verifyOnPage(IndexPage)
-  })
-
-  it('Page shown ok when roles call is unauthorised', () => {
-    cy.task('stubGetStaffRoles', 404)
-    cy.signIn()
-    Page.verifyOnPage(IndexPage)
   })
 })

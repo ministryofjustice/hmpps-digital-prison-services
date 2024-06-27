@@ -8,8 +8,6 @@ let req: any
 let res: any
 let controller: any
 
-jest.mock('../services/homepageService.ts')
-
 describe('Managed Page Controller', () => {
   let contentfulService: ContentfulService
 

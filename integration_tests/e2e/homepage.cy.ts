@@ -1,7 +1,7 @@
 import Page from '../pages/page'
 import IndexPage from '../pages'
 import { Role } from '../../server/enums/role'
-import { todayDataMock } from '../../server/mocks/todayDataMock'
+import { prisonEstablishmentRollSummaryMock } from '../../server/mocks/prisonRollCountSummaryMock'
 
 context('Homepage (with FE Components services)', () => {
   beforeEach(() => {
@@ -12,12 +12,10 @@ context('Homepage (with FE Components services)', () => {
         { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
       ],
     })
-    cy.task('stubRollCount')
-    cy.task('stubRollCountUnassigned')
-    cy.task('stubMovements')
     cy.task('stubWhatsNewPosts')
     cy.task('stubOutageBanner')
     cy.task('stubFeComponents')
+    cy.task('stubPrisonRollCountSummary')
     cy.signIn()
     cy.visit('/')
   })
@@ -75,21 +73,28 @@ context('Homepage (with FE Components services)', () => {
     it('should display today data', () => {
       const page = Page.verifyOnPage(IndexPage)
       page.today().heading().should('be.visible').and('contain.text', 'Today in Leeds (HMP)')
-      page.today().lastUpdated().should('be.visible')
 
       page.today().unlockRollCard().should('be.visible').find('h3').contains("Today's unlock roll")
-      page.today().unlockRollCard().find('.today-card__count').contains(todayDataMock.unlockRollCount)
+      page
+        .today()
+        .unlockRollCard()
+        .find('.today-card__count')
+        .contains(prisonEstablishmentRollSummaryMock.numUnlockRollToday)
 
       page.today().populationCard().should('be.visible').find('h3').contains('Current population')
-      page.today().populationCard().find('.today-card__count').contains(todayDataMock.currentPopulationCount)
+      page
+        .today()
+        .populationCard()
+        .find('.today-card__count')
+        .contains(prisonEstablishmentRollSummaryMock.numCurrentPopulation)
       page.today().populationCard().find('a').contains('Establishment roll')
 
       page.today().inTodayCard().should('be.visible').find('h3').contains('Arrived today')
-      page.today().inTodayCard().find('.today-card__count').contains(todayDataMock.inTodayCount)
+      page.today().inTodayCard().find('.today-card__count').contains(prisonEstablishmentRollSummaryMock.numArrivedToday)
       page.today().inTodayCard().find('a').contains('Arrived today')
 
       page.today().outTodayCard().should('be.visible').find('h3').contains('Out today')
-      page.today().outTodayCard().find('.today-card__count').contains(todayDataMock.outTodayCount)
+      page.today().outTodayCard().find('.today-card__count').contains(prisonEstablishmentRollSummaryMock.numOutToday)
       page.today().outTodayCard().find('a').contains('People out today')
     })
   })
@@ -125,9 +130,7 @@ context('Homepage - no global search', () => {
         { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
       ],
     })
-    cy.task('stubRollCount')
-    cy.task('stubRollCountUnassigned')
-    cy.task('stubMovements')
+    cy.task('stubPrisonRollCountSummary')
     cy.task('stubWhatsNewPosts')
     cy.task('stubOutageBanner')
 
@@ -155,9 +158,7 @@ context('Homepage - no active caseload', () => {
         { caseloadFunction: '', caseLoadId: 'MOR', currentlyActive: false, description: 'Moorland', type: '' },
       ],
     })
-    cy.task('stubRollCount', { prisonCode: 'MOR' })
-    cy.task('stubRollCountUnassigned', 'MOR')
-    cy.task('stubMovements', 'MOR')
+    cy.task('stubPrisonRollCountSummary', { prisonCode: 'MOR' })
     cy.task('stubWhatsNewPosts')
     cy.task('stubOutageBanner')
     cy.task('stubSetActiveCaseload')
@@ -200,9 +201,7 @@ context('Homepage (without FE Components services)', () => {
         { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
       ],
     })
-    cy.task('stubRollCount')
-    cy.task('stubRollCountUnassigned')
-    cy.task('stubMovements')
+    cy.task('stubPrisonRollCountSummary')
     cy.task('stubWhatsNewPosts')
     cy.task('stubOutageBanner')
     cy.signIn()

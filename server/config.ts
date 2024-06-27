@@ -244,7 +244,6 @@ export default {
     changeSomeonesCell: get('CHANGE_SOMEONES_CELL_URL', 'http://localhost:3002', requiredInProduction),
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
-  todayCacheTTL: Number(get('TODAY_CACHE_TTL', 0, requiredInProduction)),
   contentful: {
     host: get('CONTENTFUL_HOST', ''), // This is only required for Cypress testing
     spaceId: get('CONTENTFUL_SPACE_ID', 'spaceId', requiredInProduction),
@@ -253,8 +252,5 @@ export default {
   environmentName: get('ENVIRONMENT_NAME', ''),
   analytics: {
     tagManagerContainerId: get('TAG_MANAGER_CONTAINER_ID', ''),
-  },
-  features: {
-    establishmentRollExcluded: get('ESTABLISHMENT_ROLL_EXCLUDED', ''),
   },
 }

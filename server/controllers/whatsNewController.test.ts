@@ -10,8 +10,6 @@ let req: any
 let res: any
 let controller: any
 
-jest.mock('../services/homepageService.ts')
-
 describe('Whats New Controller', () => {
   let contentfulService: ContentfulService
 

@@ -3,16 +3,14 @@ import { Response } from 'express'
 import { Role } from '../enums/role'
 import HomepageController from './homepageController'
 import config from '../config'
-import HomepageService from '../services/homepageService'
-import { todayDataMock } from '../mocks/todayDataMock'
-import HmppsCache from '../middleware/hmppsCache'
 import ContentfulService from '../services/contentfulService'
 import { whatsNewPostsMock } from '../mocks/whatsNewPostsMock'
 import { whatsNewDataMock } from '../mocks/whatsNewDataMock'
-import { mockStaffRoles } from '../mocks/staffRolesMock'
 import { CaseLoad } from '../data/interfaces/caseLoad'
 import { PrisonUser } from '../interfaces/prisonUser'
 import defaultServices from '../utils/defaultServices'
+import EstablishmentRollService from '../services/establishmentRollService'
+import { prisonEstablishmentRollSummaryMock } from '../mocks/prisonRollCountSummaryMock'
 
 const staffId = 487023
 const activeCaseLoadId = 'LEI'
@@ -30,10 +28,8 @@ let res: Partial<Response> = {}
 
 let controller: any
 
-jest.mock('../services/homepageService.ts')
-
 describe('Homepage Controller', () => {
-  let homepageService: HomepageService
+  let establishmentRollService: EstablishmentRollService
   let contentfulService: ContentfulService
 
   beforeEach(() => {
@@ -53,32 +49,26 @@ describe('Homepage Controller', () => {
       redirect: jest.fn(),
     }
 
-    homepageService = new HomepageService(null, null, null)
-    homepageService.getTodaySection = jest.fn(async () => todayDataMock)
+    establishmentRollService = new EstablishmentRollService(null)
 
-    homepageService.getStaffRoles = jest.fn(async () => mockStaffRoles)
+    establishmentRollService.getEstablishmentRollSummary = jest.fn(async () => prisonEstablishmentRollSummaryMock)
 
     contentfulService = new ContentfulService(new ApolloClient({ cache: new InMemoryCache() }))
     contentfulService.getWhatsNewPosts = jest.fn(async () => whatsNewDataMock)
     contentfulService.getOutageBanner = jest.fn(async () => 'Banner')
 
-    controller = new HomepageController(homepageService, new HmppsCache(1), contentfulService)
+    controller = new HomepageController(contentfulService, establishmentRollService)
   })
 
   describe('Display homepage', () => {
     const defaultOutput = {
-      currentPopulationCount: 1023,
       errors: undefined as string[],
       globalPreset: false,
-      inTodayCount: 17,
-      outTodayCount: 9,
       outageBanner: 'Banner',
       userHasPrisonCaseLoad: true,
       searchViewAllUrl: `http://localhost:3001/prisoner-search?keywords=&location=${activeCaseLoadId}`,
       showServicesOutage: true,
       services: defaultServices,
-      todayLastUpdated: '2023-07-20T12:45',
-      unlockRollCount: 1015,
       userHasGlobal: true,
       whatsNewPosts: [
         {
@@ -100,14 +90,14 @@ describe('Homepage Controller', () => {
           title: 'Whats new three',
         },
       ],
-      establishmentRollExcluded: false,
+      todayData: prisonEstablishmentRollSummaryMock,
     }
 
     describe('With no feComponentsMeta', () => {
       it('should get homepage data', async () => {
         await controller.displayHomepage()(req, res)
 
-        expect(controller['homepageService'].getTodaySection).toHaveBeenCalled()
+        expect(controller['establishmentRollService'].getEstablishmentRollSummary).toHaveBeenCalled()
         expect(controller['contentfulService'].getWhatsNewPosts).toHaveBeenCalled()
         expect(controller['contentfulService'].getOutageBanner).toHaveBeenCalled()
         expect(res.render).toHaveBeenCalledWith('pages/index', defaultOutput)
@@ -134,7 +124,7 @@ describe('Homepage Controller', () => {
           },
         })
 
-        expect(controller['homepageService'].getTodaySection).toHaveBeenCalled()
+        expect(controller['establishmentRollService'].getEstablishmentRollSummary).toHaveBeenCalled()
         expect(controller['contentfulService'].getWhatsNewPosts).toHaveBeenCalled()
         expect(controller['contentfulService'].getOutageBanner).toHaveBeenCalled()
         expect(res.render).toHaveBeenCalledWith('pages/index', {
@@ -157,11 +147,10 @@ describe('Homepage Controller', () => {
         showServicesOutage: true,
         services: defaultServices,
         searchViewAllUrl: `${config.serviceUrls.digitalPrisons}/prisoner-search?keywords=&location=${res.locals.user.activeCaseLoadId}`,
-        ...todayDataMock,
         whatsNewPosts: whatsNewPostsMock,
         outageBanner: 'Banner',
         userHasPrisonCaseLoad: true,
-        establishmentRollExcluded: false,
+        todayData: prisonEstablishmentRollSummaryMock,
       })
     })
   })
@@ -228,7 +217,7 @@ describe('Homepage Controller', () => {
         } as PrisonUser,
       }
       await controller.displayHomepage()(req, res)
-      expect(controller['homepageService'].getTodaySection).not.toHaveBeenCalled()
+      expect(controller['establishmentRollService'].getEstablishmentRollSummary).not.toHaveBeenCalled()
       expect(controller['contentfulService'].getWhatsNewPosts).toHaveBeenCalled()
       expect(controller['contentfulService'].getOutageBanner).toHaveBeenCalled()
       expect(res.render).toHaveBeenCalledWith('pages/index', expect.objectContaining({ userHasPrisonCaseLoad: false }))

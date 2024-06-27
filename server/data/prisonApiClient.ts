@@ -4,9 +4,7 @@ import RestClient from './restClient'
 import { PrisonApiClient } from './interfaces/prisonApiClient'
 import { CaseLoad } from './interfaces/caseLoad'
 import { Location } from './interfaces/location'
-import { BlockRollCount } from './interfaces/blockRollCount'
 import { Movements } from './interfaces/movements'
-import { StaffRole } from './interfaces/staffRole'
 import { OffenderCell } from './interfaces/offenderCell'
 import { OffenderIn } from './interfaces/offenderIn'
 import { OffenderOut } from './interfaces/offenderOut'
@@ -16,6 +14,7 @@ import { UserDetail } from './interfaces/userDetail'
 import { BedAssignment } from './interfaces/bedAssignment'
 import { PagedList } from './interfaces/pagedList'
 import PrisonRollCount from './interfaces/prisonRollCount'
+import EstablishmentRollSummary from '../services/interfaces/establishmentRollService/EstablishmentRollSummary'
 
 export default class PrisonApiRestClient implements PrisonApiClient {
   constructor(private restClient: RestClient) {}
@@ -38,16 +37,6 @@ export default class PrisonApiRestClient implements PrisonApiClient {
 
   getUserLocations(): Promise<Location[]> {
     return this.get<Location[]>({ path: '/api/users/me/locations' })
-  }
-
-  getRollCount(
-    prisonId: string,
-    queryOptions: { unassigned?: boolean; wingOnly?: boolean; showCells?: boolean; parentLocationId?: number } = {},
-  ): Promise<BlockRollCount[]> {
-    return this.get<BlockRollCount[]>({
-      path: `/api/movements/rollcount/${prisonId}`,
-      query: querystring.stringify(queryOptions),
-    })
   }
 
   getMovements(prisonId: string): Promise<Movements> {
@@ -80,18 +69,6 @@ export default class PrisonApiRestClient implements PrisonApiClient {
 
   getAttributesForLocation(locationId: number): Promise<OffenderCell> {
     return this.get<OffenderCell>({ path: `/api/cell/${locationId}/attributes` })
-  }
-
-  async getStaffRoles(staffId: number, agencyId: string): Promise<StaffRole[]> {
-    try {
-      return await this.get<StaffRole[]>({ path: `/api/staff/${staffId}/${agencyId}/roles` })
-    } catch (error) {
-      if (error.status === 403 || error.status === 404) {
-        // can happen for CADM (central admin) users
-        return []
-      }
-      throw error
-    }
   }
 
   setActiveCaseload(caseLoad: CaseLoad): Promise<Record<string, string>> {
@@ -132,5 +109,9 @@ export default class PrisonApiRestClient implements PrisonApiClient {
 
   getPrisonRollCountForLocation(prisonId: string, locationId: string): Promise<PrisonRollCount> {
     return this.get<PrisonRollCount>({ path: `/api/prison/roll-count/${prisonId}/cells-only/${locationId}` })
+  }
+
+  getPrisonRollCountSummary(prisonId: string): Promise<EstablishmentRollSummary> {
+    return this.get<PrisonRollCount>({ path: `/api/prison/roll-count/${prisonId}/summary` })
   }
 }
