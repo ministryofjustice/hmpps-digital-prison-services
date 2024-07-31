@@ -42,7 +42,7 @@ describe('movementsService', () => {
             {
               alertCodes: ['HID'],
               alertIds: ['HID'],
-              classes: 'dps-alert-status dps-alert-status--medical',
+              classes: 'alert-status alert-status--medical',
               label: 'Hidden disability',
             },
           ],
@@ -84,7 +84,7 @@ describe('movementsService', () => {
             {
               alertCodes: ['HID'],
               alertIds: ['HID'],
-              classes: 'dps-alert-status dps-alert-status--medical',
+              classes: 'alert-status alert-status--medical',
               label: 'Hidden disability',
             },
           ],
@@ -128,7 +128,7 @@ describe('movementsService', () => {
             {
               alertCodes: ['HID'],
               alertIds: ['HID'],
-              classes: 'dps-alert-status dps-alert-status--medical',
+              classes: 'alert-status alert-status--medical',
               label: 'Hidden disability',
             },
           ],
@@ -174,7 +174,7 @@ describe('movementsService', () => {
             {
               alertCodes: ['HID'],
               alertIds: ['HID'],
-              classes: 'dps-alert-status dps-alert-status--medical',
+              classes: 'alert-status alert-status--medical',
               label: 'Hidden disability',
             },
           ],
@@ -306,7 +306,7 @@ describe('movementsService', () => {
             {
               alertCodes: ['HID'],
               alertIds: ['HID'],
-              classes: 'dps-alert-status dps-alert-status--medical',
+              classes: 'alert-status alert-status--medical',
               label: 'Hidden disability',
             },
           ],
@@ -366,6 +366,26 @@ describe('movementsService', () => {
       expect(result).toEqual([
         expect.objectContaining(prisonerSearchMock[0]),
         expect.objectContaining(prisonerSearchMock[1]),
+      ])
+    })
+
+    it('should decorate the alertFlags for each prisoner', async () => {
+      const result = await movementsService.getOffendersCurrentlyOutTotal('token', 'MDI')
+
+      expect(result).toEqual([
+        expect.objectContaining({
+          alertFlags: [],
+        }),
+        expect.objectContaining({
+          alertFlags: [
+            {
+              alertCodes: ['HID'],
+              alertIds: ['HID'],
+              classes: 'alert-status alert-status--medical',
+              label: 'Hidden disability',
+            },
+          ],
+        }),
       ])
     })
 

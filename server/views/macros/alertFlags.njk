@@ -1,13 +1,9 @@
-{% from "dps/components/alert-flag/macro.njk" import alertFlag %}
-
 {% macro alertFlags(alerts) %}
     {% if alerts.length %}
         <ul class="alerts-list">
             {% for alert in alerts %}
-                <li>
-                    {{ alertFlag({
-                        alert: alert
-                    }) }}
+                <li class="{{ alert.classes }}">
+                    {{ alert.label }}
                 </li>
             {% endfor %}
         </ul>

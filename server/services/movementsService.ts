@@ -1,7 +1,7 @@
-import dpsShared from '@ministryofjustice/hmpps-connect-dps-shared-items'
 import { RestClientBuilder } from '../data'
 import { PrisonApiClient } from '../data/interfaces/prisonApiClient'
 import { PrisonerSearchClient } from '../data/interfaces/prisonerSearchClient'
+import { mapAlerts } from './utils/alertFlagLabels'
 import { PrisonerWithAlerts } from './interfaces/establishmentRollService/PrisonerWithAlerts'
 import { stripAgencyPrefix } from '../utils/utils'
 import { Prisoner } from '../data/interfaces/prisoner'
@@ -34,7 +34,7 @@ export default class MovementsService {
           ...prisoner,
           movementTime: prisonerMovement?.movementTime,
           arrivedFrom: prisonerMovement?.fromAgencyDescription || prisonerMovement?.fromCity,
-          alertFlags: dpsShared.alertFlags.getAlertFlagLabelsForAlerts(prisoner.alerts),
+          alertFlags: mapAlerts(prisoner),
         }
       })
   }
@@ -59,7 +59,7 @@ export default class MovementsService {
           ...prisoner,
           timeOut: prisonerMovement?.timeOut,
           reasonDescription: prisonerMovement.reasonDescription,
-          alertFlags: dpsShared.alertFlags.getAlertFlagLabelsForAlerts(prisoner.alerts),
+          alertFlags: mapAlerts(prisoner),
         }
       })
   }
@@ -84,7 +84,7 @@ export default class MovementsService {
           ...prisoner,
           from: prisonerMovement?.fromAgencyDescription,
           reason: prisonerMovement?.movementReasonDescription,
-          alertFlags: dpsShared.alertFlags.getAlertFlagLabelsForAlerts(prisoner.alerts),
+          alertFlags: mapAlerts(prisoner),
           movementTime: prisonerMovement?.movementTime,
           movementDate: prisonerMovement?.movementDate,
         }
@@ -114,7 +114,7 @@ export default class MovementsService {
 
         return {
           ...prisoner,
-          alertFlags: dpsShared.alertFlags.getAlertFlagLabelsForAlerts(prisoner.alerts),
+          alertFlags: mapAlerts(prisoner),
           from: recentMovement?.fromAgencyDescription,
           timeArrived: recentMovement?.movementTime,
         }
@@ -223,7 +223,7 @@ export default class MovementsService {
 
         return {
           ...prisoner,
-          alertFlags: dpsShared.alertFlags.getAlertFlagLabelsForAlerts(prisoner.alerts),
+          alertFlags: mapAlerts(prisoner),
           currentLocation: recentMovement?.toCity,
           movementComment: recentMovement?.commentText,
         }
