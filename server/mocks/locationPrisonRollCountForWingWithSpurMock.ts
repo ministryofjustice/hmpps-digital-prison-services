@@ -3,7 +3,7 @@ import { PrisonRollCountForCells } from '../data/interfaces/prisonRollCount'
 export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells = {
   locationHierarchy: [
     {
-      id: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+      id: '01922dda-5d40-74d6-1d24-7db36e9b1b5e',
       prisonId: 'LEI',
       code: '2',
       level: 1,
@@ -22,7 +22,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
   },
   locations: [
     {
-      locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+      locationId: '01922dda-5d40-24d6-8d24-7db36e9b1b5e',
       locationType: 'WING',
       locationCode: '2',
       fullLocationPath: '2',
@@ -38,7 +38,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
       },
       subLocations: [
         {
-          locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+          locationId: '01922dda-5d40-34d6-8d24-7db37e9b1b5e',
           locationType: 'LANDING',
           locationCode: '1',
           fullLocationPath: '2-1',
@@ -54,7 +54,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
           },
           subLocations: [
             {
-              locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+              locationId: '01922dfa-5d40-44d6-8d24-7db36e9b1c5e',
               locationType: 'SPUR',
               locationCode: 'A',
               fullLocationPath: '2-1-A',
@@ -70,7 +70,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
               },
               subLocations: [
                 {
-                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+                  locationId: '01922dda-5d41-56d6-8d24-7db36e9b1b5e',
                   locationType: 'CELL',
                   locationCode: '001',
                   fullLocationPath: '2-1-A-001',
@@ -87,7 +87,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
                   subLocations: [],
                 },
                 {
-                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+                  locationId: '01922dda-5d40-34d4-8d24-7db36e9b1b5e',
                   locationType: 'CELL',
                   locationCode: '002',
                   fullLocationPath: '2-1-A-002',
@@ -104,7 +104,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
                   subLocations: [],
                 },
                 {
-                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+                  locationId: '01922dCa-5d40-74d6-8d24-7db36e9b1b5e',
                   locationType: 'CELL',
                   locationCode: '003',
                   fullLocationPath: '2-1-A-003',
@@ -121,7 +121,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
                   subLocations: [],
                 },
                 {
-                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+                  locationId: '01922ddf-5d40-74d6-8d24-7db36e9b1b5e',
                   locationType: 'CELL',
                   locationCode: '004',
                   fullLocationPath: '2-1-A-004',
@@ -138,7 +138,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
                   subLocations: [],
                 },
                 {
-                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+                  locationId: '01922dde-5d40-74d6-8d24-7db36e9b1b5e',
                   locationType: 'CELL',
                   locationCode: '005',
                   fullLocationPath: '2-1-A-005',
@@ -515,7 +515,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
               ],
             },
             {
-              locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+              locationId: '01922dda-5d40-73d6-5d24-7db36e0b1b5e',
               locationType: 'SPUR',
               locationCode: 'C',
               fullLocationPath: '2-1-C',
@@ -755,7 +755,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
           },
           subLocations: [
             {
-              locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+              locationId: '01922dda-5d40-74a1-8d24-7db36e9b1b5e',
               locationType: 'SPUR',
               locationCode: 'A',
               fullLocationPath: '2-2-A',
@@ -977,7 +977,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
               ],
             },
             {
-              locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+              locationId: '01922dda-5d40-74d6-8d24-7db36f7b1b5e',
               locationType: 'SPUR',
               locationCode: 'B',
               fullLocationPath: '2-2-B',
@@ -1233,7 +1233,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
               ],
             },
             {
-              locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+              locationId: '01922dda-5d40-74d6-8d24-7db36e9b1c1e',
               locationType: 'SPUR',
               locationCode: 'C',
               fullLocationPath: '2-2-C',
@@ -1457,7 +1457,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
           ],
         },
         {
-          locationId: '01922dda-5d40-74a1-b0d6-9c33c8d8fc25',
+          locationId: '01922dda-5d40-74a1-b0d6-9c33c8d9fc25',
           locationType: 'LANDING',
           locationCode: '3',
           fullLocationPath: '2-3',
@@ -1473,7 +1473,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
           },
           subLocations: [
             {
-              locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+              locationId: '01922dda-5d51-74d6-8d33-7db36e9b1b5e',
               locationType: 'SPUR',
               locationCode: 'A',
               fullLocationPath: '2-3-A',
@@ -1574,7 +1574,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
                   subLocations: [],
                 },
                 {
-                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+                  locationId: '01222dda-5d40-74d6-8d24-7db36e9b1b5e',
                   locationType: 'CELL',
                   locationCode: '006',
                   fullLocationPath: '2-3-A-006',
@@ -1591,7 +1591,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
                   subLocations: [],
                 },
                 {
-                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+                  locationId: '01322dda-5d40-74d6-8d24-7db36e9b1b5e',
                   locationType: 'CELL',
                   locationCode: '007',
                   fullLocationPath: '2-3-A-007',
@@ -1608,7 +1608,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
                   subLocations: [],
                 },
                 {
-                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+                  locationId: '01422dda-5d40-74d6-8d24-7db36e9b1b5e',
                   locationType: 'CELL',
                   locationCode: '008',
                   fullLocationPath: '2-3-A-008',
@@ -1625,7 +1625,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
                   subLocations: [],
                 },
                 {
-                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+                  locationId: '01522dda-5d40-74d6-8d24-7db36e9b1b5e',
                   locationType: 'CELL',
                   locationCode: '009',
                   fullLocationPath: '2-3-A-009',
@@ -1642,7 +1642,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
                   subLocations: [],
                 },
                 {
-                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+                  locationId: '01622dda-5d40-74d6-8d24-7db36e9b1b5e',
                   locationType: 'CELL',
                   locationCode: '010',
                   fullLocationPath: '2-3-A-010',
@@ -1659,7 +1659,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
                   subLocations: [],
                 },
                 {
-                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+                  locationId: '01722dda-5d40-74d6-8d24-7db36e9b1b5e',
                   locationType: 'CELL',
                   locationCode: '011',
                   fullLocationPath: '2-3-A-011',
@@ -1676,7 +1676,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
                   subLocations: [],
                 },
                 {
-                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+                  locationId: '01822dda-5d40-74d6-8d24-7db36e9b1b5e',
                   locationType: 'CELL',
                   locationCode: '012',
                   fullLocationPath: '2-3-A-012',
@@ -1695,7 +1695,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
               ],
             },
             {
-              locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+              locationId: '02922dda-5d40-74e6-8d24-7db36e9b1b5e',
               locationType: 'SPUR',
               locationCode: 'B',
               fullLocationPath: '2-3-B',
@@ -1711,7 +1711,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
               },
               subLocations: [
                 {
-                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+                  locationId: '01922dda-5d40-77d6-8d24-7db36e9b1b5e',
                   locationType: 'CELL',
                   locationCode: '013',
                   fullLocationPath: '2-3-B-013',
@@ -1728,7 +1728,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
                   subLocations: [],
                 },
                 {
-                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+                  locationId: '01922dda-5d40-74d9-8d24-7db36e9b1b5e',
                   locationType: 'CELL',
                   locationCode: '014',
                   fullLocationPath: '2-3-B-014',
@@ -1745,7 +1745,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
                   subLocations: [],
                 },
                 {
-                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+                  locationId: '01922dda-5d40-74d6-8d23-7db36e9b1b5e',
                   locationType: 'CELL',
                   locationCode: '015',
                   fullLocationPath: '2-3-B-015',
@@ -1762,7 +1762,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
                   subLocations: [],
                 },
                 {
-                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+                  locationId: '01922dda-5d40-74d6-8d24-7eb36e9b1b5e',
                   locationType: 'CELL',
                   locationCode: '016',
                   fullLocationPath: '2-3-B-016',
@@ -1779,7 +1779,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
                   subLocations: [],
                 },
                 {
-                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+                  locationId: '01922dda-5d40-74d6-8d24-7db37e9b1b5e',
                   locationType: 'CELL',
                   locationCode: '017',
                   fullLocationPath: '2-3-B-017',
@@ -1796,7 +1796,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
                   subLocations: [],
                 },
                 {
-                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+                  locationId: '01922dda-5d40-74d6-8d24-7db36f9b1b5e',
                   locationType: 'CELL',
                   locationCode: '018',
                   fullLocationPath: '2-3-B-018',
@@ -1813,7 +1813,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
                   subLocations: [],
                 },
                 {
-                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1c5e',
                   locationType: 'CELL',
                   locationCode: '019',
                   fullLocationPath: '2-3-B-019',
@@ -1830,7 +1830,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
                   subLocations: [],
                 },
                 {
-                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b59',
                   locationType: 'CELL',
                   locationCode: '020',
                   fullLocationPath: '2-3-B-020',
@@ -1847,7 +1847,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
                   subLocations: [],
                 },
                 {
-                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b51',
                   locationType: 'CELL',
                   locationCode: '021',
                   fullLocationPath: '2-3-B-021',
@@ -1864,7 +1864,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
                   subLocations: [],
                 },
                 {
-                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+                  locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b52',
                   locationType: 'CELL',
                   locationCode: '022',
                   fullLocationPath: '2-3-B-022',
@@ -1951,7 +1951,7 @@ export const locationPrisonRollCountForWingWithSpurMock: PrisonRollCountForCells
               ],
             },
             {
-              locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
+              locationId: '01922dda-5d40-74d6-8d24-7de16e9b1b5e',
               locationType: 'SPUR',
               locationCode: 'C',
               fullLocationPath: '2-3-C',

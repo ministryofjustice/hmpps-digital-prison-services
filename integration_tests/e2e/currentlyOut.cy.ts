@@ -11,12 +11,19 @@ context('Currently Out Page', () => {
         { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
       ],
     })
+    const locationId = '01922e9a-ffd2-77cb-ba6b-3c9c9b623194'
+
+    cy.task('stubFeComponents')
     cy.task('stubOutToday', '123')
+    cy.task('stubGetLocation')
+
     cy.task('stubPostSearchPrisonersById')
     cy.task('stubRecentMovements')
-    cy.task('stubGetLocation')
-    cy.signIn({ redirectPath: '/establishment-roll/123/currently-out' })
-    cy.visit('/establishment-roll/123/currently-out')
+
+    cy.task('stubLocationsOutToday', locationId)
+    cy.task('stubInternalLocation', locationId)
+    cy.signIn({ redirectPath: `/establishment-roll/${locationId}/currently-out` })
+    cy.visit(`/establishment-roll/${locationId}/currently-out`)
   })
 
   it('Page is visible', () => {

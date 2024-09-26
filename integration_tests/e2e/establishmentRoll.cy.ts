@@ -4,6 +4,8 @@ import { Role } from '../../server/enums/role'
 import LandingRollPage from '../pages/LandingRoll'
 import { prisonRollCountForWingWithSpurMock } from '../../server/mocks/prisonRollCountForWingWithSpurMock'
 import { prisonRollCountForWingNoSpurMock } from '../../server/mocks/prisonRollCountForWingNoSpurMock'
+import { locationPrisonRollCountForWingWithSpurMock } from '../../server/mocks/locationPrisonRollCountForWingWithSpurMock'
+import { locationPrisonRollCountForWingNoSpurMock } from '../../server/mocks/locationPrisonRollCountForWingNoSpurMock'
 
 context('Establishment Roll Page', () => {
   beforeEach(() => {
@@ -14,7 +16,9 @@ context('Establishment Roll Page', () => {
         { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
       ],
     })
+    cy.task('stubFeComponents')
     cy.task('stubPrisonRollCount')
+    cy.task('stubLocationPrisonRollCount')
     cy.signIn({ redirectPath: '/establishment-roll' })
     cy.visit('/establishment-roll')
   })
@@ -50,7 +54,7 @@ context('Establishment Roll Page', () => {
       .first()
       .find('td')
       .eq(3)
-      .find('a[href="/establishment-roll/10000/currently-out"]')
+      .find('a[href="/establishment-roll/01922dda-5d40-7bef-b74a-c8be0541d5ae/currently-out"]')
       .should('contain.text', '1')
     page.assignedRollCountRows().first().find('td').eq(4).should('contain.text', '470')
     page.assignedRollCountRows().first().find('td').eq(5).should('contain.text', '276')
@@ -104,6 +108,10 @@ context('Establishment Roll Page', () => {
 
   it('should show link to landing pages when wing has spur', () => {
     cy.task('stubPrisonRollCountForLanding', { landingId: '20000', payload: prisonRollCountForWingWithSpurMock })
+    cy.task('stubLocationPrisonRollCountForLanding', {
+      landingId: '01922dda-5d40-70d7-8fde-70e8e763dd94',
+      payload: locationPrisonRollCountForWingWithSpurMock,
+    })
 
     const page = Page.verifyOnPage(EstablishmentRollPage)
 
@@ -128,7 +136,10 @@ context('Establishment Roll Page', () => {
 
   it('should show link to landing pages when wing does not have spur', () => {
     cy.task('stubPrisonRollCountForLanding', { landingId: '10000', payload: prisonRollCountForWingNoSpurMock })
-
+    cy.task('stubLocationPrisonRollCountForLanding', {
+      landingId: '01922dda-5d40-7bef-b74a-c8be0541d5ae',
+      payload: locationPrisonRollCountForWingNoSpurMock,
+    })
     const page = Page.verifyOnPage(EstablishmentRollPage)
 
     const wing2Reveal = page.assignedRollCountRows().eq(0).find('td').eq(0).find('a')
@@ -150,7 +161,7 @@ context('Establishment Roll Page', () => {
       .first()
       .find('td')
       .eq(3)
-      .find('a[href="/establishment-roll/13138/currently-out"]')
+      .find('a[href="/establishment-roll/01922dda-5d40-715e-74c2-7c951e369858/currently-out"]')
       .should('contain.text', '1')
     landingPage.rollCountRows().first().find('td').eq(4).should('contain.text', '1')
     landingPage.rollCountRows().first().find('td').eq(5).should('contain.text', '0')

@@ -31,7 +31,7 @@ export const locationPrisonRollCountForWingNoSpurMock: PrisonRollCountForCells =
   },
   locations: [
     {
-      locationId: '01922dd9-038a-779f-9570-056c3a4483b5',
+      locationId: '01922dda-5d40-7bef-b74a-c8be0541d5ae',
       locationType: 'WING',
       locationCode: 'E',
       fullLocationPath: 'E',
@@ -1086,7 +1086,7 @@ export const locationPrisonRollCountForWingNoSpurMock: PrisonRollCountForCells =
           ],
         },
         {
-          locationId: '01922dda-5d40-7ea4-bf1b-aa7e12725c35',
+          locationId: '01922dda-5d40-79b3-8814-319fb9e9f17f',
           locationType: 'LANDING',
           locationCode: '5',
           fullLocationPath: 'E-5',
@@ -1102,7 +1102,7 @@ export const locationPrisonRollCountForWingNoSpurMock: PrisonRollCountForCells =
           },
           subLocations: [
             {
-              locationId: '01922dda-5d40-715e-86b1-7c951e369858',
+              locationId: '01922dda-5d40-715e-74c2-7c951e369858',
               locationType: 'CELL',
               locationCode: '003',
               fullLocationPath: 'E-5-003',

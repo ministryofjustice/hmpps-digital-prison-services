@@ -31,6 +31,13 @@ export default {
                 href: 'http://localhost:3001/key-worker/111111',
                 navEnabled: true,
               },
+              {
+                id: 'residential-locations',
+                heading: 'Residential Locations',
+                description: 'Manage residential locations.',
+                href: 'http://localhost:3001/locations',
+                navEnabled: true,
+              },
             ],
           },
         },

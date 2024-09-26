@@ -7,6 +7,7 @@ import contentful from './integration_tests/mockApis/contentful'
 import dps from './integration_tests/mockApis/dps'
 import prisonerSearch from './integration_tests/mockApis/prisonerSearch'
 import feComponents from './integration_tests/mockApis/feComponents'
+import locations from './integration_tests/mockApis/locations'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -27,6 +28,7 @@ export default defineConfig({
         ...auth,
         ...tokenVerification,
         ...prison,
+        ...locations,
         ...contentful,
         ...dps,
         ...prisonerSearch,

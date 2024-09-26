@@ -103,7 +103,7 @@ export const locationPrisonRollCountMock: PrisonRollCount = {
           },
           subLocations: [
             {
-              locationId: '01922dda-5d40-7720-a3f5-a1e37e0b8389',
+              locationId: '01922dda-5d40-74d6-8d24-7db36e9b1b5e',
               locationType: 'LANDING',
               locationCode: 'C-1-1',
               fullLocationPath: 'C-1-1',
