@@ -20,7 +20,11 @@ export default function routes(services: Services): Router {
       handlers.map(handler => asyncMiddleware(handler)),
     )
 
-  const homepageController = new HomepageController(services.contentfulService, services.establishmentRollService)
+  const homepageController = new HomepageController(
+    services.contentfulService,
+    services.establishmentRollService,
+    services.serviceData,
+  )
 
   get('/', homepageController.displayHomepage())
   post('/search', homepageController.search())

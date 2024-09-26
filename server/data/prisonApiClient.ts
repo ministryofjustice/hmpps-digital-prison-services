@@ -5,7 +5,6 @@ import { PrisonApiClient } from './interfaces/prisonApiClient'
 import { CaseLoad } from './interfaces/caseLoad'
 import { Location } from './interfaces/location'
 import { Movements } from './interfaces/movements'
-import { OffenderCell } from './interfaces/offenderCell'
 import { OffenderIn } from './interfaces/offenderIn'
 import { OffenderOut } from './interfaces/offenderOut'
 import { OffenderMovement } from './interfaces/offenderMovement'
@@ -65,10 +64,6 @@ export default class PrisonApiRestClient implements PrisonApiClient {
 
   getLocation(locationId: string): Promise<Location> {
     return this.get<Location>({ path: `/api/locations/${locationId}` })
-  }
-
-  getAttributesForLocation(locationId: number): Promise<OffenderCell> {
-    return this.get<OffenderCell>({ path: `/api/cell/${locationId}/attributes` })
   }
 
   setActiveCaseload(caseLoad: CaseLoad): Promise<Record<string, string>> {

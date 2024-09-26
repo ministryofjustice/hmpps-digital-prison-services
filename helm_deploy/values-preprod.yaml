@@ -36,6 +36,7 @@ generic-service:
     TOKEN_VERIFICATION_API_URL: https://token-verification-api-preprod.prison.service.justice.gov.uk
     WHEREABOUTS_ENDPOINT_URL: https://whereabouts-api-preprod.service.justice.gov.uk
     PRISONER_SEARCH_API_URL: https://prisoner-search-preprod.prison.service.justice.gov.uk
+    LOCATIONS_INSIDE_PRISON_API_URL: https://locations-inside-prison-api-preprod.hmpps.service.justice.gov.uk
 
     # Service URLs
     ACTIVITIES_URL: https://activities-preprod.prison.service.justice.gov.uk/activities

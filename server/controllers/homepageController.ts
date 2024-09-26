@@ -3,9 +3,8 @@ import { Role } from '../enums/role'
 import config from '../config'
 import { userHasRoles } from '../utils/utils'
 import ContentfulService from '../services/contentfulService'
-import { Service } from '../data/interfaces/component'
-import defaultServices from '../utils/defaultServices'
 import EstablishmentRollService from '../services/establishmentRollService'
+import ServiceData from './ServiceData'
 
 /**
  * Parse requests for homepage routes and orchestrate response
@@ -14,14 +13,8 @@ export default class HomepageController {
   constructor(
     private readonly contentfulService: ContentfulService,
     private readonly establishmentRollService: EstablishmentRollService,
+    private readonly serviceData: ServiceData,
   ) {}
-
-  private async getServiceData(res: Response): Promise<{ showServicesOutage: boolean; services: Service[] }> {
-    if (res.locals.feComponentsMeta?.services)
-      return { showServicesOutage: false, services: res.locals.feComponentsMeta.services }
-
-    return { showServicesOutage: true, services: defaultServices }
-  }
 
   public displayHomepage(): RequestHandler {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -41,7 +34,7 @@ export default class HomepageController {
       // Whats new Section - filtered to active caseload if post has been marked for specific prisons
       const [outageBanner, { showServicesOutage, services }, whatsNewData, todayData] = await Promise.all([
         this.contentfulService.getOutageBanner(activeCaseLoadId),
-        this.getServiceData(res),
+        this.serviceData.getServiceData(res),
         this.contentfulService.getWhatsNewPosts(1, 3, 0, activeCaseLoadId),
         userHasPrisonCaseLoad
           ? this.establishmentRollService.getEstablishmentRollSummary(req.middleware.clientToken, activeCaseLoadId)

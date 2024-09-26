@@ -10,6 +10,7 @@ import { movementsRecentMock } from '../test/mocks/movementsRecentMock'
 import { offenderCellHistory2Mock, offenderCellHistoryMock } from '../test/mocks/offenderCellHistoryMock'
 import { userDetailsMock } from '../test/mocks/userDetailsMock'
 import { pagedListMock } from '../test/mocks/pagedListMock'
+import locationsInsidePrisonApiClientMock from '../test/mocks/locationsInsidePrisonApiClientMock'
 
 describe('movementsService', () => {
   let movementsService: MovementsService
@@ -18,6 +19,7 @@ describe('movementsService', () => {
     movementsService = new MovementsService(
       () => prisonApiClientMock,
       () => prisonerSearchApiClientMock,
+      () => locationsInsidePrisonApiClientMock,
     )
   })
 

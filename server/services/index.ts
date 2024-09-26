@@ -6,14 +6,29 @@ import ContentfulService from './contentfulService'
 import EstablishmentRollService from './establishmentRollService'
 import MovementsService from './movementsService'
 import LocationService from './locationsService'
+import ServiceData from '../controllers/ServiceData'
 
 export const services = () => {
-  const { prisonApiClientBuilder, prisonerSearchApiClientBuilder, applicationInfo } = dataAccess
+  const {
+    prisonApiClientBuilder,
+    prisonerSearchApiClientBuilder,
+    locationsInsidePrisonApiClientBuilder,
+    applicationInfo,
+  } = dataAccess
 
   const userService = new UserService(prisonApiClientBuilder)
-  const establishmentRollService = new EstablishmentRollService(prisonApiClientBuilder)
-  const movementsService = new MovementsService(prisonApiClientBuilder, prisonerSearchApiClientBuilder)
-  const locationsService = new LocationService(prisonApiClientBuilder)
+  const establishmentRollService = new EstablishmentRollService(
+    prisonApiClientBuilder,
+    locationsInsidePrisonApiClientBuilder,
+  )
+  const movementsService = new MovementsService(
+    prisonApiClientBuilder,
+    prisonerSearchApiClientBuilder,
+    locationsInsidePrisonApiClientBuilder,
+  )
+  const locationsService = new LocationService(prisonApiClientBuilder, locationsInsidePrisonApiClientBuilder)
+
+  const serviceData = new ServiceData()
 
   const apolloClient = new ApolloClient({
     cache: new InMemoryCache(),
@@ -39,6 +54,7 @@ export const services = () => {
     establishmentRollService,
     movementsService,
     locationsService,
+    serviceData,
   }
 }
 

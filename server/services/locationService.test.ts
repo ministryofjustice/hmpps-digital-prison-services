@@ -1,12 +1,16 @@
 import prisonApiClientMock from '../test/mocks/prisonApiClientMock'
 import LocationService from './locationsService'
 import { locationMock } from '../mocks/locationMock'
+import locationsInsidePrisonApiClientMock from '../test/mocks/locationsInsidePrisonApiClientMock'
 
 describe('establishmentRollService', () => {
   let locationRollService: LocationService
 
   beforeEach(() => {
-    locationRollService = new LocationService(() => prisonApiClientMock)
+    locationRollService = new LocationService(
+      () => prisonApiClientMock,
+      () => locationsInsidePrisonApiClientMock,
+    )
   })
 
   describe('getLocationInfo', () => {

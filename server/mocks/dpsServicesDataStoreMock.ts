@@ -505,4 +505,11 @@ export const dpsServicesDataStoreMockB = [
     roles: [],
     enabled: () => enabled(undefined),
   },
+  {
+    id: 'residential-locations',
+    heading: 'Residential locations',
+    description: 'Manage residential locations',
+    href: 'http://localhost:3001/residential-locations',
+    enabled: () => enabled(true),
+  },
 ]

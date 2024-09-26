@@ -3,7 +3,6 @@ import { PrisonApiClient } from '../../data/interfaces/prisonApiClient'
 const prisonApiClientMock: PrisonApiClient = {
   getUserCaseLoads: jest.fn(),
   getUserLocations: jest.fn(),
-  getAttributesForLocation: jest.fn(),
   getMovements: jest.fn(),
   setActiveCaseload: jest.fn(),
   getLocation: jest.fn(),

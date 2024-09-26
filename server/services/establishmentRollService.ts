@@ -2,13 +2,25 @@ import { RestClientBuilder } from '../data'
 import { PrisonApiClient } from '../data/interfaces/prisonApiClient'
 import EstablishmentRollCount from './interfaces/establishmentRollService/EstablishmentRollCount'
 import EstablishmentRollSummary from './interfaces/establishmentRollService/EstablishmentRollSummary'
+import { LocationsInsidePrisonApiClient } from '../data/interfaces/locationsInsidePrisonApiClient'
 
 export default class EstablishmentRollService {
-  constructor(private readonly prisonApiClientBuilder: RestClientBuilder<PrisonApiClient>) {}
+  constructor(
+    private readonly prisonApiClientBuilder: RestClientBuilder<PrisonApiClient>,
+    private readonly locationsInsidePrisonApiClientBuilder: RestClientBuilder<LocationsInsidePrisonApiClient>,
+  ) {}
 
-  public async getEstablishmentRollCounts(clientToken: string, caseLoadId: string): Promise<EstablishmentRollCount> {
+  public async getEstablishmentRollCounts(
+    clientToken: string,
+    caseLoadId: string,
+    useLocationsApi: boolean = false,
+  ): Promise<EstablishmentRollCount> {
     const prisonApi = this.prisonApiClientBuilder(clientToken)
-    const rollCount = await prisonApi.getPrisonRollCount(caseLoadId)
+    const locationsApi = this.locationsInsidePrisonApiClientBuilder(clientToken)
+
+    const rollCount = useLocationsApi
+      ? await locationsApi.getPrisonRollCount(caseLoadId)
+      : await prisonApi.getPrisonRollCount(caseLoadId)
 
     return {
       todayStats: {
@@ -25,9 +37,18 @@ export default class EstablishmentRollService {
     }
   }
 
-  public async getLandingRollCounts(clientToken: string, caseLoadId: string, wingId: string, landingId: string) {
+  public async getLandingRollCounts(
+    clientToken: string,
+    caseLoadId: string,
+    wingId: string,
+    landingId: string,
+    useLocationsApi: boolean = false,
+  ) {
+    const locationsApi = this.locationsInsidePrisonApiClientBuilder(clientToken)
     const prisonApi = this.prisonApiClientBuilder(clientToken)
-    const rollCountForWing = await prisonApi.getPrisonRollCountForLocation(caseLoadId, wingId)
+    const rollCountForWing = useLocationsApi
+      ? await locationsApi.getPrisonRollCountForLocation(caseLoadId, wingId)
+      : await prisonApi.getPrisonRollCountForLocation(caseLoadId, wingId)
 
     const wing = rollCountForWing.locations[0]
 
@@ -37,6 +58,7 @@ export default class EstablishmentRollService {
         wingName: wing.localName || wing.locationCode,
         landingName: landingOnWing.localName || landingOnWing.locationCode,
         cellRollCounts: landingOnWing.subLocations,
+        useWorkingCapacity: useLocationsApi,
       }
     }
 
@@ -51,6 +73,7 @@ export default class EstablishmentRollService {
       spurName: spur?.localName || spur?.locationCode,
       landingName: landing?.localName || landing?.locationCode,
       cellRollCounts: landing.subLocations,
+      useWorkingCapacity: useLocationsApi,
     }
   }
 

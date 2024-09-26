@@ -2,7 +2,6 @@ import { stubFor } from './wiremock'
 import { CaseLoad } from '../../server/data/interfaces/caseLoad'
 import { Location } from '../../server/data/interfaces/location'
 import { locationMock, locationsMock } from '../../server/mocks/locationMock'
-import { movementsMock } from '../../server/mocks/movementsMock'
 import { movementsInMock } from '../../server/test/mocks/movementsInMock'
 import { movementsOutMock } from '../../server/test/mocks/movementsOutMock'
 import { movementsEnRouteMock } from '../../server/test/mocks/movementsEnRouteMock'
@@ -96,22 +95,6 @@ export default {
           'Content-Type': 'application/json;charset=UTF-8',
         },
         jsonBody: payload,
-      },
-    })
-  },
-
-  stubMovements: (prisonCode = 'LEI') => {
-    return stubFor({
-      request: {
-        method: 'GET',
-        urlPattern: `/prison/api/movements/rollcount/${prisonCode}/movements`,
-      },
-      response: {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
-        jsonBody: movementsMock,
       },
     })
   },
