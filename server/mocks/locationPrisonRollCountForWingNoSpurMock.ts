@@ -1,4 +1,4 @@
-import PrisonRollCount, { PrisonRollCountForCells } from '../data/interfaces/prisonRollCount'
+import { PrisonRollCountForCells } from '../data/interfaces/prisonRollCount'
 
 export const locationPrisonRollCountForWingNoSpurMock: PrisonRollCountForCells = {
   locationHierarchy: [
