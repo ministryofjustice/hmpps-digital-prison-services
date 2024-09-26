@@ -1,5 +1,5 @@
 import RestClient from './restClient'
-import PrisonRollCount, { PrisonersInLocation } from './interfaces/prisonRollCount'
+import PrisonRollCount, { PrisonersInLocation, PrisonRollCountForCells } from './interfaces/prisonRollCount'
 import { LocationsInsidePrisonApiClient } from './interfaces/locationsInsidePrisonApiClient'
 import { InternalLocation } from './interfaces/internalLocation'
 
@@ -18,8 +18,8 @@ export default class LocationsInsidePrisonApiRestClient implements LocationsInsi
     return this.get<PrisonRollCount>({ path: `/prison/roll-count/${prisonId}` })
   }
 
-  getPrisonRollCountForLocation(prisonId: string, locationId: string): Promise<PrisonRollCount> {
-    return this.get<PrisonRollCount>({ path: `/prison/roll-count/${prisonId}/cells-only/${locationId}` })
+  getPrisonRollCountForLocation(prisonId: string, locationId: string): Promise<PrisonRollCountForCells> {
+    return this.get<PrisonRollCountForCells>({ path: `/prison/roll-count/${prisonId}/cells-only/${locationId}` })
   }
 
   getPrisonersAtLocation(locationId: string): Promise<PrisonersInLocation[]> {

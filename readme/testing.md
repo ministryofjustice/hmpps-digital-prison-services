@@ -13,16 +13,29 @@ To run: `npm run test`
 
 For local running, start a test db, redis, and wiremock instance by:
 
-`docker-compose -f docker-compose-test.yml up`
+```zsh
+docker-compose -f docker-compose-test.yml up
+```
 
 Then run the server in test mode by:
 
-`npm run start-feature` (or `npm run start-feature:dev` to run with nodemon)
+```zsh
+npm run start-feature
+```
+or 
+```zsh
+npm run start-feature:dev
+``` 
+to run with nodemon
 
 And then either, run tests in headless mode with:
 
-`npm run int-test`
+```zsh
+npm run int-test
+```
 
 Or run tests with the cypress UI:
 
-`npm run int-test-ui`
+```zsh
+npm run int-test-ui
+```

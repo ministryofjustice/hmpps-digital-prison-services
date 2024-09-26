@@ -2,7 +2,6 @@ import { stubFor } from './wiremock'
 import { CaseLoad } from '../../server/data/interfaces/caseLoad'
 import { Location } from '../../server/data/interfaces/location'
 import { locationMock, locationsMock } from '../../server/mocks/locationMock'
-import { movementsMock } from '../../server/mocks/movementsMock'
 import { movementsInMock } from '../../server/test/mocks/movementsInMock'
 import { movementsOutMock } from '../../server/test/mocks/movementsOutMock'
 import { movementsEnRouteMock } from '../../server/test/mocks/movementsEnRouteMock'
@@ -14,6 +13,8 @@ import { pagedListMock } from '../../server/test/mocks/pagedListMock'
 import { prisonRollCountMock } from '../../server/mocks/prisonRollCountMock'
 import { prisonRollCountForWingWithSpurMock } from '../../server/mocks/prisonRollCountForWingWithSpurMock'
 import { prisonEstablishmentRollSummaryMock } from '../../server/mocks/prisonRollCountSummaryMock'
+import { locationPrisonRollCountMock } from '../../server/mocks/locationPrisonRollCountMock'
+import { locationPrisonRollCountForWingWithSpurMock } from '../../server/mocks/locationPrisonRollCountForWingWithSpurMock'
 
 export default {
   stubUserCaseLoads: (caseLoads: CaseLoad[] = []) => {
@@ -48,6 +49,43 @@ export default {
     })
   },
 
+  stubLocationPrisonRollCount: ({ prisonCode = 'LEI', payload = locationPrisonRollCountMock } = {}) => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        url: `/locations/prison/roll-count/${prisonCode}`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: payload,
+      },
+    })
+  },
+
+  stubLocationPrisonRollCountForLanding: ({
+    prisonCode = 'LEI',
+    landingId = '01922dda-5d40-77ff-9648-fba9e11a48a5',
+    payload = locationPrisonRollCountForWingWithSpurMock,
+  } = {}) => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        url: `/locations/prison/roll-count/${prisonCode}/cells-only/${landingId}`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: payload,
+      },
+    })
+  },
+
+  // TODO: deprecated
   stubPrisonRollCount: ({ prisonCode = 'LEI', payload = prisonRollCountMock } = {}) => {
     return stubFor({
       request: {
@@ -80,6 +118,7 @@ export default {
     })
   },
 
+  // TODO: deprecated
   stubPrisonRollCountForLanding: ({
     prisonCode = 'LEI',
     landingId = '123',
@@ -96,22 +135,6 @@ export default {
           'Content-Type': 'application/json;charset=UTF-8',
         },
         jsonBody: payload,
-      },
-    })
-  },
-
-  stubMovements: (prisonCode = 'LEI') => {
-    return stubFor({
-      request: {
-        method: 'GET',
-        urlPattern: `/prison/api/movements/rollcount/${prisonCode}/movements`,
-      },
-      response: {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
-        jsonBody: movementsMock,
       },
     })
   },
