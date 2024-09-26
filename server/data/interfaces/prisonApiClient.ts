@@ -2,7 +2,6 @@ import { Readable } from 'stream'
 import { CaseLoad } from './caseLoad'
 import { Location } from './location'
 import { Movements } from './movements'
-import { OffenderCell } from './offenderCell'
 import { OffenderIn } from './offenderIn'
 import { OffenderOut } from './offenderOut'
 import { OffenderMovement } from './offenderMovement'
@@ -17,7 +16,6 @@ export interface PrisonApiClient {
   getUserCaseLoads(): Promise<CaseLoad[]>
   getUserLocations(): Promise<Location[]>
   getLocation(locationId: string): Promise<Location>
-  getAttributesForLocation(locationId: number): Promise<OffenderCell>
   getMovements(prisonId: string): Promise<Movements>
   getRecentMovements(prisonerNumbers: string[]): Promise<OffenderMovement[]>
   getMovementsIn(prisonId: string, movementDate: string): Promise<OffenderIn[]>

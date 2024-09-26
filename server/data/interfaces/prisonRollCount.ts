@@ -1,3 +1,5 @@
+import { Prisoner } from './prisoner'
+
 export default interface PrisonRollCount {
   prisonId: string
   numUnlockRollToday: number
@@ -20,7 +22,7 @@ export default interface PrisonRollCount {
 
 export interface ResidentialLocation {
   locationId: string
-  locationType: 'WING' | 'LAND' | 'SPUR' | 'CELL' | 'ROOM'
+  locationType: 'WING' | 'LAND' | 'LANDING' | 'SPUR' | 'CELL' | 'ROOM'
   locationCode: string
   fullLocationPath: string
   certified: boolean
@@ -36,4 +38,9 @@ interface LocationRollCount {
   workingCapacity: number
   netVacancies: number
   outOfOrder: number
+}
+
+export interface PrisonersInLocation {
+  cellLocation: string
+  prisoners: Prisoner[]
 }

@@ -4,25 +4,44 @@ import MovementsService from '../services/movementsService'
 import { userHasRoles } from '../utils/utils'
 import { Role } from '../enums/role'
 import LocationService from '../services/locationsService'
+import { Service } from '../data/interfaces/component'
+import ServiceData from './ServiceData'
 
 export default class EstablishmentRollController {
   constructor(
     private readonly establishmentRollService: EstablishmentRollService,
     private readonly movementsService: MovementsService,
     private readonly locationService: LocationService,
+    private readonly serviceData: ServiceData,
   ) {}
+
+  private isResidentialLocationsEnabledForThisPrison(services: {
+    showServicesOutage: boolean
+    services: Service[]
+  }): boolean {
+    return services.services.filter(service => service.id === 'residential-locations')[0].navEnabled
+  }
 
   public getEstablishmentRoll(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { user } = res.locals
       const { clientToken } = req.middleware
 
+      const useLocationsApi = this.isResidentialLocationsEnabledForThisPrison(
+        await this.serviceData.getServiceData(res),
+      )
+
       const establishmentRollCounts = await this.establishmentRollService.getEstablishmentRollCounts(
         clientToken,
         user.activeCaseLoadId,
+        useLocationsApi,
       )
 
-      res.render('pages/establishmentRoll', { establishmentRollCounts, date: new Date() })
+      res.render('pages/establishmentRoll', {
+        establishmentRollCounts,
+        date: new Date(),
+        useWorkingCapacity: useLocationsApi,
+      })
     }
   }
 
@@ -32,11 +51,15 @@ export default class EstablishmentRollController {
       const { clientToken } = req.middleware
       const { landingId, wingId } = req.params
 
+      const useLocationsApi = this.isResidentialLocationsEnabledForThisPrison(
+        await this.serviceData.getServiceData(res),
+      )
       const rollCounts = await this.establishmentRollService.getLandingRollCounts(
         clientToken,
         user.activeCaseLoadId,
         wingId,
         landingId,
+        useLocationsApi,
       )
 
       res.render('pages/establishmentRollLanding', rollCounts)
@@ -108,15 +131,31 @@ export default class EstablishmentRollController {
       const { livingUnitId } = req.params
       const { clientToken } = req.middleware
 
-      const [prisonersCurrentlyOut, location] = await Promise.all([
-        this.movementsService.getOffendersCurrentlyOutOfLivingUnit(clientToken, livingUnitId),
-        this.locationService.getLocationInfo(clientToken, livingUnitId),
-      ])
+      const useLocationsApi = this.isResidentialLocationsEnabledForThisPrison(
+        await this.serviceData.getServiceData(res),
+      )
 
-      res.render('pages/currentlyOut', {
-        prisoners: prisonersCurrentlyOut,
-        location,
-      })
+      if (useLocationsApi) {
+        const [prisonersCurrentlyOut, location] = await Promise.all([
+          this.movementsService.getOffendersCurrentlyOutOfBed(clientToken, livingUnitId),
+          this.locationService.getInternalLocationInfo(clientToken, livingUnitId),
+        ])
+
+        res.render('pages/currentlyOut', {
+          prisoners: prisonersCurrentlyOut,
+          locationName: location.localName ? location.localName : location.pathHierarchy,
+        })
+      } else {
+        const [prisonersCurrentlyOut, location] = await Promise.all([
+          this.movementsService.getOffendersCurrentlyOutOfLivingUnit(clientToken, livingUnitId),
+          this.locationService.getLocationInfo(clientToken, livingUnitId),
+        ])
+
+        res.render('pages/currentlyOut', {
+          prisoners: prisonersCurrentlyOut,
+          locationName: location.userDescription ? location.userDescription : location.description,
+        })
+      }
     }
   }
 
@@ -132,7 +171,7 @@ export default class EstablishmentRollController {
 
       res.render('pages/currentlyOut', {
         prisoners: prisonersCurrentlyOut,
-        location: null,
+        locationName: null,
       })
     }
   }

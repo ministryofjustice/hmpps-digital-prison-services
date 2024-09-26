@@ -5,6 +5,7 @@
 {% set pageTitle = wingName + " - " + (spurName + " - " if spurName else "") + landingName %}
 {% set mainClasses = "govuk-body govuk-main-wrapper--auto-spacing" %}
 {% set todayStats = establishmentRollCounts.todayStats %}
+{% set capacityLabel = "Working capacity" if useWorkingCapacity else "Operational capacity" %}
 
 {% set breadCrumbs = [
     {
@@ -34,7 +35,7 @@
                         <th scope="col" class="govuk-table__header">Beds in use</th>
                         <th scope="col" class="govuk-table__header">Currently in cell</th>
                         <th scope="col" class="govuk-table__header">Currently out</th>
-                        <th scope="col" class="govuk-table__header">Operational capacity</th>
+                        <th scope="col" class="govuk-table__header">{{ capacityLabel }}</th>
                         <th scope="col" class="govuk-table__header">Net vacancies</th>
                     </tr>
                 </thead>

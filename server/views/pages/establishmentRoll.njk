@@ -7,7 +7,7 @@
 {% set todayStats = establishmentRollCounts.todayStats %}
 {% set totals = establishmentRollCounts.totals %}
 {% set wings = establishmentRollCounts.wings %}
-
+{% set capacityLabel = "Working capacity" if useWorkingCapacity else "Operational capacity" %}
 {% set breadCrumbs = [
     {
         text: 'Digital Prison Services',
@@ -132,7 +132,7 @@
                 <th scope="col" class="govuk-table__header">Beds in use</th>
                 <th scope="col" class="govuk-table__header">Currently in cell</th>
                 <th scope="col" class="govuk-table__header">Currently out</th>
-                <th scope="col" class="govuk-table__header">Operational capacity</th>
+                <th scope="col" class="govuk-table__header">{{ capacityLabel }}</th>
                 <th scope="col" class="govuk-table__header">Net vacancies</th>
                 <th scope="col" class="govuk-table__header">Out of order</th>
             </tr>

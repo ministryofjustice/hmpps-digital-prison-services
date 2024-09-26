@@ -11,6 +11,7 @@ import { PrisonUser } from '../interfaces/prisonUser'
 import defaultServices from '../utils/defaultServices'
 import EstablishmentRollService from '../services/establishmentRollService'
 import { prisonEstablishmentRollSummaryMock } from '../mocks/prisonRollCountSummaryMock'
+import ServiceData from './ServiceData'
 
 const staffId = 487023
 const activeCaseLoadId = 'LEI'
@@ -31,6 +32,7 @@ let controller: any
 describe('Homepage Controller', () => {
   let establishmentRollService: EstablishmentRollService
   let contentfulService: ContentfulService
+  let serviceData: ServiceData
 
   beforeEach(() => {
     res = {
@@ -49,15 +51,15 @@ describe('Homepage Controller', () => {
       redirect: jest.fn(),
     }
 
-    establishmentRollService = new EstablishmentRollService(null)
-
+    establishmentRollService = new EstablishmentRollService(null, null)
+    serviceData = new ServiceData()
     establishmentRollService.getEstablishmentRollSummary = jest.fn(async () => prisonEstablishmentRollSummaryMock)
 
     contentfulService = new ContentfulService(new ApolloClient({ cache: new InMemoryCache() }))
     contentfulService.getWhatsNewPosts = jest.fn(async () => whatsNewDataMock)
     contentfulService.getOutageBanner = jest.fn(async () => 'Banner')
 
-    controller = new HomepageController(contentfulService, establishmentRollService)
+    controller = new HomepageController(contentfulService, establishmentRollService, serviceData)
   })
 
   describe('Display homepage', () => {

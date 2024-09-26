@@ -7,11 +7,13 @@ import { stripAgencyPrefix } from '../utils/utils'
 import { Prisoner } from '../data/interfaces/prisoner'
 import { BedAssignment } from '../data/interfaces/bedAssignment'
 import { OffenderMovement } from '../data/interfaces/offenderMovement'
+import { LocationsInsidePrisonApiClient } from '../data/interfaces/locationsInsidePrisonApiClient'
 
 export default class MovementsService {
   constructor(
     private readonly prisonApiClientBuilder: RestClientBuilder<PrisonApiClient>,
     private readonly prisonerSearchClientBuilder: RestClientBuilder<PrisonerSearchClient>,
+    private readonly locationsInsidePrisonApiClientBuilder: RestClientBuilder<LocationsInsidePrisonApiClient>,
   ) {}
 
   public async getArrivedTodayPrisoners(
@@ -181,6 +183,27 @@ export default class MovementsService {
     const outPrisoners = await prisonApi.getPrisonersCurrentlyOutOfLivingUnit(livingUnitId)
     if (!outPrisoners || !outPrisoners?.length) return []
     const prisonerNumbers = outPrisoners.map(prisoner => prisoner.offenderNo)
+
+    const [prisoners, recentMovements] = await Promise.all([
+      prisonerSearchClient.getPrisonersById(prisonerNumbers),
+      prisonApi.getRecentMovements(prisonerNumbers),
+    ])
+
+    return this.mapCurrentlyOutPrisoners(prisoners, recentMovements)
+  }
+
+  public async getOffendersCurrentlyOutOfBed(
+    clientToken: string,
+    locationId: string,
+  ): Promise<(PrisonerWithAlerts & { currentLocation: string; movementComment?: string })[]> {
+    const prisonApi = this.prisonApiClientBuilder(clientToken)
+    const prisonerSearchClient = this.prisonerSearchClientBuilder(clientToken)
+    const locationsApi = this.locationsInsidePrisonApiClientBuilder(clientToken)
+
+    const prisonersInLocations = await locationsApi.getPrisonersAtLocation(locationId)
+    const outPrisoners = prisonersInLocations.flatMap(pl => pl.prisoners).filter(p => p.inOutStatus === 'OUT')
+    if (!outPrisoners || !outPrisoners?.length) return []
+    const prisonerNumbers = outPrisoners.map(prisoner => prisoner.prisonerNumber)
 
     const [prisoners, recentMovements] = await Promise.all([
       prisonerSearchClient.getPrisonersById(prisonerNumbers),
