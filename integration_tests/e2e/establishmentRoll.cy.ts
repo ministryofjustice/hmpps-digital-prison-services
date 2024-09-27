@@ -16,18 +16,32 @@ context('Establishment Roll Page', () => {
         { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
       ],
     })
-    cy.task('stubFeComponents')
-    cy.task('stubPrisonRollCount')
-    cy.task('stubLocationPrisonRollCount')
-    cy.signIn({ redirectPath: '/establishment-roll' })
-    cy.visit('/establishment-roll')
   })
 
-  it('Page is visible', () => {
+  function dataSourceSetup(residentialLocationActive: boolean) {
+    cy.task('stubFeComponents', residentialLocationActive)
+    if (residentialLocationActive) {
+      cy.task('stubLocationPrisonRollCount')
+    } else {
+      cy.task('stubPrisonRollCount')
+    }
+
+    cy.signIn({ redirectPath: '/establishment-roll' })
+    cy.visit('/establishment-roll')
+  }
+
+  it('Page is visible with data from prison api', () => {
+    dataSourceSetup(false)
+    Page.verifyOnPage(EstablishmentRollPage)
+  })
+
+  it('Page is visible with data from locations', () => {
+    dataSourceSetup(true)
     Page.verifyOnPage(EstablishmentRollPage)
   })
 
   it('should display todays stats', () => {
+    dataSourceSetup(true)
     const page = Page.verifyOnPage(EstablishmentRollPage)
     page.todaysStats().unlockRoll().should('contain.text', '100')
     page.todaysStats().currentPopulation().should('contain.text', '200')
@@ -43,6 +57,7 @@ context('Establishment Roll Page', () => {
   })
 
   it('should display a table row for each wing level assignedRollCount', () => {
+    dataSourceSetup(true)
     const page = Page.verifyOnPage(EstablishmentRollPage)
     page.assignedRollCountRows().should('have.length', 7)
 
@@ -62,6 +77,7 @@ context('Establishment Roll Page', () => {
   })
 
   it('should display a table row for totals', () => {
+    dataSourceSetup(true)
     const page = Page.verifyOnPage(EstablishmentRollPage)
 
     page.assignedRollCountRows().last().find('td').eq(0).should('contain.text', 'Totals')
@@ -80,6 +96,7 @@ context('Establishment Roll Page', () => {
   })
 
   it('should reveal spurs and landings when click on link', () => {
+    dataSourceSetup(true)
     const page = Page.verifyOnPage(EstablishmentRollPage)
 
     page.assignedRollCountRows().eq(0).find('td').eq(0).should('contain.text', 'B Wing').should('be.visible')
@@ -106,8 +123,63 @@ context('Establishment Roll Page', () => {
     page.assignedRollCountRows().eq(4).find('td').eq(0).should('not.be.visible')
   })
 
-  it('should show link to landing pages when wing has spur', () => {
+  it('should show link to landing pages when wing has spur old way', () => {
+    dataSourceSetup(false)
     cy.task('stubPrisonRollCountForLanding', { landingId: '20000', payload: prisonRollCountForWingWithSpurMock })
+
+    const page = Page.verifyOnPage(EstablishmentRollPage)
+
+    const wing2Reveal = page.assignedRollCountRows().eq(3).find('td').eq(0).find('a')
+    wing2Reveal.click()
+    page.assignedRollCountRows().eq(5).find('td').eq(0).find('a').click()
+
+    const landingPage = Page.verifyOnPageWithTitle(LandingRollPage, '2 - 1 - B')
+
+    landingPage.rollCountRows().should('have.length', 13)
+
+    landingPage.rollCountRows().eq(0).find('td').eq(0).should('contain.text', '013')
+    landingPage.rollCountRows().eq(1).find('td').eq(0).should('contain.text', '014')
+    landingPage.rollCountRows().eq(2).find('td').eq(0).should('contain.text', '015')
+
+    landingPage.rollCountRows().first().find('td').eq(1).should('contain.text', '1')
+    landingPage.rollCountRows().first().find('td').eq(2).should('contain.text', '1')
+    landingPage.rollCountRows().first().find('td').eq(3).should('contain.text', '0')
+    landingPage.rollCountRows().first().find('td').eq(4).should('contain.text', '1')
+    landingPage.rollCountRows().first().find('td').eq(5).should('contain.text', '0')
+  })
+
+  it('should show link to landing pages when wing does not have spur old way', () => {
+    dataSourceSetup(false)
+    cy.task('stubPrisonRollCountForLanding', { landingId: '10000', payload: prisonRollCountForWingNoSpurMock })
+    const page = Page.verifyOnPage(EstablishmentRollPage)
+
+    const wing2Reveal = page.assignedRollCountRows().eq(0).find('td').eq(0).find('a')
+    wing2Reveal.click()
+    page.assignedRollCountRows().eq(2).find('td').eq(0).find('a').click()
+
+    const landingPage = Page.verifyOnPageWithTitle(LandingRollPage, 'E - 5')
+
+    landingPage.rollCountRows().should('have.length', 34)
+
+    landingPage.rollCountRows().eq(0).find('td').eq(0).should('contain.text', '003')
+    landingPage.rollCountRows().eq(1).find('td').eq(0).should('contain.text', '004')
+    landingPage.rollCountRows().eq(2).find('td').eq(0).should('contain.text', '005')
+
+    landingPage.rollCountRows().first().find('td').eq(1).should('contain.text', '1')
+    landingPage.rollCountRows().first().find('td').eq(2).should('contain.text', '1')
+    landingPage
+      .rollCountRows()
+      .first()
+      .find('td')
+      .eq(3)
+      .find('a[href="/establishment-roll/13138/currently-out"]')
+      .should('contain.text', '1')
+    landingPage.rollCountRows().first().find('td').eq(4).should('contain.text', '1')
+    landingPage.rollCountRows().first().find('td').eq(5).should('contain.text', '0')
+  })
+
+  it('should show link to landing pages when wing has spur', () => {
+    dataSourceSetup(true)
     cy.task('stubLocationPrisonRollCountForLanding', {
       landingId: '01922dda-5d40-70d7-8fde-70e8e763dd94',
       payload: locationPrisonRollCountForWingWithSpurMock,
@@ -135,7 +207,7 @@ context('Establishment Roll Page', () => {
   })
 
   it('should show link to landing pages when wing does not have spur', () => {
-    cy.task('stubPrisonRollCountForLanding', { landingId: '10000', payload: prisonRollCountForWingNoSpurMock })
+    dataSourceSetup(true)
     cy.task('stubLocationPrisonRollCountForLanding', {
       landingId: '01922dda-5d40-7bef-b74a-c8be0541d5ae',
       payload: locationPrisonRollCountForWingNoSpurMock,

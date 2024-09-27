@@ -1,7 +1,7 @@
 import { stubFor } from './wiremock'
 
 export default {
-  stubFeComponents: () => {
+  stubFeComponents: (residentialLocationsActive = false) => {
     return stubFor({
       request: {
         method: 'GET',
@@ -36,7 +36,7 @@ export default {
                 heading: 'Residential Locations',
                 description: 'Manage residential locations.',
                 href: 'http://localhost:3001/locations',
-                navEnabled: true,
+                navEnabled: residentialLocationsActive,
               },
             ],
           },
