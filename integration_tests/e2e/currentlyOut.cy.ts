@@ -11,26 +11,37 @@ context('Currently Out Page', () => {
         { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
       ],
     })
-    const locationId = '01922e9a-ffd2-77cb-ba6b-3c9c9b623194'
-
-    cy.task('stubFeComponents')
-    cy.task('stubOutToday', '123')
-    cy.task('stubGetLocation')
 
     cy.task('stubPostSearchPrisonersById')
     cy.task('stubRecentMovements')
-
-    cy.task('stubLocationsOutToday', locationId)
-    cy.task('stubInternalLocation', locationId)
-    cy.signIn({ redirectPath: `/establishment-roll/${locationId}/currently-out` })
-    cy.visit(`/establishment-roll/${locationId}/currently-out`)
   })
 
-  it('Page is visible', () => {
+  function dataSourceSetup(residentialLocationActive: boolean, locationId: string) {
+    cy.task('stubFeComponents', residentialLocationActive)
+    if (residentialLocationActive) {
+      cy.task('stubLocationsOutToday', locationId)
+      cy.task('stubInternalLocation', locationId)
+    } else {
+      cy.task('stubOutToday', locationId)
+      cy.task('stubGetLocation', locationId)
+    }
+
+    cy.signIn({ redirectPath: `/establishment-roll/${locationId}/currently-out` })
+    cy.visit(`/establishment-roll/${locationId}/currently-out`)
+  }
+
+  it('Page is visible for old data way', () => {
+    dataSourceSetup(false, '123')
+    Page.verifyOnPage(CurrentlyOutPage)
+  })
+
+  it('Page is visible for new data way', () => {
+    dataSourceSetup(true, '01922e9a-ffd2-77cb-ba6b-3c9c9b623194')
     Page.verifyOnPage(CurrentlyOutPage)
   })
 
   it('should display a table row for each prisoner en-route', () => {
+    dataSourceSetup(true, '01922e9a-ffd2-77cb-ba6b-3c9c9b623194')
     const page = Page.verifyOnPage(CurrentlyOutPage)
     page.currentlyOutRows().should('have.length', 2)
 
@@ -44,6 +55,7 @@ context('Currently Out Page', () => {
   })
 
   it('should display alerts and category if cat A', () => {
+    dataSourceSetup(true, '01922e9a-ffd2-77cb-ba6b-3c9c9b623194')
     const page = Page.verifyOnPage(CurrentlyOutPage)
     page.currentlyOutRows().should('have.length', 2)
 
