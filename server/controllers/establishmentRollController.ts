@@ -19,7 +19,8 @@ export default class EstablishmentRollController {
     showServicesOutage: boolean
     services: Service[]
   }): boolean {
-    return services.services.filter(service => service.id === 'residential-locations')[0].navEnabled
+    const resService = services.services.filter(service => service.id === 'residential-locations')
+    return resService !== undefined && resService.length > 0 && resService[0].navEnabled
   }
 
   public getEstablishmentRoll(): RequestHandler {
