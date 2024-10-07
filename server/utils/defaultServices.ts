@@ -12,8 +12,8 @@ export default [
   {
     id: 'submit-an-intelligence-report',
     heading: 'Submit an Intelligence Report',
-    description: 'Access to the new Mercury submission form',
-    href: config.apis.mercurySubmit.url,
+    description: 'Submit an intelligence report',
+    href: config.apis.manageIntelligenceSubmit.url,
     navEnabled: true,
   },
   {

@@ -56,7 +56,7 @@ generic-service:
     MANAGE_OFFENCES_URL: https://manage-offences-preprod.hmpps.service.justice.gov.uk
     MANAGE_PRISON_VISITS_URL: https://manage-prison-visits-preprod.prison.service.justice.gov.uk
     MANAGE_RESTRICTED_PATIENTS_URL: https://manage-restricted-patients-preprod.hmpps.service.justice.gov.uk
-    MERCURY_SUBMIT_URL: https://submit-a-mercury-report-preprod.hmpps.service.justice.gov.uk
+    MANAGE_INTELLIGENCE_SUBMIT_URL: https://submit-information-report-preprod.hmpps.service.justice.gov.uk
     MOIC_URL: https://preprod.moic.service.justice.gov.uk
     OMIC_URL: https://preprod.manage-key-workers.service.justice.gov.uk
     PATHFINDER_UI_URL: https://preprod.pathfinder.service.justice.gov.uk
