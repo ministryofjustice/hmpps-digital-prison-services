@@ -89,3 +89,7 @@ generic-service:
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-digital-prison-services-non-prod
+
+  elastiCacheAlertsClusterIds:
+    cp-2e0b1b496ed43082-001: "HMPPS Digital Prison Services ElastiCache Cluster Node 1"
+    cp-2e0b1b496ed43082-002: "HMPPS Digital Prison Services ElastiCache Cluster Node 2"
