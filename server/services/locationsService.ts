@@ -10,6 +10,12 @@ export default class LocationService {
     private readonly locationsInsidePrisonApiClientBuilder: RestClientBuilder<LocationsInsidePrisonApiClient>,
   ) {}
 
+  public async isActivePrison(clientToken: string, prisonId: string): Promise<boolean> {
+    const locationsApi = this.locationsInsidePrisonApiClientBuilder(clientToken)
+
+    return locationsApi.isActivePrison(prisonId)
+  }
+
   public async getLocationInfo(clientToken: string, locationId: string): Promise<Location> {
     const prisonApi = this.prisonApiClientBuilder(clientToken)
 
