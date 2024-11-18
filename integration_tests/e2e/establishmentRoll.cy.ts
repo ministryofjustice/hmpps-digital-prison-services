@@ -19,10 +19,11 @@ context('Establishment Roll Page', () => {
   })
 
   function dataSourceSetup(residentialLocationActive: boolean) {
-    cy.task('stubFeComponents', residentialLocationActive)
     if (residentialLocationActive) {
+      cy.task('stubActivePrisons', { activeAgencies: ['***'] })
       cy.task('stubLocationPrisonRollCount')
     } else {
+      cy.task('stubActivePrisons', { activeAgencies: [] })
       cy.task('stubPrisonRollCount')
     }
 

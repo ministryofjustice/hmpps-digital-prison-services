@@ -15,8 +15,8 @@ export default class LocationsInsidePrisonApiRestClient implements LocationsInsi
   }
 
   async isActivePrison(prisonId: string): Promise<boolean> {
-    const locationInfo = await this.get<ActiveAgencies>({ path: `/info` })
-    return locationInfo.activeAgencies.includes(prisonId) || locationInfo.activeAgencies.includes('***')
+    const activeAgencies = await this.get<ActiveAgencies>({ path: `/info` })
+    return activeAgencies.activeAgencies.includes(prisonId) || activeAgencies.activeAgencies.includes('***')
   }
 
   getLocation(locationId: string): Promise<InternalLocation> {
