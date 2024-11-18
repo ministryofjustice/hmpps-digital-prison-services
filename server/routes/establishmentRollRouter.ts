@@ -16,7 +16,6 @@ export default function establishmentRollRouter(services: Services): Router {
     services.establishmentRollService,
     services.movementsService,
     services.locationsService,
-    services.serviceData,
   )
 
   get('/', establishmentRollController.getEstablishmentRoll())
