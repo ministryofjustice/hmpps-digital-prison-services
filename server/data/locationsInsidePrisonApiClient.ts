@@ -3,11 +3,20 @@ import PrisonRollCount, { PrisonersInLocation, PrisonRollCountForCells } from '.
 import { LocationsInsidePrisonApiClient } from './interfaces/locationsInsidePrisonApiClient'
 import { InternalLocation } from './interfaces/internalLocation'
 
+export interface ActiveAgencies {
+  activeAgencies: string[]
+}
+
 export default class LocationsInsidePrisonApiRestClient implements LocationsInsidePrisonApiClient {
   constructor(private restClient: RestClient) {}
 
   private get<T>(args: object): Promise<T> {
     return this.restClient.get<T>(args)
+  }
+
+  async isActivePrison(prisonId: string): Promise<boolean> {
+    const activeAgencies = await this.get<ActiveAgencies>({ path: `/info` })
+    return activeAgencies.activeAgencies.includes(prisonId) || activeAgencies.activeAgencies.includes('***')
   }
 
   getLocation(locationId: string): Promise<InternalLocation> {
