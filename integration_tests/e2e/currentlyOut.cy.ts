@@ -18,11 +18,11 @@ context('Currently Out Page', () => {
 
   function dataSourceSetup(residentialLocationActive: boolean, locationId: string) {
     if (residentialLocationActive) {
-      cy.task('stubActivePrisons', { activeAgencies: ['***'] })
+      cy.task('stubActivePrisons', { activeAgencies: ['LEI'] })
       cy.task('stubLocationsOutToday', locationId)
       cy.task('stubInternalLocation', locationId)
     } else {
-      cy.task('stubActivePrisons', { activeAgencies: [] })
+      cy.task('stubActivePrisons', { activeAgencies: ['BXI'] })
       cy.task('stubOutToday', locationId)
       cy.task('stubGetLocation', locationId)
     }
