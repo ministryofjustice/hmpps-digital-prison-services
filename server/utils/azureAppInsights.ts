@@ -38,6 +38,7 @@ export function buildAppInsightsClient(
     defaultClient.addTelemetryProcessor(parameterisePaths)
     defaultClient.addTelemetryProcessor(ignoredRequestsProcessor)
     defaultClient.addTelemetryProcessor(ignoredDependenciesProcessor)
+
     return defaultClient
   }
   return null
