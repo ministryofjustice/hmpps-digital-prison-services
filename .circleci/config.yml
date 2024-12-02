@@ -9,16 +9,16 @@ parameters:
     type: string
     # Normally team specific alert channel e.g. hmpps_tech_alerts, syscon-alerts, dps_sed_alerts
     # This is to avoid a general alert dumping ground that no-one then monitors
-    default: hmpps_typescript_notifications
+    default: connect-dps-devs
 
   releases-slack-channel:
     type: string
     # Normally dps-releases for most teams / projects
-    default: hmpps_typescript_notifications
+    default: dps-releases
 
   node-version:
     type: string
-    default: 20.17-browsers
+    default: 22.10-browsers
 
 jobs:
   build:
