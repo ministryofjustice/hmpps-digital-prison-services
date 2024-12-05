@@ -22,6 +22,7 @@ import setUpPageNotFound from './middleware/setUpPageNotFound'
 import setUpEnvironmentName from './middleware/setUpEnvironmentName'
 import logger from '../logger'
 import config from './config'
+import { ensureActiveCaseLoadSet } from './middleware/ensureActiveCaseLoadSet'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -48,10 +49,13 @@ export default function createApp(services: Services): express.Application {
     /^(?!\/api).*/,
     dpsComponents.getPageComponents({
       logger,
-      includeMeta: true,
+      includeSharedData: true,
       dpsUrl: config.serviceUrls.digitalPrisons,
     }),
   )
+  app.use(dpsComponents.retrieveCaseLoadData({ logger }))
+  app.use(ensureActiveCaseLoadSet(services.userService))
+
   app.use(routes(services))
 
   app.use(setUpPageNotFound)

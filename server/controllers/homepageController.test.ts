@@ -95,7 +95,7 @@ describe('Homepage Controller', () => {
       todayData: prisonEstablishmentRollSummaryMock,
     }
 
-    describe('With no feComponentsMeta', () => {
+    describe('With no frontend components shared data', () => {
       it('should get homepage data', async () => {
         await controller.displayHomepage()(req, res)
 
@@ -106,8 +106,8 @@ describe('Homepage Controller', () => {
       })
     })
 
-    describe('With feComponentsMeta', () => {
-      it('should user services from feComponentsMeta', async () => {
+    describe('With frontend components shared data', () => {
+      it('should get user services from frontend components', async () => {
         const feComponentsServices = [
           {
             id: 'service',
@@ -120,8 +120,10 @@ describe('Homepage Controller', () => {
           ...res,
           locals: {
             ...res.locals,
-            feComponentsMeta: {
-              services: feComponentsServices,
+            feComponents: {
+              sharedData: {
+                services: feComponentsServices,
+              },
             },
           },
         })

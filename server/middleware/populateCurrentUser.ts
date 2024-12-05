@@ -2,10 +2,8 @@ import { RequestHandler } from 'express'
 import { jwtDecode } from 'jwt-decode'
 import logger from '../../logger'
 import UserService from '../services/userService'
-import { CaseLoad } from '../data/interfaces/caseLoad'
 import { convertToTitleCase } from '../utils/utils'
 import { Role } from '../enums/role'
-import { PrisonUser } from '../interfaces/prisonUser'
 
 export function populateCurrentUser(): RequestHandler {
   return async (req, res, next) => {
@@ -38,50 +36,6 @@ export function populateCurrentUser(): RequestHandler {
       next(error)
     }
   }
-}
-
-export function getUserCaseLoads(userService: UserService): RequestHandler {
-  return async (req, res, next) => {
-    try {
-      if (res.locals.user && res.locals.user.authSource === 'nomis') {
-        const userCaseLoads = res.locals.user && (await userService.getUserCaseLoads(res.locals.user.token))
-        if (userCaseLoads && Array.isArray(userCaseLoads)) {
-          const availableCaseLoads = userCaseLoads.filter(caseload => caseload.type !== 'APP')
-          const activeCaseLoad = await getActiveCaseload(availableCaseLoads, userService, res.locals.user)
-
-          res.locals.user.caseLoads = availableCaseLoads
-          res.locals.user.activeCaseLoad = activeCaseLoad
-          res.locals.user.activeCaseLoadId = activeCaseLoad?.caseLoadId
-        } else {
-          logger.info('No user case loads available')
-        }
-      }
-      next()
-    } catch (error) {
-      logger.error(error, `Failed to retrieve case loads for: ${res.locals.user && res.locals.user.username}`)
-      next(error)
-    }
-  }
-}
-
-async function getActiveCaseload(
-  caseloads: CaseLoad[],
-  userService: UserService,
-  user: PrisonUser,
-): Promise<CaseLoad | null> {
-  const activeCaseload = caseloads.find(caseload => caseload.currentlyActive)
-  if (activeCaseload) {
-    return activeCaseload
-  }
-  const potentialCaseLoad = caseloads.find(cl => cl.caseLoadId !== '___')
-  if (potentialCaseLoad) {
-    logger.warn(`No active caseload set for user: ${user.username}: setting to ${potentialCaseLoad.caseLoadId}`)
-    await userService.setActiveCaseload(user.token, potentialCaseLoad)
-
-    return potentialCaseLoad
-  }
-
-  return null
 }
 
 export function getUserLocations(userService: UserService): RequestHandler {
