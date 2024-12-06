@@ -5,12 +5,8 @@ import ArrivedTodayPage from '../pages/arrivedToday'
 context('Arrived Today Page', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.setupUserAuth({
-      roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`],
-      caseLoads: [
-        { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
-      ],
-    })
+    cy.setupUserAuth({ roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`] })
+    cy.setupComponentsData()
     cy.task('stubMovementsIn')
     cy.task('stubPostSearchPrisonersById')
     cy.signIn({ redirectPath: '/establishment-roll/arrived-today' })

@@ -5,12 +5,8 @@ import WhatsNewPage from '../pages/whatsNew'
 context('Whats New', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.setupUserAuth({
-      roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`],
-      caseLoads: [
-        { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
-      ],
-    })
+    cy.setupUserAuth({ roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`] })
+    cy.setupComponentsData()
     cy.task('stubWhatsNewPosts')
     cy.signIn({ redirectPath: '/whats-new' })
   })

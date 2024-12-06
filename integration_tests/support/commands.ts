@@ -4,23 +4,12 @@ Cypress.Commands.add('signIn', (options = { failOnStatusCode: true, redirectPath
   return cy.task('getSignInUrl').then((url: string) => cy.visit(url, { failOnStatusCode }))
 })
 
-Cypress.Commands.add(
-  'setupUserAuth',
-  (
-    options = {
-      caseLoads: [
-        {
-          caseLoadId: 'LEI',
-          currentlyActive: true,
-          description: '',
-          type: '',
-          caseloadFunction: '',
-        },
-      ],
-    },
-  ) => {
-    cy.task('stubSignIn', options)
-    cy.task('stubUserCaseLoads', options.caseLoads)
-    cy.task('stubUserLocations', options.locations)
-  },
-)
+Cypress.Commands.add('setupUserAuth', (options = {}) => {
+  cy.task('stubSignIn', options)
+  cy.task('stubUserLocations', options.locations)
+})
+
+Cypress.Commands.add('setupComponentsData', (options = {}) => {
+  cy.task('stubFeComponents', options)
+  cy.task('stubUserCaseLoads', options.caseLoads)
+})

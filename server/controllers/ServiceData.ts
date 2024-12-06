@@ -1,5 +1,5 @@
+import type Service from '@ministryofjustice/hmpps-connect-dps-components/dist/types/Service'
 import { Response } from 'express'
-import { Service } from '../data/interfaces/component'
 import defaultServices from '../utils/defaultServices'
 
 /**
@@ -7,8 +7,8 @@ import defaultServices from '../utils/defaultServices'
  */
 export default class ServiceData {
   public async getServiceData(res: Response): Promise<{ showServicesOutage: boolean; services: Service[] }> {
-    if (res.locals.feComponentsMeta?.services)
-      return { showServicesOutage: false, services: res.locals.feComponentsMeta.services }
+    if (res.locals.feComponents?.sharedData?.services)
+      return { showServicesOutage: false, services: res.locals.feComponents.sharedData.services }
 
     return { showServicesOutage: true, services: defaultServices }
   }

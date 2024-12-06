@@ -6,15 +6,14 @@ import { prisonEstablishmentRollSummaryMock } from '../../server/mocks/prisonRol
 context('Homepage (with FE Components services)', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.setupUserAuth({
-      roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`],
+    cy.setupUserAuth({ roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`] })
+    cy.setupComponentsData({
       caseLoads: [
         { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
       ],
     })
     cy.task('stubWhatsNewPosts')
     cy.task('stubOutageBanner')
-    cy.task('stubFeComponents')
     cy.task('stubPrisonRollCountSummary')
     cy.signIn()
     cy.visit('/')
@@ -124,12 +123,8 @@ context('Homepage (with FE Components services)', () => {
 context('Homepage - no global search', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.setupUserAuth({
-      roles: [`ROLE_PRISON`],
-      caseLoads: [
-        { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
-      ],
-    })
+    cy.setupUserAuth({ roles: [`ROLE_PRISON`] })
+    cy.setupComponentsData()
     cy.task('stubPrisonRollCountSummary')
     cy.task('stubWhatsNewPosts')
     cy.task('stubOutageBanner')
@@ -152,13 +147,13 @@ context('Homepage - no global search', () => {
 context('Homepage - no active caseload', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.setupUserAuth({
-      roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`],
+    cy.setupUserAuth({ roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`] })
+    cy.setupComponentsData({
       caseLoads: [
-        { caseloadFunction: '', caseLoadId: 'MOR', currentlyActive: false, description: 'Moorland', type: '' },
+        { caseloadFunction: '', caseLoadId: 'MDI', currentlyActive: false, description: 'Moorland (HMP)', type: '' },
       ],
     })
-    cy.task('stubPrisonRollCountSummary', { prisonCode: 'MOR' })
+    cy.task('stubPrisonRollCountSummary', { prisonCode: 'MDI' })
     cy.task('stubWhatsNewPosts')
     cy.task('stubOutageBanner')
     cy.task('stubSetActiveCaseload')
@@ -176,10 +171,8 @@ context('Homepage - no active caseload', () => {
 context('Homepage - No caseloads', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.setupUserAuth({
-      roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`],
-      caseLoads: [],
-    })
+    cy.setupUserAuth({ roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`] })
+    cy.setupComponentsData({ caseLoads: [] })
     cy.task('stubWhatsNewPosts')
     cy.task('stubOutageBanner')
 
@@ -195,12 +188,16 @@ context('Homepage - No caseloads', () => {
 context('Homepage (without FE Components services)', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.setupUserAuth({
-      roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`],
-      caseLoads: [
-        { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
-      ],
-    })
+    cy.setupUserAuth({ roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`] })
+    cy.task('stubUserCaseLoads', [
+      {
+        caseLoadId: 'LEI',
+        currentlyActive: true,
+        description: '',
+        type: '',
+        caseloadFunction: '',
+      },
+    ])
     cy.task('stubPrisonRollCountSummary')
     cy.task('stubWhatsNewPosts')
     cy.task('stubOutageBanner')
