@@ -1,7 +1,25 @@
+import type Service from '@ministryofjustice/hmpps-connect-dps-components/dist/types/Service'
 import { stubFor } from './wiremock'
+import { CaseLoad } from '../../server/data/interfaces/caseLoad'
 
 export default {
-  stubFeComponents: (residentialLocationsActive = false) => {
+  stubFeComponents: (
+    options: {
+      caseLoads?: CaseLoad[]
+      services?: Service[]
+      residentialLocationsActive?: boolean
+    } = {},
+  ) => {
+    const caseLoads = options.caseLoads || [
+      {
+        caseLoadId: 'LEI',
+        currentlyActive: true,
+        description: 'Leeds (HMP)',
+        type: '',
+        caseloadFunction: '',
+      },
+    ]
+
     return stubFor({
       request: {
         method: 'GET',
@@ -16,7 +34,9 @@ export default {
           header: { html: '', css: [], javascript: [] },
           footer: { html: '', css: [], javascript: [] },
           meta: {
-            services: [
+            caseLoads,
+            activeCaseLoad: caseLoads.find(caseLoad => caseLoad.currentlyActive === true),
+            services: options.services || [
               {
                 id: 'check-my-diary',
                 heading: 'Check my diary',
@@ -36,7 +56,7 @@ export default {
                 heading: 'Residential Locations',
                 description: 'Manage residential locations.',
                 href: 'http://localhost:3001/locations',
-                navEnabled: residentialLocationsActive,
+                navEnabled: options.residentialLocationsActive,
               },
             ],
           },

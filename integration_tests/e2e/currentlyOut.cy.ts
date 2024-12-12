@@ -5,23 +5,20 @@ import CurrentlyOutPage from '../pages/currentlyOut'
 context('Currently Out Page', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.setupUserAuth({
-      roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`],
-      caseLoads: [
-        { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
-      ],
-    })
+    cy.setupUserAuth({ roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`] })
+    cy.setupComponentsData()
 
     cy.task('stubPostSearchPrisonersById')
     cy.task('stubRecentMovements')
   })
 
   function dataSourceSetup(residentialLocationActive: boolean, locationId: string) {
-    cy.task('stubFeComponents', residentialLocationActive)
     if (residentialLocationActive) {
+      cy.task('stubActivePrisons', { activeAgencies: ['LEI'] })
       cy.task('stubLocationsOutToday', locationId)
       cy.task('stubInternalLocation', locationId)
     } else {
+      cy.task('stubActivePrisons', { activeAgencies: ['BXI'] })
       cy.task('stubOutToday', locationId)
       cy.task('stubGetLocation', locationId)
     }

@@ -10,19 +10,16 @@ import { locationPrisonRollCountForWingNoSpurMock } from '../../server/mocks/loc
 context('Establishment Roll Page', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.setupUserAuth({
-      roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`],
-      caseLoads: [
-        { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
-      ],
-    })
+    cy.setupUserAuth({ roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`] })
+    cy.setupComponentsData()
   })
 
   function dataSourceSetup(residentialLocationActive: boolean) {
-    cy.task('stubFeComponents', residentialLocationActive)
     if (residentialLocationActive) {
+      cy.task('stubActivePrisons', { activeAgencies: ['LEI'] })
       cy.task('stubLocationPrisonRollCount')
     } else {
+      cy.task('stubActivePrisons', { activeAgencies: ['CFI', 'MDI', 'BXI', 'WWI'] })
       cy.task('stubPrisonRollCount')
     }
 

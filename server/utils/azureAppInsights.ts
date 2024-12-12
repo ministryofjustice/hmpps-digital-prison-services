@@ -10,6 +10,9 @@ import { EnvelopeTelemetry } from 'applicationinsights/out/Declarations/Contract
 import { RequestHandler } from 'express'
 import type { ApplicationInfo } from '../applicationInfo'
 
+const requestPrefixesToIgnore = ['GET /assets/', 'GET /health', 'GET /ping', 'GET /info']
+const dependencyPrefixesToIgnore = ['sqs']
+
 export type ContextObject = {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   [name: string]: any
@@ -33,6 +36,9 @@ export function buildAppInsightsClient(
     defaultClient.context.tags['ai.application.ver'] = buildNumber
     defaultClient.addTelemetryProcessor(addUserDataToRequests)
     defaultClient.addTelemetryProcessor(parameterisePaths)
+    defaultClient.addTelemetryProcessor(ignoredRequestsProcessor)
+    defaultClient.addTelemetryProcessor(ignoredDependenciesProcessor)
+
     return defaultClient
   }
   return null
@@ -59,6 +65,28 @@ function parameterisePaths(envelope: EnvelopeTelemetry, contextObjects: ContextO
   const operationNameOverride = contextObjects.correlationContext?.customProperties?.getProperty('operationName')
   if (operationNameOverride) {
     envelope.tags['ai.operation.name'] = envelope.data.baseData.name = operationNameOverride // eslint-disable-line no-param-reassign,no-multi-assign
+  }
+  return true
+}
+
+function ignoredRequestsProcessor(envelope: EnvelopeTelemetry) {
+  if (envelope.data.baseType === Contracts.TelemetryTypeString.Request) {
+    const requestData = envelope.data.baseData
+    if (requestData instanceof Contracts.RequestData) {
+      const { name } = requestData
+      return requestPrefixesToIgnore.every(prefix => !name.startsWith(prefix))
+    }
+  }
+  return true
+}
+
+function ignoredDependenciesProcessor(envelope: EnvelopeTelemetry) {
+  if (envelope.data.baseType === Contracts.TelemetryTypeString.Dependency) {
+    const dependencyData = envelope.data.baseData
+    if (dependencyData instanceof Contracts.RemoteDependencyData) {
+      const { target } = dependencyData
+      return dependencyPrefixesToIgnore.every(prefix => !target.startsWith(prefix))
+    }
   }
   return true
 }

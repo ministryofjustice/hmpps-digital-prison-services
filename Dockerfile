@@ -1,5 +1,5 @@
 # Stage: base image
-FROM node:20.17-bookworm-slim as base
+FROM node:22.11-bookworm-slim as base
 
 ARG BUILD_NUMBER
 ARG GIT_REF
@@ -41,6 +41,7 @@ COPY package*.json ./
 RUN CYPRESS_INSTALL_BINARY=0 npm ci --no-audit
 
 COPY . .
+RUN npm run postinstall 
 RUN npm run build
 
 RUN npm prune --no-audit --omit=dev

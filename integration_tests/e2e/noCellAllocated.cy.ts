@@ -4,10 +4,10 @@ import NoCellAllocatedPage from '../pages/NoCellAllocated'
 import { prisonerSearchMock } from '../../server/test/mocks/prisonerSearchMock'
 
 function visitPageWithRoles(roles: string[]) {
-  cy.setupUserAuth({
-    roles,
+  cy.setupUserAuth({ roles })
+  cy.setupComponentsData({
     caseLoads: [
-      { caseloadFunction: '', caseLoadId: 'MDI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
+      { caseloadFunction: '', caseLoadId: 'MDI', currentlyActive: true, description: 'Moorland (HMP)', type: '' },
     ],
   })
   cy.signIn({ redirectPath: '/establishment-roll/no-cell-allocated' })

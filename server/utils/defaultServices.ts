@@ -1,5 +1,5 @@
+import type Service from '@ministryofjustice/hmpps-connect-dps-components/dist/types/Service'
 import config from '../config'
-import { Service } from '../data/interfaces/component'
 
 export default [
   {

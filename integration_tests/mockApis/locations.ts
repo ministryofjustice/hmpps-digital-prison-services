@@ -3,8 +3,25 @@ import { locationPrisonRollCountMock } from '../../server/mocks/locationPrisonRo
 import { locationPrisonRollCountForWingWithSpurMock } from '../../server/mocks/locationPrisonRollCountForWingWithSpurMock'
 import { prisonerInLocation } from '../../server/test/mocks/prisonersInLocation'
 import { internalLocationMock } from '../../server/mocks/internalLocationMock'
+import { ActiveAgencies } from '../../server/data/locationsInsidePrisonApiClient'
 
 export default {
+  stubActivePrisons: (activeAgencies: ActiveAgencies) => {
+    return stubFor({
+      request: {
+        method: 'GET',
+        url: '/locations/info',
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: activeAgencies || { activeAgencies: [] },
+      },
+    })
+  },
+
   stubLocationPrisonRollCount: ({ prisonCode = 'LEI', payload = locationPrisonRollCountMock } = {}) => {
     return stubFor({
       request: {
