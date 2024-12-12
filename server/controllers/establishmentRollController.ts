@@ -12,7 +12,7 @@ export default class EstablishmentRollController {
     private readonly locationService: LocationService,
   ) {}
 
-  public getEstablishmentRoll(): RequestHandler {
+  public getEstablishmentRoll(forceUseLocationsApi: boolean = false): RequestHandler {
     return async (req: Request, res: Response) => {
       const { user } = res.locals
       const { clientToken } = req.middleware
@@ -20,9 +20,11 @@ export default class EstablishmentRollController {
       const establishmentRollCounts = await this.establishmentRollService.getEstablishmentRollCounts(
         clientToken,
         user.activeCaseLoadId,
+        forceUseLocationsApi,
       )
 
-      const useLocationsApi = await this.locationService.isActivePrison(clientToken, user.activeCaseLoadId)
+      const useLocationsApi =
+        forceUseLocationsApi || (await this.locationService.isActivePrison(clientToken, user.activeCaseLoadId))
       res.render('pages/establishmentRoll', {
         establishmentRollCounts,
         date: new Date(),

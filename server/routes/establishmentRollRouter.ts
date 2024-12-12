@@ -19,6 +19,7 @@ export default function establishmentRollRouter(services: Services): Router {
   )
 
   get('/', establishmentRollController.getEstablishmentRoll())
+  get('/locations/', establishmentRollController.getEstablishmentRoll(true))
 
   get(
     ['/wing/:wingId/landing/:landingId', '/wing/:wingId/spur/:spurId/landing/:landingId'],

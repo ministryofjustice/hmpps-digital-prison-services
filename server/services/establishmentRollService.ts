@@ -10,11 +10,15 @@ export default class EstablishmentRollService {
     private readonly locationsInsidePrisonApiClientBuilder: RestClientBuilder<LocationsInsidePrisonApiClient>,
   ) {}
 
-  public async getEstablishmentRollCounts(clientToken: string, caseLoadId: string): Promise<EstablishmentRollCount> {
+  public async getEstablishmentRollCounts(
+    clientToken: string,
+    caseLoadId: string,
+    forceUseLocationsApi: boolean = false,
+  ): Promise<EstablishmentRollCount> {
     const prisonApi = this.prisonApiClientBuilder(clientToken)
     const locationsApi = this.locationsInsidePrisonApiClientBuilder(clientToken)
 
-    const useLocationsApi = await locationsApi.isActivePrison(caseLoadId)
+    const useLocationsApi = forceUseLocationsApi || (await locationsApi.isActivePrison(caseLoadId))
 
     const rollCount = useLocationsApi
       ? await locationsApi.getPrisonRollCount(caseLoadId)
