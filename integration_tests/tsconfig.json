@@ -1,11 +1,9 @@
 {
+  "extends": "@tsconfig/node22/tsconfig.json",
   "compilerOptions": {
-    "target": "es5",
     "noEmit": true,
-    "lib": ["es5", "dom", "es2015.promise"],
-    "types": ["cypress", "express", "express-session"],
-    "esModuleInterop": true,
-    "skipLibCheck": true
+    "strict": false,
+    "types": ["cypress"],
   },
   "include": ["**/*.ts"]
 }
