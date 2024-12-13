@@ -1,11 +1,10 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2021",
     "noEmit": true,
-    "lib": ["es5", "dom", "es2015.promise"],
-    "types": ["cypress", "express", "express-session"],
-    "esModuleInterop": true,
-    "skipLibCheck": true
+    "moduleResolution": "node",
+    "types": ["cypress", "cypress-file-upload"],
+    "esModuleInterop": true
   },
   "include": ["**/*.ts"]
 }
