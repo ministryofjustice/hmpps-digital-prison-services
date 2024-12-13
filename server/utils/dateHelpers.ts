@@ -90,7 +90,7 @@ export const isRealDate = (date: string): boolean => {
 export const formatDate = (isoDate: string, style: 'short' | 'full' | 'long' | 'medium' = 'long'): string => {
   if (!isoDate) return ''
 
-  return new Date(isoDate).toLocaleDateString('en-gb', { dateStyle: style })
+  return new Date(isoDate).toLocaleDateString('en-gb', { dateStyle: style })?.replaceAll(',', '')
 }
 
 /**
@@ -113,7 +113,7 @@ export const formatDateTime = (
 ): string => {
   if (!isoDate) return ''
 
-  const dateStr = new Date(isoDate).toLocaleDateString('en-gb', { dateStyle: options?.style || 'long' })
+  const dateStr = formatDate(isoDate, options?.style || 'long')
   const timeStr = new Date(isoDate).toLocaleTimeString('en-gb', { hour: '2-digit', minute: '2-digit' })
 
   if (options?.order === 'time-date') {
