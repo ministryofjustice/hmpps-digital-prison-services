@@ -32,7 +32,7 @@
   },
   "engines": {
     "node": "^22",
-    "npm": "^10"
+    "npm": "^11"
   },
   "jest": {
     "transform": {
@@ -94,13 +94,13 @@
     ]
   },
   "dependencies": {
-    "@apollo/client": "3.12.3",
+    "@apollo/client": "3.12.5",
     "@contentful/rich-text-html-renderer": "^16.6.10",
     "@contentful/rich-text-types": "^16.8.5",
     "@ministryofjustice/frontend": "^2.2.5",
-    "@ministryofjustice/hmpps-connect-dps-components": "2.0.0-beta",
+    "@ministryofjustice/hmpps-connect-dps-components": "2.0.0",
     "@ministryofjustice/hmpps-connect-dps-shared-items": "^1.2.1",
-    "agentkeepalive": "^4.5.0",
+    "agentkeepalive": "^4.6.0",
     "applicationinsights": "^2.9.6",
     "body-parser": "^1.20.3",
     "bunyan": "^1.8.15",
@@ -113,7 +113,7 @@
     "date-fns": "^3.6.0",
     "express": "^4.21.2",
     "express-session": "^1.18.1",
-    "govuk-frontend": "^5.7.1",
+    "govuk-frontend": "^5.8.0",
     "helmet": "^7.2.0",
     "http-errors": "^2.0.0",
     "jquery": "^3.7.1",
@@ -139,7 +139,7 @@
     "@types/http-errors": "^2.0.4",
     "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.7",
-    "@types/node": "^22.10.2",
+    "@types/node": "^22.10.5",
     "@types/nunjucks": "^3.2.6",
     "@types/passport": "^1.0.17",
     "@types/passport-oauth2": "^1.4.17",
@@ -152,7 +152,7 @@
     "aws-sdk-client-mock": "^4.1.0",
     "concurrently": "^8.2.2",
     "cookie-session": "^2.1.0",
-    "cypress": "^13.16.1",
+    "cypress": "^13.17.0",
     "cypress-multi-reporters": "^1.6.4",
     "dotenv": "^16.4.7",
     "eslint": "^8.57.1",
@@ -168,16 +168,16 @@
     "jest-html-reporter": "^3.10.2",
     "jest-junit": "^16.0.0",
     "jsonwebtoken": "^9.0.2",
-    "lint-staged": "^15.2.11",
+    "lint-staged": "^15.3.0",
     "mocha-junit-reporter": "^2.2.1",
     "nock": "^13.5.6",
-    "nodemon": "^3.1.7",
+    "nodemon": "^3.1.9",
     "prettier": "^3.4.2",
     "prettier-plugin-jinja-template": "^1.5.0",
-    "sass": "^1.83.0",
+    "sass": "^1.83.1",
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.5",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   },
   "overrides": {
     "csurf": {
