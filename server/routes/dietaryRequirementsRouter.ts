@@ -3,7 +3,7 @@ import { Services } from '../services'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import DietaryRequirementsController from '../controllers/dietaryRequirementsController'
 
-export default function dietaryRequirementsRouter(services: Services): Router {
+export default function dietaryRequirementsRouter(_services: Services): Router {
   const router = Router()
 
   const get = (path: string | string[], ...handlers: RequestHandler[]) =>
