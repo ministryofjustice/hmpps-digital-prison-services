@@ -1,6 +1,4 @@
 {% extends "../partials/layout.njk" %}
-{% from "../macros/alertFlags.njk" import alertFlags %}
-{% from "../macros/categoryFlag.njk" import categoryFlag %}
 {% from "../macros/hmppsPagedListHeader.njk" import hmppsPagedListHeader %}
 {% from "../macros/hmppsPagedListFooter.njk" import hmppsPagedListFooter %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
@@ -59,6 +57,13 @@
       <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-l">People with dietary requirements in {{ "Prison Name" }}</h1>
         <p class="govuk-body">This information is from the diet and food allergies secion on the DPS prisoner profile.</p>
+      </div>
+    </div>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full govuk-!-text-align-right">
+        <p class="govuk-body">
+          <a class="hmpps-print-link" href="/dietary-requirements/{{ locationId }}/print-all">Print all</a>  
+        </p>
       </div>
     </div>
     <div class="govuk-grid-row">

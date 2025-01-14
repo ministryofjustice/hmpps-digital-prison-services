@@ -15,6 +15,7 @@ export default function dietaryRequirementsRouter(_services: Services): Router {
   const dietaryRequirementsController = new DietaryRequirementsController()
 
   get('/:locationId', dietaryRequirementsController.get())
+  get('/:locationId/print-all', dietaryRequirementsController.printAll())
 
   return router
 }

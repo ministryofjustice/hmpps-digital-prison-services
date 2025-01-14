@@ -1,0 +1,84 @@
+{% extends "../partials/layout.njk" %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% set pageTitle = "Dietary requirements" %}
+{% set mainClasses = "govuk-body govuk-main-wrapper--auto-spacing" %}
+
+{% set breadCrumbs = [
+    {
+        text: 'Digital Prison Services',
+        href:  '/'
+    }
+] %}
+
+{% macro dietaryRequirementsHtml(dietaryRequirements) %}
+  {% if(dietaryRequirements.medical.length > 0) %}
+    <div class="govuk-!-margin-bottom-3">
+      <span class="govuk-!-font-weight-bold govuk-!-margin-bottom-0">Medical</span><br />
+      {% for need in dietaryRequirements.medical %}
+        {{ need }}<br />
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if(dietaryRequirements.foodAllergies.length > 0) %}
+    <div class="govuk-!-margin-bottom-3">
+      <span class="govuk-!-font-weight-bold govuk-!-margin-bottom-0">Food allergies</span><br />
+      {% for need in dietaryRequirements.foodAllergies %}
+        {{ need }}<br />
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if(dietaryRequirements.personal.length > 0) %}
+    <div class="govuk-!-margin-bottom-3">
+      <span class="govuk-!-font-weight-bold govuk-!-margin-bottom-0">Personal</span><br />
+      {% for need in dietaryRequirements.personal %}
+        {{ need }}<br />
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endmacro %}
+
+{% set rows = [] %}
+{% for row in content %}
+  {% set rows = (rows.push([
+    { html: row.name + "<br />" + row.prisonerNumber },
+    { text: row.location },
+    { html: dietaryRequirementsHtml(row.dietaryRequirements) }
+  ]), rows) %}
+{% endfor %}
+
+{% block content %}
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-l">
+            <span class="govuk-caption-l">{{ date }}</span>
+            People with dietary requirements in {{ "Prison Name" }}
+        </h1>
+        <p class="govuk-body">This document may include sensitive information about prisoner dietary requirements.</p>
+      </div>
+    </div>
+    <div class="govuk-grid-row govuk-!-display-none-print">
+      <div class="govuk-grid-column-full govuk-!-text-align-right">
+        <button class="govuk-button print-link">Print</a>  
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        {{ govukTable({
+          head: [
+            { text: 'Name and prison number' },
+            { text: 'Location' },
+            { text: 'Dietary requirements' }
+          ],
+          rows: rows
+        }) }}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+

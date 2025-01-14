@@ -2,8 +2,8 @@
 {%- from './hmppsPaginationSummary.njk' import hmppsPaginationSummary -%}
 {%- from './hmppsSortSelector.njk' import hmppsSortSelector -%}
 
-{% macro hmppsPagedListHeader(listMetadata) %}
-<div class="hmpps-paged-list-header">
+{% macro hmppsPagedListHeader(listMetadata, options = {}) %}
+<div class="hmpps-paged-list-header {{ "hmpps-paged-list-header__with-divider" if options.divider}}">
     <div class="govuk-!-display-none-print">
         {% if listMetadata.sorting %}
             {{ hmppsSortSelector(listMetadata.sorting) }}
