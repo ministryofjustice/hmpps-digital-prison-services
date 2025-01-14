@@ -1,35 +1,14 @@
 import { Request, RequestHandler, Response } from 'express'
 import { DietaryRequirementsQueryParams, generateListMetadata, mapToQueryString } from '../utils/generateListMetadata'
-import { PagedList } from '../data/interfaces/pagedList'
-
-const mockPagedData = <T>(content: T[], options?: { totalPages?: number; pageNumber?: number }): PagedList<T> => ({
-  content,
-  totalElements: content.length,
-  last: options?.pageNumber === (options?.totalPages ?? 1) - 1,
-  totalPages: options?.totalPages ?? 1,
-  size: content.length,
-  number: 0,
-  sort: { empty: false, sorted: false, unsorted: true },
-  first: (options?.pageNumber ?? 0) === 0,
-  numberOfElements: content.length,
-  empty: content.length === 0,
-  pageable: {
-    pageNumber: options?.pageNumber ?? 0,
-    pageSize: 20,
-    sort: {
-      empty: true,
-      sorted: false,
-      unsorted: true,
-    },
-    offset: 0,
-    unpaged: false,
-    paged: true,
-  },
-})
+import { userHasRoles } from '../utils/utils'
 
 export default class DietaryRequirementsController {
   public get(): RequestHandler {
     return async (req: Request, res: Response) => {
+      if (!userHasRoles(['DPS_APPLICATION_DEVELOPER'], res.locals.user.userRoles)) {
+        return res.render('notFound', { url: '/' })
+      }
+
       const queryParams: DietaryRequirementsQueryParams = {}
       if (req.query.page) queryParams.page = +req.query.page
       if (req.query.showAll) queryParams.showAll = Boolean(req.query.showAll)
@@ -146,7 +125,7 @@ export default class DietaryRequirementsController {
         true,
       )
 
-      res.render('pages/dietaryRequirements', { content, listMetadata, sorting })
+      return res.render('pages/dietaryRequirements', { content, listMetadata, sorting })
     }
   }
 }
