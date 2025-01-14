@@ -5,7 +5,7 @@ import Page from '../pages/page'
 context('Currently Out Page', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.setupUserAuth({ roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`] })
+    cy.setupUserAuth({ roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`, `ROLE_${Role.DpsApplicationDeveloper}`] })
     cy.setupComponentsData()
   })
 

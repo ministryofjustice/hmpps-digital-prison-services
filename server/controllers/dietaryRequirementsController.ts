@@ -1,11 +1,12 @@
 import { Request, RequestHandler, Response } from 'express'
 import { DietaryRequirementsQueryParams, generateListMetadata, mapToQueryString } from '../utils/generateListMetadata'
 import { userHasRoles } from '../utils/utils'
+import { Role } from '../enums/role'
 
 export default class DietaryRequirementsController {
   public get(): RequestHandler {
     return async (req: Request, res: Response) => {
-      if (!userHasRoles(['DPS_APPLICATION_DEVELOPER'], res.locals.user.userRoles)) {
+      if (!userHasRoles([Role.DpsApplicationDeveloper], res.locals.user.userRoles)) {
         return res.render('notFound', { url: '/' })
       }
 
