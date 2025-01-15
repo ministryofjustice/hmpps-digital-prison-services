@@ -15,6 +15,7 @@ import {
 import { ApplicationInfo } from '../applicationInfo'
 import { formatDate, formatDateTime, formatTime, timeFromDate, toUnixTimeStamp } from './dateHelpers'
 import config from '../config'
+import { pluralise } from './pluralise'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -72,4 +73,5 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   njkEnv.addFilter('formatName', formatName)
   njkEnv.addFilter('toUnixTimeStamp', toUnixTimeStamp)
   njkEnv.addFilter('timeFromDate', timeFromDate)
+  njkEnv.addFilter('pluralise', pluralise)
 }
