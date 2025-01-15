@@ -138,6 +138,10 @@ export default class DietaryRequirementsController {
 
   public printAll(): RequestHandler {
     return async (req: Request, res: Response) => {
+      if (!userHasRoles([Role.DpsApplicationDeveloper], res.locals.user.userRoles)) {
+        return res.render('notFound', { url: '/' })
+      }
+
       return res.render('pages/printDietaryRequirements', {
         date: format(new Date(), 'cccc c MMMM yyyy'),
         content: this.content,
