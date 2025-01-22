@@ -6,6 +6,7 @@ import whatsNewRouter from './whatsNewRouter'
 import managedPageRouter from './managedPageRouter'
 import establishmentRollRouter from './establishmentRollRouter'
 import apiRouter from './apiRouter'
+import dietaryRequirementsRouter from './dietaryRequirementsRouter'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -32,6 +33,7 @@ export default function routes(services: Services): Router {
   router.use('/establishment-roll', establishmentRollRouter(services))
   router.use('/whats-new', whatsNewRouter(services))
   router.use('/api', apiRouter())
+  router.use('/dietary-requirements', dietaryRequirementsRouter(services))
 
   return router
 }

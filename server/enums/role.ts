@@ -25,4 +25,5 @@ export enum Role {
   ReceptionUser = 'PRISON_RECEPTION',
   CellMove = 'CELL_MOVE',
   KeyWorker = 'KW',
+  DpsApplicationDeveloper = 'DPS_APPLICATION_DEVELOPER',
 }

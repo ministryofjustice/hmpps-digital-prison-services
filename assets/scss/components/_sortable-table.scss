@@ -1,0 +1,59 @@
+[aria-sort] a,
+[aria-sort] a:hover {
+  background-color: rgba(0, 0, 0, 0);
+  border-width: 0;
+  -webkit-box-shadow: 0 0 0 0;
+  -moz-box-shadow: 0 0 0 0;
+  box-shadow: 0 0 0 0;
+  color: #005ea5;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  padding: 0 10px 0 0;
+  position: relative;
+  text-align: inherit;
+  font-size: 1em;
+  margin: 0;
+  text-decoration: none;
+}
+
+[aria-sort] a:before {
+  content: ' ▼';
+  position: absolute;
+  right: -1px;
+  top: 9px;
+  font-size: 0.5em;
+}
+
+[aria-sort] a:after {
+  content: ' ▲';
+  position: absolute;
+  right: -1px;
+  top: 1px;
+  font-size: 0.5em;
+}
+
+[aria-sort='descending'] a:before {
+  display: none;
+}
+
+[aria-sort='descending'] a:after {
+  content: ' ▼';
+  font-size: 0.8em;
+  position: absolute;
+  right: -5px;
+  top: 2px;
+}
+
+[aria-sort='ascending'] a:before {
+  display: none;
+}
+
+[aria-sort='ascending'] a:after {
+  content: ' ▲';
+  font-size: 0.8em;
+  position: absolute;
+  right: -5px;
+  top: 2px;
+}
