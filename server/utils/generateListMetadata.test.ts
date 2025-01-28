@@ -6,26 +6,15 @@ export const mockPagedData = <T>(
   options?: { totalPages?: number; pageNumber?: number },
 ): PagedList<T> => ({
   content,
-  totalElements: content.length,
-  last: options?.pageNumber === (options?.totalPages ?? 1) - 1,
-  totalPages: options?.totalPages ?? 1,
-  size: content.length,
-  number: 0,
-  sort: { empty: false, sorted: false, unsorted: true },
-  first: (options?.pageNumber ?? 0) === 0,
-  numberOfElements: content.length,
-  empty: content.length === 0,
-  pageable: {
-    pageNumber: options?.pageNumber ?? 0,
-    pageSize: 20,
-    sort: {
-      empty: true,
-      sorted: false,
-      unsorted: true,
-    },
+  metadata: {
+    first: (options?.pageNumber ?? 1) === 1,
+    last: (options?.pageNumber ?? 1) === (options?.totalPages ?? 1),
+    numberOfElements: content.length,
     offset: 0,
-    unpaged: false,
-    paged: true,
+    pageNumber: options?.pageNumber ?? 1,
+    size: content.length,
+    totalElements: content.length,
+    totalPages: options?.totalPages ?? 1,
   },
 })
 
@@ -63,7 +52,7 @@ describe('generateListMetadata', () => {
 
   it('Can handle multiple pages that would require elipses at the start', () => {
     const res = generateListMetadata<QueryParams>(
-      mockPagedData([], { pageNumber: 9, totalPages: 10 }),
+      mockPagedData([], { pageNumber: 10, totalPages: 10 }),
       { example: 'foo' },
       'items',
     )
@@ -79,7 +68,7 @@ describe('generateListMetadata', () => {
 
   it('Can handle multiple pages that would require elipses surrounding the current', () => {
     const res = generateListMetadata<QueryParams>(
-      mockPagedData([], { pageNumber: 4, totalPages: 10 }),
+      mockPagedData([], { pageNumber: 5, totalPages: 10 }),
       { example: 'foo' },
       'items',
     )
