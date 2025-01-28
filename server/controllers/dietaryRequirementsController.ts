@@ -143,7 +143,7 @@ export default class DietaryRequirementsController {
       }
 
       return res.render('pages/printDietaryRequirements', {
-        date: format(new Date(), 'cccc c MMMM yyyy'),
+        datetime: format(new Date(), `cccc c MMMM yyyy 'at' HH:mm`),
         content: this.content,
         locationId: req.params.locationId,
       })
