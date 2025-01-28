@@ -8,6 +8,7 @@ import dps from './integration_tests/mockApis/dps'
 import prisonerSearch from './integration_tests/mockApis/prisonerSearch'
 import feComponents from './integration_tests/mockApis/feComponents'
 import locations from './integration_tests/mockApis/locations'
+import healthAndMedication from './integration_tests/mockApis/healthAndMedication'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -33,6 +34,7 @@ export default defineConfig({
         ...dps,
         ...prisonerSearch,
         ...feComponents,
+        ...healthAndMedication,
       })
     },
     baseUrl: 'http://localhost:3007',

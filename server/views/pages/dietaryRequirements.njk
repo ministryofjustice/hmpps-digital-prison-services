@@ -12,10 +12,10 @@
 ] %}
 
 {% macro dietAndFoodAllergiesHtml(personalDetails) %}
-  {% if personalDetails.medical.length > 0 or personalDetails.foodAllergies.length > 0 %}
+  {% if personalDetails.medical.length > 0 or personalDetails.foodAllergies.length > 0 or personalDetails.personal.length > 0 %}
     {% if personalDetails.medical.length > 0 %}
       <span class="govuk-!-font-weight-bold govuk-!-display-block">Medical diet</span>
-      <div class="govuk-!-margin-bottom-2">
+      <div class="govuk-!-margin-bottom-2" data-qa="medical-requirements">
         {% for requirement in personalDetails.medical %}
           <span class="govuk-!-display-block">{{ requirement }}</span>
         {% endfor %}
@@ -23,15 +23,15 @@
     {% endif %}
     {% if personalDetails.foodAllergies.length > 0 %}
       <span class="govuk-!-font-weight-bold govuk-!-display-block">Food allergies</span>
-      <div class="govuk-!-margin-bottom-2">
+      <div class="govuk-!-margin-bottom-2" data-qa="food-allergies">
         {% for allergy in personalDetails.foodAllergies %}
           <span class="govuk-!-display-block">{{ allergy }}</span>
         {% endfor %}
       </div>
     {% endif %}
     {% if personalDetails.personal.length > 0 %}
-      <span class="govuk-!-font-weight-bold govuk-!-display-block">Food allergies</span>
-      <div class="govuk-!-margin-bottom-2">
+      <span class="govuk-!-font-weight-bold govuk-!-display-block">Personalised</span>
+      <div class="govuk-!-margin-bottom-2" data-qa="personal-requirements">
         {% for need in personalDetails.personal %}
           <span class="govuk-!-display-block">{{ need }}</span>
         {% endfor %}
