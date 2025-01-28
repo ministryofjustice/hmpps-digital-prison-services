@@ -55,8 +55,8 @@ export interface FieldHistory {
 }
 
 export interface ReferenceDataCodeWithComment {
-  value: ReferenceDataCodeSimple,
-  comment?: String
+  value: ReferenceDataCodeSimple
+  comment?: string
 }
 
 export interface HealthAndMedication {

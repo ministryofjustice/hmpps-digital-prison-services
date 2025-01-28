@@ -1,9 +1,5 @@
 import { DietaryRequirementsQueryParams } from '../utils/generateListMetadata'
-import {
-  HealthAndMedication,
-  HealthAndMedicationApiClient,
-  HealthAndMedicationForPrison,
-} from './interfaces/healthAndMedicationApiClient'
+import { HealthAndMedicationApiClient, HealthAndMedicationForPrison } from './interfaces/healthAndMedicationApiClient'
 import { PagedList } from './interfaces/pagedList'
 import RestClient from './restClient'
 

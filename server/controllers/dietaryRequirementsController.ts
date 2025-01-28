@@ -1,4 +1,4 @@
-import { query, Request, RequestHandler, Response } from 'express'
+import { Request, RequestHandler, Response } from 'express'
 import { format } from 'date-fns'
 import { DietaryRequirementsQueryParams, generateListMetadata, mapToQueryString } from '../utils/generateListMetadata'
 import { formatName, userHasRoles } from '../utils/utils'
