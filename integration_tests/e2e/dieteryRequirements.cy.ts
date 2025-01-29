@@ -7,18 +7,22 @@ context('Currently Out Page', () => {
     cy.task('reset')
     cy.setupUserAuth({ roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`, `ROLE_${Role.DpsApplicationDeveloper}`] })
     cy.task('stubHealthAndMedicationForPrison', 'LEI')
-    cy.setupComponentsData()
+    cy.setupComponentsData({
+      caseLoads: [
+        { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
+      ],
+    })
   })
 
   it('Page is visible for mock data', () => {
-    cy.signIn({ redirectPath: `/dietary-requirements/LEI` })
-    cy.visit(`/dietary-requirements/LEI`)
+    cy.signIn({ redirectPath: `/dietary-requirements` })
+    cy.visit(`/dietary-requirements`)
     Page.verifyOnPage(DietaryRequirementsPage)
   })
 
   it('Displays the prisoner information', () => {
-    cy.signIn({ redirectPath: `/dietary-requirements/LEI` })
-    cy.visit(`/dietary-requirements/LEI`)
+    cy.signIn({ redirectPath: `/dietary-requirements` })
+    cy.visit(`/dietary-requirements`)
     const page = Page.verifyOnPage(DietaryRequirementsPage)
     page.dietaryRequirements().row(0).nameAndPrisonNumber().should('include.text', 'Richard Smith')
     page.dietaryRequirements().row(0).nameAndPrisonNumber().should('include.text', 'G4879UP')
@@ -30,16 +34,16 @@ context('Currently Out Page', () => {
 
   context('Sorting', () => {
     it('Defaults to no sorting', () => {
-      cy.signIn({ redirectPath: `/dietary-requirements/LEI` })
-      cy.visit(`/dietary-requirements/LEI`)
+      cy.signIn({ redirectPath: `/dietary-requirements` })
+      cy.visit(`/dietary-requirements`)
       const page = Page.verifyOnPage(DietaryRequirementsPage)
       page.dietaryRequirements().sorting().nameAndNumber().should('have.attr', 'aria-sort', 'none')
       page.dietaryRequirements().sorting().location().should('have.attr', 'aria-sort', 'none')
     })
 
     it('Allows sorting', () => {
-      cy.signIn({ redirectPath: `/dietary-requirements/LEI` })
-      cy.visit(`/dietary-requirements/LEI`)
+      cy.signIn({ redirectPath: `/dietary-requirements` })
+      cy.visit(`/dietary-requirements`)
       const page = Page.verifyOnPage(DietaryRequirementsPage)
       page.dietaryRequirements().sorting().nameAndNumber().click()
       page.dietaryRequirements().sorting().nameAndNumber().should('have.attr', 'aria-sort', 'ascending')

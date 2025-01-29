@@ -12,12 +12,13 @@ export default class DietaryRequirementsController {
   public get(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { clientToken } = req.middleware
+      const prisonId = res.locals.user.activeCaseLoadId
 
       if (!userHasRoles([Role.DpsApplicationDeveloper], res.locals.user.userRoles)) {
         return res.render('notFound', { url: '/' })
       }
 
-      const queryParams: DietaryRequirementsQueryParams = { page: 1, size: 2 }
+      const queryParams: DietaryRequirementsQueryParams = { page: 1, size: 10 }
       if (req.query.page) queryParams.page = +req.query.page
       if (req.query.showAll) queryParams.showAll = Boolean(req.query.showAll)
       if (req.query.nameAndNumber) queryParams.nameAndNumber = req.query.nameAndNumber as string
@@ -57,21 +58,17 @@ export default class DietaryRequirementsController {
       const sorting = {
         nameAndNumber: {
           direction: sortParamToDirection(req.query.nameAndNumber as string),
-          url: `/dietary-requirements/${req.params.locationId}?${sortNameQuery()}`,
+          url: `/dietary-requirements?${sortNameQuery()}`,
         },
         location: {
           direction: sortParamToDirection(req.query.location as string),
-          url: `/dietary-requirements/${req.params.locationId}?${sortLocationQuery()}`,
+          url: `/dietary-requirements?${sortLocationQuery()}`,
         },
       }
 
       // Remove page as this comes from the API
+      const resp = await this.dietReportingService.getDietaryRequirementsForPrison(clientToken, prisonId, queryParams)
       delete queryParams.page
-      const resp = await this.dietReportingService.getDietaryRequirementsForPrison(
-        clientToken,
-        req.params.locationId,
-        queryParams,
-      )
 
       const listMetadata = generateListMetadata(resp, queryParams, 'result', [], '', true)
 
@@ -103,7 +100,6 @@ export default class DietaryRequirementsController {
         }),
         listMetadata,
         sorting,
-        locationId: req.params.locationId,
       })
     }
   }
@@ -111,12 +107,13 @@ export default class DietaryRequirementsController {
   public printAll(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { clientToken } = req.middleware
+      const prisonId = res.locals.user.activeCaseLoadId
 
       if (!userHasRoles([Role.DpsApplicationDeveloper], res.locals.user.userRoles)) {
         return res.render('notFound', { url: '/' })
       }
 
-      const resp = await this.dietReportingService.getDietaryRequirementsForPrison(clientToken, req.params.locationId, {
+      const resp = await this.dietReportingService.getDietaryRequirementsForPrison(clientToken, prisonId, {
         page: 1,
         size: 10,
         showAll: true,
@@ -149,7 +146,6 @@ export default class DietaryRequirementsController {
             },
           }
         }),
-        locationId: req.params.locationId,
       })
     }
   }
