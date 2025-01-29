@@ -14,7 +14,8 @@ export default class HealthAndMedicationRestApiClient implements HealthAndMedica
     prisonId: string,
     { page, size, nameAndNumber, location, showAll }: DietaryRequirementsQueryParams,
   ): Promise<PagedList<HealthAndMedicationForPrison>> {
-    let sort
+    // Default to prisoner name A-Z
+    let sort = `prisonerName,asc`
     if (nameAndNumber) sort = `prisonerName,${nameAndNumber.toLowerCase()}`
     if (location) sort = `location,${location.toLowerCase()}`
 
