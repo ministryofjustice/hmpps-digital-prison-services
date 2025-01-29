@@ -2,6 +2,7 @@
 {% from "../macros/hmppsPagedListHeader.njk" import hmppsPagedListHeader %}
 {% from "../macros/hmppsPagedListFooter.njk" import hmppsPagedListFooter %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 {% set pageTitle = "Dietary requirements" %}
 {% set mainClasses = "govuk-body govuk-main-wrapper--auto-spacing" %}
 {% set breadCrumbs = [
@@ -58,48 +59,59 @@
         <p class="govuk-body">This information is from the diet and food allergies secion on the DPS prisoner profile.</p>
       </div>
     </div>
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full govuk-!-text-align-right">
-        <p class="govuk-body">
-          <a class="hmpps-print-link" href="/dietary-requirements/print-all">Print all</a>
-        </p>
+    {% if content.length > 0 %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full govuk-!-text-align-right">
+          <p class="govuk-body">
+            <a class="hmpps-print-link" href="/dietary-requirements/print-all">Print all</a>
+          </p>
+        </div>
       </div>
-    </div>
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        {{ hmppsPagedListHeader(listMetadata) }}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          {{ hmppsPagedListHeader(listMetadata) }}
+        </div>
       </div>
-    </div>
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        {{ govukTable({
-          head: [
-            {
-              html: '<a href="' + sorting.nameAndNumber.url + '">Name and prison number</a>',
-              attributes: {
-                "data-qa": "name-and-number-header",
-                "aria-sort": sorting.nameAndNumber.direction
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          {{ govukTable({
+            head: [
+              {
+                html: '<a href="' + sorting.nameAndNumber.url + '">Name and prison number</a>',
+                attributes: {
+                  "data-qa": "name-and-number-header",
+                  "aria-sort": sorting.nameAndNumber.direction
+                }
+              },
+              {
+                html: '<a href="' + sorting.location.url + '">Location</a>',
+                attributes: {
+                  "data-qa": "location-header",
+                  "aria-sort": sorting.location.direction
+                }
+              },
+              {
+                text: 'Dietary requirements'
               }
-            },
-            {
-              html: '<a href="' + sorting.location.url + '">Location</a>',
-              attributes: {
-                "data-qa": "location-header",
-                "aria-sort": sorting.location.direction
-              }
-            },
-            {
-              text: 'Dietary requirements'
-            }
-          ],
-          rows: rows
-        }) }}
+            ],
+            rows: rows
+          }) }}
+        </div>
       </div>
-    </div>
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        {{ hmppsPagedListFooter(listMetadata) }}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          {{ hmppsPagedListFooter(listMetadata) }}
+        </div>
       </div>
-    </div>
+    {% else %}
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          {{ govukInsetText({
+            text: "There are no recorded dietary requirements or food allergies."
+          }) }}
+        </div>
+      </div>
+    {% endif %}
   </div>
 {% endblock %}

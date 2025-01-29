@@ -14,7 +14,7 @@ export default class DietaryRequirementsController {
       const { clientToken } = req.middleware
       const prisonId = res.locals.user.activeCaseLoadId
 
-      if (!userHasRoles([Role.DpsApplicationDeveloper], res.locals.user.userRoles)) {
+      if (!userHasRoles([Role.DietAndAllergiesReport], res.locals.user.userRoles)) {
         return res.render('notFound', { url: '/' })
       }
 
@@ -109,7 +109,7 @@ export default class DietaryRequirementsController {
       const { clientToken } = req.middleware
       const prisonId = res.locals.user.activeCaseLoadId
 
-      if (!userHasRoles([Role.DpsApplicationDeveloper], res.locals.user.userRoles)) {
+      if (!userHasRoles([Role.DietAndAllergiesReport], res.locals.user.userRoles)) {
         return res.render('notFound', { url: '/' })
       }
 
