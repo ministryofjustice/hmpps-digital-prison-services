@@ -87,19 +87,19 @@ export const generateListMetadata = <T extends PagedListQueryParams>(
   enableShowAll?: boolean,
 ): ListMetadata<T> => {
   const query = mapToQueryString(queryParams)
-  const currentPage = pagedList?.pageable ? pagedList.pageable.pageNumber + 1 : undefined
+  const currentPage = pagedList?.metadata ? pagedList.metadata.pageNumber : undefined
 
   let pages = []
 
-  if (pagedList?.totalPages > 1 && pagedList?.totalPages < 8) {
-    pages = [...Array(pagedList.totalPages).keys()].map(page => {
+  if (pagedList?.metadata.totalPages > 1 && pagedList?.metadata.totalPages < 8) {
+    pages = [...Array(pagedList.metadata.totalPages).keys()].map(page => {
       return {
         text: `${page + 1}`,
         href: [`?page=${page + 1}`, query].filter(Boolean).join('&'),
         selected: currentPage === page + 1,
       }
     })
-  } else if (pagedList?.totalPages > 7) {
+  } else if (pagedList?.metadata.totalPages > 7) {
     pages.push({
       text: '1',
       href: [`?page=1`, query].filter(Boolean).join('&'),
@@ -110,7 +110,7 @@ export const generateListMetadata = <T extends PagedListQueryParams>(
     let preDots = false
     let postDots = false
     // eslint-disable-next-line no-plusplus
-    for (let i = 2; i < pagedList.totalPages; i++) {
+    for (let i = 2; i < pagedList.metadata.totalPages; i++) {
       if (pageRange.includes(i)) {
         pages.push({
           text: `${i}`,
@@ -133,20 +133,20 @@ export const generateListMetadata = <T extends PagedListQueryParams>(
     }
 
     pages.push({
-      text: `${pagedList.totalPages}`,
-      href: [`?page=${pagedList.totalPages}`, query].filter(Boolean).join('&'),
-      selected: currentPage === pagedList.totalPages,
+      text: `${pagedList.metadata.totalPages}`,
+      href: [`?page=${pagedList.metadata.totalPages}`, query].filter(Boolean).join('&'),
+      selected: currentPage === pagedList.metadata.totalPages,
     })
   }
 
-  const next = pagedList?.last
+  const next = pagedList?.metadata.last
     ? undefined
     : {
         href: [`?page=${currentPage + 1}`, query].filter(Boolean).join('&'),
         text: 'Next',
       }
 
-  const previous = pagedList?.first
+  const previous = pagedList?.metadata.first
     ? undefined
     : {
         href: [`?page=${currentPage - 1}`, query].filter(Boolean).join('&'),
@@ -178,11 +178,11 @@ export const generateListMetadata = <T extends PagedListQueryParams>(
       previous,
       next,
       page: currentPage,
-      offset: pagedList?.pageable?.offset,
-      pageSize: pagedList?.size,
-      totalPages: pagedList?.totalPages,
-      totalElements: pagedList?.totalElements,
-      elementsOnPage: pagedList?.numberOfElements,
+      offset: pagedList?.metadata?.offset,
+      pageSize: pagedList?.metadata.size,
+      totalPages: pagedList?.metadata.totalPages,
+      totalElements: pagedList?.metadata.totalElements,
+      elementsOnPage: pagedList?.metadata.numberOfElements,
       pages,
       viewAllUrl,
       enableShowAll: enableShowAll === undefined ? false : enableShowAll,

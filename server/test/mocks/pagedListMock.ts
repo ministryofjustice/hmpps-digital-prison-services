@@ -1,14 +1,15 @@
 import { PagedList } from '../../data/interfaces/pagedList'
 
 export const pagedListMock = <T>(content: T[]): PagedList<T> => ({
-  empty: false,
-  first: false,
-  last: false,
-  number: 0,
-  numberOfElements: 0,
-  size: 0,
-  sort: { empty: false, sorted: false, unsorted: false },
-  totalElements: 0,
-  totalPages: 0,
   content,
+  metadata: {
+    first: false,
+    last: false,
+    numberOfElements: 0,
+    size: 0,
+    totalElements: 0,
+    totalPages: 0,
+    offset: 0,
+    pageNumber: 0,
+  },
 })

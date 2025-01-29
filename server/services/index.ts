@@ -7,6 +7,7 @@ import EstablishmentRollService from './establishmentRollService'
 import MovementsService from './movementsService'
 import LocationService from './locationsService'
 import ServiceData from '../controllers/ServiceData'
+import DietReportingService from './dietReportingService'
 
 export const services = () => {
   const {
@@ -46,6 +47,8 @@ export const services = () => {
 
   const contentfulService = new ContentfulService(apolloClient)
 
+  const dietReportingService = new DietReportingService(dataAccess.healthAndMedicationApiClientBuilder)
+
   return {
     dataAccess,
     applicationInfo,
@@ -55,6 +58,7 @@ export const services = () => {
     movementsService,
     locationsService,
     serviceData,
+    dietReportingService,
   }
 }
 

@@ -15,6 +15,8 @@ import PrisonerSearchRestClient from './prisonerSearchClient'
 import RedisTokenStore from './tokenStore/redisTokenStore'
 import InMemoryTokenStore from './tokenStore/inMemoryTokenStore'
 import LocationsInsidePrisonApiRestClient from './locationsInsidePrisonApiClient'
+import { HealthAndMedicationApiClient } from './interfaces/healthAndMedicationApiClient'
+import HealthAndMedicationRestApiClient from './healthAndMedicationRestApiClient'
 
 const applicationInfo = applicationInfoSupplier()
 initialiseAppInsights()
@@ -46,6 +48,11 @@ export const dataAccess = {
     'Locations Inside Prison API',
     config.apis.locationsInsidePrisonApi,
     LocationsInsidePrisonApiRestClient,
+  ),
+  healthAndMedicationApiClientBuilder: restClientBuilder<HealthAndMedicationApiClient>(
+    'Health and Medication API',
+    config.apis.healthAndMedicationApi,
+    HealthAndMedicationRestApiClient,
   ),
 }
 

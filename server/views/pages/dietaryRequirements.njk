@@ -2,10 +2,8 @@
 {% from "../macros/hmppsPagedListHeader.njk" import hmppsPagedListHeader %}
 {% from "../macros/hmppsPagedListFooter.njk" import hmppsPagedListFooter %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
-
 {% set pageTitle = "Dietary requirements" %}
 {% set mainClasses = "govuk-body govuk-main-wrapper--auto-spacing" %}
-
 {% set breadCrumbs = [
     {
         text: 'Digital Prison Services',
@@ -13,32 +11,34 @@
     }
 ] %}
 
-{% macro dietaryRequirementsHtml(dietaryRequirements) %}
-  {% if(dietaryRequirements.medical.length > 0) %}
-    <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0">Medical</p>
-    <p class="govuk-body" data-qa="medical-requirements">    
-      {% for need in dietaryRequirements.medical %}
-        {{ need }}<br />
-      {% endfor %}
-    </p>
-  {% endif %}
-
-  {% if(dietaryRequirements.foodAllergies.length > 0) %}
-    <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0">Food allergies</p>
-    <p class="govuk-body" data-qa="food-allergies">    
-      {% for need in dietaryRequirements.foodAllergies %}
-        {{ need }}<br />
-      {% endfor %}
-    </p>
-  {% endif %}
-
-  {% if(dietaryRequirements.personal.length > 0) %}
-    <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0">Personal</p>
-    <p class="govuk-body" data-qa="personal-requirements">
-    {% for need in dietaryRequirements.personal %}
-      {{ need }}<br />
-    {% endfor %}
-    </p>
+{% macro dietAndFoodAllergiesHtml(personalDetails) %}
+  {% if personalDetails.medical.length > 0 or personalDetails.foodAllergies.length > 0 or personalDetails.personal.length > 0 %}
+    {% if personalDetails.medical.length > 0 %}
+      <span class="govuk-!-font-weight-bold govuk-!-display-block">Medical diet</span>
+      <div class="govuk-!-margin-bottom-2" data-qa="medical-requirements">
+        {% for requirement in personalDetails.medical %}
+          <span class="govuk-!-display-block">{{ requirement }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% if personalDetails.foodAllergies.length > 0 %}
+      <span class="govuk-!-font-weight-bold govuk-!-display-block">Food allergies</span>
+      <div class="govuk-!-margin-bottom-2" data-qa="food-allergies">
+        {% for allergy in personalDetails.foodAllergies %}
+          <span class="govuk-!-display-block">{{ allergy }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% if personalDetails.personal.length > 0 %}
+      <span class="govuk-!-font-weight-bold govuk-!-display-block">Personalised</span>
+      <div class="govuk-!-margin-bottom-2" data-qa="personal-requirements">
+        {% for need in personalDetails.personal %}
+          <span class="govuk-!-display-block">{{ need }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% else %}
+    <span class="govuk-!-margin-top-1">Not entered</span>
   {% endif %}
 {% endmacro %}
 
@@ -47,22 +47,21 @@
   {% set rows = (rows.push([
     { html: row.name + "<br />" + row.prisonerNumber },
     { text: row.location },
-    { html: dietaryRequirementsHtml(row.dietaryRequirements) }
+    { html: dietAndFoodAllergiesHtml(row.dietaryRequirements) }
   ]), rows) %}
 {% endfor %}
-
 {% block content %}
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-l">People with dietary requirements in {{ "Prison Name" }}</h1>
+        <h1 class="govuk-heading-l">People with dietary requirements in {{ user.activeCaseLoad.description }}</h1>
         <p class="govuk-body">This information is from the diet and food allergies secion on the DPS prisoner profile.</p>
       </div>
     </div>
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full govuk-!-text-align-right">
         <p class="govuk-body">
-          <a class="hmpps-print-link" href="/dietary-requirements/{{ locationId }}/print-all">Print all</a>  
+          <a class="hmpps-print-link" href="/dietary-requirements/{{ locationId }}/print-all">Print all</a>
         </p>
       </div>
     </div>
@@ -104,4 +103,3 @@
     </div>
   </div>
 {% endblock %}
-

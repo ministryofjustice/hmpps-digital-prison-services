@@ -2,7 +2,7 @@ import Page from './page'
 
 export default class DietaryRequirementsPage extends Page {
   constructor() {
-    super(`People with dietary requirements in Prison Name`)
+    super(`People with dietary requirements in Leeds (HMP)`)
   }
 
   dietaryRequirements = () => ({

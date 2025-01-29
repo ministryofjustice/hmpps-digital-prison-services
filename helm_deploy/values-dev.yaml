@@ -36,6 +36,8 @@ generic-service:
     WHEREABOUTS_ENDPOINT_URL: https://whereabouts-api-dev.service.justice.gov.uk
     PRISONER_SEARCH_API_URL: https://prisoner-search-dev.prison.service.justice.gov.uk
     LOCATIONS_INSIDE_PRISON_API_URL: https://locations-inside-prison-api-dev.hmpps.service.justice.gov.uk
+    HEALTH_AND_MEDICATION_API_URL: "https://health-and-medication-api-dev.hmpps.service.justice.gov.uk"
+
 
     # Service URLs
     ACTIVITIES_URL: https://activities-dev.prison.service.justice.gov.uk/activities
