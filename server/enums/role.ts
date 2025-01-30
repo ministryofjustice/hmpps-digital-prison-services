@@ -26,5 +26,5 @@ export enum Role {
   CellMove = 'CELL_MOVE',
   KeyWorker = 'KW',
   DpsApplicationDeveloper = 'DPS_APPLICATION_DEVELOPER',
-  DietAndAllergiesReport = 'DIET_AND_ALLERGIES_REPORT',
+  DietAndAllergiesReport = 'DIET_AND_FOOD_ALLERGIES_REPORT',
 }
