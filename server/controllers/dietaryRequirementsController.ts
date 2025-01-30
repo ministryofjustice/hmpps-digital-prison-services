@@ -18,7 +18,7 @@ export default class DietaryRequirementsController {
         return res.render('notFound', { url: '/' })
       }
 
-      const queryParams: DietaryRequirementsQueryParams = { page: 1, size: 10 }
+      const queryParams: DietaryRequirementsQueryParams = { page: 1, size: 25 }
       if (req.query.page) queryParams.page = +req.query.page
       if (req.query.showAll) queryParams.showAll = Boolean(req.query.showAll)
       if (req.query.nameAndNumber) queryParams.nameAndNumber = req.query.nameAndNumber as string
@@ -100,6 +100,10 @@ export default class DietaryRequirementsController {
         }),
         listMetadata,
         sorting,
+        printQuery: mapToQueryString({
+          nameAndNumber: req.query.nameAndNumber as string,
+          location: req.query.location as string,
+        }),
       })
     }
   }
@@ -113,11 +117,11 @@ export default class DietaryRequirementsController {
         return res.render('notFound', { url: '/' })
       }
 
-      const resp = await this.dietReportingService.getDietaryRequirementsForPrison(clientToken, prisonId, {
-        page: 1,
-        size: 10,
-        showAll: true,
-      })
+      const queryParams: DietaryRequirementsQueryParams = { page: 1, size: 25, showAll: true }
+      if (req.query.nameAndNumber) queryParams.nameAndNumber = req.query.nameAndNumber as string
+      if (req.query.location) queryParams.location = req.query.location as string
+
+      const resp = await this.dietReportingService.getDietaryRequirementsForPrison(clientToken, prisonId, queryParams)
 
       const getEntries = (content?: ReferenceDataCodeWithComment[]) => {
         if (!content) return []
