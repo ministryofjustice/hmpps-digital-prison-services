@@ -137,7 +137,7 @@ export default class DietaryRequirementsController {
       }
 
       return res.render('pages/printDietaryRequirements', {
-        datetime: format(new Date(), `cccc c MMMM yyyy 'at' HH:mm`),
+        datetime: format(new Date(), `cccc d MMMM yyyy 'at' HH:mm`),
         content: resp.content.map(prisoner => {
           return {
             name: formatName(prisoner.firstName, '', prisoner.lastName),
