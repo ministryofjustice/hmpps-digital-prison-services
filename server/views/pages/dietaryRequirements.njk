@@ -18,7 +18,7 @@
       <span class="govuk-!-font-weight-bold govuk-!-display-block">Medical diet</span>
       <div class="govuk-!-margin-bottom-2" data-qa="medical-requirements">
         {% for requirement in personalDetails.medical %}
-          <span class="govuk-!-display-block">{{ requirement }}</span>
+          <span class="govuk-!-display-block dietary-requirements">{{ requirement }}</span>
         {% endfor %}
       </div>
     {% endif %}
@@ -26,7 +26,7 @@
       <span class="govuk-!-font-weight-bold govuk-!-display-block">Food allergies</span>
       <div class="govuk-!-margin-bottom-2" data-qa="food-allergies">
         {% for allergy in personalDetails.foodAllergies %}
-          <span class="govuk-!-display-block">{{ allergy }}</span>
+          <span class="govuk-!-display-block dietary-requirements">{{ allergy }}</span>
         {% endfor %}
       </div>
     {% endif %}
@@ -34,7 +34,7 @@
       <span class="govuk-!-font-weight-bold govuk-!-display-block">Personalised</span>
       <div class="govuk-!-margin-bottom-2" data-qa="personal-requirements">
         {% for need in personalDetails.personal %}
-          <span class="govuk-!-display-block">{{ need }}</span>
+          <span class="govuk-!-display-block dietary-requirements">{{ need }}</span>
         {% endfor %}
       </div>
     {% endif %}
