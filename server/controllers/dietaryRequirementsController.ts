@@ -31,7 +31,7 @@ export default class DietaryRequirementsController {
           direction = 'DESC'
         }
 
-        return mapToQueryString({ nameAndNumber: direction, location: null })
+        return mapToQueryString({ nameAndNumber: direction, location: null, showAll: queryParams.showAll })
       }
 
       const sortLocationQuery = () => {
@@ -41,7 +41,7 @@ export default class DietaryRequirementsController {
           direction = 'DESC'
         }
 
-        return mapToQueryString({ location: direction, nameAndNumber: null })
+        return mapToQueryString({ location: direction, nameAndNumber: null, showAll: queryParams.showAll })
       }
 
       const sortParamToDirection = (param: string) => {
