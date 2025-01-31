@@ -103,6 +103,7 @@ export default class DietaryRequirementsController {
         printQuery: mapToQueryString({
           nameAndNumber: req.query.nameAndNumber as string,
           location: req.query.location as string,
+          showAll: req.query.showAll as string,
         }),
       })
     }
@@ -149,6 +150,11 @@ export default class DietaryRequirementsController {
               personal: getEntries(prisoner?.health?.dietAndAllergy?.personalisedDietaryRequirements?.value),
             },
           }
+        }),
+        backQuery: mapToQueryString({
+          nameAndNumber: req.query.nameAndNumber as string,
+          location: req.query.location as string,
+          showAll: req.query.showAll as string,
         }),
       })
     }
