@@ -10,13 +10,13 @@
 .hmpps-paged-list-header {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: space-between;
   padding-bottom: 30px;
   margin-bottom: 30px;
 
   .moj-pagination {
-    margin-top: 30px;
+    margin-top: 0;
     margin-left: 0;
     margin-right: 0;
   }
