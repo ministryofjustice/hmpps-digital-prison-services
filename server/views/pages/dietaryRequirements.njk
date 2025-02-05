@@ -46,16 +46,16 @@
 {% set rows = [] %}
 {% for row in content %}
   {% set rows = (rows.push([
-    { html: row.name + "<br />" + row.prisonerNumber },
-    { text: row.location },
-    { html: dietAndFoodAllergiesHtml(row.dietaryRequirements) }
+    { html: row.name + "<br />" + row.prisonerNumber, classes: "hmpps-dietary-requirements__name" },
+    { text: row.location, classes: "hmpps-dietary-requirements__location" },
+    { html: dietAndFoodAllergiesHtml(row.dietaryRequirements), classes: "hmpps-dietary-requirements__requirements" }
   ]), rows) %}
 {% endfor %}
 {% block content %}
-  <div class="govuk-width-container">
+  <div class="govuk-width-container govuk-!-margin-top-8">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-l">People with dietary requirements in {{ user.activeCaseLoad.description }}</h1>
+        <h1 class="govuk-heading-l govuk-!-margin-bottom-4">People with dietary requirements in {{ user.activeCaseLoad.description }}</h1>
         <p class="govuk-body">This information is from the diet and food allergies section on the DPS prisoner profile.</p>
       </div>
     </div>
@@ -78,6 +78,7 @@
             head: [
               {
                 html: '<a href="' + sorting.nameAndNumber.url + '">Name and prison number</a>',
+                classes: 'hmpps-dietary-requirements__name',
                 attributes: {
                   "data-qa": "name-and-number-header",
                   "aria-sort": sorting.nameAndNumber.direction
@@ -85,13 +86,15 @@
               },
               {
                 html: '<a href="' + sorting.location.url + '">Location</a>',
+                classes: 'hmpps-dietary-requirements__location',
                 attributes: {
                   "data-qa": "location-header",
                   "aria-sort": sorting.location.direction
                 }
               },
               {
-                text: 'Dietary requirements'
+                text: 'Dietary requirements',
+                classes: 'hmpps-dietary-requirements__requirements'
               }
             ],
             rows: rows

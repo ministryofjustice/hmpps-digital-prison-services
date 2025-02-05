@@ -44,14 +44,14 @@
 {% set rows = [] %}
 {% for row in content %}
   {% set rows = (rows.push([
-    { html: row.name + "<br />" + row.prisonerNumber },
-    { text: row.location },
-    { html: dietaryRequirementsHtml(row.dietaryRequirements) }
+    { html: row.name + "<br />" + row.prisonerNumber, classes: "hmpps-dietary-requirements__name" },
+    { text: row.location, classes: "hmpps-dietary-requirements__location" },
+    { html: dietaryRequirementsHtml(row.dietaryRequirements), classes: "hmpps-dietary-requirements__requirements" }
   ]), rows) %}
 {% endfor %}
 
 {% block content %}
-  <div class="govuk-width-container">
+  <div class="govuk-width-container govuk-!-margin-top-8">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
         {{ govukBackLink({
@@ -61,7 +61,7 @@
         }) }}
       </div>
     </div>
-    <div class="govuk-grid-row">
+    <div class="govuk-grid-row govuk-!-margin-top-6">
       <div class="govuk-grid-column-three-quarters">
         <h1 class="govuk-heading-l">
             <span class="govuk-caption-l">{{ datetime }}</span>
@@ -76,7 +76,7 @@
       </div>
     </div>
 
-    <div class="govuk-grid-row">
+    <div class="govuk-grid-row govuk-!-margin-top-7">
       <div class="govuk-grid-column-full">
         {{ govukTable({
           head: [
