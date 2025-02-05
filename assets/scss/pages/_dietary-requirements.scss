@@ -1,5 +1,29 @@
 .dietary-requirements {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    max-width: 300px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.hmpps-dietary-requirements {
+  table-layout: fixed;
+}
+
+.hmpps-dietary-requirements__name {
+  width: calc(100% / 6) * 2;
+  padding: 15px 30px 15px 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.hmpps-dietary-requirements__location {
+  width: calc(100% / 6) * 1;
+  padding: 15px 30px 15px 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.hmpps-dietary-requirements__requirements {
+  width: calc(100% / 6) * 3;
+  padding: 15px 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
