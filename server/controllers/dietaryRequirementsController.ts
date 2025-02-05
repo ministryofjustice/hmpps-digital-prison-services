@@ -88,7 +88,7 @@ export default class DietaryRequirementsController {
       return res.render('pages/dietaryRequirements', {
         content: resp.content.map(prisoner => {
           return {
-            name: formatName(prisoner.firstName, '', prisoner.lastName),
+            name: formatName(prisoner.firstName, '', prisoner.lastName, { style: 'lastCommaFirst' }),
             prisonerNumber: prisoner.prisonerNumber,
             location: prisoner.location,
             dietaryRequirements: {
@@ -141,7 +141,7 @@ export default class DietaryRequirementsController {
         datetime: format(new Date(), `cccc d MMMM yyyy 'at' HH:mm`),
         content: resp.content.map(prisoner => {
           return {
-            name: formatName(prisoner.firstName, '', prisoner.lastName),
+            name: formatName(prisoner.firstName, '', prisoner.lastName, { style: 'lastCommaFirst' }),
             prisonerNumber: prisoner.prisonerNumber,
             location: prisoner.location,
             dietaryRequirements: {

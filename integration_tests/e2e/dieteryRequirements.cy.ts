@@ -24,7 +24,7 @@ context('Currently Out Page', () => {
     cy.signIn({ redirectPath: `/dietary-requirements` })
     cy.visit(`/dietary-requirements`)
     const page = Page.verifyOnPage(DietaryRequirementsPage)
-    page.dietaryRequirements().row(0).nameAndPrisonNumber().should('include.text', 'Richard Smith')
+    page.dietaryRequirements().row(0).nameAndPrisonNumber().should('include.text', 'Smith, Richard')
     page.dietaryRequirements().row(0).nameAndPrisonNumber().should('include.text', 'G4879UP')
     page.dietaryRequirements().row(0).location().should('include.text', 'C-3-010')
     page.dietaryRequirements().row(0).dietaryRequirements().medical().should('include.text', 'Nutrient Deficiency')
