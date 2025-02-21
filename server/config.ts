@@ -253,6 +253,9 @@ export default {
       },
       agent: new AgentConfig(Number(get('HEALTH_AND_MEDICATION_TIMEOUT_DEADLINE', 10000))),
     },
+    establishmentRoll: {
+      ui_url: get('ESTABLISHMENT_ROLL_URL', 'http://localhost:8082', requiredInProduction),
+    },
   },
   serviceUrls: {
     digitalPrisons: get('DIGITAL_PRISONS_URL', 'http://localhost:3001', requiredInProduction),

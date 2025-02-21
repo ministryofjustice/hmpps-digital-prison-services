@@ -71,6 +71,7 @@ generic-service:
     ACCREDITED_PROGRAMMES_URL: https://accredited-programmes-preprod.hmpps.service.justice.gov.uk
     PRISONER_PROFILE_URL: https://prisoner-preprod.digital.prison.service.justice.gov.uk
     CHANGE_SOMEONES_CELL_URL: https://change-someones-cell-preprod.prison.service.justice.gov.uk
+    ESTABLISHMENT_ROLL_URL: https://prison-roll-count-preprod.hmpps.service.justice.gov.uk
 
     # Feature flags
     USE_OF_FORCE_PRISONS: "ACI,AGI,ASI,AYI,BAI,BCI,BFI,BHI,BLI,BMI,BNI,BRI,BSI,BWI,BXI,BZI,CDI,CFI,CKI,CLI,CWI,DAI,DGI,DHI,DMI,DNI,DTI,DWI,EEI,EHI,ESI,EWI,EXI,EYI,FBI,FDI,FEI,FHI,FKI,FMI,FNI,FSI,FWI,GHI,GMI,GNI,GTI,HBI,HCI,HDI,HEI,HHI,HII,HLI,HMI,HOI,HPI,HVI,ISI,IWI,KMI,KVI,LCI,LEI,LFI,LGI,LHI,LII,LLI,LNI,LPI,LTI,LWI,LYI,MDI,MHI,MRI,MSI,MTI,NHI,NLI,NMI,NSI,NWI,ONI,OWI,PBI,PDI,PFI,PNI,PRI,PVI,RCI,RHI,RNI,RSI,SDI,SFI,SHI,SKI,SLI,SNI,SPI,STI,SUI,SWI,TCI,TSI,UKI,UPI,VEI,WCI,WDI,WEI,WHI,WII,WLI,WMI,WRI,WSI,WTI,WWI"

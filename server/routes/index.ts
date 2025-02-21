@@ -4,7 +4,6 @@ import type { Services } from '../services'
 import HomepageController from '../controllers/homepageController'
 import whatsNewRouter from './whatsNewRouter'
 import managedPageRouter from './managedPageRouter'
-import establishmentRollRouter from './establishmentRollRouter'
 import apiRouter from './apiRouter'
 import dietaryRequirementsRouter from './dietaryRequirementsRouter'
 
@@ -30,7 +29,6 @@ export default function routes(services: Services): Router {
   get('/', homepageController.displayHomepage())
   post('/search', homepageController.search())
   router.use(managedPageRouter(services))
-  router.use('/establishment-roll', establishmentRollRouter(services))
   router.use('/whats-new', whatsNewRouter(services))
   router.use('/api', apiRouter())
   router.use('/dietary-requirements', dietaryRequirementsRouter(services))
