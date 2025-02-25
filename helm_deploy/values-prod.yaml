@@ -20,7 +20,8 @@ generic-service:
   env:
     INGRESS_URL: https://dps.prison.service.justice.gov.uk
 
-    CONTENTFUL_HOST: https://graphql.contentful.com
+    CONTENTFUL_HOST: https://graphql.eu.contentful.com
+    CONTENTFUL_ENVIRONMENT: master
     HMPPS_AUTH_URL: https://sign-in.hmpps.service.justice.gov.uk/auth
     HMPPS_COOKIE_DOMAIN: digital.prison.service.justice.gov.uk
     HMPPS_COOKIE_NAME: hmpps-session-preprod
