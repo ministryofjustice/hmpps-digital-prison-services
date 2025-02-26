@@ -11,10 +11,8 @@ import config, { ApiConfig } from '../config'
 import RestClient, { RestClientBuilder as CreateRestClientBuilder } from './restClient'
 import PrisonApiRestClient from './prisonApiClient'
 import { PrisonApiClient } from './interfaces/prisonApiClient'
-import PrisonerSearchRestClient from './prisonerSearchClient'
 import RedisTokenStore from './tokenStore/redisTokenStore'
 import InMemoryTokenStore from './tokenStore/inMemoryTokenStore'
-import LocationsInsidePrisonApiRestClient from './locationsInsidePrisonApiClient'
 import { HealthAndMedicationApiClient } from './interfaces/healthAndMedicationApiClient'
 import HealthAndMedicationRestApiClient from './healthAndMedicationRestApiClient'
 
@@ -38,16 +36,6 @@ export const dataAccess = {
   prisonApiClientBuilder: restClientBuilder<PrisonApiClient>('Prison API', config.apis.prisonApi, PrisonApiRestClient),
   systemToken: systemTokenBuilder(
     config.redis.enabled ? new RedisTokenStore(createRedisClient()) : new InMemoryTokenStore(),
-  ),
-  prisonerSearchApiClientBuilder: restClientBuilder<PrisonerSearchRestClient>(
-    'Prisoner Search API',
-    config.apis.prisonerSearchApi,
-    PrisonerSearchRestClient,
-  ),
-  locationsInsidePrisonApiClientBuilder: restClientBuilder<LocationsInsidePrisonApiRestClient>(
-    'Locations Inside Prison API',
-    config.apis.locationsInsidePrisonApi,
-    LocationsInsidePrisonApiRestClient,
   ),
   healthAndMedicationApiClientBuilder: restClientBuilder<HealthAndMedicationApiClient>(
     'Health and Medication API',
