@@ -4,9 +4,8 @@ import type { Services } from '../services'
 import HomepageController from '../controllers/homepageController'
 import whatsNewRouter from './whatsNewRouter'
 import managedPageRouter from './managedPageRouter'
-import establishmentRollRouter from './establishmentRollRouter'
-import apiRouter from './apiRouter'
 import dietaryRequirementsRouter from './dietaryRequirementsRouter'
+import config from '../config'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -30,10 +29,14 @@ export default function routes(services: Services): Router {
   get('/', homepageController.displayHomepage())
   post('/search', homepageController.search())
   router.use(managedPageRouter(services))
-  router.use('/establishment-roll', establishmentRollRouter(services))
   router.use('/whats-new', whatsNewRouter(services))
-  router.use('/api', apiRouter())
   router.use('/dietary-requirements', dietaryRequirementsRouter(services))
+  router.get(
+    '/establishment-roll*',
+    asyncMiddleware(async (req, res) => {
+      res.render('pages/establishmentRollHasMoved', { establishmentRollUrl: config.apis.establishmentRoll.ui_url })
+    }),
+  )
 
   return router
 }

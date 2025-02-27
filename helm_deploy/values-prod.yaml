@@ -75,6 +75,7 @@ generic-service:
     ACCREDITED_PROGRAMMES_URL: https://accredited-programmes.hmpps.service.justice.gov.uk
     PRISONER_PROFILE_URL: https://prisoner.digital.prison.service.justice.gov.uk
     CHANGE_SOMEONES_CELL_URL: https://change-someones-cell.prison.service.justice.gov.uk
+    ESTABLISHMENT_ROLL_URL: https://prison-roll-count.hmpps.service.justice.gov.uk
 
     # Feature flags
     ACTIVITIES_ENABLED_PRISONS: "RSI,LPI"

@@ -51,7 +51,7 @@ describe('Homepage Controller', () => {
       redirect: jest.fn(),
     }
 
-    establishmentRollService = new EstablishmentRollService(null, null)
+    establishmentRollService = new EstablishmentRollService(null)
     serviceData = new ServiceData()
     establishmentRollService.getEstablishmentRollSummary = jest.fn(async () => prisonEstablishmentRollSummaryMock)
 

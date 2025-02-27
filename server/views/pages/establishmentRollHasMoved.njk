@@ -1,0 +1,18 @@
+{% extends "../partials/layout.njk" %}
+{% set mainClasses = "govuk-main-wrapper--auto-spacing" %}
+
+{% set pageTitle =  "Establishment roll has moved" %}
+
+{% block content %}
+    <div class="govuk-grid-row" data-qa="page-not-found">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-l">Establishment roll has moved</h1>
+            <p class="govuk-body">
+                Establishment roll has moved to a <a class="govuk-link" href="{{ establishmentRollUrl }}">new URL</a>.
+            </p>
+            <p class="govuk-body">
+                You should update any bookmarks to the new address.
+            </p>
+        </div>
+    </div>
+{% endblock %}

@@ -4,30 +4,14 @@ import UserService from './userService'
 import config from '../config'
 import ContentfulService from './contentfulService'
 import EstablishmentRollService from './establishmentRollService'
-import MovementsService from './movementsService'
-import LocationService from './locationsService'
 import ServiceData from '../controllers/ServiceData'
 import DietReportingService from './dietReportingService'
 
 export const services = () => {
-  const {
-    prisonApiClientBuilder,
-    prisonerSearchApiClientBuilder,
-    locationsInsidePrisonApiClientBuilder,
-    applicationInfo,
-  } = dataAccess
+  const { prisonApiClientBuilder, applicationInfo } = dataAccess
 
   const userService = new UserService(prisonApiClientBuilder)
-  const establishmentRollService = new EstablishmentRollService(
-    prisonApiClientBuilder,
-    locationsInsidePrisonApiClientBuilder,
-  )
-  const movementsService = new MovementsService(
-    prisonApiClientBuilder,
-    prisonerSearchApiClientBuilder,
-    locationsInsidePrisonApiClientBuilder,
-  )
-  const locationsService = new LocationService(prisonApiClientBuilder, locationsInsidePrisonApiClientBuilder)
+  const establishmentRollService = new EstablishmentRollService(prisonApiClientBuilder)
 
   const serviceData = new ServiceData()
 
@@ -55,8 +39,6 @@ export const services = () => {
     userService,
     contentfulService,
     establishmentRollService,
-    movementsService,
-    locationsService,
     serviceData,
     dietReportingService,
   }

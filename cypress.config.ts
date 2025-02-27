@@ -5,9 +5,7 @@ import tokenVerification from './integration_tests/mockApis/tokenVerification'
 import prison from './integration_tests/mockApis/prison'
 import contentful from './integration_tests/mockApis/contentful'
 import dps from './integration_tests/mockApis/dps'
-import prisonerSearch from './integration_tests/mockApis/prisonerSearch'
 import feComponents from './integration_tests/mockApis/feComponents'
-import locations from './integration_tests/mockApis/locations'
 import healthAndMedication from './integration_tests/mockApis/healthAndMedication'
 
 export default defineConfig({
@@ -29,10 +27,8 @@ export default defineConfig({
         ...auth,
         ...tokenVerification,
         ...prison,
-        ...locations,
         ...contentful,
         ...dps,
-        ...prisonerSearch,
         ...feComponents,
         ...healthAndMedication,
       })
