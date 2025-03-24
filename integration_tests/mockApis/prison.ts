@@ -1,3 +1,5 @@
+import { format } from 'date-fns/format'
+import { subDays } from 'date-fns'
 import { stubFor } from './wiremock'
 import { CaseLoad } from '../../server/data/interfaces/caseLoad'
 import { Location } from '../../server/data/interfaces/location'
@@ -67,6 +69,31 @@ export default {
           'Content-Type': 'application/json;charset=UTF-8',
         },
         jsonBody: {},
+      },
+    })
+  },
+
+  stubLatestArrivalDates: () => {
+    return stubFor({
+      request: {
+        method: 'POST',
+        urlPattern: `/prison/api/movements/offenders/latest-arrival-date`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: [
+          {
+            offenderNo: 'G4879UP',
+            latestArrivalDate: format(subDays(Date.now(), 3), 'yyyy-MM-dd'),
+          },
+          {
+            offenderNo: 'G6333VK',
+            latestArrivalDate: format(subDays(Date.now(), 2), 'yyyy-MM-dd'),
+          },
+        ],
       },
     })
   },

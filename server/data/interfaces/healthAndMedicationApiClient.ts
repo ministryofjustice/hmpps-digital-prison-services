@@ -81,6 +81,8 @@ export interface HealthAndMedicationForPrison {
   health: HealthAndMedication
 }
 
+export type HealthAndMedicationData = HealthAndMedicationForPrison & { arrivalDate: Date }
+
 export interface HealthAndMedicationApiClient {
   getHealthAndMedicationForPrison(
     prisonId: string,

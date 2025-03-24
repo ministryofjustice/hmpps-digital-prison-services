@@ -55,6 +55,7 @@ COMPONENT_API_URL=https://frontend-components-dev.hmpps.service.justice.gov.uk
 CREATE_AND_VARY_A_LICENCE_URL=https://create-and-vary-a-licence-dev.hmpps.service.justice.gov.uk
 DIGITAL_PRISONS_URL=https://digital-dev.prison.service.justice.gov.uk
 GET_SOMEONE_READY_FOR_WORK_URL=https://get-ready-for-work-dev.hmpps.service.justice.gov.uk
+HEALTH_AND_MEDICATION_API_URL=https://health-and-medication-api-dev.hmpps.service.justice.gov.uk
 HISTORICAL_PRISONER_APPLICATION_URL=https://historical-prisoner-dev.prison.service.justice.gov.uk
 HMPPS_AUTH_URL=https://sign-in-dev.hmpps.service.justice.gov.uk/auth
 HMPPS_COOKIE_DOMAIN=digital-dev.prison.service.justice.gov.uk

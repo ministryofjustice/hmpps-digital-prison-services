@@ -1,4 +1,4 @@
-import { format, formatISO, isValid, parse } from 'date-fns'
+import { endOfToday, format, formatISO, isValid, isWithinInterval, parse, startOfToday, subDays } from 'date-fns'
 import logger from '../../logger'
 
 /**
@@ -135,4 +135,14 @@ export const toUnixTimeStamp = (isoDate: string, time: string): number => {
 
 export const timeFromDate = (isoString: string): string => {
   return formatTime(isoString.split('T')[1].split('.')[0])
+}
+
+export const isWithinLast3Days = (value?: Date): boolean => {
+  if (!value) {
+    return false
+  }
+  return isWithinInterval(value, {
+    start: subDays(startOfToday(), 2),
+    end: endOfToday(),
+  })
 }

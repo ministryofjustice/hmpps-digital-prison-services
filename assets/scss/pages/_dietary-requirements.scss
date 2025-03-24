@@ -27,3 +27,21 @@
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
+
+.arrived-in-last-3-days-badge {
+  display: block;
+  width: fit-content;
+  background-color: #c3ded3;
+  color: #00502c;
+  padding: 5px;
+  margin-top: 10px;
+
+  &__print {
+    display: block;
+    width: fit-content;
+    background-color: #e1e2e3;
+    color: $govuk-text-colour;
+    padding: 5px;
+    margin-top: 10px;
+  }
+}

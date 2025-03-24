@@ -43,10 +43,20 @@
   {% endif %}
 {% endmacro %}
 
+{% macro nameAndIdHtml(row) %}
+  <a href="{{ config.serviceUrls.prisonerProfile }}/prisoner/{{ row.prisonerNumber }}" class="govuk-link govuk-link--no-visited-state">{{ row.name }}</a>
+  <br />
+  {{ row.prisonerNumber }}
+  {% if row.arrivalDate | isWithinLast3Days %}
+    <br />
+    <span class="arrived-in-last-3-days-badge">Arrived in the last 3 days</span>
+  {% endif %}
+{% endmacro %}
+
 {% set rows = [] %}
 {% for row in content %}
   {% set rows = (rows.push([
-    { html: row.name + "<br />" + row.prisonerNumber, classes: "hmpps-dietary-requirements__name" },
+    { html: nameAndIdHtml(row), classes: "hmpps-dietary-requirements__name" },
     { text: row.location, classes: "hmpps-dietary-requirements__location" },
     { html: dietAndFoodAllergiesHtml(row.dietaryRequirements), classes: "hmpps-dietary-requirements__requirements" }
   ]), rows) %}

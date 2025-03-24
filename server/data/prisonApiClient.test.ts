@@ -83,4 +83,15 @@ describe('prisonApiClient', () => {
       expect(output).toEqual({ body: 'RESPONSE' })
     })
   })
+
+  describe('getLatestArrivalDates', () => {
+    it('Should return data from the API', async () => {
+      fakePrisonApi
+        .post('/api/movements/offenders/latest-arrival-date')
+        .matchHeader('authorization', `Bearer ${token.access_token}`)
+        .reply(200, { body: 'RESPONSE' })
+      const output = await prisonApiClient.getLatestArrivalDates(['A1234AA', 'A2345BB'])
+      expect(output).toEqual({ body: 'RESPONSE' })
+    })
+  })
 })
