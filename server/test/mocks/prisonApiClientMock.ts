@@ -5,6 +5,7 @@ const prisonApiClientMock: PrisonApiClient = {
   getUserLocations: jest.fn(),
   setActiveCaseload: jest.fn(),
   getPrisonRollCountSummary: jest.fn(),
+  getLatestArrivalDates: jest.fn(),
 }
 
 export default prisonApiClientMock

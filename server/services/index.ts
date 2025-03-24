@@ -31,7 +31,10 @@ export const services = () => {
 
   const contentfulService = new ContentfulService(apolloClient)
 
-  const dietReportingService = new DietReportingService(dataAccess.healthAndMedicationApiClientBuilder)
+  const dietReportingService = new DietReportingService(
+    dataAccess.healthAndMedicationApiClientBuilder,
+    dataAccess.prisonApiClientBuilder,
+  )
 
   return {
     dataAccess,

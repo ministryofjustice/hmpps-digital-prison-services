@@ -1,4 +1,13 @@
-import { formatDate, formatDateISO, formatDateTime, formatDateTimeISO, isRealDate, parseDate } from './dateHelpers'
+import { endOfToday, startOfToday, subDays } from 'date-fns'
+import {
+  formatDate,
+  formatDateISO,
+  formatDateTime,
+  formatDateTimeISO,
+  isRealDate,
+  isWithinLast3Days,
+  parseDate,
+} from './dateHelpers'
 
 describe('formatDateISO', () => {
   it('should return an ISO-8601 date string given a valid date', () => {
@@ -112,5 +121,17 @@ describe('format datetime', () => {
     ],
   ])('%s: formatDateTime(%s, %s)', (_: string, a: string, b: any, expected: string) => {
     expect(formatDateTime(a, b)).toEqual(expected)
+  })
+})
+
+describe('isWithinLast3Days', () => {
+  it.each([
+    [Date.now(), true],
+    [startOfToday(), true],
+    [subDays(startOfToday(), 1), true],
+    [subDays(startOfToday(), 2), true],
+    [subDays(endOfToday(), 3), false],
+  ])('isWithinLast3Days(%s) - %s', (date: Date, expected: boolean) => {
+    expect(isWithinLast3Days(date)).toBe(expected)
   })
 })

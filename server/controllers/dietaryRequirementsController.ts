@@ -90,6 +90,7 @@ export default class DietaryRequirementsController {
           return {
             name: formatName(prisoner.firstName, '', prisoner.lastName, { style: 'lastCommaFirst' }),
             prisonerNumber: prisoner.prisonerNumber,
+            arrivalDate: prisoner.arrivalDate,
             location: prisoner.location,
             dietaryRequirements: {
               medical: getEntries(prisoner?.health?.dietAndAllergy?.medicalDietaryRequirements?.value),
@@ -143,6 +144,7 @@ export default class DietaryRequirementsController {
           return {
             name: formatName(prisoner.firstName, '', prisoner.lastName, { style: 'lastCommaFirst' }),
             prisonerNumber: prisoner.prisonerNumber,
+            arrivalDate: prisoner.arrivalDate,
             location: prisoner.location,
             dietaryRequirements: {
               medical: getEntries(prisoner?.health?.dietAndAllergy?.medicalDietaryRequirements?.value),

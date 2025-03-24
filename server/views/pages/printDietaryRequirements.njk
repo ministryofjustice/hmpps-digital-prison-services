@@ -41,10 +41,20 @@
   {% endif %}
 {% endmacro %}
 
+{% macro rowNameHtml(row) %}
+  {{ row.name }}
+  <br />
+  {{ row.prisonerNumber }}
+  {% if row.arrivalDate | isWithinLast3Days %}
+    <br />
+    <span class="arrived-in-last-3-days-badge__print">Arrived in the last 3 days</span>
+  {% endif %}
+{% endmacro %}
+
 {% set rows = [] %}
 {% for row in content %}
   {% set rows = (rows.push([
-    { html: row.name + "<br />" + row.prisonerNumber, classes: "hmpps-dietary-requirements__name" },
+    { html: rowNameHtml(row), classes: "hmpps-dietary-requirements__name" },
     { text: row.location, classes: "hmpps-dietary-requirements__location" },
     { html: dietaryRequirementsHtml(row.dietaryRequirements), classes: "hmpps-dietary-requirements__requirements" }
   ]), rows) %}

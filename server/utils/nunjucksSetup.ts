@@ -13,7 +13,7 @@ import {
   userHasRoles,
 } from './utils'
 import { ApplicationInfo } from '../applicationInfo'
-import { formatDate, formatDateTime, formatTime, timeFromDate, toUnixTimeStamp } from './dateHelpers'
+import { formatDate, formatDateTime, formatTime, isWithinLast3Days, timeFromDate, toUnixTimeStamp } from './dateHelpers'
 import config from '../config'
 import { pluralise } from './pluralise'
 
@@ -73,5 +73,6 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   njkEnv.addFilter('formatName', formatName)
   njkEnv.addFilter('toUnixTimeStamp', toUnixTimeStamp)
   njkEnv.addFilter('timeFromDate', timeFromDate)
+  njkEnv.addFilter('isWithinLast3Days', isWithinLast3Days)
   njkEnv.addFilter('pluralise', pluralise)
 }

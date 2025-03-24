@@ -4,6 +4,7 @@ import { CaseLoad } from './interfaces/caseLoad'
 import { Location } from './interfaces/location'
 import PrisonRollCount from './interfaces/prisonRollCount'
 import EstablishmentRollSummary from '../services/interfaces/establishmentRollService/EstablishmentRollSummary'
+import { LatestArrivalDateInfo } from './interfaces/latestArrivalDateInfo'
 
 export default class PrisonApiRestClient implements PrisonApiClient {
   constructor(private restClient: RestClient) {}
@@ -34,5 +35,12 @@ export default class PrisonApiRestClient implements PrisonApiClient {
 
   getPrisonRollCountSummary(prisonId: string): Promise<EstablishmentRollSummary> {
     return this.get<PrisonRollCount>({ path: `/api/prison/roll-count/${prisonId}/summary` })
+  }
+
+  getLatestArrivalDates(prisonerNumbers: string[]): Promise<LatestArrivalDateInfo[]> {
+    return this.post<LatestArrivalDateInfo[]>({
+      path: '/api/movements/offenders/latest-arrival-date',
+      data: prisonerNumbers,
+    })
   }
 }
