@@ -1,0 +1,51 @@
+{% extends "../../partials/layout.njk" %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% block content %}
+  <form method="POST">
+    {% call govukFieldset({
+  legend: {
+    text: "New notification",
+    classes: "govuk-fieldset__legend--l",
+    isPageHeading: true
+  }
+}) %}
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/> {{ govukInput({
+    label: {
+      text: "User ID to notify (fixed for now)"
+    },
+    id: "userId",
+    name: "userId",
+    value: userId,
+    attributes: { readonly: 'true' }
+  }) }}
+    {{ govukInput({
+    label: {
+      text: "Type (fixed)"
+    },
+    id: "type",
+    name: "type",
+    value: "PATHFINDER",
+    attributes: { readonly: 'true' }
+  }) }}
+    {{ govukInput({
+    label: {
+      text: "Content"
+    },
+    id: "content",
+    name: "content"
+  }) }}
+    {{ govukInput({
+    label: {
+      text: "URL"
+    },
+    id: "url",
+    name: "url"
+  }) }}
+    {% endcall %}
+    {{ govukButton({
+  text: "Save notification"
+}) }}
+  </form>
+{% endblock %}
