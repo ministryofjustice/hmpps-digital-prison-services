@@ -273,4 +273,5 @@ export default {
   analytics: {
     tagManagerContainerId: get('TAG_MANAGER_CONTAINER_ID', ''),
   },
+  feedbackSurveyUrl: 'https://www.smartsurvey.co.uk/s/43EWY0/',
 }
