@@ -13,6 +13,8 @@ export default class DietaryRequirementsPage extends Page {
         medical: () => cy.get('table tbody tr').eq(i).find('td').eq(2).find('[data-qa="medical-requirements"]'),
         foodAllergies: () => cy.get('table tbody tr').eq(i).find('td').eq(2).find('[data-qa="food-allergies"]'),
         personal: () => cy.get('table tbody tr').eq(i).find('td').eq(2).find('[data-qa="personal-requirements"]'),
+        cateringInstructions: () =>
+          cy.get('table tbody tr').eq(i).find('td').eq(2).find('[data-qa="catering-instructions"]'),
       }),
     }),
     sorting: () => ({

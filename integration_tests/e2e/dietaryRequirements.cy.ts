@@ -37,7 +37,23 @@ context('Currently Out Page', () => {
     page.dietaryRequirements().row(0).location().should('include.text', 'C-3-010')
     page.dietaryRequirements().row(0).dietaryRequirements().medical().should('include.text', 'Nutrient Deficiency')
     page.dietaryRequirements().row(0).dietaryRequirements().foodAllergies().should('include.text', 'Egg')
+    page.dietaryRequirements().row(0).dietaryRequirements().personal().should('include.text', 'Kosher')
+    page
+      .dietaryRequirements()
+      .row(0)
+      .dietaryRequirements()
+      .cateringInstructions()
+      .should('include.text', 'Serve food on a plate')
+
+    page.dietaryRequirements().row(1).dietaryRequirements().medical().should('not.exist')
+    page.dietaryRequirements().row(1).dietaryRequirements().foodAllergies().should('include.text', 'Sesame')
+    page.dietaryRequirements().row(1).dietaryRequirements().personal().should('not.exist')
+    page.dietaryRequirements().row(1).dietaryRequirements().cateringInstructions().should('not.exist')
+
+    page.dietaryRequirements().row(2).dietaryRequirements().medical().should('not.exist')
+    page.dietaryRequirements().row(2).dietaryRequirements().foodAllergies().should('not.exist')
     page.dietaryRequirements().row(2).dietaryRequirements().personal().should('include.text', 'Kosher')
+    page.dietaryRequirements().row(2).dietaryRequirements().cateringInstructions().should('not.exist')
   })
 
   it(`Displays the 'arrived within last 3 days' badge for new arrivals`, () => {
