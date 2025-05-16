@@ -39,6 +39,13 @@
       {% endfor %}
     </div>
   {% endif %}
+
+  {% if dietaryRequirements.cateringInstructions.length > 0 %}
+    <div class="govuk-!-margin-bottom-3">
+      <span class="govuk-!-font-weight-bold govuk-!-margin-bottom-0">Catering instructions</span><br />
+      <span class="govuk-!-display-block catering-instructions">{{ dietaryRequirements.cateringInstructions }}</span>
+    </div>
+  {% endif %}
 {% endmacro %}
 
 {% macro rowNameHtml(row) %}
@@ -77,11 +84,12 @@
             <span class="govuk-caption-l">{{ datetime }}</span>
             People with dietary requirements in {{ user.activeCaseLoad.description }}
         </h1>
-        <p class="govuk-body">This document may include sensitive information about prisoner dietary requirements.</p>
+        <span class="classification-banner">OFFICIAL-SENSITIVE</span>
+        <p class="govuk-body">This document includes sensitive information about prisoner dietary requirements.</p>
       </div>
       <div class="govuk-grid-column-one-quarter govuk-!-display-none-print">
         <div class="govuk-!-text-align-right">
-          <button class="govuk-button print-link">Print</a>  
+          <button class="govuk-button print-link">Print</button>
         </div>
       </div>
     </div>

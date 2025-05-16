@@ -45,3 +45,19 @@
     margin-top: 10px;
   }
 }
+
+.classification-banner {
+  @media screen {
+    display: block;
+    width: fit-content;
+    background-color: govuk-colour('red');
+    color: govuk-colour('white');
+    font-weight: bold;
+    padding: 0 10px 0 10px;
+    margin-bottom: 10px;
+  }
+
+  @media print {
+    display: none;
+  }
+}

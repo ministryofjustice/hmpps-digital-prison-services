@@ -64,6 +64,7 @@ export interface HealthAndMedication {
     foodAllergies: ValueWithMetadata<ReferenceDataCodeWithComment[]>
     medicalDietaryRequirements: ValueWithMetadata<ReferenceDataCodeWithComment[]>
     personalisedDietaryRequirements: ValueWithMetadata<ReferenceDataCodeWithComment[]>
+    cateringInstructions: ValueWithMetadata<string>
   }
 }
 

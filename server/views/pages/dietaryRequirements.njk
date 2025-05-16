@@ -13,7 +13,7 @@
 ] %}
 
 {% macro dietAndFoodAllergiesHtml(personalDetails) %}
-  {% if personalDetails.medical.length > 0 or personalDetails.foodAllergies.length > 0 or personalDetails.personal.length > 0 %}
+  {% if personalDetails.medical.length > 0 or personalDetails.foodAllergies.length > 0 or personalDetails.personal.length > 0 or personalDetails.cateringInstructions.length > 0 %}
     {% if personalDetails.medical.length > 0 %}
       <span class="govuk-!-font-weight-bold govuk-!-display-block">Medical diet</span>
       <div class="govuk-!-margin-bottom-2" data-qa="medical-requirements">
@@ -36,6 +36,12 @@
         {% for need in personalDetails.personal %}
           <span class="govuk-!-display-block dietary-requirements">{{ need }}</span>
         {% endfor %}
+      </div>
+    {% endif %}
+    {% if personalDetails.cateringInstructions.length > 0 %}
+      <span class="govuk-!-font-weight-bold govuk-!-display-block">Catering instructions</span>
+      <div class="govuk-!-margin-bottom-2" data-qa="catering-instructions">
+        <span class="govuk-!-display-block dietary-requirements">{{ personalDetails.cateringInstructions }}</span>
       </div>
     {% endif %}
   {% else %}

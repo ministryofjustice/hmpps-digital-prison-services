@@ -19,6 +19,7 @@ export default {
             },
             foodAllergies: { value: [{ value: { id: 'x', description: 'Egg' } }] },
             personalisedDietaryRequirements: { value: [{ value: { id: 'x', description: 'Kosher' } }] },
+            cateringInstructions: { value: 'Serve food on a plate' },
           },
         },
       },

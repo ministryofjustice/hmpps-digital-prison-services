@@ -3,7 +3,7 @@ import { format } from 'date-fns'
 import { DietaryRequirementsQueryParams, generateListMetadata, mapToQueryString } from '../utils/generateListMetadata'
 import { formatName, userHasRoles } from '../utils/utils'
 import { Role } from '../enums/role'
-import { ReferenceDataCodeWithComment } from '../data/interfaces/healthAndMedicationApiClient'
+import { HealthAndMedicationData, ReferenceDataCodeWithComment } from '../data/interfaces/healthAndMedicationApiClient'
 import DietReportingService from '../services/dietReportingService'
 
 export default class DietaryRequirementsController {
@@ -72,33 +72,8 @@ export default class DietaryRequirementsController {
 
       const listMetadata = generateListMetadata(resp, queryParams, 'result', [], '', true)
 
-      const getEntries = (content?: ReferenceDataCodeWithComment[]) => {
-        if (!content) return []
-        const entries = content
-          .filter(i => !i.value.id.endsWith('_OTHER'))
-          .map(i => i.value.description)
-          .sort()
-        const other = content
-          .filter(i => i.value.id.endsWith('_OTHER'))
-          .map(i => `Other: ${i.comment}`)
-          .sort()
-        return [...entries, ...other]
-      }
-
       return res.render('pages/dietaryRequirements', {
-        content: resp.content.map(prisoner => {
-          return {
-            name: formatName(prisoner.firstName, '', prisoner.lastName, { style: 'lastCommaFirst' }),
-            prisonerNumber: prisoner.prisonerNumber,
-            arrivalDate: prisoner.arrivalDate,
-            location: prisoner.location,
-            dietaryRequirements: {
-              medical: getEntries(prisoner?.health?.dietAndAllergy?.medicalDietaryRequirements?.value),
-              foodAllergies: getEntries(prisoner?.health?.dietAndAllergy?.foodAllergies?.value),
-              personal: getEntries(prisoner?.health?.dietAndAllergy?.personalisedDietaryRequirements?.value),
-            },
-          }
-        }),
+        content: resp.content.map(this.buildContent),
         listMetadata,
         sorting,
         printQuery: mapToQueryString({
@@ -125,40 +100,43 @@ export default class DietaryRequirementsController {
 
       const resp = await this.dietReportingService.getDietaryRequirementsForPrison(clientToken, prisonId, queryParams)
 
-      const getEntries = (content?: ReferenceDataCodeWithComment[]) => {
-        if (!content) return []
-        const entries = content
-          .filter(i => !i.value.id.endsWith('_OTHER'))
-          .map(i => i.value.description)
-          .sort()
-        const other = content
-          .filter(i => i.value.id.endsWith('_OTHER'))
-          .map(i => `Other: ${i.comment}`)
-          .sort()
-        return [...entries, ...other]
-      }
-
       return res.render('pages/printDietaryRequirements', {
         datetime: format(new Date(), `cccc d MMMM yyyy 'at' HH:mm`),
-        content: resp.content.map(prisoner => {
-          return {
-            name: formatName(prisoner.firstName, '', prisoner.lastName, { style: 'lastCommaFirst' }),
-            prisonerNumber: prisoner.prisonerNumber,
-            arrivalDate: prisoner.arrivalDate,
-            location: prisoner.location,
-            dietaryRequirements: {
-              medical: getEntries(prisoner?.health?.dietAndAllergy?.medicalDietaryRequirements?.value),
-              foodAllergies: getEntries(prisoner?.health?.dietAndAllergy?.foodAllergies?.value),
-              personal: getEntries(prisoner?.health?.dietAndAllergy?.personalisedDietaryRequirements?.value),
-            },
-          }
-        }),
+        content: resp.content.map(this.buildContent),
         backQuery: mapToQueryString({
           nameAndNumber: req.query.nameAndNumber as string,
           location: req.query.location as string,
           showAll: req.query.showAll as string,
         }),
       })
+    }
+  }
+
+  getEntries = (content?: ReferenceDataCodeWithComment[]) => {
+    if (!content) return []
+    const entries = content
+      .filter(i => !i.value.id.endsWith('_OTHER'))
+      .map(i => i.value.description)
+      .sort()
+    const other = content
+      .filter(i => i.value.id.endsWith('_OTHER'))
+      .map(i => `Other: ${i.comment}`)
+      .sort()
+    return [...entries, ...other]
+  }
+
+  buildContent = (prisoner: HealthAndMedicationData) => {
+    return {
+      name: formatName(prisoner.firstName, '', prisoner.lastName, { style: 'lastCommaFirst' }),
+      prisonerNumber: prisoner.prisonerNumber,
+      arrivalDate: prisoner.arrivalDate,
+      location: prisoner.location,
+      dietaryRequirements: {
+        medical: this.getEntries(prisoner?.health?.dietAndAllergy?.medicalDietaryRequirements?.value),
+        foodAllergies: this.getEntries(prisoner?.health?.dietAndAllergy?.foodAllergies?.value),
+        personal: this.getEntries(prisoner?.health?.dietAndAllergy?.personalisedDietaryRequirements?.value),
+        cateringInstructions: prisoner?.health?.dietAndAllergy?.cateringInstructions?.value,
+      },
     }
   }
 }
