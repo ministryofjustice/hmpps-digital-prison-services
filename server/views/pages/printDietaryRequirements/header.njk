@@ -2,9 +2,9 @@
 <head>
     <style>
         #header {
-            margin-left: 40px;
-            margin-right: 40px;
-            margin-top: 28px;
+            margin-left: 50px;
+            margin-right: 50px;
+            margin-top: 35px;
             padding: 0;
             -webkit-print-color-adjust: exact;
             font-family: arial sans-serif;
@@ -23,7 +23,7 @@
             font-weight: bold;
             padding: 0 5px 0 5px;
             margin-bottom: 10px;
-            font-size: 10pt;
+            font-size: 11px;
         }
 
         #header .container {
@@ -41,20 +41,15 @@
             width: 100%;
         }
 
-        #hmpps-logo {
-            height: 80px;
-            width: auto;
+        #header .establishment-info {
+            font-size: 11px;
+            padding-top: 2px;
         }
-        /*#header .content-container {*/
-        /*    display: grid;*/
-        /*    grid-template-rows: 10px 10px;*/
-        /*    justify-items: end;*/
-        /*    align-items: start;*/
-        /*    align-content: start;*/
-        /*    width: 100%;*/
-        /*    background-color: cornflowerblue;*/
-        /*    gap: 0;*/
-        /*}*/
+
+        #hmpps-logo {
+            width: 150px;
+            height: auto;
+        }
     </style>
 </head>
 <body id="header">
@@ -264,7 +259,7 @@
     </div>
     <div class="content-container">
         <p><span class="classification-banner">OFFICIAL-SENSITIVE</span></p>
-        <p>People with dietary requirements in {{ user.activeCaseLoad.description }}</p>
+        <p class="establishment-info">People with dietary requirements in {{ user.activeCaseLoad.description }}</p>
     </div>
 </div>
 </body>
