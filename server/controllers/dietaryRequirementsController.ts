@@ -5,9 +5,13 @@ import { formatName, userHasRoles } from '../utils/utils'
 import { Role } from '../enums/role'
 import { HealthAndMedicationData, ReferenceDataCodeWithComment } from '../data/interfaces/healthAndMedicationApiClient'
 import DietReportingService from '../services/dietReportingService'
+import PdfRenderingService from '../services/pdfRenderingService'
 
 export default class DietaryRequirementsController {
-  constructor(private readonly dietReportingService: DietReportingService) {}
+  constructor(
+    private readonly dietReportingService: DietReportingService,
+    private readonly pdfReportingService: PdfRenderingService,
+  ) {}
 
   public get(): RequestHandler {
     return async (req: Request, res: Response) => {
@@ -100,15 +104,33 @@ export default class DietaryRequirementsController {
 
       const resp = await this.dietReportingService.getDietaryRequirementsForPrison(clientToken, prisonId, queryParams)
 
-      return res.render('pages/printDietaryRequirements', {
-        datetime: format(new Date(), `cccc d MMMM yyyy 'at' HH:mm`),
+      return this.pdfReportingService.renderDietReport(clientToken, res, {
         content: resp.content.map(this.buildContent),
-        backQuery: mapToQueryString({
+        datetime: format(new Date(), `cccc d MMMM yyyy 'at' HH:mm`),
+        printQuery: mapToQueryString({
           nameAndNumber: req.query.nameAndNumber as string,
           location: req.query.location as string,
           showAll: req.query.showAll as string,
         }),
       })
+      // return res.render('pages/printDietaryRequirements/header', {
+      //   datetime: format(new Date(), `cccc d MMMM yyyy 'at' HH:mm`),
+      //   content: resp.content.map(this.buildContent),
+      //   backQuery: mapToQueryString({
+      //     nameAndNumber: req.query.nameAndNumber as string,
+      //     location: req.query.location as string,
+      //     showAll: req.query.showAll as string,
+      //   }),
+      // })
+      // return res.render('pages/printDietaryRequirements', {
+      //   datetime: format(new Date(), `cccc d MMMM yyyy 'at' HH:mm`),
+      //   content: resp.content.map(this.buildContent),
+      //   backQuery: mapToQueryString({
+      //     nameAndNumber: req.query.nameAndNumber as string,
+      //     location: req.query.location as string,
+      //     showAll: req.query.showAll as string,
+      //   }),
+      // })
     }
   }
 

@@ -1,13 +1,3 @@
-@page {
-  margin: 0;
-}
-
-@media screen {
-  .print-only {
-    display: none;
-  }
-}
-
 @include govuk-media-query($media-type: print) {
   // govuk-frontend overrides
   .govuk-heading-l {
@@ -33,7 +23,7 @@
   .govuk-table {
     font-size: 10pt;
 
-    // Remove styling from MOJ sortable table colum headers
+    // Remove styling from MOJ sortable table column headers
     [aria-sort] button {
       color: inherit;
 

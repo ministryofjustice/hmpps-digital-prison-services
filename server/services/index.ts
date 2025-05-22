@@ -6,6 +6,7 @@ import ContentfulService from './contentfulService'
 import EstablishmentRollService from './establishmentRollService'
 import ServiceData from '../controllers/ServiceData'
 import DietReportingService from './dietReportingService'
+import PdfRenderingService from './pdfRenderingService'
 
 export const services = () => {
   const { prisonApiClientBuilder, applicationInfo } = dataAccess
@@ -36,6 +37,8 @@ export const services = () => {
     dataAccess.prisonApiClientBuilder,
   )
 
+  const pdfRenderingService = new PdfRenderingService(dataAccess.gotenbergApiClientBuilder)
+
   return {
     dataAccess,
     applicationInfo,
@@ -44,6 +47,7 @@ export const services = () => {
     establishmentRollService,
     serviceData,
     dietReportingService,
+    pdfRenderingService,
   }
 }
 

@@ -1,0 +1,58 @@
+<html>
+<head>
+    <style>
+        #footer {
+            margin-left: 40px;
+            margin-right: 40px;
+            margin-bottom: 40px;
+            -webkit-print-color-adjust: exact;
+            font-family: arial sans-serif;
+        }
+
+        #footer p {
+            font-size: 10pt;
+        }
+
+        #footer .classification-banner {
+            display: block;
+            width: fit-content;
+            background-color: #505a5f;
+            color: white;
+            font-weight: bold;
+            padding: 0 5px 0 5px;
+            margin-bottom: 10px;
+            font-size: 10pt;
+        }
+
+        #footer .container {
+            display: grid;
+            grid-template-rows: 10px 10px;
+            width: 100%;
+        }
+
+        #footer .content-container {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            justify-items: start;
+            align-items: start;
+            align-content: start;
+            width: 100%;
+        }
+
+        #footer .page-number {
+            justify-self: end;
+        }
+    </style>
+</head>
+<body id="footer">
+<div class="container">
+    <div class="classification-container">
+        <span class="classification-banner">OFFICIAL-SENSITIVE</span>
+    </div>
+    <div class="content-container">
+        <p>{{ datetime }}</p>
+        <p class="page-number"><span class="pageNumber"></span> of <span class="totalPages"></span></p>
+    </div>
+</div>
+</body>
+</html>

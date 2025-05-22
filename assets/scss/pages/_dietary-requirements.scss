@@ -46,18 +46,40 @@
   }
 }
 
-.classification-banner {
-  @media screen {
-    display: block;
-    width: fit-content;
-    background-color: govuk-colour('red');
-    color: govuk-colour('white');
-    font-weight: bold;
-    padding: 0 10px 0 10px;
-    margin-bottom: 10px;
+.dietary-requirements-print-table {
+  th {
+    padding-left: 5px;
+    background-color: govuk-colour('light-grey');
   }
 
-  @media print {
-    display: none;
+  td {
+    padding-left: 5px;
   }
+}
+
+.classification-banner {
+  display: block;
+  width: fit-content;
+  background-color: govuk-colour('red');
+  color: govuk-colour('white');
+  font-weight: bold;
+  padding: 0 10px 0 10px;
+  margin-bottom: 10px;
+}
+
+.print-header-timestamp {
+  font-size: 11pt;
+}
+
+.sensitive-info-disclaimer {
+  font-size: 12pt;
+}
+
+.print-report-heading {
+  margin-bottom: 10px;
+}
+
+#print-report-content {
+  margin-left: -7px;
+  margin-right: -7px;
 }
