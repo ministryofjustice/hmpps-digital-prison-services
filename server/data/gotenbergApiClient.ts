@@ -1,64 +1,51 @@
-import { GotenbergApiClient, PdfOptions } from './interfaces/gotenbergApiClient'
-import RestClient from './restClient'
+import superagent from 'superagent'
+import Agent, { HttpsAgent } from 'agentkeepalive'
+import { GotenbergApiClient, PdfRenderRequest } from './interfaces/gotenbergApiClient'
+import { ApiConfig } from '../config'
 
-// If the CSS contains any usage of @page Gotenberg will use that over the margin sizes sent in the request
+const defaultPage = {
+  paperWidth: '8.27',
+  paperHeight: '11.7',
+  marginTop: '140px',
+  marginBottom: '140px',
+  marginLeft: '50px',
+  marginRight: '50px',
+}
+
+// If the CSS contains any usage of @page, Gotenberg will use that over the margin sizes sent in the request
 // Setting preferCssPageSize doesn't have any effect
 // This seems to be a known bug: https://github.com/gotenberg/gotenberg/issues/651
 export default class GotenbergRestApiClient implements GotenbergApiClient {
-  constructor(private restClient: RestClient) {}
+  agent: Agent
 
-  async renderPdfFromHtml(html: string, options: PdfOptions = {}): Promise<Buffer> {
-    const { headerHtml, footerHtml, css, marginBottom, marginLeft, marginRight, marginTop, paperWidth, paperHeight } =
-      options
-
-    const files = this.buildFileAttachments(html, headerHtml, footerHtml, css)
-    return this.restClient.postMultipart({
-      path: '/forms/chromium/convert/html',
-      data: {
-        paperWidth: paperWidth ?? '8.27',
-        paperHeight: paperHeight ?? '11.7',
-        marginTop: marginTop ?? '140px',
-        marginBottom: marginBottom ?? '140px',
-        marginLeft: marginLeft ?? '50px',
-        marginRight: marginRight ?? '50px',
-        // waitDelay: '5s',
-      },
-      files,
-      responseType: 'blob',
-    })
+  constructor(private config: ApiConfig) {
+    this.agent = config.url.startsWith('https') ? new HttpsAgent(config.agent) : new Agent(config.agent)
   }
 
-  private buildFileAttachments(
-    html: string,
-    headerHtml: string,
-    footerHtml: string,
-    css: string,
-  ): Record<string, { buffer: Buffer; originalName: string }> {
-    const files: Record<string, { buffer: Buffer; originalName: string }> = {
-      content: {
-        buffer: Buffer.from(html),
-        originalName: 'index.html',
-      },
-    }
-    if (headerHtml) {
-      files.header = {
-        buffer: Buffer.from(headerHtml),
-        originalName: 'header.html',
-      }
-    }
-    if (footerHtml) {
-      files.footer = {
-        buffer: Buffer.from(footerHtml),
-        originalName: 'footer.html',
-      }
-    }
-    if (css) {
-      files.css = {
-        buffer: Buffer.from(css),
-        originalName: 'index.css',
-      }
-    }
+  async renderPdfFromHtml(renderRequest: PdfRenderRequest): Promise<Buffer> {
+    const { marginBottom, marginLeft, marginRight, marginTop, paperWidth, paperHeight } = renderRequest.options ?? {}
 
-    return files
+    const request = superagent
+      .post(`${this.config.url}/forms/chromium/convert/html`)
+      .agent(this.agent)
+      .set('Content-Type', 'multi-part/form-data')
+      .field('paperWidth', paperWidth ?? defaultPage.paperWidth)
+      .field('paperHeight', paperHeight ?? defaultPage.paperHeight)
+      .field('marginTop', marginTop ?? defaultPage.marginTop)
+      .field('marginBottom', marginBottom ?? defaultPage.marginBottom)
+      .field('marginLeft', marginLeft ?? defaultPage.marginLeft)
+      .field('marginRight', marginRight ?? defaultPage.marginRight)
+      // needed to avoid blank PDFs - see https://gotenberg.dev/docs/troubleshooting#blank-pdfs
+      .field('skipNetworkIdleEvent', false)
+      .buffer(true)
+      .attach('content', Buffer.from(renderRequest.contentHtml), 'index.html')
+      .attach('header', Buffer.from(renderRequest.headerHtml), 'header.html')
+      .attach('footer', Buffer.from(renderRequest.footerHtml), 'footer.html')
+      .attach('stylesheet', Buffer.from(renderRequest.css), 'index.css')
+      .responseType('blob')
+      .timeout(this.config.timeout)
+
+    const response = await request
+    return response.body
   }
 }

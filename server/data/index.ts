@@ -15,8 +15,6 @@ import RedisTokenStore from './tokenStore/redisTokenStore'
 import InMemoryTokenStore from './tokenStore/inMemoryTokenStore'
 import { HealthAndMedicationApiClient } from './interfaces/healthAndMedicationApiClient'
 import HealthAndMedicationRestApiClient from './healthAndMedicationRestApiClient'
-import GotenbergRestApiClient from './gotenbergApiClient'
-import { GotenbergApiClient } from './interfaces/gotenbergApiClient'
 
 const applicationInfo = applicationInfoSupplier()
 initialiseAppInsights()
@@ -43,11 +41,6 @@ export const dataAccess = {
     'Health and Medication API',
     config.apis.healthAndMedicationApi,
     HealthAndMedicationRestApiClient,
-  ),
-  gotenbergApiClientBuilder: restClientBuilder<GotenbergApiClient>(
-    'Gotenberg API',
-    config.apis.gotenberg,
-    GotenbergRestApiClient,
   ),
 }
 

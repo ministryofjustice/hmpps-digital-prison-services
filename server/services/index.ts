@@ -7,6 +7,7 @@ import EstablishmentRollService from './establishmentRollService'
 import ServiceData from '../controllers/ServiceData'
 import DietReportingService from './dietReportingService'
 import PdfRenderingService from './pdfRenderingService'
+import GotenbergRestApiClient from '../data/gotenbergApiClient'
 
 export const services = () => {
   const { prisonApiClientBuilder, applicationInfo } = dataAccess
@@ -37,7 +38,8 @@ export const services = () => {
     dataAccess.prisonApiClientBuilder,
   )
 
-  const pdfRenderingService = new PdfRenderingService(dataAccess.gotenbergApiClientBuilder)
+  const gotenbergClient = new GotenbergRestApiClient(config.apis.gotenberg)
+  const pdfRenderingService = new PdfRenderingService(gotenbergClient)
 
   return {
     dataAccess,

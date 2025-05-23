@@ -1,7 +1,4 @@
-export type PdfOptions = {
-  headerHtml?: string
-  footerHtml?: string
-  css?: string
+export interface PdfOptions {
   marginTop?: string
   marginBottom?: string
   marginLeft?: string
@@ -10,6 +7,14 @@ export type PdfOptions = {
   paperHeight?: string
 }
 
+export interface PdfRenderRequest {
+  contentHtml: string
+  headerHtml: string
+  footerHtml: string
+  css: string
+  options?: PdfOptions
+}
+
 export interface GotenbergApiClient {
-  renderPdfFromHtml(html: string, options: PdfOptions): Promise<Buffer>
+  renderPdfFromHtml(request: PdfRenderRequest): Promise<Buffer>
 }

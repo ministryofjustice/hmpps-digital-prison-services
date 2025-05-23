@@ -103,34 +103,20 @@ export default class DietaryRequirementsController {
       if (req.query.location) queryParams.location = req.query.location as string
 
       const resp = await this.dietReportingService.getDietaryRequirementsForPrison(clientToken, prisonId, queryParams)
+      const datetime = format(new Date(), `cccc d MMMM yyyy 'at' HH:mm`)
 
-      return this.pdfReportingService.renderDietReport(clientToken, res, {
-        content: resp.content.map(this.buildContent),
-        datetime: format(new Date(), `cccc d MMMM yyyy 'at' HH:mm`),
-        printQuery: mapToQueryString({
-          nameAndNumber: req.query.nameAndNumber as string,
-          location: req.query.location as string,
-          showAll: req.query.showAll as string,
-        }),
+      return this.pdfReportingService.renderDietReport(res, {
+        footer: { datetime },
+        content: {
+          content: resp.content.map(this.buildContent),
+          datetime,
+          printQuery: mapToQueryString({
+            nameAndNumber: req.query.nameAndNumber as string,
+            location: req.query.location as string,
+            showAll: req.query.showAll as string,
+          }),
+        },
       })
-      // return res.render('pages/printDietaryRequirements/header', {
-      //   datetime: format(new Date(), `cccc d MMMM yyyy 'at' HH:mm`),
-      //   content: resp.content.map(this.buildContent),
-      //   backQuery: mapToQueryString({
-      //     nameAndNumber: req.query.nameAndNumber as string,
-      //     location: req.query.location as string,
-      //     showAll: req.query.showAll as string,
-      //   }),
-      // })
-      // return res.render('pages/printDietaryRequirements', {
-      //   datetime: format(new Date(), `cccc d MMMM yyyy 'at' HH:mm`),
-      //   content: resp.content.map(this.buildContent),
-      //   backQuery: mapToQueryString({
-      //     nameAndNumber: req.query.nameAndNumber as string,
-      //     location: req.query.location as string,
-      //     showAll: req.query.showAll as string,
-      //   }),
-      // })
     }
   }
 
