@@ -107,7 +107,7 @@
     "bunyan-format": "^0.2.1",
     "compression": "^1.8.0",
     "connect-flash": "^0.1.1",
-    "connect-redis": "^7.1.1",
+    "connect-redis": "^8.1.0",
     "contentful": "^10.15.2",
     "csurf": "^1.11.0",
     "date-fns": "^3.6.0",
