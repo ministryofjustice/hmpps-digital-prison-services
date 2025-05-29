@@ -91,6 +91,13 @@ generic-service:
     COVID_UNITS_ENABLED: false
     ACCREDITED_PROGRAMMES_ENABLED: true
 
+  allowlist:
+    groups:
+      - digital_staff_and_mojo
+      - moj_cloud_platform
+      - prisons
+      - accessibility-testing-1
+
 generic-prometheus-alerts:
   alertSeverity: hmpps-digital-prison-services-non-prod
 
