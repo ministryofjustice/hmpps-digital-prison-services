@@ -19,7 +19,6 @@ export default class PdfRenderingService {
       'pages/printDietaryRequirements/header',
       'pages/printDietaryRequirements/footer',
       'pages/printDietaryRequirements/content',
-      'diet-and-allergy-report.pdf',
       pageData,
     )
   }
@@ -29,7 +28,6 @@ export default class PdfRenderingService {
     headerFilePath: string,
     footerFilePath: string,
     contentFilePath: string,
-    outputFileName: string,
     pageData: PdfPageData,
   ) {
     return res.render(headerFilePath, pageData.header ?? {}, (headerError: Error, headerHtml: string) => {
@@ -54,7 +52,7 @@ export default class PdfRenderingService {
             .then(buffer =>
               res
                 .contentType('application/pdf')
-                .setHeader('Content-Disposition', `attachment; filename=${outputFileName}`)
+                .setHeader('Content-Disposition', 'inline')
                 .setHeader('Content-Transfer-Encoding', 'binary')
                 .send(buffer),
             )
