@@ -12,6 +12,10 @@
   padding: 15px 30px 15px 0;
   word-wrap: break-word;
   overflow-wrap: break-word;
+
+  @media print {
+    width: calc(100% / 20) * 6;
+  }
 }
 
 .hmpps-dietary-requirements__location {
@@ -19,6 +23,10 @@
   padding: 15px 30px 15px 0;
   word-wrap: break-word;
   overflow-wrap: break-word;
+
+  @media print {
+    width: calc(100% / 20) * 3;
+  }
 }
 
 .hmpps-dietary-requirements__requirements {
@@ -26,6 +34,10 @@
   padding: 15px 0;
   word-wrap: break-word;
   overflow-wrap: break-word;
+
+  @media print {
+    width: calc(100% / 20) * 11;
+  }
 }
 
 .arrived-in-last-3-days-badge {
@@ -46,18 +58,46 @@
   }
 }
 
-.classification-banner {
-  @media screen {
-    display: block;
-    width: fit-content;
-    background-color: govuk-colour('red');
-    color: govuk-colour('white');
-    font-weight: bold;
-    padding: 0 10px 0 10px;
-    margin-bottom: 10px;
+.dietary-requirements-print-table {
+  th {
+    padding-left: 5px;
+    background-color: govuk-colour('light-grey');
   }
 
-  @media print {
-    display: none;
+  td {
+    padding-left: 5px;
   }
+}
+
+.classification-banner {
+  display: block;
+  width: fit-content;
+  background-color: govuk-colour('red');
+  color: govuk-colour('white');
+  font-weight: bold;
+  padding: 0 10px 0 10px;
+  margin-bottom: 10px;
+}
+
+.print-header-timestamp {
+  font-size: 12px;
+  padding-bottom: 5px;
+}
+
+.sensitive-info-disclaimer {
+  font-size: 14px;
+}
+
+.print-report-heading {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+#print-report-content {
+  margin-left: -7px;
+  margin-right: -7px;
+}
+
+#diet-report-frame {
+  display: none;
 }

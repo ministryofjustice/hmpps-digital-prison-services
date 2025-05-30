@@ -24,6 +24,11 @@ services:
     ports:
       - '6379:6379'
 
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    ports:
+      - '3100:3000'
+
   app:
     build: .
     networks:

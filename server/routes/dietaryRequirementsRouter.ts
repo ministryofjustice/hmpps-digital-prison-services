@@ -12,7 +12,10 @@ export default function dietaryRequirementsRouter(services: Services): Router {
       handlers.map(handler => asyncMiddleware(handler)),
     )
 
-  const dietaryRequirementsController = new DietaryRequirementsController(services.dietReportingService)
+  const dietaryRequirementsController = new DietaryRequirementsController(
+    services.dietReportingService,
+    services.pdfRenderingService,
+  )
 
   get('/', dietaryRequirementsController.get())
   get('/print-all', dietaryRequirementsController.printAll())

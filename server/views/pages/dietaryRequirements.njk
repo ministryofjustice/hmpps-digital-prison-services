@@ -79,7 +79,7 @@
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full govuk-!-text-align-right">
           <p class="govuk-body">
-            <a class="hmpps-print-link" href="/dietary-requirements/print-all?{{ printQuery }}">Print all</a>
+            <a class="hmpps-print-link" target="diet-report-frame" href="/dietary-requirements/print-all">Print all</a>
           </p>
         </div>
       </div>
@@ -133,4 +133,9 @@
       </div>
     {% endif %}
   </div>
+  <iframe id="diet-report-frame" name="diet-report-frame"></iframe>
+{% endblock %}
+
+{% block pageScripts %}
+  <script src="/assets/js/printDietReport.js"></script>
 {% endblock %}

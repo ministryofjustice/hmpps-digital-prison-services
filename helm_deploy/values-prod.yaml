@@ -41,6 +41,7 @@ generic-service:
     PRISONER_SEARCH_API_URL: https://prisoner-search.prison.service.justice.gov.uk
     LOCATIONS_INSIDE_PRISON_API_URL: https://locations-inside-prison-api.hmpps.service.justice.gov.uk
     HEALTH_AND_MEDICATION_API_URL: "https://health-and-medication-api.hmpps.service.justice.gov.uk"
+    GOTENBERG_API_URL: 'http://hmpps-digital-prison-services-gotenberg'
 
     # Service URLs
     ACTIVITIES_URL: https://activities.prison.service.justice.gov.uk/activities

@@ -1,0 +1,88 @@
+{% extends "../../partials/pdfLayout.njk" %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% set pageTitle = "Dietary requirements" %}
+{% set mainClasses = "govuk-body govuk-main-wrapper--auto-spacing" %}
+
+{% macro dietaryRequirementsHtml(dietaryRequirements) %}
+    {% if(dietaryRequirements.medical.length > 0) %}
+        <div class="govuk-!-margin-bottom-3">
+            <span class="govuk-!-font-weight-bold govuk-!-margin-bottom-0">Medical</span><br />
+            {% for need in dietaryRequirements.medical %}
+                <span class="govuk-!-display-block dietary-requirements">{{ need }}</span>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if(dietaryRequirements.foodAllergies.length > 0) %}
+        <div class="govuk-!-margin-bottom-3">
+            <span class="govuk-!-font-weight-bold govuk-!-margin-bottom-0">Food allergies</span><br />
+            {% for need in dietaryRequirements.foodAllergies %}
+                <span class="govuk-!-display-block dietary-requirements">{{ need }}</span>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if(dietaryRequirements.personal.length > 0) %}
+        <div class="govuk-!-margin-bottom-3">
+            <span class="govuk-!-font-weight-bold govuk-!-margin-bottom-0">Personal</span><br />
+            {% for need in dietaryRequirements.personal %}
+                <span class="govuk-!-display-block dietary-requirements">{{ need }}</span>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if dietaryRequirements.cateringInstructions.length > 0 %}
+        <div class="govuk-!-margin-bottom-3">
+            <span class="govuk-!-font-weight-bold govuk-!-margin-bottom-0">Catering instructions</span><br />
+            <span class="govuk-!-display-block catering-instructions">{{ dietaryRequirements.cateringInstructions }}</span>
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{% macro rowNameHtml(row) %}
+    {{ row.name }}
+    <br />
+    {{ row.prisonerNumber }}
+    {% if row.arrivalDate | isWithinLast3Days %}
+        <br />
+        <span class="arrived-in-last-3-days-badge__print">Arrived in the last 3 days</span>
+    {% endif %}
+{% endmacro %}
+
+{% set rows = [] %}
+{% for row in content %}
+    {% set rows = (rows.push([
+        { html: rowNameHtml(row), classes: "hmpps-dietary-requirements__name" },
+        { text: row.location, classes: "hmpps-dietary-requirements__location" },
+        { html: dietaryRequirementsHtml(row.dietaryRequirements), classes: "hmpps-dietary-requirements__requirements" }
+    ]), rows) %}
+{% endfor %}
+
+{% block content %}
+    <div id="print-report-content">
+        <div class="govuk-grid-row govuk-!-margin-0">
+            <h1 class="govuk-heading-m print-report-heading">
+                <span class="govuk-caption-m print-header-timestamp">{{ datetime }}</span>
+                People with dietary requirements in {{ user.activeCaseLoad.description }}
+            </h1>
+            <p class="sensitive-info-disclaimer">This document includes sensitive information about prisoner dietary requirements.</p>
+        </div>
+
+        <div class="govuk-grid-row govuk-!-margin-top-7">
+            <div class="dietary-requirements-print-table govuk-grid-column-full">
+                {{ govukTable({
+                    head: [
+                        { text: 'Name and prison number' },
+                        { text: 'Location' },
+                        { text: 'Dietary requirements' }
+                    ],
+                    rows: rows
+                }) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+

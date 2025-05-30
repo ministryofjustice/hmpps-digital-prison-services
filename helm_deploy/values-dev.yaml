@@ -38,6 +38,7 @@ generic-service:
     PRISONER_SEARCH_API_URL: https://prisoner-search-dev.prison.service.justice.gov.uk
     LOCATIONS_INSIDE_PRISON_API_URL: https://locations-inside-prison-api-dev.hmpps.service.justice.gov.uk
     HEALTH_AND_MEDICATION_API_URL: "https://health-and-medication-api-dev.hmpps.service.justice.gov.uk"
+    GOTENBERG_API_URL: 'http://hmpps-digital-prison-services-gotenberg'
 
 
     # Service URLs
@@ -104,3 +105,6 @@ generic-prometheus-alerts:
   elastiCacheAlertsClusterIds:
     cp-2e0b1b496ed43082-001: "HMPPS Digital Prison Services ElastiCache Cluster Node 1"
     cp-2e0b1b496ed43082-002: "HMPPS Digital Prison Services ElastiCache Cluster Node 2"
+
+gotenberg:
+  replicaCount: 2

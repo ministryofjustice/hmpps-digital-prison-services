@@ -1,11 +1,9 @@
-import { Readable } from 'stream'
 import superagent from 'superagent'
 import Agent, { HttpsAgent } from 'agentkeepalive'
 
 import logger from '../../logger'
 import sanitiseError from '../sanitisedError'
 import { ApiConfig } from '../config'
-import type { UnsanitisedError } from '../sanitisedError'
 
 interface GetRequest {
   path?: string
@@ -19,15 +17,11 @@ interface PostRequest {
   headers?: Record<string, string>
   responseType?: string
   data?: Record<string, unknown>
+  raw?: boolean
+  files?: Record<string, { buffer: Buffer; originalName: string }>
 }
 
 type PutRequest = PostRequest
-
-interface StreamRequest {
-  path?: string
-  headers?: Record<string, string>
-  errorLogger?: (e: UnsanitisedError) => void
-}
 
 export function RestClientBuilder(name: string, config: ApiConfig) {
   return (token: string): RestClient => new RestClient(name, config, token)
@@ -96,34 +90,6 @@ export default class RestClient {
       logger.warn({ ...sanitisedError }, `Error calling ${this.name}, path: '${path}', verb: 'POST'`)
       throw sanitisedError
     }
-  }
-
-  async stream({ path = null, headers = {} }: StreamRequest = {}): Promise<Readable> {
-    return new Promise((resolve, reject) => {
-      superagent
-        .get(`${this.apiUrl()}${path}`)
-        .agent(this.agent)
-        .auth(this.token, { type: 'bearer' })
-        .retry(2, (err, res) => {
-          if (err) logger.info(`Retry handler found API error with ${err.code} ${err.message}`)
-          return undefined // retry handler only for logging retries, not to influence retry logic
-        })
-        .timeout(this.timeoutConfig())
-        .set(headers)
-        .end((error, response) => {
-          if (error) {
-            logger.warn(sanitiseError(error), `Error calling ${this.name}`)
-            reject(error)
-          } else if (response) {
-            const s = new Readable()
-            // eslint-disable-next-line no-underscore-dangle,@typescript-eslint/no-empty-function,no-empty-function
-            s._read = () => {}
-            s.push(response.body)
-            s.push(null)
-            resolve(s)
-          }
-        })
-    })
   }
 
   async put<T>({ path = null, headers = {}, responseType = '', data = {} }: PutRequest = {}): Promise<T> {

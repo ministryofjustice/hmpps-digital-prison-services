@@ -100,6 +100,14 @@ export default {
       systemClientId: get('SYSTEM_CLIENT_ID', 'clientid', requiredInProduction),
       systemClientSecret: get('SYSTEM_CLIENT_SECRET', 'clientsecret', requiredInProduction),
     },
+    gotenberg: {
+      url: get('GOTENBERG_API_URL', 'http://localhost:3100', requiredInProduction),
+      timeout: {
+        response: Number(get('GOTENBERG_API_TIMEOUT_RESPONSE', 20000)),
+        deadline: Number(get('GOTENBERG_API_TIMEOUT_DEADLINE', 20000)),
+      },
+      agent: new AgentConfig(Number(get('GOTENBERG_API_TIMEOUT_DEADLINE', 20000))),
+    },
     prisonApi: {
       url: get('PRISON_API_URL', 'http://localhost:8082', requiredInProduction),
       timeout: {
