@@ -130,7 +130,6 @@ workflows:
             branches:
               only:
                 - main
-                - CDPS-1409-gotenberg
       - hmpps/deploy_env:
           name: deploy_dev
           env: "dev"
@@ -142,7 +141,6 @@ workflows:
             branches:
               only:
                 - main
-                - CDPS-1409-gotenberg
           requires:
             - helm_lint
             - unit_test
