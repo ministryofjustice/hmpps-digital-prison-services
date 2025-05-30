@@ -28,7 +28,7 @@ export default class GotenbergRestApiClient implements GotenbergApiClient {
     const request = superagent
       .post(`${this.config.url}/forms/chromium/convert/html`)
       .agent(this.agent)
-      .set('Content-Type', 'multi-part/form-data')
+      .set('Content-Type', 'multipart/form-data')
       .field('paperWidth', paperWidth ?? defaultPage.paperWidth)
       .field('paperHeight', paperHeight ?? defaultPage.paperHeight)
       .field('marginTop', marginTop ?? defaultPage.marginTop)

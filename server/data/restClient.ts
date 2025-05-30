@@ -1,11 +1,9 @@
-import { Readable } from 'stream'
 import superagent from 'superagent'
 import Agent, { HttpsAgent } from 'agentkeepalive'
 
 import logger from '../../logger'
 import sanitiseError from '../sanitisedError'
 import { ApiConfig } from '../config'
-import type { UnsanitisedError } from '../sanitisedError'
 
 interface GetRequest {
   path?: string
@@ -24,12 +22,6 @@ interface PostRequest {
 }
 
 type PutRequest = PostRequest
-
-interface StreamRequest {
-  path?: string
-  headers?: Record<string, string>
-  errorLogger?: (e: UnsanitisedError) => void
-}
 
 export function RestClientBuilder(name: string, config: ApiConfig) {
   return (token: string): RestClient => new RestClient(name, config, token)

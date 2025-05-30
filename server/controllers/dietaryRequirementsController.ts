@@ -110,11 +110,6 @@ export default class DietaryRequirementsController {
         content: {
           content: resp.content.map(this.buildContent),
           datetime,
-          printQuery: mapToQueryString({
-            nameAndNumber: req.query.nameAndNumber as string,
-            location: req.query.location as string,
-            showAll: req.query.showAll as string,
-          }),
         },
       })
     }
