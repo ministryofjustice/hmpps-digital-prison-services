@@ -90,7 +90,7 @@ WELCOME_PEOPLE_INTO_PRISON_URL=https://welcome-dev.prison.service.justice.gov.uk
 WHEREABOUTS_ENDPOINT_URL=https://whereabouts-api-dev.service.justice.gov.uk
 PRISONER_SEARCH_API_URL=https://prisoner-search-dev.prison.service.justice.gov.uk
 PRISONER_PROFILE_URL=https://prisoner-dev.digital.prison.service.justice.gov.uk
-
+GOTENBERG_API_URL=http://localhost:3100
 ```
 </details>
 
