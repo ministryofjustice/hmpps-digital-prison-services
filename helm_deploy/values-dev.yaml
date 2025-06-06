@@ -54,6 +54,7 @@ generic-service:
       - moj_cloud_platform
       - prisons
       - accessibility-testing-1
+      - circleci
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-digital-prison-services-non-prod
