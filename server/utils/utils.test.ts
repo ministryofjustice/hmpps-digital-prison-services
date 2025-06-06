@@ -106,13 +106,17 @@ describe('userHasAllRoles', () => {
     { roles: [Role.GlobalSearch], userRoles: [Role.GlobalSearch], result: true },
     { roles: [Role.GlobalSearch], userRoles: ['SOME_ROLE', Role.GlobalSearch], result: true },
     {
-      roles: [Role.GlobalSearch, Role.InactiveBookings],
-      userRoles: [Role.InactiveBookings, Role.GlobalSearch],
+      roles: [Role.GlobalSearch, Role.DietAndAllergiesReport],
+      userRoles: [Role.DietAndAllergiesReport, Role.GlobalSearch],
       result: true,
     },
     { roles: [Role.GlobalSearch], userRoles: [], result: false },
-    { roles: [Role.GlobalSearch, Role.InactiveBookings], userRoles: [Role.GlobalSearch], result: false },
-    { roles: [Role.GlobalSearch, Role.InactiveBookings], userRoles: ['SOME_ROLE', Role.GlobalSearch], result: false },
+    { roles: [Role.GlobalSearch, Role.DietAndAllergiesReport], userRoles: [Role.GlobalSearch], result: false },
+    {
+      roles: [Role.GlobalSearch, Role.DietAndAllergiesReport],
+      userRoles: ['SOME_ROLE', Role.GlobalSearch],
+      result: false,
+    },
   ])('Should return the correct result when checking user roles', ({ roles, userRoles, result }) => {
     expect(userHasAllRoles(roles, userRoles)).toEqual(result)
   })

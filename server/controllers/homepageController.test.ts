@@ -38,7 +38,7 @@ describe('Homepage Controller', () => {
     res = {
       locals: {
         user: {
-          userRoles: [Role.GlobalSearch, Role.KeyWorker],
+          userRoles: [Role.GlobalSearch],
           staffId,
           caseLoads: [
             { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
@@ -213,7 +213,7 @@ describe('Homepage Controller', () => {
     it.each([undefined, '', 'CADM_I'])('Displays the home page (caseload: %s)', async caseLoadId => {
       res.locals = {
         user: {
-          userRoles: [Role.GlobalSearch, Role.KeyWorker],
+          userRoles: [Role.GlobalSearch],
           staffId: 487023,
           caseLoads: [] as CaseLoad[],
           token: 'USER_TOKEN',
