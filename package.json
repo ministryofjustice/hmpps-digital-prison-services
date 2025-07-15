@@ -100,7 +100,7 @@
     "@apollo/client": "3.13.8",
     "@contentful/rich-text-html-renderer": "^17.1.0",
     "@contentful/rich-text-types": "^17.1.0",
-    "@ministryofjustice/frontend": "^2.2.5",
+    "@ministryofjustice/frontend": "^5.1.4",
     "@ministryofjustice/hmpps-connect-dps-components": "2.2.0",
     "@ministryofjustice/hmpps-connect-dps-shared-items": "^1.2.1",
     "agentkeepalive": "^4.6.0",
