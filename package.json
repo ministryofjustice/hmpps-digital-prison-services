@@ -128,7 +128,7 @@
     "redis": "^4.7.1",
     "superagent": "^9.0.2",
     "url-value-parser": "^2.2.0",
-    "uuid": "^9.0.1"
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@ministryofjustice/hmpps-precommit-hooks": "^0.0.3",
@@ -149,7 +149,6 @@
     "@types/passport-oauth2": "^1.8.0",
     "@types/superagent": "^8.1.9",
     "@types/supertest": "^6.0.3",
-    "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "audit-ci": "^6.6.1",
