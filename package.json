@@ -153,7 +153,7 @@
     "@typescript-eslint/eslint-plugin": "^8.37.0",
     "audit-ci": "^7.1.0",
     "aws-sdk-client-mock": "^4.1.0",
-    "concurrently": "^8.2.2",
+    "concurrently": "^9.2.0",
     "cookie-session": "^2.1.0",
     "cypress": "^13.17.0",
     "cypress-multi-reporters": "^1.6.4",
