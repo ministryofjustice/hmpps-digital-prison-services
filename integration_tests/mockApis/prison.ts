@@ -4,7 +4,6 @@ import { stubFor } from './wiremock'
 import { CaseLoad } from '../../server/data/interfaces/caseLoad'
 import { Location } from '../../server/data/interfaces/location'
 import { locationsMock } from '../../server/mocks/locationMock'
-
 import { userDetailsMock } from '../../server/test/mocks/userDetailsMock'
 import { prisonEstablishmentRollSummaryMock } from '../../server/mocks/prisonRollCountSummaryMock'
 

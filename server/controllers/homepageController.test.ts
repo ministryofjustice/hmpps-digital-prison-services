@@ -1,5 +1,4 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client/core'
-import { Response } from 'express'
 import { Role } from '../enums/role'
 import HomepageController from './homepageController'
 import config from '../config'
@@ -13,28 +12,27 @@ import EstablishmentRollService from '../services/establishmentRollService'
 import { prisonEstablishmentRollSummaryMock } from '../mocks/prisonRollCountSummaryMock'
 import ServiceData from './ServiceData'
 
-const staffId = 487023
-const activeCaseLoadId = 'LEI'
-const req = {
-  middleware: { clientToken: 'CLIENT_TOKEN' },
-  headers: {
-    referer: 'http://referer',
-  },
-  path: '/',
-  flash: jest.fn(),
-  body: {},
-}
-
-let res: Partial<Response> = {}
-
-let controller: any
-
 describe('Homepage Controller', () => {
+  const staffId = 487023
+  const activeCaseLoadId = 'LEI'
+  let req: any
+  let res: any
+  let controller: HomepageController
   let establishmentRollService: EstablishmentRollService
   let contentfulService: ContentfulService
   let serviceData: ServiceData
 
   beforeEach(() => {
+    req = {
+      middleware: { clientToken: 'CLIENT_TOKEN' },
+      headers: {
+        referer: 'http://referer',
+      },
+      path: '/',
+      flash: jest.fn(),
+      body: {},
+    } as any
+
     res = {
       locals: {
         user: {
@@ -49,7 +47,7 @@ describe('Homepage Controller', () => {
       },
       render: jest.fn(),
       redirect: jest.fn(),
-    }
+    } as any
 
     establishmentRollService = new EstablishmentRollService(null)
     serviceData = new ServiceData()
@@ -97,11 +95,11 @@ describe('Homepage Controller', () => {
 
     describe('With no frontend components shared data', () => {
       it('should get homepage data', async () => {
-        await controller.displayHomepage()(req, res)
+        await controller.displayHomepage()(req, res, null)
 
-        expect(controller['establishmentRollService'].getEstablishmentRollSummary).toHaveBeenCalled()
-        expect(controller['contentfulService'].getWhatsNewPosts).toHaveBeenCalled()
-        expect(controller['contentfulService'].getOutageBanner).toHaveBeenCalled()
+        expect(establishmentRollService.getEstablishmentRollSummary).toHaveBeenCalled()
+        expect(contentfulService.getWhatsNewPosts).toHaveBeenCalled()
+        expect(contentfulService.getOutageBanner).toHaveBeenCalled()
         expect(res.render).toHaveBeenCalledWith('pages/index', defaultOutput)
       })
     })
@@ -116,21 +114,25 @@ describe('Homepage Controller', () => {
             description: 'What a service',
           },
         ]
-        await controller.displayHomepage()(req, {
-          ...res,
-          locals: {
-            ...res.locals,
-            feComponents: {
-              sharedData: {
-                services: feComponentsServices,
+        await controller.displayHomepage()(
+          req,
+          {
+            ...res,
+            locals: {
+              ...res.locals,
+              feComponents: {
+                sharedData: {
+                  services: feComponentsServices,
+                },
               },
             },
-          },
-        })
+          } as any,
+          null,
+        )
 
-        expect(controller['establishmentRollService'].getEstablishmentRollSummary).toHaveBeenCalled()
-        expect(controller['contentfulService'].getWhatsNewPosts).toHaveBeenCalled()
-        expect(controller['contentfulService'].getOutageBanner).toHaveBeenCalled()
+        expect(establishmentRollService.getEstablishmentRollSummary).toHaveBeenCalled()
+        expect(contentfulService.getWhatsNewPosts).toHaveBeenCalled()
+        expect(contentfulService.getOutageBanner).toHaveBeenCalled()
         expect(res.render).toHaveBeenCalledWith('pages/index', {
           ...defaultOutput,
           showServicesOutage: false,
@@ -140,9 +142,9 @@ describe('Homepage Controller', () => {
     })
 
     it('should render errors', async () => {
-      req.flash = jest.fn(() => [{ text: 'error', href: '#name' }])
+      req.flash = jest.fn((_key: string) => [{ text: 'error', href: '#name' }])
 
-      await controller.displayHomepage()(req, res)
+      await controller.displayHomepage()(req, res, null)
 
       expect(res.render).toHaveBeenCalledWith('pages/index', {
         errors: [{ text: 'error', href: '#name' }],
@@ -165,7 +167,7 @@ describe('Homepage Controller', () => {
       const location = 'LEI'
       req.body = { name, location }
 
-      await controller.search()(req, res)
+      await controller.search()(req, res, () => {})
 
       expect(res.redirect).toHaveBeenCalledWith(
         `${config.serviceUrls.digitalPrisons}/prisoner-search?keywords=${name}&location=${location}`,
@@ -177,7 +179,7 @@ describe('Homepage Controller', () => {
       const location = 'LEI'
       req.body = { searchType: 'local', name, location }
 
-      await controller.search()(req, res)
+      await controller.search()(req, res, () => {})
 
       expect(res.redirect).toHaveBeenCalledWith(
         `${config.serviceUrls.digitalPrisons}/prisoner-search?keywords=${name}&location=${location}`,
@@ -188,7 +190,7 @@ describe('Homepage Controller', () => {
       const name = 'John Saunders'
       req.body = { searchType: 'global', name }
 
-      await controller.search()(req, res)
+      await controller.search()(req, res, () => {})
 
       expect(res.redirect).toHaveBeenCalledWith(
         `${config.serviceUrls.digitalPrisons}/global-search/results?searchText=${name}`,
@@ -199,7 +201,7 @@ describe('Homepage Controller', () => {
       const name = ''
       req.body = { searchType: 'global', name }
 
-      await controller.search()(req, res)
+      await controller.search()(req, res, () => {})
 
       expect(req.flash).toHaveBeenCalledWith('errors', {
         href: '#name',
@@ -220,10 +222,10 @@ describe('Homepage Controller', () => {
           activeCaseLoadId: caseLoadId,
         } as PrisonUser,
       }
-      await controller.displayHomepage()(req, res)
-      expect(controller['establishmentRollService'].getEstablishmentRollSummary).not.toHaveBeenCalled()
-      expect(controller['contentfulService'].getWhatsNewPosts).toHaveBeenCalled()
-      expect(controller['contentfulService'].getOutageBanner).toHaveBeenCalled()
+      await controller.displayHomepage()(req, res, () => {})
+      expect(establishmentRollService.getEstablishmentRollSummary).not.toHaveBeenCalled()
+      expect(contentfulService.getWhatsNewPosts).toHaveBeenCalled()
+      expect(contentfulService.getOutageBanner).toHaveBeenCalled()
       expect(res.render).toHaveBeenCalledWith('pages/index', expect.objectContaining({ userHasPrisonCaseLoad: false }))
     })
   })

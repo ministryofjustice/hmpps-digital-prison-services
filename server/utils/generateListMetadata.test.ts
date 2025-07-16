@@ -1,10 +1,7 @@
 import { PagedList } from '../data/interfaces/pagedList'
 import { generateListMetadata, QueryParams } from './generateListMetadata'
 
-export const mockPagedData = <T>(
-  content: T[],
-  options?: { totalPages?: number; pageNumber?: number },
-): PagedList<T> => ({
+const mockPagedData = <T>(content: T[], options?: { totalPages?: number; pageNumber?: number }): PagedList<T> => ({
   content,
   metadata: {
     first: (options?.pageNumber ?? 1) === 1,

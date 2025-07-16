@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client/core'
+import { ApolloClient, ApolloQueryResult, InMemoryCache } from '@apollo/client/core'
 import ContentfulService from './contentfulService'
 import {
   whatsNewPostCollectionMock,
@@ -8,17 +8,23 @@ import {
 } from '../mocks/whatsNewPostsMock'
 import { managedPagesCollectionMock, managedPagesMock } from '../mocks/managedPagesMock'
 
+jest.mock('@apollo/client/core')
+
 describe('ContentfulService', () => {
   let contentfulService: ContentfulService
+  let apolloClient: jest.Mocked<ApolloClient<InMemoryCache>>
 
   beforeEach(() => {
-    contentfulService = new ContentfulService(new ApolloClient<unknown>({ cache: new InMemoryCache() }))
+    apolloClient = new ApolloClient<InMemoryCache>(null) as jest.Mocked<ApolloClient<InMemoryCache>>
+    contentfulService = new ContentfulService(apolloClient)
   })
 
+  const mockApolloQuery = (response: ApolloQueryResult<unknown>) => {
+    return jest.spyOn(apolloClient, 'query').mockResolvedValue(response)
+  }
+
   it('should get whats new posts', async () => {
-    const apolloSpy = jest
-      .spyOn<any, string>(contentfulService['apolloClient'], 'query')
-      .mockResolvedValue(whatsNewPostsCollectionMock)
+    const apolloSpy = mockApolloQuery(whatsNewPostsCollectionMock as ApolloQueryResult<unknown>)
 
     const whatsNewData = await contentfulService.getWhatsNewPosts(1, 3, 0, 'LEI')
 
@@ -35,9 +41,7 @@ describe('ContentfulService', () => {
   })
 
   it('should get whats new posts without an active caseload id', async () => {
-    const apolloSpy = jest
-      .spyOn<any, string>(contentfulService['apolloClient'], 'query')
-      .mockResolvedValue(whatsNewPostsCollectionMock)
+    const apolloSpy = jest.spyOn(apolloClient, 'query').mockResolvedValue(whatsNewPostsCollectionMock)
 
     const whatsNewData = await contentfulService.getWhatsNewPosts(1, 3, 0, undefined)
 
@@ -55,9 +59,7 @@ describe('ContentfulService', () => {
   })
 
   it('should get whats new post', async () => {
-    const apolloSpy = jest
-      .spyOn<any, string>(contentfulService['apolloClient'], 'query')
-      .mockResolvedValue(whatsNewPostCollectionMock)
+    const apolloSpy = mockApolloQuery(whatsNewPostCollectionMock as ApolloQueryResult<unknown>)
     const slug = 'whats-new-one'
 
     const post = await contentfulService.getWhatsNewPost(slug)
@@ -67,9 +69,7 @@ describe('ContentfulService', () => {
   })
 
   it('should get managed page', async () => {
-    const apolloSpy = jest
-      .spyOn<any, string>(contentfulService['apolloClient'], 'query')
-      .mockResolvedValue(managedPagesCollectionMock)
+    const apolloSpy = mockApolloQuery(managedPagesCollectionMock)
 
     const pages = await contentfulService.getManagedPage('title-one')
 
@@ -78,9 +78,7 @@ describe('ContentfulService', () => {
   })
 
   it('Should get the outage banner for the users caseload', async () => {
-    const apolloSpy = jest
-      .spyOn<any, string>(contentfulService['apolloClient'], 'query')
-      .mockResolvedValue({ data: { outageBannerCollection: [] } })
+    const apolloSpy = mockApolloQuery({ data: { outageBannerCollection: [] } } as ApolloQueryResult<unknown>)
 
     await contentfulService.getOutageBanner('LEI')
 
@@ -94,9 +92,7 @@ describe('ContentfulService', () => {
   })
 
   it('Should get the outage banner for the users without a caseload', async () => {
-    const apolloSpy = jest
-      .spyOn<any, string>(contentfulService['apolloClient'], 'query')
-      .mockResolvedValue({ data: { outageBannerCollection: [] } })
+    const apolloSpy = mockApolloQuery({ data: { outageBannerCollection: [] } } as ApolloQueryResult<unknown>)
 
     await contentfulService.getOutageBanner(undefined)
 

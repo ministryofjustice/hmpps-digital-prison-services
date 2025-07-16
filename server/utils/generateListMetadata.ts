@@ -14,6 +14,7 @@ export interface DietaryRequirementsQueryParams extends PagedListQueryParams {
   location?: string
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface PagedListItem {
   // Extended by:
   // Dietary Requirement

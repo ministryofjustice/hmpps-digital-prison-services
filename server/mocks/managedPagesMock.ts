@@ -1,3 +1,4 @@
+import { ApolloQueryResult, NetworkStatus } from '@apollo/client/core'
 import { Document } from '@contentful/rich-text-types'
 import { ManagedPage, ManagedPageApollo } from '../data/interfaces/managedPage'
 
@@ -80,10 +81,12 @@ export const managedPagesApolloMock: ManagedPageApollo[] = [
   },
 ]
 
-export const managedPagesCollectionMock = {
+export const managedPagesCollectionMock: ApolloQueryResult<unknown> = {
   data: {
     managedPageCollection: {
       items: managedPagesApolloMock,
     },
   },
+  loading: false,
+  networkStatus: NetworkStatus.ready,
 }

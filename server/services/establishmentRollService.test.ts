@@ -12,7 +12,7 @@ describe('establishmentRollService', () => {
   describe('getEstablishmentRollSummary', () => {
     it('should call the prisonApiClient with the correct parameters', async () => {
       await establishmentRollService.getEstablishmentRollSummary('token', 'LEI')
-      expect(prisonApiClientMock.getPrisonRollCountSummary).toBeCalledWith('LEI')
+      expect(prisonApiClientMock.getPrisonRollCountSummary).toHaveBeenCalledWith('LEI')
     })
 
     it('should return the data from the API', async () => {

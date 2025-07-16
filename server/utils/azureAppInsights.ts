@@ -14,7 +14,6 @@ const requestPrefixesToIgnore = ['GET /assets/', 'GET /health', 'GET /ping', 'GE
 const dependencyPrefixesToIgnore = ['sqs']
 
 export type ContextObject = {
-  /* eslint-disable  @typescript-eslint/no-explicit-any */
   [name: string]: any
 }
 

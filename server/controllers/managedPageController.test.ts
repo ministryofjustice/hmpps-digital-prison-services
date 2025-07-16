@@ -1,15 +1,13 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client/core'
 import { Role } from '../enums/role'
 import ContentfulService from '../services/contentfulService'
 import { managedPagesMock } from '../mocks/managedPagesMock'
 import ManagedPageController from './managedPageController'
 
-let req: any
-let res: any
-let controller: any
-
 describe('Managed Page Controller', () => {
   let contentfulService: ContentfulService
+  let req: any
+  let res: any
+  let controller: ManagedPageController
 
   beforeEach(() => {
     req = {
@@ -25,7 +23,8 @@ describe('Managed Page Controller', () => {
       },
       path: '/',
       flash: jest.fn(),
-    }
+    } as any
+
     res = {
       locals: {
         user: {
@@ -37,19 +36,17 @@ describe('Managed Page Controller', () => {
       },
       render: jest.fn(),
       redirect: jest.fn(),
-    }
+    } as any
 
-    contentfulService = new ContentfulService(new ApolloClient({ cache: new InMemoryCache() }))
-    contentfulService.getManagedPage = jest.fn(async () => managedPagesMock[0])
-
+    contentfulService = { getManagedPage: jest.fn(async () => managedPagesMock[0]) } as unknown as ContentfulService
     controller = new ManagedPageController(contentfulService)
   })
 
   describe('Display managed page', () => {
     it('should display managed page by slug', async () => {
-      await controller.displayManagedPage('title-one')(req, res)
+      await controller.displayManagedPage('title-one')(req, res, null)
 
-      expect(controller['contentfulService'].getManagedPage).toHaveBeenCalled()
+      expect(contentfulService.getManagedPage).toHaveBeenCalled()
       expect(res.render).toHaveBeenCalledWith('pages/managedPage', {
         pageTitle: managedPagesMock[0].title,
         managedPage: managedPagesMock[0],

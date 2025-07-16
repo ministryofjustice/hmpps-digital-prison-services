@@ -1,7 +1,7 @@
+import { ApolloQueryResult, NetworkStatus } from '@apollo/client/core'
 import { Document } from '@contentful/rich-text-types'
 import { WhatsNewPost, WhatsNewPostApollo } from '../data/interfaces/whatsNewPost'
 
-// eslint-disable-next-line import/prefer-default-export
 export const whatsNewPostsMock: WhatsNewPost[] = [
   {
     title: 'Whats new one',
@@ -74,7 +74,7 @@ export const whatsNewPostApolloMock: WhatsNewPostApollo[] = [
   },
 ]
 
-export const whatsNewPostsCollectionMock = {
+export const whatsNewPostsCollectionMock: ApolloQueryResult<unknown> = {
   data: {
     whatsNewPostCollection: {
       total: 3,
@@ -83,12 +83,16 @@ export const whatsNewPostsCollectionMock = {
       items: whatsNewPostsApolloMock,
     },
   },
+  loading: false,
+  networkStatus: NetworkStatus.ready,
 }
 
-export const whatsNewPostCollectionMock = {
+export const whatsNewPostCollectionMock: ApolloQueryResult<unknown> = {
   data: {
     whatsNewPostCollection: {
       items: whatsNewPostApolloMock,
     },
   },
+  loading: false,
+  networkStatus: NetworkStatus.ready,
 }
