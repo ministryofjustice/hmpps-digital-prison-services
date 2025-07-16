@@ -32,7 +32,7 @@ export default function routes(services: Services): Router {
   router.use('/whats-new', whatsNewRouter(services))
   router.use('/dietary-requirements', dietaryRequirementsRouter(services))
   router.get(
-    '/establishment-roll*',
+    '/establishment-roll{*path}',
     asyncMiddleware(async (req, res) => {
       res.render('pages/establishmentRollHasMoved', { establishmentRollUrl: config.apis.establishmentRoll.ui_url })
     }),
