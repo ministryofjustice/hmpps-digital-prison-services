@@ -9,6 +9,8 @@ import logger from '../../logger'
  * @param date
  */
 export const formatDateISO = (date: Date): string => {
+  if (date === null) return undefined
+
   let dateStr
   try {
     dateStr = formatISO(date, { representation: 'date' })
@@ -25,6 +27,8 @@ export const formatDateISO = (date: Date): string => {
  * @param options
  */
 export const formatDateTimeISO = (date: Date, options?: { startOfDay?: boolean; endOfDay?: boolean }): string => {
+  if (date === null) return undefined
+
   let dateStr
   const adjustedDate = date
   if (options?.startOfDay) {

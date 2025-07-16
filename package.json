@@ -113,7 +113,7 @@
     "connect-redis": "^9.0.0",
     "contentful": "^11.7.7",
     "csurf": "^1.11.0",
-    "date-fns": "^3.6.0",
+    "date-fns": "^4.1.0",
     "express": "^4.21.2",
     "express-session": "^1.18.1",
     "govuk-frontend": "^5.11.0",
