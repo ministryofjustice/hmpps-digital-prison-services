@@ -151,7 +151,7 @@
     "@types/superagent": "^8.1.9",
     "@types/supertest": "^6.0.3",
     "@typescript-eslint/eslint-plugin": "^8.37.0",
-    "audit-ci": "^6.6.1",
+    "audit-ci": "^7.1.0",
     "aws-sdk-client-mock": "^4.1.0",
     "concurrently": "^8.2.2",
     "cookie-session": "^2.1.0",
