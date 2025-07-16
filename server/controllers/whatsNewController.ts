@@ -34,7 +34,7 @@ export default class WhatsNewController {
           pageTitle: whatsNewPost.title,
           whatsNewPost,
         })
-      } catch (error) {
+      } catch (_error) {
         res.render('notFound')
       }
     }

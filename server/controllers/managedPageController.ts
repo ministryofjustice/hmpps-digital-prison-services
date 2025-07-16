@@ -16,7 +16,7 @@ export default class ManagedPageController {
           pageTitle: managedPage.title,
           managedPage,
         })
-      } catch (error) {
+      } catch (_error) {
         res.render('notFound')
       }
     }

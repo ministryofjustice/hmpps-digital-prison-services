@@ -6,7 +6,6 @@ import { WhatsNewPost, WhatsNewPostApollo } from '../data/interfaces/whatsNewPos
 import { OutageBannerApollo } from '../data/interfaces/outageBanner'
 import { ManagedPage, ManagedPageApollo } from '../data/interfaces/managedPage'
 
-/* eslint-disable  @typescript-eslint/no-explicit-any */
 export default class ContentfulService {
   constructor(private readonly apolloClient: ApolloClient<unknown>) {}
 

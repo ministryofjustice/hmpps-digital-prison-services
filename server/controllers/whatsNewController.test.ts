@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client/core'
+import { Request, Response } from 'express'
 import { Role } from '../enums/role'
 import ContentfulService from '../services/contentfulService'
 import { whatsNewPostsMock } from '../mocks/whatsNewPostsMock'
@@ -6,12 +6,11 @@ import WhatsNewController from './whatsNewController'
 import { whatsNewDataMock } from '../mocks/whatsNewDataMock'
 import { paginationMock } from '../mocks/paginationMock'
 
-let req: any
-let res: any
-let controller: any
-
 describe('Whats New Controller', () => {
   let contentfulService: ContentfulService
+  let req: Request
+  let res: Response
+  let controller: WhatsNewController
 
   beforeEach(() => {
     req = {
@@ -27,7 +26,7 @@ describe('Whats New Controller', () => {
       },
       path: '/',
       flash: jest.fn(),
-    }
+    } as unknown as Request
     res = {
       locals: {
         user: {
@@ -39,9 +38,13 @@ describe('Whats New Controller', () => {
       },
       render: jest.fn(),
       redirect: jest.fn(),
-    }
+    } as unknown as Response
 
-    contentfulService = new ContentfulService(new ApolloClient({ cache: new InMemoryCache() }))
+    contentfulService = {
+      getWhatsNewPosts: jest.fn(),
+      getWhatsNewPost: jest.fn(),
+    } as unknown as ContentfulService
+
     contentfulService.getWhatsNewPosts = jest.fn(async () => whatsNewDataMock)
     contentfulService.getWhatsNewPost = jest.fn(async slug => {
       if (slug) return whatsNewPostsMock[0]
@@ -53,9 +56,9 @@ describe('Whats New Controller', () => {
 
   describe('Display whats new page', () => {
     it('should get whats new list', async () => {
-      await controller.displayWhatsNewList()(req, res)
+      await controller.displayWhatsNewList()(req, res, null)
 
-      expect(controller['contentfulService'].getWhatsNewPosts).toHaveBeenCalled()
+      expect(contentfulService.getWhatsNewPosts).toHaveBeenCalled()
       expect(res.render).toHaveBeenCalledWith('pages/whatsNew', {
         pageTitle: "What's new",
         whatsNewPosts: whatsNewPostsMock,
@@ -66,9 +69,9 @@ describe('Whats New Controller', () => {
 
   describe('Display whats new post', () => {
     it('should get whats new post', async () => {
-      await controller.displayWhatsNewPost()(req, res)
+      await controller.displayWhatsNewPost()(req, res, null)
 
-      expect(controller['contentfulService'].getWhatsNewPost).toHaveBeenCalled()
+      expect(contentfulService.getWhatsNewPost).toHaveBeenCalled()
       expect(res.render).toHaveBeenCalledWith('pages/whatsNewPost', {
         pageTitle: whatsNewPostsMock[0].title,
         whatsNewPost: whatsNewPostsMock[0],
