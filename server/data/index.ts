@@ -43,4 +43,4 @@ export const dataAccess = {
   ),
 }
 
-export { RestClientBuilder }
+export type { RestClientBuilder }
