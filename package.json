@@ -101,7 +101,7 @@
     "@ministryofjustice/hmpps-connect-dps-components": "2.2.0",
     "@ministryofjustice/hmpps-connect-dps-shared-items": "^1.2.1",
     "agentkeepalive": "^4.6.0",
-    "applicationinsights": "^2.9.7",
+    "applicationinsights": "^3.7.0",
     "body-parser": "^2.2.0",
     "bunyan": "^1.8.15",
     "bunyan-format": "^0.2.1",
