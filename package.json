@@ -122,7 +122,7 @@
     "nunjucks": "^3.2.4",
     "passport": "^0.7.0",
     "passport-oauth2": "^1.8.0",
-    "redis": "^5.6.1",
+    "redis": "^5.8.1",
     "superagent": "^10.2.3",
     "url-value-parser": "^2.2.0",
     "uuid": "^11.1.0"
