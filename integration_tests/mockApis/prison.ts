@@ -8,6 +8,19 @@ import { userDetailsMock } from '../../server/test/mocks/userDetailsMock'
 import { prisonEstablishmentRollSummaryMock } from '../../server/mocks/prisonRollCountSummaryMock'
 
 export default {
+  stubPrisonApiPing: (httpStatus = 200) =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: '/prison/health/ping',
+      },
+      response: {
+        status: httpStatus,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: { status: httpStatus === 200 ? 'UP' : 'DOWN' },
+      },
+    }),
+
   stubUserCaseLoads: (caseLoads: CaseLoad[] = []) => {
     return stubFor({
       request: {

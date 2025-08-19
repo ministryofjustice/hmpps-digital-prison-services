@@ -1,6 +1,18 @@
 import { stubFor } from './wiremock'
 
 export default {
+  stubHealthAndMedicationPing: (httpStatus = 200) =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: '/health-and-medication/health/ping',
+      },
+      response: {
+        status: httpStatus,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: { status: httpStatus === 200 ? 'UP' : 'DOWN' },
+      },
+    }),
   stubHealthAndMedicationForPrison: (prisonId: string) => {
     const content = [
       {
