@@ -86,6 +86,7 @@ export type HealthAndMedicationData = HealthAndMedicationForPrison & { arrivalDa
 
 export interface HealthAndMedicationApiClient {
   getHealthAndMedicationForPrison(
+    token: string,
     prisonId: string,
     queryParams: DietaryRequirementsQueryParams,
   ): Promise<PagedList<HealthAndMedicationForPrison>>

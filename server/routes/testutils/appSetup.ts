@@ -5,7 +5,6 @@ import createError from 'http-errors'
 import routes from '../index'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
-import * as auth from '../../authentication/auth'
 import type { Services } from '../../services'
 import type { ApplicationInfo } from '../../applicationInfo'
 import { PrisonUser } from '../../interfaces/prisonUser'
@@ -68,6 +67,5 @@ export function appWithAllRoutes({
   services?: Partial<Services>
   userSupplier?: () => Express.User
 }): Express {
-  auth.default.authenticationMiddleware = () => (req, res, next) => next()
   return appSetup(services as Services, production, userSupplier)
 }

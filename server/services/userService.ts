@@ -1,20 +1,19 @@
 import { CaseLoad } from '../data/interfaces/caseLoad'
-import { RestClientBuilder } from '../data'
 import { PrisonApiClient } from '../data/interfaces/prisonApiClient'
 import { Location } from '../data/interfaces/location'
 
 export default class UserService {
-  constructor(private readonly prisonApiClientBuilder: RestClientBuilder<PrisonApiClient>) {}
+  constructor(private readonly prisonApiClient: PrisonApiClient) {}
 
   getUserCaseLoads(token: string): Promise<CaseLoad[]> {
-    return this.prisonApiClientBuilder(token).getUserCaseLoads()
+    return this.prisonApiClient.getUserCaseLoads(token)
   }
 
   getUserLocations(token: string): Promise<Location[]> {
-    return this.prisonApiClientBuilder(token).getUserLocations()
+    return this.prisonApiClient.getUserLocations(token)
   }
 
   setActiveCaseload(token: string, caseLoad: CaseLoad): Promise<Record<string, string>> {
-    return this.prisonApiClientBuilder(token).setActiveCaseload(caseLoad)
+    return this.prisonApiClient.setActiveCaseload(token, caseLoad)
   }
 }

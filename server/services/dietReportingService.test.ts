@@ -10,10 +10,7 @@ describe('DietReportingService', () => {
 
   beforeEach(() => {
     jest.resetAllMocks()
-    dietReportingService = new DietReportingService(
-      () => healthAndMedicationApiClientMock,
-      () => prisonApiClientMock,
-    )
+    dietReportingService = new DietReportingService(healthAndMedicationApiClientMock, prisonApiClientMock)
   })
 
   it('should get health and medication data for a prison', async () => {
@@ -69,7 +66,7 @@ describe('DietReportingService', () => {
 
     const dietaryRequirements = await dietReportingService.getDietaryRequirementsForPrison('token', 'LEI', {})
 
-    expect(prisonApiClientMock.getLatestArrivalDates).toHaveBeenCalledWith(['A1234AA', 'A2345BB'])
+    expect(prisonApiClientMock.getLatestArrivalDates).toHaveBeenCalledWith('token', ['A1234AA', 'A2345BB'])
     expect(dietaryRequirements.content.length).toBe(2)
     expect(dietaryRequirements.content[0].prisonerNumber).toBe('A1234AA')
     expect(dietaryRequirements.content[0].lastName).toBe('SMITH')

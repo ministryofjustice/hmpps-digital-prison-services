@@ -1,6 +1,6 @@
+import { AgentConfig } from '@ministryofjustice/hmpps-rest-client'
 import { serviceCheckFactory } from '../data/healthCheck'
 import config from '../config'
-import type { AgentConfig } from '../config'
 import type { ApplicationInfo } from '../applicationInfo'
 
 interface HealthCheckStatus {

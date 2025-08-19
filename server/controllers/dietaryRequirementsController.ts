@@ -15,7 +15,6 @@ export default class DietaryRequirementsController {
 
   public get(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { clientToken } = req.middleware
       const prisonId = res.locals.user.activeCaseLoadId
 
       if (!userHasRoles([Role.DietAndAllergiesReport], res.locals.user.userRoles)) {
@@ -71,7 +70,11 @@ export default class DietaryRequirementsController {
       }
 
       // Remove page as this comes from the API
-      const resp = await this.dietReportingService.getDietaryRequirementsForPrison(clientToken, prisonId, queryParams)
+      const resp = await this.dietReportingService.getDietaryRequirementsForPrison(
+        res.locals.user.token,
+        prisonId,
+        queryParams,
+      )
       delete queryParams.page
 
       const listMetadata = generateListMetadata(resp, queryParams, 'result', [], '', true)
@@ -91,7 +94,6 @@ export default class DietaryRequirementsController {
 
   public printAll(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { clientToken } = req.middleware
       const prisonId = res.locals.user.activeCaseLoadId
 
       if (!userHasRoles([Role.DietAndAllergiesReport], res.locals.user.userRoles)) {
@@ -102,7 +104,11 @@ export default class DietaryRequirementsController {
       if (req.query.nameAndNumber) queryParams.nameAndNumber = req.query.nameAndNumber as string
       if (req.query.location) queryParams.location = req.query.location as string
 
-      const resp = await this.dietReportingService.getDietaryRequirementsForPrison(clientToken, prisonId, queryParams)
+      const resp = await this.dietReportingService.getDietaryRequirementsForPrison(
+        res.locals.user.token,
+        prisonId,
+        queryParams,
+      )
       const datetime = format(new Date(), `cccc d MMMM yyyy 'at' HH:mm`)
 
       return this.pdfReportingService.renderDietReport(res, {
