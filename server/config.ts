@@ -45,6 +45,7 @@ export default {
   apis: {
     hmppsAuth: {
       url: get('HMPPS_AUTH_URL', 'http://localhost:9090/auth', requiredInProduction),
+      healthPath: '/health/ping',
       externalUrl: get('HMPPS_AUTH_EXTERNAL_URL', get('HMPPS_AUTH_URL', 'http://localhost:9090/auth')),
       timeout: {
         response: Number(get('HMPPS_AUTH_TIMEOUT_RESPONSE', 10000)),
@@ -58,6 +59,7 @@ export default {
     },
     gotenberg: {
       url: get('GOTENBERG_API_URL', 'http://localhost:3100', requiredInProduction),
+      healthPath: '/health',
       timeout: {
         response: Number(get('GOTENBERG_API_TIMEOUT_RESPONSE', 20000)),
         deadline: Number(get('GOTENBERG_API_TIMEOUT_DEADLINE', 20000)),
@@ -66,6 +68,7 @@ export default {
     },
     prisonApi: {
       url: get('PRISON_API_URL', 'http://localhost:8082', requiredInProduction),
+      healthPath: '/health/ping',
       timeout: {
         response: Number(get('PRISON_API_TIMEOUT_RESPONSE', 20000)),
         deadline: Number(get('PRISON_API_TIMEOUT_DEADLINE', 20000)),
@@ -74,6 +77,7 @@ export default {
     },
     tokenVerification: {
       url: get('TOKEN_VERIFICATION_API_URL', 'http://localhost:8100', requiredInProduction),
+      healthPath: '/health/ping',
       timeout: {
         response: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000)),
         deadline: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_DEADLINE', 5000)),
@@ -96,6 +100,7 @@ export default {
     },
     healthAndMedicationApi: {
       url: get('HEALTH_AND_MEDICATION_API_URL', 'http://localhost:8082', requiredInProduction),
+      healthPath: '/health/ping',
       timeout: {
         response: Number(get('HEALTH_AND_MEDICATION_TIMEOUT_RESPONSE', 10000)),
         deadline: Number(get('HEALTH_AND_MEDICATION_TIMEOUT_DEADLINE', 10000)),
