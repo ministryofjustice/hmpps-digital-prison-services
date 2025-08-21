@@ -5,7 +5,7 @@ import { Location } from '../data/interfaces/location'
 
 jest.mock('../data/prisonApiClient')
 
-const token = 'token'
+const token = 'some token'
 
 describe('User service', () => {
   let prisonApiClient: jest.Mocked<PrisonApiRestClient>
@@ -13,7 +13,7 @@ describe('User service', () => {
 
   beforeEach(() => {
     prisonApiClient = new PrisonApiRestClient(null) as jest.Mocked<PrisonApiRestClient>
-    userService = new UserService(prisonApiClient)
+    userService = new UserService(() => prisonApiClient)
   })
 
   describe('getUserCaseLoads', () => {
@@ -55,7 +55,7 @@ describe('User service', () => {
       const caseLoad = { caseLoadId: 'MDI' } as CaseLoad
       await userService.setActiveCaseload(token, caseLoad)
 
-      expect(prisonApiClient.setActiveCaseload).toHaveBeenCalledWith(token, caseLoad)
+      expect(prisonApiClient.setActiveCaseload).toHaveBeenCalledWith(caseLoad)
     })
 
     it('propagates error', async () => {

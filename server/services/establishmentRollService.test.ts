@@ -6,13 +6,13 @@ describe('establishmentRollService', () => {
   let establishmentRollService: EstablishmentRollService
 
   beforeEach(() => {
-    establishmentRollService = new EstablishmentRollService(prisonApiClientMock)
+    establishmentRollService = new EstablishmentRollService(() => prisonApiClientMock)
   })
 
   describe('getEstablishmentRollSummary', () => {
     it('should call the prisonApiClient with the correct parameters', async () => {
       await establishmentRollService.getEstablishmentRollSummary('token', 'LEI')
-      expect(prisonApiClientMock.getPrisonRollCountSummary).toHaveBeenCalledWith('token', 'LEI')
+      expect(prisonApiClientMock.getPrisonRollCountSummary).toHaveBeenCalledWith('LEI')
     })
 
     it('should return the data from the API', async () => {

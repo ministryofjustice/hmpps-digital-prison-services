@@ -37,7 +37,7 @@ export default class HomepageController {
         this.serviceData.getServiceData(res),
         this.contentfulService.getWhatsNewPosts(1, 3, 0, activeCaseLoadId),
         userHasPrisonCaseLoad
-          ? this.establishmentRollService.getEstablishmentRollSummary(res.locals.user.token, activeCaseLoadId)
+          ? this.establishmentRollService.getEstablishmentRollSummary(req.middleware.clientToken, activeCaseLoadId)
           : {},
       ])
 

@@ -15,6 +15,8 @@ const applicationInfo = applicationInfoSupplier()
 initialiseAppInsights()
 buildAppInsightsClient(applicationInfo)
 
+type RestClientBuilder<T> = (token: string) => T
+
 export const dataAccess = () => {
   const hmppsAuthClient = new AuthenticationClient(
     config.apis.hmppsAuth,
@@ -24,9 +26,11 @@ export const dataAccess = () => {
 
   return {
     applicationInfo,
-    prisonApiClient: new PrisonApiRestClient(hmppsAuthClient),
-    healthAndMedicationApiClient: new HealthAndMedicationRestApiClient(hmppsAuthClient),
+    hmppsAuthClient,
+    prisonApiClientBuilder: (token: string) => new PrisonApiRestClient(token),
+    healthAndMedicationApiClientBuilder: (token: string) => new HealthAndMedicationRestApiClient(token),
   }
 }
 
+export type { RestClientBuilder }
 export type DataAccess = ReturnType<typeof dataAccess>

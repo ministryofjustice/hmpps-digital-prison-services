@@ -22,6 +22,7 @@ import setUpEnvironmentName from './middleware/setUpEnvironmentName'
 import logger from '../logger'
 import config from './config'
 import { ensureActiveCaseLoadSet } from './middleware/ensureActiveCaseLoadSet'
+import populateClientToken from './middleware/populateClientToken'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -42,6 +43,7 @@ export default function createApp(services: Services): express.Application {
   app.use(authorisationMiddleware(['ROLE_PRISON']))
   app.use(setUpCsrf())
   app.use(setUpCurrentUser(services))
+  app.use(populateClientToken())
 
   app.get(
     /^(?!\/api).*/,

@@ -1,5 +1,4 @@
 import nock from 'nock'
-import { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
 import config from '../config'
 import PrisonApiClient from './prisonApiClient'
 import { ApplicationInfo } from '../applicationInfo'
@@ -23,16 +22,11 @@ const token = { access_token: 'token-1', expires_in: 300 }
 
 describe('prisonApiClient', () => {
   let fakePrisonApi: nock.Scope
-  let mockAuthenticationClient: AuthenticationClient
   let prisonApiClient: PrisonApiClient
 
   beforeEach(() => {
     fakePrisonApi = nock(config.apis.prisonApi.url)
-    mockAuthenticationClient = {
-      getToken: jest.fn().mockResolvedValue(token.access_token),
-    } as unknown as jest.Mocked<AuthenticationClient>
-
-    prisonApiClient = new PrisonApiClient(mockAuthenticationClient)
+    prisonApiClient = new PrisonApiClient(token.access_token)
   })
 
   afterEach(() => {
@@ -57,7 +51,7 @@ describe('prisonApiClient', () => {
     it('should return data from api', async () => {
       mockSuccessfulPrisonApiCall('/api/users/me/caseLoads?allCaseloads=true', caseloadMock)
 
-      const output = await prisonApiClient.getUserCaseLoads(token.access_token)
+      const output = await prisonApiClient.getUserCaseLoads()
       expect(output).toEqual(caseloadMock)
     })
   })
@@ -66,7 +60,7 @@ describe('prisonApiClient', () => {
     it('should return data from api', async () => {
       mockSuccessfulPrisonApiCall('/api/users/me/locations', locationMock)
 
-      const output = await prisonApiClient.getUserLocations(token.access_token)
+      const output = await prisonApiClient.getUserLocations()
       expect(output).toEqual(locationMock)
     })
   })
@@ -84,7 +78,7 @@ describe('prisonApiClient', () => {
         .put('/api/users/me/activeCaseLoad')
         .matchHeader('authorization', `Bearer ${token.access_token}`)
         .reply(200, { body: 'RESPONSE' })
-      const output = await prisonApiClient.setActiveCaseload(token.access_token, caseLoadMock)
+      const output = await prisonApiClient.setActiveCaseload(caseLoadMock)
       expect(output).toEqual({ body: 'RESPONSE' })
     })
   })
@@ -95,7 +89,7 @@ describe('prisonApiClient', () => {
         .post('/api/movements/offenders/latest-arrival-date')
         .matchHeader('authorization', `Bearer ${token.access_token}`)
         .reply(200, { body: 'RESPONSE' })
-      const output = await prisonApiClient.getLatestArrivalDates(token.access_token, ['A1234AA', 'A2345BB'])
+      const output = await prisonApiClient.getLatestArrivalDates(['A1234AA', 'A2345BB'])
       expect(output).toEqual({ body: 'RESPONSE' })
     })
   })

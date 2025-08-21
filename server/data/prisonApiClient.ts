@@ -1,42 +1,40 @@
-import { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
-import { asUser, RestClient } from '@ministryofjustice/hmpps-rest-client'
 import { CaseLoad } from './interfaces/caseLoad'
 import { Location } from './interfaces/location'
 import { LatestArrivalDateInfo } from './interfaces/latestArrivalDateInfo'
-import logger from '../../logger'
 import config from '../config'
 import PrisonRollCount from './interfaces/prisonRollCount'
 import EstablishmentRollSummary from '../services/interfaces/establishmentRollService/EstablishmentRollSummary'
 import { PrisonApiClient } from './interfaces/prisonApiClient'
+import RestClient from './restClient'
 
 export default class PrisonApiRestClient extends RestClient implements PrisonApiClient {
-  constructor(authenticationClient: AuthenticationClient) {
-    super('Prison API', config.apis.prisonApi, logger, authenticationClient)
+  constructor(token: string) {
+    super('Prison API', config.apis.prisonApi, token)
   }
 
-  getUserCaseLoads(token: string): Promise<CaseLoad[]> {
-    return this.get<CaseLoad[]>({ path: '/api/users/me/caseLoads', query: 'allCaseloads=true' }, asUser(token))
+  getUserCaseLoads(): Promise<CaseLoad[]> {
+    return this.get<CaseLoad[]>({ path: '/api/users/me/caseLoads', query: 'allCaseloads=true' }, this.token)
   }
 
-  getUserLocations(token: string): Promise<Location[]> {
-    return this.get<Location[]>({ path: '/api/users/me/locations' }, asUser(token))
+  getUserLocations(): Promise<Location[]> {
+    return this.get<Location[]>({ path: '/api/users/me/locations' }, this.token)
   }
 
-  setActiveCaseload(token: string, caseLoad: CaseLoad): Promise<Record<string, string>> {
-    return this.put<Record<string, string>>({ path: '/api/users/me/activeCaseLoad', data: caseLoad }, asUser(token))
+  setActiveCaseload(caseLoad: CaseLoad): Promise<Record<string, string>> {
+    return this.put<Record<string, string>>({ path: '/api/users/me/activeCaseLoad', data: caseLoad }, this.token)
   }
 
-  getPrisonRollCountSummary(token: string, prisonId: string): Promise<EstablishmentRollSummary> {
-    return this.get<PrisonRollCount>({ path: `/api/prison/roll-count/${prisonId}/summary` }, asUser(token))
+  getPrisonRollCountSummary(prisonId: string): Promise<EstablishmentRollSummary> {
+    return this.get<PrisonRollCount>({ path: `/api/prison/roll-count/${prisonId}/summary` }, this.token)
   }
 
-  getLatestArrivalDates(token: string, prisonerNumbers: string[]): Promise<LatestArrivalDateInfo[]> {
+  getLatestArrivalDates(prisonerNumbers: string[]): Promise<LatestArrivalDateInfo[]> {
     return this.post<LatestArrivalDateInfo[]>(
       {
         path: '/api/movements/offenders/latest-arrival-date',
         data: prisonerNumbers,
       },
-      asUser(token),
+      this.token,
     )
   }
 }
