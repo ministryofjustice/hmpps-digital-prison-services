@@ -1,7 +1,6 @@
 import nock from 'nock'
 import config from '../config'
 import PrisonApiClient from './prisonApiClient'
-import restClientBuilder from '.'
 import { ApplicationInfo } from '../applicationInfo'
 import { locationMock } from '../mocks/locationMock'
 
@@ -27,7 +26,7 @@ describe('prisonApiClient', () => {
 
   beforeEach(() => {
     fakePrisonApi = nock(config.apis.prisonApi.url)
-    prisonApiClient = restClientBuilder('Prison API', config.apis.prisonApi, PrisonApiClient)(token.access_token)
+    prisonApiClient = new PrisonApiClient(token.access_token)
   })
 
   afterEach(() => {

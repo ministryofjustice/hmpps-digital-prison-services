@@ -17,12 +17,12 @@ import setUpWebSession from './middleware/setUpWebSession'
 
 import routes from './routes'
 import type { Services } from './services'
-import populateClientToken from './middleware/populateClientToken'
 import setUpPageNotFound from './middleware/setUpPageNotFound'
 import setUpEnvironmentName from './middleware/setUpEnvironmentName'
 import logger from '../logger'
 import config from './config'
 import { ensureActiveCaseLoadSet } from './middleware/ensureActiveCaseLoadSet'
+import populateClientToken from './middleware/populateClientToken'
 
 export default function createApp(services: Services): express.Application {
   const app = express()

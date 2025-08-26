@@ -7,6 +7,7 @@ import contentful from './integration_tests/mockApis/contentful'
 import dps from './integration_tests/mockApis/dps'
 import feComponents from './integration_tests/mockApis/feComponents'
 import healthAndMedication from './integration_tests/mockApis/healthAndMedication'
+import gotenberg from './integration_tests/mockApis/gotenberg'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -31,6 +32,7 @@ export default defineConfig({
         ...dps,
         ...feComponents,
         ...healthAndMedication,
+        ...gotenberg,
       })
     },
     baseUrl: 'http://localhost:3007',

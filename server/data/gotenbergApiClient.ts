@@ -1,7 +1,7 @@
 import superagent from 'superagent'
 import Agent, { HttpsAgent } from 'agentkeepalive'
+import { ApiConfig } from '@ministryofjustice/hmpps-rest-client'
 import { GotenbergApiClient, PdfRenderRequest } from './interfaces/gotenbergApiClient'
-import { ApiConfig } from '../config'
 
 const defaultPage = {
   paperWidth: '8.27',
