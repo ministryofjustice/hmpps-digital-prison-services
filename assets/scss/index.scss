@@ -4,13 +4,8 @@ $path: "/assets/images/";
 $moj-page-width: 1170px;
 $govuk-page-width: $moj-page-width;
 
-@import "node_modules/govuk-frontend/dist/govuk/base";
-@import "node_modules/govuk-frontend/dist/govuk/core";
-@import "node_modules/govuk-frontend/dist/govuk/objects";
-@import "node_modules/govuk-frontend/dist/govuk/components";
-@import "node_modules/govuk-frontend/dist/govuk/utilities";
-@import "node_modules/govuk-frontend/dist/govuk/overrides";
-@import 'moj/all';
+@import "govuk-frontend/dist/govuk/all";
+@import "@ministryofjustice/frontend/moj/all";
 
 @import 'node_modules/@ministryofjustice/hmpps-connect-dps-components/dist/assets/footer';
 @import 'node_modules/@ministryofjustice/hmpps-connect-dps-components/dist/assets/header-bar';
@@ -19,7 +14,7 @@ $govuk-page-width: $moj-page-width;
 
 @import './components/whats-new';
 @import './components/print-link';
-@import 'components/alert-flags';
+@import './components/alert-flags';
 @import './components/pagination';
 @import './components/sortable-table';
 @import './pages/help';
@@ -28,6 +23,7 @@ $govuk-page-width: $moj-page-width;
 @import './pages/whats-new';
 @import './pages/whats-new-post';
 @import './pages/dietary-requirements';
-@import 'assets/scss/local';
-@import 'assets/scss/print';
-@import "assets/scss/helpers";
+
+@import 'overrides/local';
+@import 'overrides/print';
+@import "helpers/index";
