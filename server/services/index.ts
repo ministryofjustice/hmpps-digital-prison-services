@@ -1,5 +1,5 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client/core'
-import { dataAccess } from '../data'
+import { dataAccess as initDataAccess } from '../data'
 import UserService from './userService'
 import config from '../config'
 import ContentfulService from './contentfulService'
@@ -10,7 +10,8 @@ import PdfRenderingService from './pdfRenderingService'
 import GotenbergRestApiClient from '../data/gotenbergApiClient'
 
 export const services = () => {
-  const { applicationInfo, prisonApiClientBuilder, healthAndMedicationApiClientBuilder } = dataAccess()
+  const dataAccess = initDataAccess()
+  const { applicationInfo, prisonApiClientBuilder, healthAndMedicationApiClientBuilder } = dataAccess
 
   const userService = new UserService(prisonApiClientBuilder)
   const establishmentRollService = new EstablishmentRollService(prisonApiClientBuilder)
