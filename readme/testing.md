@@ -22,11 +22,11 @@ Then run the server in test mode by:
 ```zsh
 npm run start-feature
 ```
-or 
+or
 ```zsh
 npm run start-feature:dev
-``` 
-to run with nodemon
+```
+to run with auto-start on changes
 
 And then either, run tests in headless mode with:
 

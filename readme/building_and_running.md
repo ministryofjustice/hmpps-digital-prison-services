@@ -18,7 +18,7 @@ The DPS Homepage has a number of dependencies:
 * [contentful](https://graphql.contentful.com) - for banner and 'what's new' content
 
 ### Developing against the development environment
-Development of this application has mainly relied on configuring `hmpps-digital-prison-services` to point at the development 
+Development of this application has mainly relied on configuring `hmpps-digital-prison-services` to point at the development
 environment instances of the above dependencies (redis being the exception, a local instance of this was used).
 
 Here's the process.
@@ -59,7 +59,7 @@ GOTENBERG_API_URL=http://localhost:3100
 ```
 </details>
 
-2/ And then, to build the assets and start the app with nodemon:
+2/ And then, to build the assets and start the app with esbuild:
 ```
 npm run start:dev
 ```
