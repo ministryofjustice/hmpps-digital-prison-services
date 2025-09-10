@@ -43,7 +43,7 @@ export default function createApp(services: Services): express.Application {
   app.use(authorisationMiddleware(['ROLE_PRISON']))
   app.use(setUpCsrf())
   app.use(setUpCurrentUser(services))
-  app.use(populateClientToken())
+  app.use(populateClientToken(services.dataAccess.hmppsAuthClient))
 
   app.get(
     /^(?!\/api).*/,

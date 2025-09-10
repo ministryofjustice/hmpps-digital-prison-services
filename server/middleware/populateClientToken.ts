@@ -1,13 +1,12 @@
 import { RequestHandler } from 'express'
+import { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
 import logger from '../../logger'
-import { dataAccess } from '../data'
 
-export default function populateClientToken(): RequestHandler {
+export default function populateClientToken(authenticationClient: AuthenticationClient): RequestHandler {
   return async (req, res, next) => {
     try {
-      const { hmppsAuthClient } = dataAccess()
       if (res.locals.user) {
-        const clientToken = await hmppsAuthClient.getToken(res.locals.user.username)
+        const clientToken = await authenticationClient.getToken(res.locals.user.username)
         if (clientToken) {
           req.middleware = { ...req.middleware, clientToken }
         } else {
