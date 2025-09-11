@@ -138,15 +138,15 @@
         top: 0;
       }
     }
+    grid-template-columns: auto auto auto;
+    column-gap: govuk-spacing(7);
+    row-gap: govuk-spacing(4);
     @media (max-width: 768px) {
       grid-template-columns: auto;
     }
     @media (min-width: 769px) and (max-width: 1019px) {
       grid-template-columns: auto auto;
     }
-    grid-template-columns: auto auto auto;
-    column-gap: govuk-spacing(7);
-    row-gap: govuk-spacing(4);
     .hmpps-service-item {
       li.hmpps-service-link::marker {
         color: govuk-colour('blue');
