@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 .alerts-list {
   @extend %govuk-list;
   margin-bottom: 0;
@@ -38,8 +40,8 @@
 .non-association {
   @extend %status-style;
 
-  background: lighten(#D4351C,40);
-  border-color: lighten(#D4351C,40);
+  background: color.adjust(#D4351C, $lightness: 40%);
+  border-color: color.adjust(#D4351C, $lightness: 40%);
   font-weight: bold;
   color: #D4351C;
 }
