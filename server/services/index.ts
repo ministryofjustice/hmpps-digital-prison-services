@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client/core'
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client/core'
 import { dataAccess as initDataAccess } from '../data'
 import UserService from './userService'
 import config from '../config'
@@ -20,10 +20,12 @@ export const services = () => {
 
   const apolloClient = new ApolloClient({
     cache: new InMemoryCache(),
-    uri: `${config.contentful.host}/content/v1/spaces/${config.contentful.spaceId}/environments/${config.contentful.environment}`,
-    headers: {
-      Authorization: `Bearer ${config.contentful.accessToken}`,
-    },
+    link: new HttpLink({
+      uri: `${config.contentful.host}/content/v1/spaces/${config.contentful.spaceId}/environments/${config.contentful.environment}`,
+      headers: {
+        Authorization: `Bearer ${config.contentful.accessToken}`,
+      },
+    }),
     ssrMode: true,
     defaultOptions: {
       watchQuery: {
