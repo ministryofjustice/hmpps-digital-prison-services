@@ -4,4 +4,18 @@ export interface OutageBannerApollo {
   text: {
     json: Document
   }
+  prisons?: string[]
+}
+
+export interface OutageBannerQuery {
+  outageBannerCollection: {
+    items: OutageBannerApollo[]
+  }
+}
+
+type OutageBannerCondition = { prisons_exists: boolean } | { prisons_contains_some: string }
+type OutageBannerFilter = OutageBannerCondition | { OR: OutageBannerCondition[] }
+
+export interface OutageBannerQueryVariables {
+  condition: OutageBannerFilter
 }

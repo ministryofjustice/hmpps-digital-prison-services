@@ -1,4 +1,4 @@
-import { ApolloClient, ApolloQueryResult, InMemoryCache } from '@apollo/client/core'
+import { ApolloClient, ObservableQuery } from '@apollo/client'
 import ContentfulService from './contentfulService'
 import {
   whatsNewPostCollectionMock,
@@ -12,19 +12,19 @@ jest.mock('@apollo/client/core')
 
 describe('ContentfulService', () => {
   let contentfulService: ContentfulService
-  let apolloClient: jest.Mocked<ApolloClient<InMemoryCache>>
+  let apolloClient: jest.Mocked<ApolloClient>
 
   beforeEach(() => {
-    apolloClient = new ApolloClient<InMemoryCache>(null) as jest.Mocked<ApolloClient<InMemoryCache>>
+    apolloClient = new ApolloClient(null) as jest.Mocked<ApolloClient>
     contentfulService = new ContentfulService(apolloClient)
   })
 
-  const mockApolloQuery = (response: ApolloQueryResult<unknown>) => {
+  const mockApolloQuery = (response: ObservableQuery.Result<unknown>) => {
     return jest.spyOn(apolloClient, 'query').mockResolvedValue(response)
   }
 
   it('should get whats new posts', async () => {
-    const apolloSpy = mockApolloQuery(whatsNewPostsCollectionMock as ApolloQueryResult<unknown>)
+    const apolloSpy = mockApolloQuery(whatsNewPostsCollectionMock as ObservableQuery.Result<unknown>)
 
     const whatsNewData = await contentfulService.getWhatsNewPosts(1, 3, 0, 'LEI')
 
@@ -59,7 +59,7 @@ describe('ContentfulService', () => {
   })
 
   it('should get whats new post', async () => {
-    const apolloSpy = mockApolloQuery(whatsNewPostCollectionMock as ApolloQueryResult<unknown>)
+    const apolloSpy = mockApolloQuery(whatsNewPostCollectionMock as ObservableQuery.Result<unknown>)
     const slug = 'whats-new-one'
 
     const post = await contentfulService.getWhatsNewPost(slug)
@@ -78,7 +78,7 @@ describe('ContentfulService', () => {
   })
 
   it('Should get the outage banner for the users caseload', async () => {
-    const apolloSpy = mockApolloQuery({ data: { outageBannerCollection: [] } } as ApolloQueryResult<unknown>)
+    const apolloSpy = mockApolloQuery({ data: { outageBannerCollection: [] } } as ObservableQuery.Result<unknown>)
 
     await contentfulService.getOutageBanner('LEI')
 
@@ -92,7 +92,7 @@ describe('ContentfulService', () => {
   })
 
   it('Should get the outage banner for the users without a caseload', async () => {
-    const apolloSpy = mockApolloQuery({ data: { outageBannerCollection: [] } } as ApolloQueryResult<unknown>)
+    const apolloSpy = mockApolloQuery({ data: { outageBannerCollection: [] } } as ObservableQuery.Result<unknown>)
 
     await contentfulService.getOutageBanner(undefined)
 

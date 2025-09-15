@@ -1,4 +1,4 @@
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client/core'
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
 import { dataAccess as initDataAccess } from '../data'
 import UserService from './userService'
 import config from '../config'

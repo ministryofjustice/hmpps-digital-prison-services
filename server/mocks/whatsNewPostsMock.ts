@@ -1,4 +1,4 @@
-import { ApolloQueryResult, NetworkStatus } from '@apollo/client/core'
+import { NetworkStatus, ObservableQuery } from '@apollo/client'
 import { Document } from '@contentful/rich-text-types'
 import { WhatsNewPost, WhatsNewPostApollo } from '../data/interfaces/whatsNewPost'
 
@@ -74,7 +74,7 @@ export const whatsNewPostApolloMock: WhatsNewPostApollo[] = [
   },
 ]
 
-export const whatsNewPostsCollectionMock: ApolloQueryResult<unknown> = {
+export const whatsNewPostsCollectionMock: ObservableQuery.Result<unknown> = {
   data: {
     whatsNewPostCollection: {
       total: 3,
@@ -83,16 +83,20 @@ export const whatsNewPostsCollectionMock: ApolloQueryResult<unknown> = {
       items: whatsNewPostsApolloMock,
     },
   },
+  dataState: 'complete',
   loading: false,
+  partial: false,
   networkStatus: NetworkStatus.ready,
 }
 
-export const whatsNewPostCollectionMock: ApolloQueryResult<unknown> = {
+export const whatsNewPostCollectionMock: ObservableQuery.Result<unknown> = {
   data: {
     whatsNewPostCollection: {
       items: whatsNewPostApolloMock,
     },
   },
+  dataState: 'complete',
   loading: false,
+  partial: false,
   networkStatus: NetworkStatus.ready,
 }

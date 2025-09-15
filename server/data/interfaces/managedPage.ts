@@ -14,3 +14,16 @@ export interface ManagedPageApollo {
     links?: any
   }
 }
+
+export interface ManagedPagesQuery {
+  managedPageCollection: {
+    items: ManagedPageApollo[]
+  }
+}
+
+type ManagedPageCondition = { slug: string }
+type ManagedPageFilter = ManagedPageCondition | { OR: ManagedPageCondition[] }
+
+export interface ManagedPagesQueryVariables {
+  condition: ManagedPageFilter
+}

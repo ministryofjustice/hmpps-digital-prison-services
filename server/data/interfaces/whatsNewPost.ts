@@ -17,4 +17,29 @@ export interface WhatsNewPostApollo {
   }
   summary: string
   date: string
+  prisons?: string[]
+}
+
+export interface WhatsNewPostsQuery {
+  whatsNewPostCollection: {
+    total: number
+    limit: number
+    skip: number
+    items: WhatsNewPost[]
+  }
+}
+
+export interface WhatsNewPostWithSlugQuery {
+  whatsNewPostCollection: {
+    items: WhatsNewPostApollo[]
+  }
+}
+
+type WhatsNewPostCondition = { slug: string } | { prisons_exists: boolean } | { prisons_contains_some: string }
+type WhatsNewPostFilter = WhatsNewPostCondition | { OR: WhatsNewPostCondition[] }
+
+export interface WhatsNewPostsQueryVariables {
+  limit?: number
+  skip?: number
+  condition: WhatsNewPostFilter
 }
