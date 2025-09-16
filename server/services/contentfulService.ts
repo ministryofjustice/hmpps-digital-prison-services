@@ -1,13 +1,18 @@
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
-import { ApolloClient, gql } from '@apollo/client/core'
+import { ApolloClient, gql, TypedDocumentNode } from '@apollo/client'
 import { BLOCKS, INLINES } from '@contentful/rich-text-types'
 import { WhatsNewData } from '../data/interfaces/whatsNewData'
-import { WhatsNewPost, WhatsNewPostApollo } from '../data/interfaces/whatsNewPost'
-import { OutageBannerApollo } from '../data/interfaces/outageBanner'
-import { ManagedPage, ManagedPageApollo } from '../data/interfaces/managedPage'
+import {
+  WhatsNewPost,
+  WhatsNewPostsQuery,
+  WhatsNewPostsQueryVariables,
+  WhatsNewPostWithSlugQuery,
+} from '../data/interfaces/whatsNewPost'
+import { OutageBannerQuery, OutageBannerQueryVariables } from '../data/interfaces/outageBanner'
+import { ManagedPage, ManagedPagesQuery, ManagedPagesQueryVariables } from '../data/interfaces/managedPage'
 
 export default class ContentfulService {
-  constructor(private readonly apolloClient: ApolloClient<unknown>) {}
+  constructor(private readonly apolloClient: ApolloClient) {}
 
   /**
    * Get list of `whatsNewPost` entries.
@@ -29,7 +34,7 @@ export default class ContentfulService {
       ? { OR: [{ prisons_exists: false }, { prisons_contains_some: activeCaseLoadId }] }
       : { prisons_exists: false }
 
-    const getWhatsNewPostsQuery = gql`
+    const getWhatsNewPostsQuery: TypedDocumentNode<WhatsNewPostsQuery, WhatsNewPostsQueryVariables> = gql`
       query Posts($limit: Int!, $skip: Int!, $condition: WhatsNewPostFilter!) {
         whatsNewPostCollection(limit: $limit, skip: $skip, where: $condition, order: date_DESC) {
           total
@@ -87,7 +92,7 @@ export default class ContentfulService {
   public async getWhatsNewPost(slug: string): Promise<WhatsNewPost> {
     const filter = { slug }
 
-    const getWhatsNewPostQuery = gql`
+    const getWhatsNewPostQuery: TypedDocumentNode<WhatsNewPostWithSlugQuery, WhatsNewPostsQueryVariables> = gql`
       query PostWithSlug($condition: WhatsNewPostFilter!) {
         whatsNewPostCollection(limit: 1, where: $condition) {
           items {
@@ -139,7 +144,7 @@ export default class ContentfulService {
       throw new Error('Whats new post not found')
     }
 
-    return items.map((post: WhatsNewPostApollo) => ({
+    return items.map(post => ({
       ...post,
       body: documentToHtmlString(post.body.json, this.renderOptions(post.body.links)),
     }))[0]
@@ -153,7 +158,7 @@ export default class ContentfulService {
       ? { OR: [{ prisons_exists: false }, { prisons_contains_some: activeCaseLoadId }] }
       : { prisons_exists: false }
 
-    const getOutageBannerQuery = gql`
+    const getOutageBannerQuery: TypedDocumentNode<OutageBannerQuery, OutageBannerQueryVariables> = gql`
       query OutageBanner($condition: OutageBannerFilter!) {
         outageBannerCollection(limit: 1, order: sys_publishedAt_DESC, where: $condition) {
           items {
@@ -177,7 +182,7 @@ export default class ContentfulService {
       return undefined
     }
 
-    return items.map((outageBanner: OutageBannerApollo) => ({
+    return items.map(outageBanner => ({
       ...outageBanner,
       text: documentToHtmlString(outageBanner.text.json),
     }))[0]?.text
@@ -189,7 +194,7 @@ export default class ContentfulService {
   public async getManagedPage(slug: string): Promise<ManagedPage> {
     const filter = { slug }
 
-    const getManagedPageBySlugQuery = gql`
+    const getManagedPageBySlugQuery: TypedDocumentNode<ManagedPagesQuery, ManagedPagesQueryVariables> = gql`
       query ManagedPageBySlug($condition: ManagedPageFilter!) {
         managedPageCollection(limit: 1, where: $condition) {
           items {
@@ -239,7 +244,7 @@ export default class ContentfulService {
       throw new Error('Page not found')
     }
 
-    return items.map((page: ManagedPageApollo) => ({
+    return items.map(page => ({
       ...page,
       content: documentToHtmlString(page.content.json, this.renderOptions(page.content.links)),
     }))[0]

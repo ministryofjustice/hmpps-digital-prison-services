@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client/core'
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
 import { Role } from '../enums/role'
 import HomepageController from './homepageController'
 import config from '../config'
@@ -53,7 +53,12 @@ describe('Homepage Controller', () => {
     serviceData = new ServiceData()
     establishmentRollService.getEstablishmentRollSummary = jest.fn(async () => prisonEstablishmentRollSummaryMock)
 
-    contentfulService = new ContentfulService(new ApolloClient({ cache: new InMemoryCache() }))
+    contentfulService = new ContentfulService(
+      new ApolloClient({
+        cache: new InMemoryCache(),
+        link: new HttpLink({}),
+      }),
+    )
     contentfulService.getWhatsNewPosts = jest.fn(async () => whatsNewDataMock)
     contentfulService.getOutageBanner = jest.fn(async () => 'Banner')
 
