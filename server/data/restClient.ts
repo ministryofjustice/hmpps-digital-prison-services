@@ -2,7 +2,7 @@ import { ApiConfig, RestClient as HmppsRestClient } from '@ministryofjustice/hmp
 import appConfig from '../config'
 import logger, { warnLevelLogger } from '../../logger'
 
-export default class RestClient extends HmppsRestClient {
+export default abstract class RestClient extends HmppsRestClient {
   constructor(
     protected readonly name: string,
     protected readonly config: ApiConfig,

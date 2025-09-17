@@ -7,3 +7,5 @@ export const prisonEstablishmentRollSummaryMock: EstablishmentRollSummary = {
   numOutToday: 40,
   numCurrentPopulation: 50,
 }
+
+export default { prisonEstablishmentRollSummaryMock }

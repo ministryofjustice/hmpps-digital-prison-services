@@ -1,4 +1,5 @@
 import { Document } from '@contentful/rich-text-types'
+import { ArticleTextLinks } from './contentful'
 
 export interface WhatsNewPost {
   title: string
@@ -13,7 +14,7 @@ export interface WhatsNewPostApollo {
   slug: string
   body?: {
     json: Document
-    links?: any
+    links?: ArticleTextLinks
   }
   summary: string
   date: string

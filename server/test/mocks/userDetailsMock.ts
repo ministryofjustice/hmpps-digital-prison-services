@@ -24,3 +24,5 @@ export const userDetailsMock: UserDetail[] = [
     active: true,
   },
 ]
+
+export default { userDetailsMock }

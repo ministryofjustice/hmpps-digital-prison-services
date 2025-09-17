@@ -12,3 +12,5 @@ export const paginationMock: Pagination = {
   totalElements: 1,
   totalPages: 1,
 }
+
+export default { paginationMock }

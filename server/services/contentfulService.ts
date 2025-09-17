@@ -1,6 +1,7 @@
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
 import { ApolloClient, gql, TypedDocumentNode } from '@apollo/client'
-import { BLOCKS, INLINES } from '@contentful/rich-text-types'
+import { AssetHyperlink, AssetLinkBlock, BLOCKS, INLINES } from '@contentful/rich-text-types'
+import { ArticleTextLinks } from '../data/interfaces/contentful'
 import { WhatsNewData } from '../data/interfaces/whatsNewData'
 import {
   WhatsNewPost,
@@ -252,15 +253,13 @@ export default class ContentfulService {
     }))[0]
   }
 
-  private renderOptions(links: any) {
-    const hyperlinkMap: Map<any, any> = new Map(
-      links?.assets?.hyperlink?.map((hyperlink: any) => [hyperlink.sys.id, hyperlink]),
-    )
-    const blockMap: Map<any, any> = new Map(links?.assets?.block?.map((block: any) => [block.sys.id, block]))
+  private renderOptions(links: ArticleTextLinks) {
+    const hyperlinkMap = new Map(links?.assets?.hyperlink?.map(hyperlink => [hyperlink.sys.id, hyperlink]))
+    const blockMap = new Map(links?.assets?.block?.map(block => [block.sys.id, block]))
 
     return {
       renderNode: {
-        [BLOCKS.EMBEDDED_ASSET]: (node: any) => {
+        [BLOCKS.EMBEDDED_ASSET]: (node: AssetLinkBlock) => {
           // find the asset in the assetMap by ID
           const asset = blockMap?.get(node.data.target.sys.id)
 
@@ -278,7 +277,7 @@ export default class ContentfulService {
 
           return ''
         },
-        [INLINES.ASSET_HYPERLINK]: (node: any) => {
+        [INLINES.ASSET_HYPERLINK]: (node: AssetHyperlink) => {
           // find the asset in the assetMap by ID
           const asset = hyperlinkMap?.get(node.data.target.sys.id)
 

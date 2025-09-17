@@ -6,15 +6,17 @@ import {
   setup,
   TelemetryClient,
 } from 'applicationinsights'
+import { CorrelationContext } from 'applicationinsights/out/AutoCollection/CorrelationContextManager'
 import { EnvelopeTelemetry } from 'applicationinsights/out/Declarations/Contracts'
-import { RequestHandler } from 'express'
+import { Request, RequestHandler } from 'express'
 import type { ApplicationInfo } from '../applicationInfo'
 
 const requestPrefixesToIgnore = ['GET /assets/', 'GET /health', 'GET /ping', 'GET /info']
 const dependencyPrefixesToIgnore = ['sqs']
 
 export type ContextObject = {
-  [name: string]: any
+  ['http.ServerRequest']?: Request
+  correlationContext?: CorrelationContext
 }
 
 export function initialiseAppInsights(): void {

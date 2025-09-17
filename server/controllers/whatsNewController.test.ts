@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { Role } from '../enums/role'
 import ContentfulService from '../services/contentfulService'
 import { whatsNewPostsMock } from '../mocks/whatsNewPostsMock'
@@ -10,6 +10,7 @@ describe('Whats New Controller', () => {
   let contentfulService: ContentfulService
   let req: Request
   let res: Response
+  const next: NextFunction = jest.fn()
   let controller: WhatsNewController
 
   beforeEach(() => {
@@ -56,7 +57,7 @@ describe('Whats New Controller', () => {
 
   describe('Display whats new page', () => {
     it('should get whats new list', async () => {
-      await controller.displayWhatsNewList()(req, res, null)
+      await controller.displayWhatsNewList()(req, res, next)
 
       expect(contentfulService.getWhatsNewPosts).toHaveBeenCalled()
       expect(res.render).toHaveBeenCalledWith('pages/whatsNew', {
@@ -69,7 +70,7 @@ describe('Whats New Controller', () => {
 
   describe('Display whats new post', () => {
     it('should get whats new post', async () => {
-      await controller.displayWhatsNewPost()(req, res, null)
+      await controller.displayWhatsNewPost()(req, res, next)
 
       expect(contentfulService.getWhatsNewPost).toHaveBeenCalled()
       expect(res.render).toHaveBeenCalledWith('pages/whatsNewPost', {
