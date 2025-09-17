@@ -1,7 +1,10 @@
+import path from 'path'
+import fs from 'fs'
 import config from '../config'
 import { CaseLoad } from '../data/interfaces/caseLoad'
 import { HmppsError } from '../data/interfaces/hmppsError'
 import { SelectItem } from '../data/interfaces/selectItem'
+import logger from '../../logger'
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -134,4 +137,17 @@ export const formatName = (
     .map(s => s.trim().toLowerCase())
     .join(' ')
     .replace(/(^\w)|([\s'-]+\w)/g, letter => letter.toUpperCase())
+}
+
+export const assetMap = (url: string) => {
+  let assetManifest: Record<string, string> = {}
+
+  try {
+    const assetMetadataPath = path.resolve(__dirname, '../../assets/manifest.json')
+    assetManifest = JSON.parse(fs.readFileSync(assetMetadataPath, 'utf8'))
+  } catch (_e) {
+    logger.error('Could not read asset manifest file')
+  }
+
+  return assetManifest[url] || url
 }

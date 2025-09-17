@@ -3,6 +3,7 @@ import path from 'path'
 import fs from 'fs'
 import { GotenbergApiClient } from '../data/interfaces/gotenbergApiClient'
 import logger from '../../logger'
+import { assetMap } from '../utils/utils'
 
 export interface PdfPageData {
   header?: Record<string, unknown>
@@ -66,8 +67,8 @@ export default class PdfRenderingService {
 
   private readAssetCss() {
     try {
-      const cssPath = './assets/stylesheets/application.css'
-      return fs.readFileSync(path.resolve(cssPath), 'utf8')
+      const cssPath = path.resolve(__dirname, `../..${assetMap('/assets/css/index.css')}`)
+      return fs.readFileSync(cssPath, 'utf8')
     } catch (e) {
       logger.error(e, 'Could not read asset css file')
       return null
