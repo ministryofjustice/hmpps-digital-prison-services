@@ -2,11 +2,11 @@
 import path from 'path'
 import nunjucks from 'nunjucks'
 import express from 'express'
-import fs from 'fs'
 
 import {
   addDefaultSelectedValue,
   asSelectItem,
+  assetMap,
   findError,
   formatName,
   initialiseName,
@@ -17,7 +17,6 @@ import {
 import { formatDate, formatDateTime, formatTime, isWithinLast3Days, timeFromDate, toUnixTimeStamp } from './dateHelpers'
 import config from '../config'
 import { pluralise } from './pluralise'
-import logger from '../../logger'
 
 export default function nunjucksSetup(app: express.Express): void {
   app.set('view engine', 'njk')
@@ -25,15 +24,6 @@ export default function nunjucksSetup(app: express.Express): void {
   app.locals.asset_path = '/assets/'
   app.locals.applicationName = 'Digital Prison Services'
   app.locals.config = config
-
-  let assetManifest: Record<string, string> = {}
-
-  try {
-    const assetMetadataPath = path.resolve(__dirname, '../../assets/manifest.json')
-    assetManifest = JSON.parse(fs.readFileSync(assetMetadataPath, 'utf8'))
-  } catch (_e) {
-    logger.error('Could not read asset manifest file')
-  }
 
   const njkEnv = nunjucks.configure(
     [
@@ -60,7 +50,7 @@ export default function nunjucksSetup(app: express.Express): void {
   } = config
   njkEnv.addGlobal('tagManagerContainerId', tagManagerContainerId.trim())
 
-  njkEnv.addFilter('assetMap', (url: string) => assetManifest[url] || url)
+  njkEnv.addFilter('assetMap', assetMap)
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('findError', findError)
   njkEnv.addFilter('addDefaultSelectedValue', addDefaultSelectedValue)
