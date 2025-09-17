@@ -6,4 +6,10 @@ const formatOut = bunyanFormat({ outputMode: 'short', color: !config.production 
 
 const logger = bunyan.createLogger({ name: 'HMPPS Digital Prison Services', stream: formatOut, level: 'debug' })
 
+export const warnLevelLogger = bunyan.createLogger({
+  name: 'HMPPS Digital Prison Services',
+  stream: formatOut,
+  level: 'warn',
+})
+
 export default logger

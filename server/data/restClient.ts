@@ -1,5 +1,6 @@
 import { ApiConfig, RestClient as HmppsRestClient } from '@ministryofjustice/hmpps-rest-client'
-import logger from '../../logger'
+import appConfig from '../config'
+import logger, { warnLevelLogger } from '../../logger'
 
 export default class RestClient extends HmppsRestClient {
   constructor(
@@ -7,6 +8,8 @@ export default class RestClient extends HmppsRestClient {
     protected readonly config: ApiConfig,
     protected readonly token: string,
   ) {
-    super(name, config, logger)
+    // only log warn level and above in production for API clients to reduce app insights usage
+    // (dependencies are separately tracked):
+    super(name, config, appConfig.production ? warnLevelLogger : logger)
   }
 }
