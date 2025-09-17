@@ -1,5 +1,6 @@
 import { UserDetail } from '../../data/interfaces/userDetail'
 
+// eslint-disable-next-line import/prefer-default-export
 export const userDetailsMock: UserDetail[] = [
   {
     staffId: 1,

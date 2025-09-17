@@ -4,8 +4,9 @@ import UserService from '../services/userService'
 import { CaseLoad } from '../data/interfaces/caseLoad'
 import { PrisonUser } from '../interfaces/prisonUser'
 
+// eslint-disable-next-line import/prefer-default-export
 export function ensureActiveCaseLoadSet(userService: UserService): RequestHandler {
-  return async (req, res, next) => {
+  return async (_req, res, next) => {
     try {
       if (res.locals.user && res.locals.user.activeCaseLoad && res.locals.user.activeCaseLoadId) return next()
 

@@ -32,6 +32,7 @@ const notStandardPlurals: Record<string, string> = {
  * @param options.emptyMessage - return this string if `count` is Falsy
  * @return pluralised form of word if count !== [1,-1] else just word
  */
+// eslint-disable-next-line import/prefer-default-export
 export const pluralise = (
   count: number,
   word: string,

@@ -1,3 +1,4 @@
+import { Request, Response } from 'express'
 import { Role } from '../enums/role'
 import ContentfulService from '../services/contentfulService'
 import { managedPagesMock } from '../mocks/managedPagesMock'
@@ -5,8 +6,8 @@ import ManagedPageController from './managedPageController'
 
 describe('Managed Page Controller', () => {
   let contentfulService: ContentfulService
-  let req: any
-  let res: any
+  let req: Request
+  let res: Response
   let controller: ManagedPageController
 
   beforeEach(() => {
@@ -23,7 +24,7 @@ describe('Managed Page Controller', () => {
       },
       path: '/',
       flash: jest.fn(),
-    } as any
+    } as unknown as Request
 
     res = {
       locals: {
@@ -36,7 +37,7 @@ describe('Managed Page Controller', () => {
       },
       render: jest.fn(),
       redirect: jest.fn(),
-    } as any
+    } as unknown as Response
 
     contentfulService = { getManagedPage: jest.fn(async () => managedPagesMock[0]) } as unknown as ContentfulService
     controller = new ManagedPageController(contentfulService)

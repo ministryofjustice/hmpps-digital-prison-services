@@ -116,7 +116,7 @@
   },
   "devDependencies": {
     "@jgoz/esbuild-plugin-typecheck": "^4.0.3",
-    "@ministryofjustice/eslint-config-hmpps": "^0.0.3",
+    "@ministryofjustice/eslint-config-hmpps": "^0.0.4",
     "@ministryofjustice/hmpps-precommit-hooks": "^0.0.3",
     "@tsconfig/node22": "^22.0.2",
     "@types/bunyan": "^1.8.11",
@@ -134,7 +134,6 @@
     "@types/passport-oauth2": "^1.8.0",
     "@types/superagent": "^8.1.9",
     "@types/supertest": "^6.0.3",
-    "@typescript-eslint/eslint-plugin": "^8.41.0",
     "audit-ci": "^7.1.0",
     "aws-sdk-client-mock": "^4.1.0",
     "chokidar": "^4.0.3",

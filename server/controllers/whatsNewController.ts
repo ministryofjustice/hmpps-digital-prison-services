@@ -1,4 +1,4 @@
-import { NextFunction, Request, RequestHandler, Response } from 'express'
+import { RequestHandler } from 'express'
 import ContentfulService from '../services/contentfulService'
 
 /**
@@ -8,7 +8,7 @@ export default class WhatsNewController {
   constructor(private readonly contentfulService: ContentfulService) {}
 
   public displayWhatsNewList(): RequestHandler {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return async (req, res) => {
       const { activeCaseLoadId } = res.locals.user
       const pageSize = 10
       const currentPage = +req.query.page || 1
@@ -24,7 +24,7 @@ export default class WhatsNewController {
   }
 
   public displayWhatsNewPost(): RequestHandler {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return async (req, res) => {
       const { slug } = req.params
 
       try {
@@ -34,6 +34,7 @@ export default class WhatsNewController {
           pageTitle: whatsNewPost.title,
           whatsNewPost,
         })
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (_error) {
         res.render('notFound')
       }

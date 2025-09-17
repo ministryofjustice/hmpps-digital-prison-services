@@ -1,4 +1,4 @@
-import { Request, RequestHandler, Response } from 'express'
+import { RequestHandler } from 'express'
 import { format } from 'date-fns'
 import { DietaryRequirementsQueryParams, generateListMetadata, mapToQueryString } from '../utils/generateListMetadata'
 import { formatName, userHasRoles } from '../utils/utils'
@@ -14,7 +14,7 @@ export default class DietaryRequirementsController {
   ) {}
 
   public get(): RequestHandler {
-    return async (req: Request, res: Response) => {
+    return async (req, res) => {
       const { clientToken } = req.middleware
       const prisonId = res.locals.user.activeCaseLoadId
 
@@ -90,7 +90,7 @@ export default class DietaryRequirementsController {
   }
 
   public printAll(): RequestHandler {
-    return async (req: Request, res: Response) => {
+    return async (req, res) => {
       const { clientToken } = req.middleware
       const prisonId = res.locals.user.activeCaseLoadId
 

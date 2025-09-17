@@ -1,4 +1,4 @@
-import { NextFunction, Request, RequestHandler, Response } from 'express'
+import { RequestHandler } from 'express'
 import { Role } from '../enums/role'
 import config from '../config'
 import { userHasRoles } from '../utils/utils'
@@ -17,7 +17,7 @@ export default class HomepageController {
   ) {}
 
   public displayHomepage(): RequestHandler {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return async (req, res) => {
       const { activeCaseLoadId } = res.locals.user
       const userHasPrisonCaseLoad =
         Boolean(activeCaseLoadId) && activeCaseLoadId !== '' && activeCaseLoadId !== 'CADM_I'
@@ -57,7 +57,7 @@ export default class HomepageController {
   }
 
   public search(): RequestHandler {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return async (req, res) => {
       const { searchType, name, location } = req.body
 
       if (searchType === undefined || searchType === 'local') {

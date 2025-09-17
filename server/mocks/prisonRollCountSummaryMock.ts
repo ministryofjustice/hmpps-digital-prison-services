@@ -1,5 +1,6 @@
 import EstablishmentRollSummary from '../services/interfaces/establishmentRollService/EstablishmentRollSummary'
 
+// eslint-disable-next-line import/prefer-default-export
 export const prisonEstablishmentRollSummaryMock: EstablishmentRollSummary = {
   prisonId: 'LEI',
   numUnlockRollToday: 20,

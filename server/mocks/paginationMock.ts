@@ -1,5 +1,6 @@
 import { Pagination } from '../data/interfaces/pagination'
 
+// eslint-disable-next-line import/prefer-default-export
 export const paginationMock: Pagination = {
   elementsOnPage: 0,
   itemDescription: 'item',

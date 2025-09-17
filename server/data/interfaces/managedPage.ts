@@ -1,4 +1,5 @@
 import { Document } from '@contentful/rich-text-types'
+import { ArticleTextLinks } from './contentful'
 
 export interface ManagedPage {
   title: string
@@ -11,7 +12,7 @@ export interface ManagedPageApollo {
   slug: string
   content?: {
     json: Document
-    links?: any
+    links?: ArticleTextLinks
   }
 }
 
