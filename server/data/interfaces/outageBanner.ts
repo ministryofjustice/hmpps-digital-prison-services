@@ -5,6 +5,9 @@ export interface OutageBannerApollo {
     json: Document
   }
   prisons?: string[]
+  development?: boolean
+  preProduction?: boolean
+  production?: boolean
 }
 
 export interface OutageBannerQuery {
@@ -13,8 +16,13 @@ export interface OutageBannerQuery {
   }
 }
 
-type OutageBannerCondition = { prisons_exists: boolean } | { prisons_contains_some: string }
-type OutageBannerFilter = OutageBannerCondition | { OR: OutageBannerCondition[] }
+type OutageBannerCondition =
+  | { prisons_exists: boolean }
+  | { prisons_contains_some: string }
+  | { development: boolean }
+  | { preProduction: boolean }
+  | { production: boolean }
+type OutageBannerFilter = OutageBannerCondition | { OR: OutageBannerFilter[] } | { AND: OutageBannerFilter[] }
 
 export interface OutageBannerQueryVariables {
   condition: OutageBannerFilter
