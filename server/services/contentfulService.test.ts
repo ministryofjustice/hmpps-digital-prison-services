@@ -77,31 +77,45 @@ describe('ContentfulService', () => {
     expect(pages).toEqual(managedPagesMock[0])
   })
 
-  it('Should get the outage banner for the users caseload', async () => {
-    const apolloSpy = mockApolloQuery({ data: { outageBannerCollection: [] } } as ObservableQuery.Result<unknown>)
+  it.each([
+    { environment: 'DEV', query: { development: true } },
+    { environment: 'PRE-PRODUCTION', query: { preProd: true } },
+    { environment: 'PRODUCTION', query: { production: true } },
+  ])(
+    'Should get the outage banner for the users caseload for the current environment',
+    async ({ environment, query }) => {
+      const apolloSpy = mockApolloQuery({ data: { outageBannerCollection: [] } } as ObservableQuery.Result<unknown>)
 
-    await contentfulService.getOutageBanner('LEI')
+      await contentfulService.getOutageBanner('LEI', environment)
 
-    expect(apolloSpy).toHaveBeenCalledWith(
-      expect.objectContaining({
-        variables: {
-          condition: { OR: [{ prisons_exists: false }, { prisons_contains_some: 'LEI' }] },
-        },
-      }),
-    )
-  })
+      expect(apolloSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          variables: {
+            condition: { AND: [{ OR: [{ prisons_exists: false }, { prisons_contains_some: 'LEI' }] }, query] },
+          },
+        }),
+      )
+    },
+  )
 
-  it('Should get the outage banner for the users without a caseload', async () => {
-    const apolloSpy = mockApolloQuery({ data: { outageBannerCollection: [] } } as ObservableQuery.Result<unknown>)
+  it.each([
+    { environment: 'DEV', query: { development: true } },
+    { environment: 'PRE-PRODUCTION', query: { preProd: true } },
+    { environment: 'PRODUCTION', query: { production: true } },
+  ])(
+    'Should get the outage banner for the users without a caseload for the current environment',
+    async ({ environment, query }) => {
+      const apolloSpy = mockApolloQuery({ data: { outageBannerCollection: [] } } as ObservableQuery.Result<unknown>)
 
-    await contentfulService.getOutageBanner(undefined)
+      await contentfulService.getOutageBanner(undefined, environment)
 
-    expect(apolloSpy).toHaveBeenCalledWith(
-      expect.objectContaining({
-        variables: {
-          condition: { prisons_exists: false },
-        },
-      }),
-    )
-  })
+      expect(apolloSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          variables: {
+            condition: { AND: [{ prisons_exists: false }, query] },
+          },
+        }),
+      )
+    },
+  )
 })

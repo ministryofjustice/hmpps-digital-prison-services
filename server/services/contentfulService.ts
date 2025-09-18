@@ -153,10 +153,12 @@ export default class ContentfulService {
   /**
    * Get `outageBanner` entry.
    */
-  public async getOutageBanner(activeCaseLoadId: string | undefined): Promise<string> {
-    const filter = activeCaseLoadId
+  public async getOutageBanner(activeCaseLoadId: string | undefined, environment: string): Promise<string> {
+    const prisonsFilter = activeCaseLoadId
       ? { OR: [{ prisons_exists: false }, { prisons_contains_some: activeCaseLoadId }] }
       : { prisons_exists: false }
+
+    const environmentFilter = this.getEnvironmentFilter(environment)
 
     const getOutageBannerQuery: TypedDocumentNode<OutageBannerQuery, OutageBannerQueryVariables> = gql`
       query OutageBanner($condition: OutageBannerFilter!) {
@@ -174,7 +176,7 @@ export default class ContentfulService {
     const { items } = (
       await this.apolloClient.query({
         query: getOutageBannerQuery,
-        variables: { condition: filter },
+        variables: { condition: { AND: [prisonsFilter, environmentFilter] } },
       })
     ).data.outageBannerCollection
 
@@ -284,5 +286,12 @@ export default class ContentfulService {
         },
       },
     }
+  }
+
+  private getEnvironmentFilter(environment: string) {
+    if (environment === 'DEV') return { development: true }
+    if (environment === 'PRE-PRODUCTION') return { preProd: true }
+    // Default to production
+    return { production: true }
   }
 }

@@ -33,7 +33,7 @@ export default class HomepageController {
       // Outage Banner - filtered to active caseload if banner has been marked for specific prisons
       // Whats new Section - filtered to active caseload if post has been marked for specific prisons
       const [outageBanner, { showServicesOutage, services }, whatsNewData, todayData] = await Promise.all([
-        this.contentfulService.getOutageBanner(activeCaseLoadId),
+        this.contentfulService.getOutageBanner(activeCaseLoadId, config.environmentName),
         this.serviceData.getServiceData(res),
         this.contentfulService.getWhatsNewPosts(1, 3, 0, activeCaseLoadId),
         userHasPrisonCaseLoad
