@@ -290,7 +290,7 @@ export default class ContentfulService {
 
   private getEnvironmentFilter(environment: string) {
     if (environment === 'DEV') return { development: true }
-    if (environment === 'PRE-PRODUCTION') return { preProd: true }
+    if (environment === 'PRE-PRODUCTION') return { preProduction: true }
     // Default to production
     return { production: true }
   }
