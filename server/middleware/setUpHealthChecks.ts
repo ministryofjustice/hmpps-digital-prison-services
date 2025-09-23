@@ -8,7 +8,9 @@ import logger from '../../logger'
 export default function setUpHealthChecks(applicationInfo: ApplicationInfo): Router {
   const router = express.Router()
 
-  const apiConfig = Object.entries(config.apis)
+  const apiConfig = Object.entries(config.apis).filter(
+    ([name]) => config.environmentName.toUpperCase() !== 'DEV' || ['hmppsAuth', 'tokenVerification'].includes(name),
+  )
 
   const middleware = monitoringMiddleware({
     applicationInfo,
