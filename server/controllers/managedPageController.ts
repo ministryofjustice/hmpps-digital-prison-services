@@ -1,4 +1,4 @@
-import { NextFunction, Request, RequestHandler, Response } from 'express'
+import { RequestHandler } from 'express'
 import ContentfulService from '../services/contentfulService'
 
 /**
@@ -8,7 +8,7 @@ export default class ManagedPageController {
   constructor(private readonly contentfulService: ContentfulService) {}
 
   public displayManagedPage(slug: string): RequestHandler {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return async (_req, res) => {
       try {
         const managedPage = await this.contentfulService.getManagedPage(slug)
 
@@ -16,6 +16,7 @@ export default class ManagedPageController {
           pageTitle: managedPage.title,
           managedPage,
         })
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (_error) {
         res.render('notFound')
       }

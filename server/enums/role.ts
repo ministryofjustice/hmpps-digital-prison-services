@@ -3,3 +3,5 @@ export enum Role {
   PrisonUser = 'PRISON',
   DietAndAllergiesReport = 'DIET_AND_FOOD_ALLERGIES_REPORT',
 }
+
+export default { Role }

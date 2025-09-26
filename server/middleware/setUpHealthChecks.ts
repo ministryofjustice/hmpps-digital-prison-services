@@ -1,6 +1,10 @@
 import express, { Router } from 'express'
 
-import { endpointHealthComponent, monitoringMiddleware } from '@ministryofjustice/hmpps-monitoring'
+import {
+  endpointHealthComponent,
+  EndpointHealthComponentOptions,
+  monitoringMiddleware,
+} from '@ministryofjustice/hmpps-monitoring'
 import type { ApplicationInfo } from '../applicationInfo'
 import config from '../config'
 import logger from '../../logger'
@@ -15,8 +19,8 @@ export default function setUpHealthChecks(applicationInfo: ApplicationInfo): Rou
   const middleware = monitoringMiddleware({
     applicationInfo,
     healthComponents: apiConfig
-      .filter(([_, options]: [string, any]) => options?.healthPath)
-      .map(([name, options]: [string, any & { healthPath: string }]) => endpointHealthComponent(logger, name, options)),
+      .filter(([_, options]) => 'healthPath' in options && options.healthPath)
+      .map(([name, options]) => endpointHealthComponent(logger, name, options as EndpointHealthComponentOptions)),
   })
 
   router.get('/health', middleware.health)

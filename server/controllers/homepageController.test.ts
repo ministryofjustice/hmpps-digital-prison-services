@@ -1,4 +1,5 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
+import { NextFunction, Request, Response } from 'express'
 import { Role } from '../enums/role'
 import HomepageController from './homepageController'
 import config from '../config'
@@ -15,8 +16,9 @@ import ServiceData from './ServiceData'
 describe('Homepage Controller', () => {
   const staffId = 487023
   const activeCaseLoadId = 'LEI'
-  let req: any
-  let res: any
+  let req: Request
+  let res: Response
+  const next: NextFunction = jest.fn()
   let controller: HomepageController
   let establishmentRollService: EstablishmentRollService
   let contentfulService: ContentfulService
@@ -31,7 +33,7 @@ describe('Homepage Controller', () => {
       path: '/',
       flash: jest.fn(),
       body: {},
-    } as any
+    } as unknown as Request
 
     res = {
       locals: {
@@ -47,7 +49,7 @@ describe('Homepage Controller', () => {
       },
       render: jest.fn(),
       redirect: jest.fn(),
-    } as any
+    } as unknown as Response
 
     establishmentRollService = new EstablishmentRollService(null)
     serviceData = new ServiceData()
@@ -100,7 +102,7 @@ describe('Homepage Controller', () => {
 
     describe('With no frontend components shared data', () => {
       it('should get homepage data', async () => {
-        await controller.displayHomepage()(req, res, null)
+        await controller.displayHomepage()(req, res, next)
 
         expect(establishmentRollService.getEstablishmentRollSummary).toHaveBeenCalled()
         expect(contentfulService.getWhatsNewPosts).toHaveBeenCalled()
@@ -131,8 +133,8 @@ describe('Homepage Controller', () => {
                 },
               },
             },
-          } as any,
-          null,
+          } as unknown as Response,
+          next,
         )
 
         expect(establishmentRollService.getEstablishmentRollSummary).toHaveBeenCalled()
@@ -147,9 +149,9 @@ describe('Homepage Controller', () => {
     })
 
     it('should render errors', async () => {
-      req.flash = jest.fn((_key: string) => [{ text: 'error', href: '#name' }])
+      req.flash = jest.fn((_key: string) => [{ text: 'error', href: '#name' }]) as unknown as Request['flash']
 
-      await controller.displayHomepage()(req, res, null)
+      await controller.displayHomepage()(req, res, next)
 
       expect(res.render).toHaveBeenCalledWith('pages/index', {
         errors: [{ text: 'error', href: '#name' }],
@@ -172,7 +174,7 @@ describe('Homepage Controller', () => {
       const location = 'LEI'
       req.body = { name, location }
 
-      await controller.search()(req, res, () => {})
+      await controller.search()(req, res, next)
 
       expect(res.redirect).toHaveBeenCalledWith(
         `${config.serviceUrls.digitalPrisons}/prisoner-search?keywords=${name}&location=${location}`,
@@ -184,7 +186,7 @@ describe('Homepage Controller', () => {
       const location = 'LEI'
       req.body = { searchType: 'local', name, location }
 
-      await controller.search()(req, res, () => {})
+      await controller.search()(req, res, next)
 
       expect(res.redirect).toHaveBeenCalledWith(
         `${config.serviceUrls.digitalPrisons}/prisoner-search?keywords=${name}&location=${location}`,
@@ -195,7 +197,7 @@ describe('Homepage Controller', () => {
       const name = 'John Saunders'
       req.body = { searchType: 'global', name }
 
-      await controller.search()(req, res, () => {})
+      await controller.search()(req, res, next)
 
       expect(res.redirect).toHaveBeenCalledWith(
         `${config.serviceUrls.digitalPrisons}/global-search/results?searchText=${name}`,
@@ -206,7 +208,7 @@ describe('Homepage Controller', () => {
       const name = ''
       req.body = { searchType: 'global', name }
 
-      await controller.search()(req, res, () => {})
+      await controller.search()(req, res, next)
 
       expect(req.flash).toHaveBeenCalledWith('errors', {
         href: '#name',
@@ -217,7 +219,7 @@ describe('Homepage Controller', () => {
   })
 
   describe('With no prison case load', () => {
-    it.each([undefined, '', 'CADM_I'])('Displays the home page (caseload: %s)', async caseLoadId => {
+    it.each([undefined, '', 'CADM_I'])('Displays the home page (caseload: %j)', async caseLoadId => {
       res.locals = {
         user: {
           userRoles: [Role.GlobalSearch],
@@ -227,7 +229,7 @@ describe('Homepage Controller', () => {
           activeCaseLoadId: caseLoadId,
         } as PrisonUser,
       }
-      await controller.displayHomepage()(req, res, () => {})
+      await controller.displayHomepage()(req, res, next)
       expect(establishmentRollService.getEstablishmentRollSummary).not.toHaveBeenCalled()
       expect(contentfulService.getWhatsNewPosts).toHaveBeenCalled()
       expect(contentfulService.getOutageBanner).toHaveBeenCalled()

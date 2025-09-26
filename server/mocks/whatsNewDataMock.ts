@@ -6,3 +6,5 @@ export const whatsNewDataMock: WhatsNewData = {
   whatsNewPosts: whatsNewPostsMock,
   pagination: paginationMock,
 }
+
+export default { whatsNewDataMock }
