@@ -1,6 +1,6 @@
 import express from 'express'
 
-import dpsComponents from '@ministryofjustice/hmpps-connect-dps-components'
+import { getFrontendComponents, retrieveCaseLoadData } from '@ministryofjustice/hmpps-connect-dps-components'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
 import { appInsightsMiddleware } from './utils/azureAppInsights'
@@ -47,13 +47,14 @@ export default function createApp(services: Services): express.Application {
 
   app.get(
     /^(?!\/api).*/,
-    dpsComponents.getPageComponents({
+    getFrontendComponents({
       logger,
-      includeSharedData: true,
+      componentApiConfig: config.apis.componentApi,
       dpsUrl: config.serviceUrls.digitalPrisons,
+      requestOptions: { includeSharedData: true },
     }),
   )
-  app.use(dpsComponents.retrieveCaseLoadData({ logger }))
+  app.use(retrieveCaseLoadData({ logger, prisonApiConfig: config.apis.prisonApi }))
   app.use(ensureActiveCaseLoadSet(services.userService))
 
   app.use(routes(services))
