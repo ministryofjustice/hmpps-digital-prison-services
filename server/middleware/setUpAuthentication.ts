@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import passport from 'passport'
 import flash from 'connect-flash'
-import dpsComponents from '@ministryofjustice/hmpps-connect-dps-components'
+import { getFrontendComponents } from '@ministryofjustice/hmpps-connect-dps-components'
 import { Strategy } from 'passport-oauth2'
 import { AuthenticatedRequest, VerificationClient } from '@ministryofjustice/hmpps-auth-clients'
 import config from '../config'
@@ -46,7 +46,11 @@ export default function setUpAuthentication(): Router {
 
   router.get(
     '/autherror',
-    dpsComponents.getPageComponents({ dpsUrl: config.serviceUrls.digitalPrisons }),
+    getFrontendComponents({
+      logger,
+      componentApiConfig: config.apis.componentApi,
+      dpsUrl: config.serviceUrls.digitalPrisons,
+    }),
     (req, res) => {
       res.status(401)
       return res.render('autherror')

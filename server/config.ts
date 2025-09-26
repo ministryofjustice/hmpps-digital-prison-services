@@ -57,6 +57,14 @@ export default {
       systemClientId: get('SYSTEM_CLIENT_ID', 'clientid', requiredInProduction),
       systemClientSecret: get('SYSTEM_CLIENT_SECRET', 'clientsecret', requiredInProduction),
     },
+    componentApi: {
+      url: get('COMPONENT_API_URL', 'http://localhost:8082', requiredInProduction),
+      timeout: {
+        response: Number(get('COMPONENT_TIMEOUT_RESPONSE', 10000)),
+        deadline: Number(get('COMPONENT_TIMEOUT_DEADLINE', 10000)),
+      },
+      agent: new AgentConfig(Number(get('COMPONENT_TIMEOUT_DEADLINE', 10000))),
+    },
     gotenberg: {
       url: get('GOTENBERG_API_URL', 'http://localhost:3100', requiredInProduction),
       healthPath: '/health',
