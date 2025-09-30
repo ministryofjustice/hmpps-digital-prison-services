@@ -8,6 +8,7 @@ import ServiceData from '../controllers/ServiceData'
 import DietReportingService from './dietReportingService'
 import PdfRenderingService from './pdfRenderingService'
 import GotenbergRestApiClient from '../data/gotenbergApiClient'
+import AuditService from './auditService'
 
 export const services = () => {
   const dataAccess = initDataAccess()
@@ -33,23 +34,23 @@ export const services = () => {
       },
     },
   })
-
-  const contentfulService = new ContentfulService(apolloClient)
-
-  const dietReportingService = new DietReportingService(healthAndMedicationApiClientBuilder, prisonApiClientBuilder)
-
   const gotenbergClient = new GotenbergRestApiClient(config.apis.gotenberg)
+
+  const auditService = new AuditService(config.audit.enabled)
+  const contentfulService = new ContentfulService(apolloClient)
+  const dietReportingService = new DietReportingService(healthAndMedicationApiClientBuilder, prisonApiClientBuilder)
   const pdfRenderingService = new PdfRenderingService(gotenbergClient)
 
   return {
-    dataAccess,
     applicationInfo,
-    userService,
+    auditService,
     contentfulService,
-    establishmentRollService,
-    serviceData,
+    dataAccess,
     dietReportingService,
+    establishmentRollService,
     pdfRenderingService,
+    serviceData,
+    userService,
   }
 }
 

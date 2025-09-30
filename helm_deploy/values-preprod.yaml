@@ -46,6 +46,7 @@ generic-service:
     MERCURY_SUBMIT_LIVE_ENABLED_DATE: ""
     COMPONENT_API_LATEST: true
     ACCREDITED_PROGRAMMES_ENABLED: true
+    AUDIT_ENABLED: "true"
 
   allowlist:
     sscl-blackpool: 31.121.5.27/32

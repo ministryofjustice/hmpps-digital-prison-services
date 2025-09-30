@@ -1,4 +1,4 @@
-import { RequestHandler } from 'express'
+import { Request, RequestHandler, Response } from 'express'
 import { format } from 'date-fns'
 import { DietaryRequirementsQueryParams, generateListMetadata, mapToQueryString } from '../utils/generateListMetadata'
 import { formatName, userHasRoles } from '../utils/utils'
@@ -6,15 +6,17 @@ import { Role } from '../enums/role'
 import { HealthAndMedicationData, ReferenceDataCodeWithComment } from '../data/interfaces/healthAndMedicationApiClient'
 import DietReportingService from '../services/dietReportingService'
 import PdfRenderingService from '../services/pdfRenderingService'
+import AuditService from '../services/auditService'
 
 export default class DietaryRequirementsController {
   constructor(
     private readonly dietReportingService: DietReportingService,
     private readonly pdfReportingService: PdfRenderingService,
+    private readonly auditService: AuditService,
   ) {}
 
   public get(): RequestHandler {
-    return async (req, res) => {
+    return async (req: Request, res: Response) => {
       const { clientToken } = req.middleware
       const prisonId = res.locals.user.activeCaseLoadId
 
@@ -76,6 +78,12 @@ export default class DietaryRequirementsController {
 
       const listMetadata = generateListMetadata(resp, queryParams, 'result', [], '', true)
 
+      await this.auditService.auditDietReportView({
+        username: res.locals.user.username,
+        prisonId,
+        requestId: req.id,
+      })
+
       return res.render('pages/dietaryRequirements', {
         content: resp.content.map(this.buildContent),
         listMetadata,
@@ -90,7 +98,7 @@ export default class DietaryRequirementsController {
   }
 
   public printAll(): RequestHandler {
-    return async (req, res) => {
+    return async (req: Request, res: Response) => {
       const { clientToken } = req.middleware
       const prisonId = res.locals.user.activeCaseLoadId
 
@@ -104,6 +112,12 @@ export default class DietaryRequirementsController {
 
       const resp = await this.dietReportingService.getDietaryRequirementsForPrison(clientToken, prisonId, queryParams)
       const datetime = format(new Date(), `cccc d MMMM yyyy 'at' HH:mm`)
+
+      await this.auditService.auditDietReportPrint({
+        username: res.locals.user.username,
+        prisonId,
+        requestId: req.id,
+      })
 
       return this.pdfReportingService.renderDietReport(res, {
         footer: { datetime },
