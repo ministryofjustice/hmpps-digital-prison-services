@@ -1,6 +1,5 @@
 import { RequestHandler, Router } from 'express'
 import { Services } from '../services'
-import asyncMiddleware from '../middleware/asyncMiddleware'
 import WhatsNewController from '../controllers/whatsNewController'
 
 export default function whatsNewRouter(services: Services): Router {
@@ -9,7 +8,7 @@ export default function whatsNewRouter(services: Services): Router {
   const get = (path: string | string[], ...handlers: RequestHandler[]) =>
     router.get(
       path,
-      handlers.map(handler => asyncMiddleware(handler)),
+      handlers.map(handler => handler),
     )
 
   const whatsNewController = new WhatsNewController(services.contentfulService)

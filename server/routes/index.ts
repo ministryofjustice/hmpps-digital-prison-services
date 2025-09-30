@@ -1,5 +1,4 @@
 import { type RequestHandler, Router } from 'express'
-import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import HomepageController from '../controllers/homepageController'
 import whatsNewRouter from './whatsNewRouter'
@@ -12,12 +11,12 @@ export default function routes(services: Services): Router {
   const get = (path: string | string[], ...handlers: RequestHandler[]) =>
     router.get(
       path,
-      handlers.map(handler => asyncMiddleware(handler)),
+      handlers.map(handler => handler),
     )
   const post = (path: string | string[], ...handlers: RequestHandler[]) =>
     router.post(
       path,
-      handlers.map(handler => asyncMiddleware(handler)),
+      handlers.map(handler => handler),
     )
 
   const homepageController = new HomepageController(
@@ -31,12 +30,9 @@ export default function routes(services: Services): Router {
   router.use(managedPageRouter(services))
   router.use('/whats-new', whatsNewRouter(services))
   router.use('/dietary-requirements', dietaryRequirementsRouter(services))
-  router.get(
-    '/establishment-roll{*path}',
-    asyncMiddleware(async (req, res) => {
-      res.render('pages/establishmentRollHasMoved', { establishmentRollUrl: config.apis.establishmentRoll.ui_url })
-    }),
-  )
+  router.get('/establishment-roll{*path}', (_req, res) => {
+    res.render('pages/establishmentRollHasMoved', { establishmentRollUrl: config.apis.establishmentRoll.ui_url })
+  })
 
   return router
 }
