@@ -97,7 +97,7 @@
     "compression": "^1.8.1",
     "connect-flash": "^0.1.1",
     "connect-redis": "^9.0.0",
-    "contentful": "^11.7.18",
+    "contentful": "^11.8.2",
     "csrf-sync": "^4.2.1",
     "date-fns": "^4.1.0",
     "express": "^5.1.0",
