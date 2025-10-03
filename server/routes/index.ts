@@ -1,4 +1,4 @@
-import { type RequestHandler, Router } from 'express'
+import { Router } from 'express'
 import type { Services } from '../services'
 import HomepageController from '../controllers/homepageController'
 import whatsNewRouter from './whatsNewRouter'
@@ -8,16 +8,6 @@ import config from '../config'
 
 export default function routes(services: Services): Router {
   const router = Router()
-  const get = (path: string | string[], ...handlers: RequestHandler[]) =>
-    router.get(
-      path,
-      handlers.map(handler => handler),
-    )
-  const post = (path: string | string[], ...handlers: RequestHandler[]) =>
-    router.post(
-      path,
-      handlers.map(handler => handler),
-    )
 
   const homepageController = new HomepageController(
     services.contentfulService,
@@ -25,8 +15,8 @@ export default function routes(services: Services): Router {
     services.serviceData,
   )
 
-  get('/', homepageController.displayHomepage())
-  post('/search', homepageController.search())
+  router.get('/', homepageController.displayHomepage())
+  router.post('/search', homepageController.search())
   router.use(managedPageRouter(services))
   router.use('/whats-new', whatsNewRouter(services))
   router.use('/dietary-requirements', dietaryRequirementsRouter(services))
