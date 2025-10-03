@@ -58,7 +58,7 @@ export default class HomepageController {
 
   public search(): RequestHandler {
     return async (req, res) => {
-      const { searchType, name, location } = req.body
+      const { searchType, name, location } = req.body ?? {}
 
       if (searchType === undefined || searchType === 'local') {
         return res.redirect(
