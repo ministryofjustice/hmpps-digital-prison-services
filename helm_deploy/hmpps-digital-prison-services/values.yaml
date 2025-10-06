@@ -7,7 +7,7 @@ generic-service:
   replicaCount: 4
 
   image:
-    repository: quay.io/hmpps/hmpps-digital-prison-services
+    repository: ghcr.io/ministryofjustice/hmpps-digital-prison-services
     tag: app_version    # override at deployment time
     port: 3000
 
@@ -30,10 +30,8 @@ generic-service:
     REDIS_ENABLED: "true"
     REDIS_TLS_ENABLED: "true"
     TOKEN_VERIFICATION_ENABLED: "true"
-    APPLICATIONINSIGHTS_CONNECTION_STRING: "InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY);IngestionEndpoint=https://northeurope-0.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/"
     AUDIT_SQS_REGION: "eu-west-2"
     AUDIT_SERVICE_NAME: "hmpps-digital-prison-services"
-
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
@@ -42,15 +40,19 @@ generic-service:
 
   namespace_secrets:
     hmpps-digital-prison-services:
-      APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
-      API_CLIENT_ID: "API_CLIENT_ID"
-      API_CLIENT_SECRET: "API_CLIENT_SECRET"
-      SYSTEM_CLIENT_ID: "SYSTEM_CLIENT_ID"
-      SYSTEM_CLIENT_SECRET: "SYSTEM_CLIENT_SECRET"
-      SESSION_SECRET: "SESSION_SECRET"
       CONTENTFUL_SPACE_ID: "CONTENTFUL_SPACE_ID"
       CONTENTFUL_ACCESS_TOKEN: "CONTENTFUL_ACCESS_TOKEN"
       TAG_MANAGER_CONTAINER_ID: "TAG_MANAGER_CONTAINER_ID"
+    hmpps-digital-prison-services-application-insights:
+      APPLICATIONINSIGHTS_CONNECTION_STRING: "APPLICATIONINSIGHTS_CONNECTION_STRING"
+    hmpps-digital-prison-services-auth-code:
+      API_CLIENT_ID: "AUTH_CODE_CLIENT_ID"
+      API_CLIENT_SECRET: "AUTH_CODE_CLIENT_SECRET"
+    hmpps-digital-prison-services-client-creds:
+      SYSTEM_CLIENT_ID: "CLIENT_CREDS_CLIENT_ID"
+      SYSTEM_CLIENT_SECRET: "CLIENT_CREDS_CLIENT_SECRET"
+    hmpps-digital-prison-services-session-secret:
+      SESSION_SECRET: "SESSION_SECRET"
     elasticache-redis:
       REDIS_HOST: "primary_endpoint_address"
       REDIS_AUTH_TOKEN: "auth_token"
