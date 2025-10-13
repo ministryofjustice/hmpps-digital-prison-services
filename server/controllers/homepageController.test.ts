@@ -12,6 +12,8 @@ import defaultServices from '../utils/defaultServices'
 import EstablishmentRollService from '../services/establishmentRollService'
 import { prisonEstablishmentRollSummaryMock } from '../mocks/prisonRollCountSummaryMock'
 import ServiceData from './ServiceData'
+import { WhatsNewData } from '../data/interfaces/whatsNewData'
+import HmppsCache from '../middleware/hmppsCache'
 
 describe('Homepage Controller', () => {
   const staffId = 487023
@@ -23,6 +25,8 @@ describe('Homepage Controller', () => {
   let establishmentRollService: EstablishmentRollService
   let contentfulService: ContentfulService
   let serviceData: ServiceData
+  let whatsNewCache: HmppsCache<WhatsNewData>
+  let outageBannerCache: HmppsCache<string>
 
   beforeEach(() => {
     req = {
@@ -63,8 +67,16 @@ describe('Homepage Controller', () => {
     )
     contentfulService.getWhatsNewPosts = jest.fn(async () => whatsNewDataMock)
     contentfulService.getOutageBanner = jest.fn(async () => 'Banner')
+    whatsNewCache = { wrap: jest.fn(async (_, fn) => fn()) } as unknown as HmppsCache<WhatsNewData>
+    outageBannerCache = { wrap: jest.fn(async (_, fn) => fn()) } as unknown as HmppsCache<string>
 
-    controller = new HomepageController(contentfulService, establishmentRollService, serviceData)
+    controller = new HomepageController(
+      contentfulService,
+      establishmentRollService,
+      serviceData,
+      whatsNewCache,
+      outageBannerCache,
+    )
   })
 
   describe('Display homepage', () => {
@@ -234,6 +246,18 @@ describe('Homepage Controller', () => {
       expect(contentfulService.getWhatsNewPosts).toHaveBeenCalled()
       expect(contentfulService.getOutageBanner).toHaveBeenCalled()
       expect(res.render).toHaveBeenCalledWith('pages/index', expect.objectContaining({ userHasPrisonCaseLoad: false }))
+    })
+  })
+
+  describe('Contentful cache', () => {
+    it('Caches the whats new data', async () => {
+      await controller.displayHomepage()(req, res, next)
+      expect(whatsNewCache.wrap).toHaveBeenCalled()
+    })
+
+    it('Caches the outage banner data', async () => {
+      await controller.displayHomepage()(req, res, next)
+      expect(outageBannerCache.wrap).toHaveBeenCalled()
     })
   })
 })

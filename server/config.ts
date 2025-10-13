@@ -138,4 +138,8 @@ export default {
     tagManagerContainerId: get('TAG_MANAGER_CONTAINER_ID', ''),
   },
   feedbackSurveyUrl: 'https://www.smartsurvey.co.uk/s/43EWY0/',
+  cache: {
+    whatsNewTtl: Number(get('WHATS_NEW_CACHE_TTL', 10)),
+    outageBannerTtl: Number(get('OUTAGE_BANNER_CACHE_TTL', 1)),
+  },
 }

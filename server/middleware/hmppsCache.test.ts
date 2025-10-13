@@ -1,7 +1,6 @@
 import HmppsCache from './hmppsCache'
 
 describe('HmppsCache', () => {
-  let cache: HmppsCache
   const func = jest.fn()
 
   beforeEach(() => {
@@ -9,7 +8,7 @@ describe('HmppsCache', () => {
   })
 
   it('should ignore cache and directly return results of given function if ttl is 0', async () => {
-    cache = new HmppsCache(0)
+    const cache = new HmppsCache(0)
 
     await cache.wrap('key', func)
     await cache.wrap('key', func)
@@ -19,7 +18,7 @@ describe('HmppsCache', () => {
   })
 
   it('should cache result of function call per key', async () => {
-    cache = new HmppsCache(1)
+    const cache = new HmppsCache(1)
 
     await cache.wrap('key', func)
     await cache.wrap('key', func)
@@ -32,7 +31,6 @@ describe('HmppsCache', () => {
   })
 
   it('should return correct data from cache', async () => {
-    cache = new HmppsCache(1)
     const mockData = {
       stringVal: 'stringVal',
       numberVal: 99,
@@ -43,6 +41,7 @@ describe('HmppsCache', () => {
         nestedBooleanVal: true,
       },
     }
+    const cache = new HmppsCache<typeof mockData>(1)
     const fn = async () => {
       return mockData
     }

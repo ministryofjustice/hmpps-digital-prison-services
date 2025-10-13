@@ -13,6 +13,8 @@ export default function routes(services: Services): Router {
     services.contentfulService,
     services.establishmentRollService,
     services.serviceData,
+    services.whatsNewCache,
+    services.outageBannerCache,
   )
 
   router.get('/', homepageController.displayHomepage())

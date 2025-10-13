@@ -9,6 +9,8 @@ import DietReportingService from './dietReportingService'
 import PdfRenderingService from './pdfRenderingService'
 import GotenbergRestApiClient from '../data/gotenbergApiClient'
 import AuditService from './auditService'
+import HmppsCache from '../middleware/hmppsCache'
+import { WhatsNewData } from '../data/interfaces/whatsNewData'
 
 export const services = () => {
   const dataAccess = initDataAccess()
@@ -30,7 +32,7 @@ export const services = () => {
     ssrMode: true,
     defaultOptions: {
       watchQuery: {
-        fetchPolicy: 'cache-and-network',
+        fetchPolicy: 'no-cache',
       },
     },
   })
@@ -40,6 +42,10 @@ export const services = () => {
   const contentfulService = new ContentfulService(apolloClient)
   const dietReportingService = new DietReportingService(healthAndMedicationApiClientBuilder, prisonApiClientBuilder)
   const pdfRenderingService = new PdfRenderingService(gotenbergClient)
+
+  // Caches
+  const whatsNewCache = new HmppsCache<WhatsNewData>(config.cache.whatsNewTtl)
+  const outageBannerCache = new HmppsCache<string>(config.cache.outageBannerTtl)
 
   return {
     applicationInfo,
@@ -51,6 +57,8 @@ export const services = () => {
     pdfRenderingService,
     serviceData,
     userService,
+    whatsNewCache,
+    outageBannerCache,
   }
 }
 
