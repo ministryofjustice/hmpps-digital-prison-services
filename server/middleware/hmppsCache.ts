@@ -3,10 +3,10 @@
  *
  * To cache today data for all ~120 prisons, will use ~20kb
  */
-export default class HmppsCache {
+export default class HmppsCache<T> {
   private readonly ttl: number // Time to Live in milliseconds
 
-  private cache: Map<string, HmppsCacheData> = new Map<string, HmppsCacheData>()
+  private cache: Map<string, HmppsCacheData<T>> = new Map<string, HmppsCacheData<T>>()
 
   /**
    * Constructor.
@@ -23,7 +23,7 @@ export default class HmppsCache {
    * @param key - key
    * @param fn - function to call if not using cache, cache is empty, or cache has expired
    */
-  public async wrap(key: string, fn: () => Promise<object>): Promise<object> {
+  public async wrap(key: string, fn: () => Promise<T>): Promise<T> {
     if (!this.ttl) return fn()
 
     const now = new Date().getTime()
@@ -35,7 +35,7 @@ export default class HmppsCache {
   }
 }
 
-export interface HmppsCacheData {
-  data: object
+export interface HmppsCacheData<T> {
+  data: T
   expires: number
 }

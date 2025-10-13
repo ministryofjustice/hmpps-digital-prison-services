@@ -5,6 +5,8 @@ import { userHasRoles } from '../utils/utils'
 import ContentfulService from '../services/contentfulService'
 import EstablishmentRollService from '../services/establishmentRollService'
 import ServiceData from './ServiceData'
+import HmppsCache from '../middleware/hmppsCache'
+import { WhatsNewData } from '../data/interfaces/whatsNewData'
 
 /**
  * Parse requests for homepage routes and orchestrate response
@@ -14,6 +16,8 @@ export default class HomepageController {
     private readonly contentfulService: ContentfulService,
     private readonly establishmentRollService: EstablishmentRollService,
     private readonly serviceData: ServiceData,
+    private readonly whatsNewCache: HmppsCache<WhatsNewData>,
+    private readonly outageBannerCache: HmppsCache<string>,
   ) {}
 
   public displayHomepage(): RequestHandler {
@@ -33,9 +37,13 @@ export default class HomepageController {
       // Outage Banner - filtered to active caseload if banner has been marked for specific prisons
       // Whats new Section - filtered to active caseload if post has been marked for specific prisons
       const [outageBanner, { showServicesOutage, services }, whatsNewData, todayData] = await Promise.all([
-        this.contentfulService.getOutageBanner(activeCaseLoadId, config.environmentName),
+        this.outageBannerCache.wrap('outageBanner', () =>
+          this.contentfulService.getOutageBanner(activeCaseLoadId, config.environmentName),
+        ),
         this.serviceData.getServiceData(res),
-        this.contentfulService.getWhatsNewPosts(1, 3, 0, activeCaseLoadId),
+        this.whatsNewCache.wrap(`whatsNew__${activeCaseLoadId}`, () =>
+          this.contentfulService.getWhatsNewPosts(1, 3, 0, activeCaseLoadId),
+        ),
         userHasPrisonCaseLoad
           ? this.establishmentRollService.getEstablishmentRollSummary(req.middleware.clientToken, activeCaseLoadId)
           : {},
