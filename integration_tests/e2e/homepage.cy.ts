@@ -46,6 +46,7 @@ context('Homepage (with FE Components services)', () => {
       page.search().localGlobalRadios().should('be.visible')
       page.search().localGlobalRadios().find('label[for=search-type-local]').should('contain.text', 'Leeds (HMP)')
       page.search().nameField().should('be.visible')
+      page.search().nameHintText().should('not.be.visible')
       page.search().locationField().should('be.visible').and('contain.text', 'All')
       page.search().locationField().children().should('have.length', 3)
       page.search().viewAllLink().should('be.visible').and('contain.text', 'Leeds (HMP)')
@@ -56,6 +57,13 @@ context('Homepage (with FE Components services)', () => {
       page.search().locationField().should('be.enabled')
       page.search().localGlobalRadios().find('label[for=search-type-global]').click()
       page.search().locationField().should('be.disabled')
+    })
+
+    it('should show name hint text when choosing global', () => {
+      const page = Page.verifyOnPage(IndexPage)
+      page.search().nameHintText().should('not.be.visible')
+      page.search().localGlobalRadios().find('label[for=search-type-global]').click()
+      page.search().nameHintText().should('be.visible')
     })
   })
 

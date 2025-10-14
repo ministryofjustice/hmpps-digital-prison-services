@@ -2,6 +2,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
+
 <section class="dps-homepage-search" data-qa="homepage-search-section">
     <div class="govuk-width-container">
         <form method="post" action="/search" novalidate autocomplete="off">
@@ -36,6 +37,13 @@
                         },
                         id: "name",
                         name: "name",
+                        hint: {
+                          attributes: {
+                            hidden: ''
+                          },
+                          classes: 'hmpps-width-20',
+                          text: 'If searching by name, enter last name and then first name. For example, Smith John.'
+                        },
                         formGroup: {
                             classes: "govuk-form-group__item"
                         },

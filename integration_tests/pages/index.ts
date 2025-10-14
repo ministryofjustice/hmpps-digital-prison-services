@@ -28,6 +28,7 @@ export default class IndexPage extends Page {
       nameField: () => searchSection().find('[name=name]'),
       locationField: () => searchSection().find('[name=location]'),
       viewAllLink: () => searchSection().find('[data-qa=search-view-all-link]'),
+      nameHintText: () => searchSection().find('#name-hint'),
     }
   }
 
