@@ -53,6 +53,7 @@ generic-service:
       - moj_cloud_platform
       - prisons
       - accessibility-testing-1
+      - circleci
       - kilco_uat
 
 generic-prometheus-alerts:
