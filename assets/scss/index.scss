@@ -12,6 +12,9 @@ $govuk-page-width: $moj-page-width;
 
 @import '@ministryofjustice/hmpps-connect-dps-shared-items/dist/assets/scss/all';
 
+@import 'helpers';
+@import 'helpers/contentful-body-html';
+
 @import './components/whats-new';
 @import './components/print-link';
 @import './components/alert-flags';
@@ -25,4 +28,3 @@ $govuk-page-width: $moj-page-width;
 
 @import 'overrides/local';
 @import 'overrides/print';
-@import 'helpers/index';

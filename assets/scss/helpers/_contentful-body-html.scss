@@ -1,0 +1,17 @@
+%contentful-body-html {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+
+  img,
+  video {
+    max-width: 100%;
+  }
+
+  h2 {
+    @extend .govuk-heading-m;
+  }
+
+  h3 {
+    @extend .govuk-heading-s;
+  }
+}
