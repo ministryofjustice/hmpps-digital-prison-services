@@ -6,7 +6,7 @@
         href:  "/"
     },
     {
-        text: "What's new",
+        text: "What’s new",
         href: '/whats-new'
     }
 ] %}
@@ -15,12 +15,12 @@
     <article class="whats-new-post--full">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-                <span class="govuk-caption-m whats-new-post__caption">What's new in DPS</span>
+                <span class="govuk-caption-m whats-new-post__caption">What’s new in DPS</span>
                 <h1>{{ whatsNewPost.title }}</h1>
                 <div class="whats-new-post__date">Published on {{ whatsNewPost.date | formatDate('long') }}</div>
                 <p class="whats-new-post__summary">{{ whatsNewPost.summary }}</p>
                 <pre role="article" class="whats-new-post__body govuk-body">{{ whatsNewPost.body | safe }}</pre>
-                <a href="/whats-new" class="govuk-link govuk-link--no-visited-state" data-qa="back-to-whats-new-link">Back to what's new in DPS</a>
+                <a href="/whats-new" class="govuk-link govuk-link--no-visited-state" data-qa="back-to-whats-new-link">Back to what’s new in DPS</a>
             </div>
         </div>
     </article>

@@ -15,7 +15,7 @@ The DPS Homepage has a number of dependencies:
 * [hmpps-auth](https://github.com/ministryofjustice/hmpps-auth) - for authentication
 * [prison-api](https://github.com/ministryofjustice/prison-api) - the main API for retrieving data from NOMIS
 * [manage-soc-cases-api](https://github.com/ministryofjustice/manage-soc-cases-api) - an API for retrieving SOC case data
-* [contentful](https://graphql.contentful.com) - for banner and 'what's new' content
+* [contentful](https://graphql.contentful.com) - for banner and 'what’s new' content
 
 ### Developing against the development environment
 Development of this application has mainly relied on configuring `hmpps-digital-prison-services` to point at the development

@@ -61,7 +61,7 @@ describe('Whats New Controller', () => {
 
       expect(contentfulService.getWhatsNewPosts).toHaveBeenCalled()
       expect(res.render).toHaveBeenCalledWith('pages/whatsNew', {
-        pageTitle: "What's new",
+        pageTitle: 'What’s new',
         whatsNewPosts: whatsNewPostsMock,
         pagination: paginationMock,
       })
