@@ -7,7 +7,9 @@
     <div class="govuk-width-container">
         <form method="post" action="/search" novalidate autocomplete="off">
             <fieldset class="govuk-fieldset">
-                <legend><h2>Search for a prisoner</h2></legend>
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m govuk-!-margin-bottom-2">
+                  <h2 class="govuk-fieldset__heading">Search for a prisoner</h2>
+                </legend>
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 {% if userHasGlobal %}
                     {{ govukRadios({

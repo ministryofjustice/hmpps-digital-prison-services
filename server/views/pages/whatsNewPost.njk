@@ -16,7 +16,7 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
                 <span class="govuk-caption-m whats-new-post__caption">What’s new in DPS</span>
-                <h1>{{ whatsNewPost.title }}</h1>
+                <h1 class="govuk-heading-l govuk-!-margin-bottom-3">{{ whatsNewPost.title }}</h1>
                 <div class="whats-new-post__date">Published on {{ whatsNewPost.date | formatDate('long') }}</div>
                 <p class="whats-new-post__summary">{{ whatsNewPost.summary }}</p>
                 <pre role="article" class="whats-new-post__body govuk-body">{{ whatsNewPost.body | safe }}</pre>
