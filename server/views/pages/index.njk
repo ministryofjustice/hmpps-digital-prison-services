@@ -1,7 +1,7 @@
 {% extends "../partials/layout.njk" %}
 
 {% set pageTitle = "Home" %}
-{% set mainClasses = "app-container govuk-body" %}
+{% set mainClasses = "govuk-body" %}
 {% set containerClasses = "dps-homepage-container" %}
 
 {% block beforeContent %}
@@ -33,4 +33,3 @@
 {% block pageScripts %}
   <script src={{ "/assets/js/homepageSearch.js" | assetMap }}></script>
 {% endblock %}
-

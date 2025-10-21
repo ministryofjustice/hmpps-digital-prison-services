@@ -43,8 +43,6 @@
     }
 
     h1 {
-      font-size: 36px;
-      line-height: 36px;
       margin: 0 0 8px 0;
     }
 
@@ -61,11 +59,6 @@
   .dps-homepage-search {
     background-color: govuk-colour('light-grey');
     padding: 25px 0;
-
-    h2 {
-      font-size: 24px;
-      margin: 0 0 10px 0;
-    }
 
     .govuk-radios__label {
       max-width: unset;
@@ -153,10 +146,6 @@
       }
       min-height: 120px;
     }
-    h2 {
-      font-size: 24px;
-      margin-bottom: 5px;
-    }
   }
 
   .dps-homepage-today {
@@ -175,11 +164,6 @@
       padding: 15px 15px 20px 15px;
       border: 1px solid govuk-colour('black');
       box-shadow: 0 4px govuk-colour('mid-grey');
-
-      h3 {
-        font-size: 19px;
-        margin: 0;
-      }
 
       &__count {
         font-size: 48px;
@@ -210,20 +194,14 @@
     .dps-homepage-whats-new {
       width: 570px;
 
-      h2 {
-        font-size: 24px;
-        margin: 0 0 20px 0;
-      }
-
       @include whats-new;
     }
 
     .dps-homepage-help {
       width: 460px;
 
-      h2 {
-        font-size: 24px;
-        margin: 0 0 20px 0;
+      p + p {
+        margin-top: 30px
       }
     }
   }

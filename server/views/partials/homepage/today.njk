@@ -2,25 +2,25 @@
     <h2 class="govuk-heading-m">Today in {{ user.activeCaseLoad.description }}</h2>
     <div class="today-card-container">
         <div class="today-card" data-qa="today-unlock-roll-card">
-            <h3>Today's unlock roll</h3>
+            <h3 class="govuk-heading-s">Today’s unlock roll</h3>
             <div class="today-card__count">{{ todayData.numUnlockRollToday }}</div>
         </div>
         <div class="today-card" data-qa="today-current-population-card">
-            <h3>Current population</h3>
+            <h3 class="govuk-heading-s">Current population</h3>
             <div class="today-card__count">{{ todayData.numCurrentPopulation }}</div>
             <div class="today-card__link">
-                <a href={{ config.apis.establishmentRoll.ui_url }} class="govuk-link govuk-link--no-visited-state">Establishment roll</a>
+                <a href="{{ config.apis.establishmentRoll.ui_url }}" class="govuk-link govuk-link--no-visited-state">Establishment roll</a>
             </div>
         </div>
         <div class="today-card" data-qa="today-in-card">
-            <h3>Arrived today</h3>
+            <h3 class="govuk-heading-s">Arrived today</h3>
             <div class="today-card__count">{{ todayData.numArrivedToday }}</div>
             <div class="today-card__link">
                 <a href="{{ config.apis.establishmentRoll.ui_url }}/arrived-today" class="govuk-link govuk-link--no-visited-state">Arrived today</a>
             </div>
         </div>
         <div class="today-card" data-qa="today-out-card">
-            <h3>Out today</h3>
+            <h3 class="govuk-heading-s">Out today</h3>
             <div class="today-card__count">{{ todayData.numOutToday }}</div>
             <div class="today-card__link">
                 <a href="{{ config.apis.establishmentRoll.ui_url }}/out-today" class="govuk-link govuk-link--no-visited-state">People out today</a>

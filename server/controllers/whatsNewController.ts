@@ -17,7 +17,7 @@ export default class WhatsNewController {
       const whatsNewData = await this.contentfulService.getWhatsNewPosts(currentPage, pageSize, skip, activeCaseLoadId)
 
       res.render('pages/whatsNew', {
-        pageTitle: "What's new",
+        pageTitle: 'What’s new',
         ...whatsNewData,
       })
     }

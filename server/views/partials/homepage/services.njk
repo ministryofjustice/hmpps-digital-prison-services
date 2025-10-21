@@ -1,5 +1,5 @@
 <section data-qa="homepage-services-section">
-    <h2 id="homepage-services" class="govuk-!-font-size-24" data-qa="homepage-services-heading">Services</h2>
+    <h2 id="homepage-services" class="govuk-heading-m govuk-!-margin-top-4" data-qa="homepage-services-heading">Services</h2>
     {% if showServicesOutage %}
         <div class="govuk-inset-text dps-homepage-services-outage govuk-!-margin-top-3 govuk-!-margin-bottom-3" data-qa="homepage-services-outage-banner">
             <p class="govuk-body govuk-!-margin-bottom-1"><strong>Important</strong></p>
@@ -12,7 +12,7 @@
             <div class="hmpps-service-item">
                 <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible govuk-!-static-margin-top-0" />
                 <div class="hmpps-service-item__header">
-                    <a href="{{ service.href }} " class="govuk-link govuk-!-font-weight-bold govuk-link--no-visited-state">{{ service.heading}}</a>
+                    <a href="{{ service.href }}" class="govuk-link govuk-!-font-weight-bold govuk-link--no-visited-state">{{ service.heading}}</a>
                 </div>
                 <p class="govuk-!-static-margin-top-3 govuk-!-static-margin-bottom-0">{{ service.description}}</p>
             </div>

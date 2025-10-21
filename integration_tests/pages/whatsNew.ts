@@ -2,7 +2,7 @@ import Page, { PageElement } from './page'
 
 export default class WhatsNewPage extends Page {
   constructor() {
-    super("What's new in DPS")
+    super('What’s new in DPS')
   }
 
   whatsNew = () => {

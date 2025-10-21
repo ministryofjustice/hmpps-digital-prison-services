@@ -81,7 +81,7 @@ context('Homepage (with FE Components services)', () => {
       const page = Page.verifyOnPage(IndexPage)
       page.today().heading().should('be.visible').and('contain.text', 'Today in Leeds (HMP)')
 
-      page.today().unlockRollCard().should('be.visible').find('h3').contains("Today's unlock roll")
+      page.today().unlockRollCard().should('be.visible').find('h3').contains('Today’s unlock roll')
       page
         .today()
         .unlockRollCard()
@@ -109,7 +109,7 @@ context('Homepage (with FE Components services)', () => {
   context('Whats New', () => {
     it('should display whats new data', () => {
       const page = Page.verifyOnPage(IndexPage)
-      page.whatsNew().heading().should('be.visible').and('contain.text', "What's new in DPS")
+      page.whatsNew().heading().should('be.visible').and('contain.text', 'What’s new in DPS')
       page.whatsNew().whatsNewPost().should('have.length', 3)
       page.whatsNew().whatsNewPost().first().find('.whats-new-post__date').should('have.text', '27 July 2023')
       page.whatsNew().whatsNewPost().first().find('a').should('have.text', 'Whats new one')
