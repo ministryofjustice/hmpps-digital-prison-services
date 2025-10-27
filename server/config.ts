@@ -89,8 +89,8 @@ export default {
     prisonerSearchApi: {
       url: get('PRISONER_SEARCH_API_URL', 'http://localhost:8082', requiredInProduction),
       timeout: {
-        response: Number(get('PRISONER_SEARCH_API_TIMEOUT_SECONDS', 3000)),
-        deadline: Number(get('PRISONER_SEARCH_API_TIMEOUT_SECONDS', 3000)),
+        response: Number(get('PRISONER_SEARCH_API_TIMEOUT_RESPONSE', 3000)),
+        deadline: Number(get('PRISONER_SEARCH_API_TIMEOUT_DEADLINE', 3000)),
       },
       agent: new AgentConfig(Number(get('PRISONER_SEARCH_API_TIMEOUT_DEADLINE', 3000))),
     },
