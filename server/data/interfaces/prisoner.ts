@@ -1,6 +1,23 @@
-import { Assessment } from './assessment'
+export interface Assessment {
+  bookingId?: number
+  offenderNo?: string
+  classificationCode: string
+  classification: string
+  assessmentCode: string
+  assessmentDescription: string
+  cellSharingAlertFlag: boolean
+  assessmentDate: string
+  nextReviewDate: string
+  approvalDate?: string
+  assessmentAgencyId?: string
+  assessmentStatus?: 'P' | 'A' | 'I'
+  assessmentSeq?: number
+  assessmentComment?: string
+  assessorId?: number
+  assessorUser?: string
+}
 
-export interface Prisoner {
+export default interface Prisoner {
   prisonerNumber: string
   pncNumber?: string
   pncNumberCanonicalShort?: string
@@ -23,6 +40,8 @@ export interface Prisoner {
   lastMovementReasonCode?: string
   inOutStatus?: 'IN' | 'OUT' | 'TRN'
   prisonId?: string
+  previousPrisonId?: string
+  previousPrisonLeavingDate?: string
   prisonName?: string
   cellLocation?: string
   aliases?: Alias[]
@@ -116,10 +135,12 @@ export interface Prisoner {
     | 'Stocky'
     | 'Stooped'
     | 'Thin'
-  shoeSize?: number
+  shoeSize?: string
   tattoos?: BodyPartDetail[]
   scars?: BodyPartDetail[]
   marks?: BodyPartDetail[]
+  newArrival24?: boolean
+  newArrival72?: boolean
 }
 
 export interface Alias {
@@ -163,7 +184,7 @@ export interface BodyPartDetail {
     | 'Shoulder'
     | 'Thigh'
     | 'Toe'
-    | 'Torso'
+    | 'Front and side'
 
   comment?: string
 }

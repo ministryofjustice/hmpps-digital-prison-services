@@ -1,11 +1,16 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import { appWithAllRoutes } from './routes/testutils/appSetup'
+import { Services } from './services'
 
 let app: Express
 
 beforeEach(() => {
-  app = appWithAllRoutes({})
+  app = appWithAllRoutes({
+    services: {
+      dataAccess: {} as Services['dataAccess'],
+    },
+  })
 })
 
 afterEach(() => {
@@ -25,7 +30,7 @@ describe('GET 404', () => {
   })
 
   it('should render content without stack in production mode', () => {
-    return request(appWithAllRoutes({ production: true }))
+    return request(appWithAllRoutes({ production: true, services: { dataAccess: {} as Services['dataAccess'] } }))
       .get('/unknown')
       .expect(404)
       .expect('Content-Type', /html/)

@@ -46,6 +46,7 @@ generic-service:
     COMPONENT_API_LATEST: true
     ACCREDITED_PROGRAMMES_ENABLED: true
     AUDIT_ENABLED: "true"
+    PRISONER_SEARCH_ENABLED: true
 
   allowlist:
     groups:

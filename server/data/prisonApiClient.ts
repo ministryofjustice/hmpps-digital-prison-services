@@ -1,3 +1,4 @@
+import { Readable } from 'stream'
 import { CaseLoad } from './interfaces/caseLoad'
 import { Location } from './interfaces/location'
 import { LatestArrivalDateInfo } from './interfaces/latestArrivalDateInfo'
@@ -33,6 +34,15 @@ export default class PrisonApiRestClient extends RestClient implements PrisonApi
       {
         path: '/api/movements/offenders/latest-arrival-date',
         data: prisonerNumbers,
+      },
+      this.token,
+    )
+  }
+
+  getPrisonerImage(offenderNumber: string, fullSizeImage: boolean): Promise<Readable> {
+    return this.stream(
+      {
+        path: `/api/bookings/offenderNo/${offenderNumber}/image/data?fullSizeImage=${fullSizeImage}`,
       },
       this.token,
     )

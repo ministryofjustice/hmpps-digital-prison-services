@@ -10,6 +10,7 @@ import config from '../config'
 import PrisonApiRestClient from './prisonApiClient'
 import HealthAndMedicationRestApiClient from './healthAndMedicationRestApiClient'
 import logger from '../../logger'
+import PrisonerSearchRestClient from './prisonerSearchApiClient'
 
 const applicationInfo = applicationInfoSupplier()
 initialiseAppInsights()
@@ -38,6 +39,7 @@ const initialiseDataAccess = () => {
         hmppsAuthClient,
         prisonApiClientBuilder: (token: string) => new PrisonApiRestClient(token),
         healthAndMedicationApiClientBuilder: (token: string) => new HealthAndMedicationRestApiClient(token),
+        prisonerSearchApiClientBuilder: (token: string) => new PrisonerSearchRestClient(token),
       }
     }
     throw new Error('Data access already initialised')

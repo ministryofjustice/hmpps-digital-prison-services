@@ -5,9 +5,12 @@ import whatsNewRouter from './whatsNewRouter'
 import managedPageRouter from './managedPageRouter'
 import dietaryRequirementsRouter from './dietaryRequirementsRouter'
 import config from '../config'
+import SearchController from '../controllers/searchController'
+import CommonApiRoutes from './common/api'
 
 export default function routes(services: Services): Router {
   const router = Router()
+  const commonApiRoutes = new CommonApiRoutes(services.dataAccess.prisonApiClientBuilder)
 
   const homepageController = new HomepageController(
     services.contentfulService,
@@ -17,11 +20,26 @@ export default function routes(services: Services): Router {
     services.outageBannerCache,
   )
 
+  const searchController = new SearchController(services.dataAccess.prisonerSearchApiClientBuilder)
+
+  // API routes
+  if (config.features.prisonerSearchEnabled) {
+    router.get('/api/prisoner/:prisonerNumber/image/data', commonApiRoutes.prisonerImage)
+  }
+
+  // Page routes
   router.get('/', homepageController.displayHomepage())
   router.post('/search', homepageController.search())
   router.use(managedPageRouter(services))
   router.use('/whats-new', whatsNewRouter(services))
   router.use('/dietary-requirements', dietaryRequirementsRouter(services))
+
+  if (config.features.prisonerSearchEnabled) {
+    router.get('/prisoner-search', searchController.localSearch().get())
+    router.post('/prisoner-search', searchController.localSearch().post())
+  }
+
+  // Redirect routes
   router.get('/establishment-roll{*path}', (_req, res) => {
     res.render('pages/establishmentRollHasMoved', { establishmentRollUrl: config.apis.establishmentRoll.ui_url })
   })

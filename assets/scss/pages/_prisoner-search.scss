@@ -1,0 +1,228 @@
+// This fixes the spacing where the flex basis breaks
+.prisoner-search__results-grid * {
+  box-sizing: border-box;
+}
+
+.horizontal-form {
+  * {
+    width: 100%;
+  }
+
+  @include govuk-media-query($from: desktop) {
+    display: flex;
+    flex-flow: row wrap;
+
+    * {
+      width: auto;
+      margin-bottom: 0;
+    }
+
+    > div {
+      margin-right: govuk-spacing(3);
+    }
+
+    .date-picker-container input {
+      width: 130px !important;
+    }
+
+    label {
+      margin-bottom: govuk-spacing(1);
+    }
+
+    button {
+      margin-right: govuk-spacing(3);
+      margin-bottom: $govuk-border-width-form-element;
+    }
+
+    a {
+      margin-bottom: 10px;
+    }
+
+    button,
+    a {
+      align-self: flex-end;
+    }
+  }
+}
+
+.prisoner-search {
+  &__form {
+    margin-bottom: govuk-spacing(6);
+    padding: govuk-spacing(3);
+    background-color: govuk-colour('light-grey');
+  }
+
+  &__alerts {
+    @include govuk-media-query($from: mobile) {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .govuk-checkboxes__item {
+      @include govuk-media-query($from: mobile) {
+        flex-basis: 50%;
+      }
+
+      @include govuk-media-query($from: desktop) {
+        flex-basis: 25%;
+      }
+    }
+  }
+
+  &__results-options {
+    @include govuk-media-query($from: desktop) {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: govuk-spacing(6);
+      align-items: baseline;
+    }
+  }
+
+  &__toggles {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: govuk-spacing(3);
+
+    &__toggle {
+      display: flex;
+      align-items: center;
+      color: $govuk-link-colour;
+
+      &--list {
+        border-right: 1px solid $govuk-text-colour;
+        padding-right: govuk-spacing(2);
+      }
+
+      &--grid {
+        padding-left: govuk-spacing(2);
+      }
+
+      path {
+        fill: $govuk-link-colour;
+      }
+
+      svg {
+        margin-left: 10px;
+      }
+
+      &--active {
+        text-decoration: none;
+        color: $govuk-text-colour !important;
+
+
+        path {
+          fill: $govuk-text-colour !important;
+        }
+      }
+    }
+  }
+
+  &__summary {
+    margin: -10px 0 10px;
+    font-size: 14px;
+
+    @media screen {
+      display: none;
+    }
+  }
+
+  &__options {
+    margin-top: -10px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &__results {
+    &-list {
+      overflow: auto;
+
+      &__image {
+        width: 90px;
+
+        @media print {
+          width: 60px;
+        }
+      }
+
+      .govuk-table__header {
+        vertical-align: bottom;
+      }
+
+      .govuk-table__cell {
+        vertical-align: middle;
+      }
+    }
+
+    &-grid {
+      margin: 0 (-$govuk-gutter-half) govuk-spacing(3);
+
+      @include govuk-media-query($from: mobile) {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      &__prisoner {
+        @include govuk-media-query($from: mobile) {
+          flex-basis: 50%;
+        }
+
+        @include govuk-media-query($from: desktop) {
+          flex-basis: 33.333%;
+        }
+
+        @include govuk-media-query($from: 950px) {
+          flex-basis: 20%;
+        }
+
+        padding: $govuk-gutter-half;
+
+        @media print {
+          width: 25%;
+          display: inline-block;
+          page-break-inside: avoid;
+
+          .govuk-link {
+            color: inherit;
+            text-decoration: none;
+
+            // Remove url from links in printed view
+            &[href^="/"], &[href^="http://"], &[href^="https://"]
+            {
+              &::after {
+                content: '';
+              }
+            }
+          }
+        }
+      }
+
+      @media print {
+        display: block;
+      }
+    }
+  }
+}
+
+.prisoner-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: govuk-colour('light-grey');
+
+  &__image {
+    width: 100%;
+
+    @include govuk-media-query($from: mobile) {
+      height: 250px;
+      object-fit: cover;
+
+      @media print {
+        height: 175px;
+      }
+    }
+  }
+
+  &__details {
+    padding: govuk-spacing(3);
+  }
+}

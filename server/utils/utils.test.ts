@@ -1,10 +1,14 @@
 import {
   addDefaultSelectedValue,
+  arrayToQueryString,
   asSelectItem,
+  calculateAge,
   convertToTitleCase,
   findError,
+  formatLocation,
   formatName,
   initialiseName,
+  mapToQueryString,
   prisonerBelongsToUsersCaseLoad,
   userHasAllRoles,
   userHasRoles,
@@ -224,4 +228,71 @@ describe('format name', () => {
       expect(formatName(firstName, middleNames, lastName, options)).toEqual(expected)
     },
   )
+})
+
+describe('formatLocation', () => {
+  it('should cope with undefined', () => {
+    expect(formatLocation(undefined)).toEqual(undefined)
+  })
+
+  it('should cope with null', () => {
+    expect(formatLocation(null)).toEqual(undefined)
+  })
+
+  it('should preserve normal location names', () => {
+    expect(formatLocation('MDI-1-1-1')).toEqual('MDI-1-1-1')
+  })
+
+  it('should convert RECP,CSWAP,COURT', () => {
+    expect(formatLocation('RECP')).toEqual('Reception')
+    expect(formatLocation('CSWAP')).toEqual('No cell allocated')
+    expect(formatLocation('COURT')).toEqual('Court')
+  })
+})
+
+describe('dateStringToAge', () => {
+  it.each([
+    ['2020-01-01', { years: 0, months: 0 }],
+    ['2019-10-01', { years: 0, months: 3 }],
+    ['2018-10-01', { years: 1, months: 3 }],
+    ['1919-10-01', { years: 100, months: 3 }],
+    ['1920-01-01', { years: 100, months: 0 }],
+    ['1920-01-05', { years: 100, months: 0 }],
+  ])('Number of years and months since %s', (dob: string, expectedAge: { years: number; months: number }) => {
+    jest.useFakeTimers().setSystemTime(new Date('2020-01-10'))
+    expect(calculateAge(dob)).toEqual(expectedAge)
+    jest.useRealTimers()
+  })
+})
+
+describe('arrayToQueryString()', () => {
+  it('should split correctly when name is in LAST_NAME, FIRST_NAME format', () => {
+    expect(arrayToQueryString(['string'], 'key')).toEqual('key=string')
+  })
+})
+
+describe('mapToQueryString', () => {
+  it('should handle null/undefined map', () => {
+    expect(mapToQueryString(undefined)).toEqual('')
+  })
+
+  it('should handle empty maps', () => {
+    expect(mapToQueryString({})).toEqual('')
+  })
+
+  it('should handle single key values', () => {
+    expect(mapToQueryString({ key1: 'val' })).toEqual('key1=val')
+  })
+
+  it('should handle non-string, scalar values', () => {
+    expect(mapToQueryString({ key1: 1, key2: true })).toEqual('key1=1&key2=true')
+  })
+
+  it('should ignore null values', () => {
+    expect(mapToQueryString({ key1: 1, key2: null })).toEqual('key1=1')
+  })
+
+  it('should handle encode values', () => {
+    expect(mapToQueryString({ key1: "Hi, I'm here" })).toEqual("key1=Hi%2C%20I'm%20here")
+  })
 })
