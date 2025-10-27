@@ -3,6 +3,10 @@
   box-sizing: border-box;
 }
 
+.prisoner-search__results-list * {
+  box-sizing: border-box;
+}
+
 .horizontal-form {
   * {
     width: 100%;
@@ -138,9 +142,11 @@
 
       &__image {
         width: 90px;
+        max-width: 90px;
 
         @media print {
           width: 60px;
+          max-width: 90px;
         }
       }
 
