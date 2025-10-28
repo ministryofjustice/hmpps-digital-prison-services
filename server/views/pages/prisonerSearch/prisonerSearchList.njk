@@ -1,0 +1,61 @@
+{% set rows = [] %}
+{% for prisoner in results %}
+  {% set prisonerImageUrl = ('/api/prisoner/' + prisoner.prisonerNumber + '/image/data?imageId=' + prisoner.currentFacialImageId) %}
+  {% set prisonerImage = '<img src="' + prisonerImageUrl + '" alt="Image of ' + prisoner.name + '" class="prisoner-search__results-list__image" loading="lazy" data-test="prisoner-image" />' %}
+  {% set prisonerLink = '<a href="' + prisonerProfileBaseUrl + '/save-backlink?service=digital-prison-services&returnPath=' + encodedOriginalUrl + '&redirectPath=/prisoner/' + prisoner.prisonerNumber + '" class="govuk-link">' + prisoner.name + '</a>' %}
+  {% set rows = (rows.push([
+    { html: prisonerImage },
+    {
+      html: prisonerLink,
+      attributes: {
+      "data-sort-value": prisoner.name
+    }
+    },
+    { text: prisoner.prisonerNumber },
+    { text: prisoner.assignedLivingUnitDesc },
+    { text: prisoner.iepLevel },
+    { text: prisoner.age },
+    { html: alertFlags(prisoner.alerts, newLine=false) + categoryFlag('', prisoner.categoryCode, false) }
+  ]), rows) %}
+{% endfor %}
+
+<div class="prisoner-search__results-list">
+
+  {% set nameSort = "none" %}
+  {% set nameSort = "ascending" if formValues.sort == "lastName,firstName,asc"
+    else ("descending" if formValues.sort == "lastName,firstName,desc" else "none") %}
+  {% set locationSort = "ascending" if formValues.sort == "cellLocation,asc"
+    else ("descending" if formValues.sort == "cellLocation,desc" else "none") %}
+  {% set incentiveLevelSort = "none" %}
+  {% set ageSort = "ascending" if formValues.sort == "dateOfBirth,desc"
+    else ("descending" if formValues.sort == "dateOfBirth,asc" else "none") %}
+
+  {{ govukTable({
+    head: [
+      { html: '<span class="govuk-visually-hidden">Picture</span>' },
+      {
+        text: "Name",
+        attributes: { "aria-sort": nameSort }
+      },
+      { text: "Prison number" },
+      {
+        text: "Location",
+        attributes: { "aria-sort": locationSort }
+      },
+      {
+        text: "Incentive level",
+        attributes: { "aria-sort": incentiveLevelSort }
+      },
+      {
+        text: "Age",
+        attributes: { "aria-sort": ageSort }
+      },
+      {
+        text: "Relevant alerts",
+        classes: "govuk-!-width-one-quarter"
+      }
+    ],
+    rows: rows,
+    attributes: { "data-test": "prisoner-search-results-table" }
+  }) }}
+</div>

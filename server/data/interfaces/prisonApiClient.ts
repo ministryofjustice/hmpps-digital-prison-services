@@ -1,3 +1,4 @@
+import { Readable } from 'stream'
 import { CaseLoad } from './caseLoad'
 import { Location } from './location'
 import EstablishmentRollSummary from '../../services/interfaces/establishmentRollService/EstablishmentRollSummary'
@@ -9,4 +10,5 @@ export interface PrisonApiClient {
   setActiveCaseload(caseLoad: CaseLoad): Promise<Record<string, string>>
   getPrisonRollCountSummary(prisonId: string): Promise<EstablishmentRollSummary>
   getLatestArrivalDates(prisonerNumbers: string[]): Promise<LatestArrivalDateInfo[]>
+  getPrisonerImage(offenderNumber: string, fullSizeImage: boolean): Promise<Readable>
 }

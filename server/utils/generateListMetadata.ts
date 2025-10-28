@@ -1,4 +1,5 @@
 import { PagedList } from '../data/interfaces/pagedList'
+import { mapToQueryString } from './utils'
 
 export type QueryParamValue = string | number | boolean
 export type QueryParams = Record<string, QueryParamValue | QueryParamValue[]>
@@ -12,6 +13,13 @@ export interface PagedListQueryParams extends QueryParams {
 export interface DietaryRequirementsQueryParams extends PagedListQueryParams {
   nameAndNumber?: string
   location?: string
+}
+
+export interface PrisonerSearchQueryParams extends PagedListQueryParams {
+  term?: string
+  alerts?: string[]
+  location?: string
+  cellLocationPrefix?: string
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -51,20 +59,6 @@ export interface ListMetadata<TGeneric> {
     pages: { href: string; text: string; selected: boolean; type?: string }[]
     viewAllUrl?: string
   }
-}
-
-export const arrayToQueryString = (array: QueryParamValue[], key: string): string =>
-  array && array.map(item => `${key}=${encodeURIComponent(item)}`).join('&')
-
-export const mapToQueryString = (params: QueryParams): string => {
-  if (!params) return ''
-  return Object.keys(params)
-    .filter(key => params[key] !== undefined && params[key] !== null)
-    .map(key => {
-      if (Array.isArray(params[key])) return arrayToQueryString(params[key], key)
-      return `${key}=${encodeURIComponent(params[key])}`
-    })
-    .join('&')
 }
 
 /**

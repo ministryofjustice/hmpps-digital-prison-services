@@ -1,0 +1,39 @@
+{% set orderOptions = [
+  { value: 'lastName,firstName,asc', text: 'Last name, First name - A to Z' },
+  { value: 'lastName,firstName,desc', text: 'Last name, First name - Z to A' },
+  { value: 'cellLocation,asc', text: 'Location - Numbers then A to Z' },
+  { value: 'cellLocation,desc', text: 'Location - Z to A then numbers' }
+] %}
+
+        {% if view !== 'grid' %}
+          {% set orderOptions = (orderOptions.push(
+            { value: 'dateOfBirth,desc', text: 'Age - youngest to oldest' },
+            { value: 'dateOfBirth,asc', text: 'Age - oldest to youngest' }
+          ), orderOptions) %}
+        {% endif %}
+
+<form method="POST" class="horizontal-form" data-test="prisoner-search-order-form">
+  <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+  {{ govukSelect({
+    id: "sort",
+    name: "sort",
+    label: {
+      text: "Order " + listMetadata.pagination.totalElements +  " results by"
+    },
+    items: orderOptions | setSelected(formValues.sort),
+    attributes: {
+      'data-test': 'prisoner-search-order'
+    }
+  }) }}
+
+  {{ govukButton({
+    text: "Reorder",
+    type: "submit",
+    classes: "govuk-button--secondary",
+    attributes: {
+      'data-test': 'prisoner-search-order-form-submit'
+    }
+  }) }}
+</form>
+
+

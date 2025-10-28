@@ -1,3 +1,4 @@
+import { parse, differenceInMonths } from 'date-fns'
 import path from 'path'
 import fs from 'fs'
 import config from '../config'
@@ -151,4 +152,43 @@ export const assetMap = (url: string) => {
   }
 
   return assetManifest[url] || url
+}
+
+export const formatLocation = (locationName: string): string => {
+  if (!locationName) return undefined
+  if (locationName.includes('RECP')) return 'Reception'
+  if (locationName.includes('CSWAP')) return 'No cell allocated'
+  if (locationName.includes('COURT')) return 'Court'
+  return locationName
+}
+
+export const calculateAge = (dob: string): { years: number; months: number } => {
+  const currentDate = new Date()
+
+  const birthDate = parse(dob, 'yyyy-MM-dd', new Date())
+
+  const totalMonths = differenceInMonths(currentDate, birthDate)
+
+  const years = Math.floor(totalMonths / 12)
+  const months = totalMonths % 12
+
+  return { years, months }
+}
+
+export type QueryParamValue = string | number | boolean
+
+export type QueryParams = Record<string, QueryParamValue | QueryParamValue[]>
+
+export const arrayToQueryString = (array: QueryParamValue[], key: string): string =>
+  array && array.map(item => `${key}=${encodeURIComponent(item)}`).join('&')
+
+export const mapToQueryString = (params: QueryParams): string => {
+  if (!params) return ''
+  return Object.keys(params)
+    .filter(key => params[key] !== undefined && params[key] !== null)
+    .map(key => {
+      if (Array.isArray(params[key])) return arrayToQueryString(params[key], key)
+      return `${key}=${encodeURIComponent(params[key])}`
+    })
+    .join('&')
 }

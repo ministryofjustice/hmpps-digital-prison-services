@@ -86,6 +86,14 @@ export default {
       },
       agent: new AgentConfig(Number(get('PRISON_API_TIMEOUT_DEADLINE', 20000))),
     },
+    prisonerSearchApi: {
+      url: get('PRISONER_SEARCH_API_URL', 'http://localhost:8082', requiredInProduction),
+      timeout: {
+        response: Number(get('PRISONER_SEARCH_API_TIMEOUT_RESPONSE', 3000)),
+        deadline: Number(get('PRISONER_SEARCH_API_TIMEOUT_DEADLINE', 3000)),
+      },
+      agent: new AgentConfig(Number(get('PRISONER_SEARCH_API_TIMEOUT_DEADLINE', 3000))),
+    },
     tokenVerification: {
       url: get('TOKEN_VERIFICATION_API_URL', 'http://localhost:8100', requiredInProduction),
       healthPath: '/health/ping',
@@ -141,5 +149,8 @@ export default {
   cache: {
     whatsNewTtl: Number(get('WHATS_NEW_CACHE_TTL', 10)),
     outageBannerTtl: Number(get('OUTAGE_BANNER_CACHE_TTL', 1)),
+  },
+  features: {
+    prisonerSearchEnabled: get('PRISONER_SEARCH_ENABLED', 'false') === 'true',
   },
 }

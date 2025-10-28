@@ -10,4 +10,5 @@ export interface Location {
   operationalCapacity?: number
   parentLocationId?: number
   userDescription?: string
+  subLocations?: boolean
 }

@@ -63,4 +63,13 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('timeFromDate', timeFromDate)
   njkEnv.addFilter('isWithinLast3Days', isWithinLast3Days)
   njkEnv.addFilter('pluralise', pluralise)
+  njkEnv.addFilter(
+    'setSelected',
+    (items, selected) =>
+      items &&
+      items.map((entry: { value: string }) => ({
+        ...entry,
+        selected: entry && entry.value === selected,
+      })),
+  )
 }

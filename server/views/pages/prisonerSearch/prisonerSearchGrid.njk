@@ -1,0 +1,22 @@
+{% macro prisonerPanel(prisoner, encodedOriginalUrl) %}
+  {% set prisonerImageUrl = ('/api/prisoner/' + prisoner.prisonerNumber + '/image/data?imageId=' + prisoner.currentFacialImageId) %}
+  {% set prisonerImage = '<img src="' + prisonerImageUrl + '" alt="Image of ' + prisoner.name + '" class="prisoner-search__results-list__image" loading="lazy" data-test="prisoner-image" />' %}
+  {% set prisonerLink = prisonerProfileBaseUrl + '/save-backlink?service=digital-prison-services&returnPath=' + encodedOriginalUrl + '&redirectPath=/prisoner/' + prisoner.prisonerNumber %}
+
+  <div class="prisoner-panel">
+    <img src="{{ prisonerImageUrl }}" alt="{{ 'Image of ' + prisoner.name }}" class="prisoner-panel__image" loading="lazy" />
+    <div class="prisoner-panel__details">
+      <a href="{{ prisonerLink }}" class="govuk-link  govuk-!-font-size-19" data-test="prisoner-profile-link">{{ prisoner.name }}</a>
+      <p class="govuk-body govuk-!-margin-bottom-0">{{ prisoner.prisonerNumber }}</p>
+      <p class="govuk-body govuk-!-margin-bottom-0">{{ prisoner.assignedLivingUnitDesc }}</p>
+    </div>
+  </div>
+{% endmacro %}
+
+<div class="prisoner-search__results-grid">
+  {% for prisoner in results -%}
+    <div class="prisoner-search__results-grid__prisoner">
+      {{ prisonerPanel(prisoner, encodedOriginalUrl) }}
+    </div>
+  {%- endfor %}
+</div>

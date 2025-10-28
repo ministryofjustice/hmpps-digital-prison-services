@@ -1,0 +1,45 @@
+<form novalidate="novalidate" class="prisoner-search__form" data-test="prisoner-search-form">
+  <div class="horizontal-form govuk-!-margin-bottom-3">
+    {{ govukInput({
+      id: "term",
+      name: "term",
+      value: formValues.term,
+      errorMessage: errors | findError('term'),
+      label: {
+        text: "Enter name or prison number"
+      },
+      classes: 'govuk-!-width-full',
+      attributes: {
+        'data-test': 'prisoner-search-term'
+      }
+    }) }}
+
+    {{ govukSelect({
+      id: "location",
+      name: "location",
+      label: {
+        text: "Select location"
+      },
+      items: user.locations | asSelectItems('description', 'locationPrefix') | addDefaultSelectedValue('All', user.activeCaseLoadId) | setSelected(formValues.location),
+      attributes: {
+        'data-test': 'prisoner-search-location'
+      }
+    }) }}
+
+    {{ govukButton({
+      text: "Search",
+      type: "submit"
+    }) }}
+    <input type="hidden" name="feature" value={{ formValues.feature }} />
+  </div>
+
+  {{ govukDetails({
+    summaryText: "View by alerts",
+    classes: 'govuk-!-margin-bottom-0',
+    open: formValues.alerts.length > 0,
+    html: alertCheckboxes,
+    attributes: {
+      'data-test': 'prisoner-search-alerts-container'
+    }
+  }) }}
+</form>
