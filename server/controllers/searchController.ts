@@ -1,11 +1,12 @@
 import { isValid, isFuture, isBefore, parse } from 'date-fns'
 import { alertFlagLabels } from '@ministryofjustice/hmpps-connect-dps-shared-items'
-import { Request, RequestHandler } from 'express'
+import { Request, Response, RequestHandler } from 'express'
 import { PrisonerSearchClient } from '../data/interfaces/prisonerSearchClient'
 import { RestClientBuilder } from '../data'
 import {
   generateListMetadata,
   GlobalSearchFilterParams,
+  ListMetadata,
   PrisonerSearchQueryParams,
 } from '../utils/generateListMetadata'
 import { calculateAge, formatLocation, formatName, mapToQueryString } from '../utils/utils'
@@ -13,6 +14,32 @@ import { Location } from '../data/interfaces/location'
 import config from '../config'
 import { HmppsError } from '../data/interfaces/hmppsError'
 import Prisoner from '../data/interfaces/prisoner'
+
+interface GlobalSearchQueryString {
+  page: number
+  searchText: string
+  location: GlobalSearchFilterParams['locationFilter']
+  gender: GlobalSearchFilterParams['genderFilter']
+  referrer: string
+  dateOfBirth: {
+    day: string
+    month: string
+    year: string
+  }
+}
+
+interface GlobalSearchResult {
+  prisonerNumber: string
+  name: string
+  workingName: string
+  dateOfBirth: string
+  currentFacialImageId: number
+  latestLocation: string
+  prisonerProfileUrl: string
+  showProfileLink: boolean
+  updateLicenceLink?: string
+  showUpdateLicenceLink: boolean
+}
 
 export default class SearchController {
   constructor(private readonly prisonerSearchApiClientBuilder: RestClientBuilder<PrisonerSearchClient>) {}
@@ -79,12 +106,11 @@ export default class SearchController {
 
       results: {
         get: (): RequestHandler => async (req, res) => {
-          const { clientToken } = req.middleware
           const {
-            user: { activeCaseLoad, userRoles },
+            user: { userRoles },
           } = res.locals
           const { searchText, location, gender, dateOfBirth, referrer } = this.parseGlobalSearchQuery(req.query)
-          const errors = this.validateDate(dateOfBirth)
+          const isLicencesUser = userRoles.includes('LICENCE_RO')
 
           const filters: GlobalSearchFilterParams = {
             locationFilter: location,
@@ -95,61 +121,7 @@ export default class SearchController {
           }
           const openFilters = Boolean(Object.values(filters).filter(value => value && value !== 'ALL').length)
 
-          if (searchText && errors.length === 0) {
-            const currentlyInPrison = ({ status }: Prisoner) => (status && status.startsWith('ACTIVE') ? 'Y' : 'N')
-            const prisonerBooked = (prisoner: Prisoner) => prisoner.bookingId > 0
-            const userCanViewInactive = userRoles.includes('INACTIVE_BOOKINGS')
-            const isLicencesUser = userRoles.includes('LICENCE_RO')
-            const isLicencesVaryUser = userRoles.includes('LICENCE_VARY')
-
-            const resp = await this.performGlobalSearch(req.query, clientToken)
-            const results = resp.content.map(prisoner => ({
-              prisonerNumber: prisoner.prisonerNumber,
-              name: formatName(prisoner.firstName, '', prisoner.lastName, { style: 'lastCommaFirst' }),
-              workingName: formatName(prisoner.firstName, '', prisoner.lastName, { style: 'lastCommaFirst' }),
-              dateOfBirth: prisoner.dateOfBirth,
-              currentFacialImageId: prisoner.currentFacialImageId,
-              latestLocation: prisoner.locationDescription,
-              prisonerProfileUrl: `${config.serviceUrls.prisonerProfile}/prisoner/${prisoner.prisonerNumber}`,
-              showProfileLink:
-                (activeCaseLoad &&
-                  ((userCanViewInactive && currentlyInPrison(prisoner) === 'N') ||
-                    currentlyInPrison(prisoner) === 'Y') &&
-                  prisonerBooked(prisoner)) === true,
-              updateLicenceLink: prisonerBooked(prisoner)
-                ? `${config.serviceUrls.licences}/hdc/taskList/${prisoner.bookingId}`
-                : undefined,
-              showUpdateLicenceLink:
-                isLicencesUser &&
-                (currentlyInPrison(prisoner) === 'Y' || isLicencesVaryUser) &&
-                prisonerBooked(prisoner),
-            }))
-
-            const listMetadata = generateListMetadata<GlobalSearchFilterParams>(
-              resp,
-              { page: undefined, searchText, referrer, ...filters },
-              'result',
-              [],
-              '',
-              false,
-            )
-
-            return res.render('pages/globalSearch/results', {
-              prisonerProfileBaseUrl: config.serviceUrls.prisonerProfile,
-              encodedOriginalUrl: encodeURIComponent(req.originalUrl),
-              formValues: {
-                searchText,
-                filters,
-              },
-              openFilters,
-              errors,
-              results,
-              listMetadata,
-              isLicencesUser,
-              backLink: this.backLinkWhitelist[referrer],
-              referrer,
-            })
-          }
+          const { results, listMetadata, errors } = await this.performGlobalSearch(req, res, filters)
 
           return res.render('pages/globalSearch/results', {
             prisonerProfileBaseUrl: config.serviceUrls.prisonerProfile,
@@ -160,7 +132,9 @@ export default class SearchController {
             },
             openFilters,
             errors,
-            results: [],
+            results,
+            listMetadata,
+            isLicencesUser,
             backLink: this.backLinkWhitelist[referrer],
             referrer,
           })
@@ -196,7 +170,7 @@ export default class SearchController {
     }
   }
 
-  private parseGlobalSearchQuery(query: Request['query']) {
+  private parseGlobalSearchQuery(query: Request['query']): GlobalSearchQueryString {
     return {
       page: query.page ? Number(query.page) : 1,
       searchText: (query.searchText ?? '') as string,
@@ -211,10 +185,33 @@ export default class SearchController {
     }
   }
 
-  private async performGlobalSearch(query: Request['query'], clientToken: string) {
-    const { searchText, gender, dateOfBirth, location, page } = this.parseGlobalSearchQuery(query)
+  private async performGlobalSearch(
+    req: Request,
+    res: Response,
+    filters: GlobalSearchFilterParams,
+  ): Promise<{
+    results: GlobalSearchResult[]
+    listMetadata?: ListMetadata<GlobalSearchFilterParams>
+    errors: HmppsError[]
+  }> {
+    const { clientToken } = req.middleware
+    const {
+      user: { activeCaseLoad, userRoles },
+    } = res.locals
+    const currentlyInPrison = ({ status }: Prisoner) => (status && status.startsWith('ACTIVE') ? 'Y' : 'N')
+    const prisonerBooked = (prisoner: Prisoner) => prisoner.bookingId > 0
+    const userCanViewInactive = userRoles.includes('INACTIVE_BOOKINGS')
+    const isLicencesUser = userRoles.includes('LICENCE_RO')
+    const isLicencesVaryUser = userRoles.includes('LICENCE_VARY')
+    const { searchText, gender, dateOfBirth, location, page, referrer } = this.parseGlobalSearchQuery(req.query)
+    const dateErrors = this.validateDate(dateOfBirth)
+
+    // If these are invalid we can exit early
+    if (dateErrors.length > 0 || !searchText) {
+      return { results: [], errors: dateErrors }
+    }
+
     // Replace commas and additional spaces with a single space
-    const text = searchText.replace(/,/g, ' ').replace(/\s\s+/g, ' ').trim()
     const isPrisonerIdentifier = (str: string) => /\d/.test(str)
     const prisonerSearchClient = this.prisonerSearchApiClientBuilder(clientToken)
     const includedFields = [
@@ -230,7 +227,7 @@ export default class SearchController {
     ]
     const globalSearchParams = {
       page,
-      gender: gender as 'M' | 'F',
+      gender,
       dateOfBirth:
         dateOfBirth.day &&
         dateOfBirth.month &&
@@ -240,25 +237,59 @@ export default class SearchController {
       location,
     }
 
-    if (isPrisonerIdentifier(text)) {
+    const getResponse = (searchTerm: string) => {
+      const text = searchTerm.replace(/,/g, ' ').replace(/\s\s+/g, ' ').trim()
+      if (isPrisonerIdentifier(text)) {
+        return prisonerSearchClient.globalSearch(
+          {
+            ...globalSearchParams,
+            prisonerIdentifier: text,
+          },
+          includedFields,
+        )
+      }
+
+      const [lastName, firstName] = text.split(' ')
       return prisonerSearchClient.globalSearch(
         {
           ...globalSearchParams,
-          prisonerIdentifier: searchText,
+          firstName,
+          lastName,
         },
         includedFields,
       )
     }
 
-    const [lastName, firstName] = text.split(' ')
-    return prisonerSearchClient.globalSearch(
-      {
-        ...globalSearchParams,
-        firstName,
-        lastName,
-      },
-      includedFields,
+    const resp = await getResponse(searchText)
+    const results = resp.content.map(prisoner => ({
+      prisonerNumber: prisoner.prisonerNumber,
+      name: formatName(prisoner.firstName, '', prisoner.lastName, { style: 'lastCommaFirst' }),
+      workingName: formatName(prisoner.firstName, '', prisoner.lastName, { style: 'lastCommaFirst' }),
+      dateOfBirth: prisoner.dateOfBirth,
+      currentFacialImageId: prisoner.currentFacialImageId,
+      latestLocation: prisoner.locationDescription,
+      prisonerProfileUrl: `${config.serviceUrls.prisonerProfile}/prisoner/${prisoner.prisonerNumber}`,
+      showProfileLink:
+        (activeCaseLoad &&
+          ((userCanViewInactive && currentlyInPrison(prisoner) === 'N') || currentlyInPrison(prisoner) === 'Y') &&
+          prisonerBooked(prisoner)) === true,
+      updateLicenceLink: prisonerBooked(prisoner)
+        ? `${config.serviceUrls.licences}/hdc/taskList/${prisoner.bookingId}`
+        : undefined,
+      showUpdateLicenceLink:
+        isLicencesUser && (currentlyInPrison(prisoner) === 'Y' || isLicencesVaryUser) && prisonerBooked(prisoner),
+    }))
+
+    const listMetadata = generateListMetadata<GlobalSearchFilterParams>(
+      resp,
+      { page: undefined, searchText, referrer, ...filters },
+      'result',
+      [],
+      '',
+      false,
     )
+
+    return { results, listMetadata, errors: [] }
   }
 
   /*
