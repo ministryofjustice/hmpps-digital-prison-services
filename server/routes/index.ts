@@ -21,7 +21,10 @@ export default function routes(services: Services): Router {
     services.outageBannerCache,
   )
 
-  const searchController = new SearchController(services.dataAccess.prisonerSearchApiClientBuilder)
+  const searchController = new SearchController(
+    services.dataAccess.prisonerSearchApiClientBuilder,
+    services.globalSearchService,
+  )
 
   const ensureGlobalSearchUser: RequestHandler = (_req, res, next) => {
     const {

@@ -14,6 +14,8 @@ import { Location } from '../data/interfaces/location'
 import config from '../config'
 import { HmppsError } from '../data/interfaces/hmppsError'
 import Prisoner from '../data/interfaces/prisoner'
+import GlobalSearchService from '../services/globalSearchService'
+import { PrisonUser } from '../interfaces/prisonUser'
 
 interface GlobalSearchQueryString {
   page: number
@@ -42,7 +44,10 @@ interface GlobalSearchResult {
 }
 
 export default class SearchController {
-  constructor(private readonly prisonerSearchApiClientBuilder: RestClientBuilder<PrisonerSearchClient>) {}
+  constructor(
+    private readonly prisonerSearchApiClientBuilder: RestClientBuilder<PrisonerSearchClient>,
+    private readonly globalSearchService: GlobalSearchService,
+  ) {}
 
   backLinkWhitelist: { [key: string]: string } = { licences: config.serviceUrls.licences }
 
@@ -195,14 +200,7 @@ export default class SearchController {
     errors: HmppsError[]
   }> {
     const { clientToken } = req.middleware
-    const {
-      user: { activeCaseLoad, userRoles },
-    } = res.locals
-    const currentlyInPrison = ({ status }: Prisoner) => (status && status.startsWith('ACTIVE') ? 'Y' : 'N')
-    const prisonerBooked = (prisoner: Prisoner) => prisoner.bookingId > 0
-    const userCanViewInactive = userRoles.includes('INACTIVE_BOOKINGS')
-    const isLicencesUser = userRoles.includes('LICENCE_RO')
-    const isLicencesVaryUser = userRoles.includes('LICENCE_VARY')
+    const { user } = res.locals
     const { searchText, gender, dateOfBirth, location, page, referrer } = this.parseGlobalSearchQuery(req.query)
     const dateErrors = this.validateDate(dateOfBirth)
 
@@ -211,57 +209,40 @@ export default class SearchController {
       return { results: [], errors: dateErrors }
     }
 
-    // Replace commas and additional spaces with a single space
-    const isPrisonerIdentifier = (str: string) => /\d/.test(str)
-    const prisonerSearchClient = this.prisonerSearchApiClientBuilder(clientToken)
-    const includedFields = [
-      'firstName',
-      'lastName',
-      'prisonerNumber',
-      'dateOfBirth',
-      'locationDescription',
-      'prisonId',
-      'currentFacialImageId',
-      'status',
-      'bookingId',
-    ]
     const globalSearchParams = {
+      searchTerm: searchText,
       page,
       gender,
       dateOfBirth:
-        dateOfBirth.day &&
-        dateOfBirth.month &&
-        dateOfBirth.year &&
-        this.validateDate(dateOfBirth).length === 0 &&
-        `${dateOfBirth.year}-${dateOfBirth.month}-${dateOfBirth.day}`,
+        dateOfBirth.day && dateOfBirth.month && dateOfBirth.year
+          ? `${dateOfBirth.year}-${dateOfBirth.month}-${dateOfBirth.day}`
+          : undefined,
       location,
     }
 
-    const getResponse = (searchTerm: string) => {
-      const text = searchTerm.replace(/,/g, ' ').replace(/\s\s+/g, ' ').trim()
-      if (isPrisonerIdentifier(text)) {
-        return prisonerSearchClient.globalSearch(
-          {
-            ...globalSearchParams,
-            prisonerIdentifier: text,
-          },
-          includedFields,
-        )
-      }
+    const resp = await this.globalSearchService.getResultsForUser(clientToken, globalSearchParams)
+    const results = this.mapPrisonersToGlobalSearchResults(user, resp.content)
+    const listMetadata = generateListMetadata<GlobalSearchFilterParams>(
+      resp,
+      { page: undefined, searchText, referrer, ...filters },
+      'result',
+      [],
+      '',
+      false,
+    )
 
-      const [lastName, firstName] = text.split(' ')
-      return prisonerSearchClient.globalSearch(
-        {
-          ...globalSearchParams,
-          firstName,
-          lastName,
-        },
-        includedFields,
-      )
-    }
+    return { results, listMetadata, errors: [] }
+  }
 
-    const resp = await getResponse(searchText)
-    const results = resp.content.map(prisoner => ({
+  private mapPrisonersToGlobalSearchResults(user: PrisonUser, prisoners: Prisoner[]): GlobalSearchResult[] {
+    const { userRoles, activeCaseLoad } = user
+    const currentlyInPrison = ({ status }: Prisoner) => (status && status.startsWith('ACTIVE') ? 'Y' : 'N')
+    const prisonerBooked = (prisoner: Prisoner) => prisoner.bookingId > 0
+    const userCanViewInactive = userRoles.includes('INACTIVE_BOOKINGS')
+    const isLicencesUser = userRoles.includes('LICENCE_RO')
+    const isLicencesVaryUser = userRoles.includes('LICENCE_VARY')
+
+    return prisoners.map(prisoner => ({
       prisonerNumber: prisoner.prisonerNumber,
       name: formatName(prisoner.firstName, '', prisoner.lastName, { style: 'lastCommaFirst' }),
       workingName: formatName(prisoner.firstName, '', prisoner.lastName, { style: 'lastCommaFirst' }),
@@ -279,17 +260,6 @@ export default class SearchController {
       showUpdateLicenceLink:
         isLicencesUser && (currentlyInPrison(prisoner) === 'Y' || isLicencesVaryUser) && prisonerBooked(prisoner),
     }))
-
-    const listMetadata = generateListMetadata<GlobalSearchFilterParams>(
-      resp,
-      { page: undefined, searchText, referrer, ...filters },
-      'result',
-      [],
-      '',
-      false,
-    )
-
-    return { results, listMetadata, errors: [] }
   }
 
   /*
@@ -366,24 +336,8 @@ export default class SearchController {
         age: calculateAge(prisoner.dateOfBirth).years,
       }))
 
-    const listMetadata = generateListMetadata(resp, paramsForMetadata, 'result', [], '', true)
     // TODO: use the sorting from the metadata, not done for now as its a design change
-    // const listMetadata = generateListMetadata(
-    //   resp,
-    //   queryParams,
-    //   'result',
-    //   [
-    //     { value: 'lastName,firstName,asc', description: 'Last name, First name - A to Z' },
-    //     { value: 'lastName,firstName,desc', description: 'Last name, First name - Z to A' },
-    //     { value: 'cellLocation,asc', description: 'Location - Numbers then A to Z' },
-    //     { value: 'cellLocation,desc', description: 'Location - Z to A then numbers' },
-    //     // TODO: Hide if grid
-    //     { value: 'dateOfBirth,desc', description: 'Age - youngest to oldest' },
-    //     { value: 'dateOfBirth,asc', description: 'Age - oldest to youngest' },
-    //   ],
-    //   `Order ${resp.metadata.totalElements} results by`,
-    //   true,
-    // )
+    const listMetadata = generateListMetadata(resp, paramsForMetadata, 'result', [], '', true)
 
     return { results, listMetadata }
   }
