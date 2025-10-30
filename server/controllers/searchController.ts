@@ -1,14 +1,23 @@
+import { isValid, isFuture, isBefore, parse } from 'date-fns'
 import { alertFlagLabels } from '@ministryofjustice/hmpps-connect-dps-shared-items'
 import { Request, RequestHandler } from 'express'
 import { PrisonerSearchClient } from '../data/interfaces/prisonerSearchClient'
 import { RestClientBuilder } from '../data'
-import { generateListMetadata, PrisonerSearchQueryParams } from '../utils/generateListMetadata'
+import {
+  generateListMetadata,
+  GlobalSearchFilterParams,
+  PrisonerSearchQueryParams,
+} from '../utils/generateListMetadata'
 import { calculateAge, formatLocation, formatName, mapToQueryString } from '../utils/utils'
 import { Location } from '../data/interfaces/location'
 import config from '../config'
+import { HmppsError } from '../data/interfaces/hmppsError'
+import Prisoner from '../data/interfaces/prisoner'
 
 export default class SearchController {
   constructor(private readonly prisonerSearchApiClientBuilder: RestClientBuilder<PrisonerSearchClient>) {}
+
+  backLinkWhitelist: { [key: string]: string } = { licences: config.serviceUrls.licences }
 
   public localSearch() {
     return {
@@ -57,6 +66,109 @@ export default class SearchController {
     }
   }
 
+  public globalSearch() {
+    return {
+      get: (): RequestHandler => (req, res) => {
+        const { searchText, referrer } = this.parseGlobalSearchQuery(req.query)
+        return res.render('pages/globalSearch/index', {
+          backLink: this.backLinkWhitelist[referrer],
+          referrer,
+          formValues: { searchText },
+        })
+      },
+
+      results: {
+        get: (): RequestHandler => async (req, res) => {
+          const { clientToken } = req.middleware
+          const {
+            user: { activeCaseLoad, userRoles },
+          } = res.locals
+          const { searchText, location, gender, dateOfBirth, referrer } = this.parseGlobalSearchQuery(req.query)
+          const errors = this.validateDate(dateOfBirth)
+
+          const filters: GlobalSearchFilterParams = {
+            locationFilter: location,
+            genderFilter: gender,
+            dobDay: dateOfBirth.day,
+            dobMonth: dateOfBirth.month,
+            dobYear: dateOfBirth.year,
+          }
+          const openFilters = Boolean(Object.values(filters).filter(value => value && value !== 'ALL').length)
+
+          if (searchText && errors.length === 0) {
+            const currentlyInPrison = ({ status }: Prisoner) => (status && status.startsWith('ACTIVE') ? 'Y' : 'N')
+            const prisonerBooked = (prisoner: Prisoner) => prisoner.bookingId > 0
+            const userCanViewInactive = userRoles.includes('INACTIVE_BOOKINGS')
+            const isLicencesUser = userRoles.includes('LICENCE_RO')
+            const isLicencesVaryUser = userRoles.includes('LICENCE_VARY')
+
+            const resp = await this.performGlobalSearch(req.query, clientToken)
+            const results = resp.content.map(prisoner => ({
+              prisonerNumber: prisoner.prisonerNumber,
+              name: formatName(prisoner.firstName, '', prisoner.lastName, { style: 'lastCommaFirst' }),
+              workingName: formatName(prisoner.firstName, '', prisoner.lastName, { style: 'lastCommaFirst' }),
+              dateOfBirth: prisoner.dateOfBirth,
+              currentFacialImageId: prisoner.currentFacialImageId,
+              latestLocation: prisoner.locationDescription,
+              prisonerProfileUrl: `${config.serviceUrls.prisonerProfile}/prisoner/${prisoner.prisonerNumber}`,
+              showProfileLink:
+                (activeCaseLoad &&
+                  ((userCanViewInactive && currentlyInPrison(prisoner) === 'N') ||
+                    currentlyInPrison(prisoner) === 'Y') &&
+                  prisonerBooked(prisoner)) === true,
+              updateLicenceLink: prisonerBooked(prisoner)
+                ? `${config.serviceUrls.licences}/hdc/taskList/${prisoner.bookingId}`
+                : undefined,
+              showUpdateLicenceLink:
+                isLicencesUser &&
+                (currentlyInPrison(prisoner) === 'Y' || isLicencesVaryUser) &&
+                prisonerBooked(prisoner),
+            }))
+
+            const listMetadata = generateListMetadata<GlobalSearchFilterParams>(
+              resp,
+              { page: undefined, searchText, referrer, ...filters },
+              'result',
+              [],
+              '',
+              false,
+            )
+
+            return res.render('pages/globalSearch/results', {
+              prisonerProfileBaseUrl: config.serviceUrls.prisonerProfile,
+              encodedOriginalUrl: encodeURIComponent(req.originalUrl),
+              formValues: {
+                searchText,
+                filters,
+              },
+              openFilters,
+              errors,
+              results,
+              listMetadata,
+              isLicencesUser,
+              backLink: this.backLinkWhitelist[referrer],
+              referrer,
+            })
+          }
+
+          return res.render('pages/globalSearch/results', {
+            prisonerProfileBaseUrl: config.serviceUrls.prisonerProfile,
+            encodedOriginalUrl: encodeURIComponent(req.originalUrl),
+            formValues: {
+              searchText,
+              filters,
+            },
+            openFilters,
+            errors,
+            results: [],
+            backLink: this.backLinkWhitelist[referrer],
+            referrer,
+          })
+        },
+      },
+    }
+  }
+
   private parseQuery(query: Request['query']): PrisonerSearchQueryParams {
     const { view, showAll = 'false', sort = 'lastName,firstName,asc', term, page = 1, size = 50, location } = query
     const alerts = query.alerts && (Array.isArray(query.alerts) ? query.alerts : [query.alerts])
@@ -82,6 +194,71 @@ export default class SearchController {
       size: (pageLimitOption ?? size) as number,
       location: location as string,
     }
+  }
+
+  private parseGlobalSearchQuery(query: Request['query']) {
+    return {
+      page: query.page ? Number(query.page) : 1,
+      searchText: (query.searchText ?? '') as string,
+      location: query.locationFilter as GlobalSearchFilterParams['locationFilter'],
+      gender: query.genderFilter as GlobalSearchFilterParams['genderFilter'],
+      referrer: query.referrer as string,
+      dateOfBirth: {
+        day: query.dobDay as string,
+        month: query.dobMonth as string,
+        year: query.dobYear as string,
+      },
+    }
+  }
+
+  private async performGlobalSearch(query: Request['query'], clientToken: string) {
+    const { searchText, gender, dateOfBirth, location, page } = this.parseGlobalSearchQuery(query)
+    // Replace commas and additional spaces with a single space
+    const text = searchText.replace(/,/g, ' ').replace(/\s\s+/g, ' ').trim()
+    const isPrisonerIdentifier = (str: string) => /\d/.test(str)
+    const prisonerSearchClient = this.prisonerSearchApiClientBuilder(clientToken)
+    const includedFields = [
+      'firstName',
+      'lastName',
+      'prisonerNumber',
+      'dateOfBirth',
+      'locationDescription',
+      'prisonId',
+      'currentFacialImageId',
+      'status',
+      'bookingId',
+    ]
+    const globalSearchParams = {
+      page,
+      gender: gender as 'M' | 'F',
+      dateOfBirth:
+        dateOfBirth.day &&
+        dateOfBirth.month &&
+        dateOfBirth.year &&
+        this.validateDate(dateOfBirth).length === 0 &&
+        `${dateOfBirth.year}-${dateOfBirth.month}-${dateOfBirth.day}`,
+      location,
+    }
+
+    if (isPrisonerIdentifier(text)) {
+      return prisonerSearchClient.globalSearch(
+        {
+          ...globalSearchParams,
+          prisonerIdentifier: searchText,
+        },
+        includedFields,
+      )
+    }
+
+    const [lastName, firstName] = text.split(' ')
+    return prisonerSearchClient.globalSearch(
+      {
+        ...globalSearchParams,
+        firstName,
+        lastName,
+      },
+      includedFields,
+    )
   }
 
   /*
@@ -178,5 +355,49 @@ export default class SearchController {
     // )
 
     return { results, listMetadata }
+  }
+
+  private validateDate(dateOfBirth?: { day: string; month: string; year: string }): HmppsError[] {
+    const { day, month, year } = dateOfBirth
+    const isRealDate = (date: string): boolean => {
+      const dateFormatPattern = /(\d{1,2})([-/,. ])(\d{1,2})[-/,. ](\d{4})/
+
+      if (!dateFormatPattern.test(date)) return false
+      const separator = date.match(dateFormatPattern)[2]
+      return isValid(parse(date, `dd${separator}MM${separator}yyyy`, new Date()))
+    }
+
+    const errors: HmppsError[] = []
+    const date = day && month && year ? `${day}/${month}/${year}` : null
+
+    const missingFields = [day, month, year].filter(it => !it).length
+
+    if (missingFields === 3) {
+      return []
+    }
+
+    if (missingFields >= 1) {
+      if (!day) errors.push({ text: 'Date of birth must include a day', href: '#dobDay' })
+      else if (!month) errors.push({ text: 'Date of birth must include a month', href: '#dobMonth' })
+      else if (!year) errors.push({ text: 'Date of birth must include a year', href: '#dobYear' })
+      return errors
+    }
+
+    if (!isRealDate(date)) {
+      errors.push(
+        { text: 'Enter a date of birth which is a real date', href: '#dobDay' },
+        { text: '', href: '#dobError' },
+      )
+    }
+
+    if (isRealDate(date) && isFuture(date)) {
+      errors.push({ text: `Date of birth must be in the past`, href: `#dobDay` }, { text: '', href: '#dobError' })
+    }
+
+    if (isRealDate(date) && isBefore(date, new Date(1900, 0, 1))) {
+      errors.push({ text: `Date of birth must be after 1900`, href: `#dobDay` }, { text: '', href: '#dobError' })
+    }
+
+    return errors
   }
 }

@@ -1,4 +1,4 @@
-import { PrisonerSearchQueryParams } from '../../utils/generateListMetadata'
+import { GlobalSearchQueryParams, PrisonerSearchQueryParams } from '../../utils/generateListMetadata'
 import { PagedList } from './pagedList'
 import Prisoner from './prisoner'
 
@@ -35,4 +35,5 @@ export interface PrisonerSearchResponse {
 export interface PrisonerSearchClient {
   getPrisonerDetails(prisonerNumber: string): Promise<Prisoner>
   locationSearch(prisonId: string, queryParams: PrisonerSearchQueryParams): Promise<PagedList<Prisoner>>
+  globalSearch(queryParams: GlobalSearchQueryParams, responseFields: string[]): Promise<PagedList<Prisoner>>
 }

@@ -1,0 +1,50 @@
+{% extends "../../partials/layout.njk" %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "../../macros/hmppsPagedListHeader.njk" import hmppsPagedListHeader %}
+{% from "../../macros/hmppsPagedListFooter.njk" import hmppsPagedListFooter %}
+{% from "../../macros/printLink.njk" import printLink %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% set pageTitle = "Global search" %}
+{% set mainClasses = "govuk-body govuk-main-wrapper--auto-spacing" %}
+{% block beforeContent %}
+  {% if backLink %}
+    {{ govukBackLink({
+      text: "Back",
+      href: backLink,
+      classes: "govuk-!-display-none-print"
+    }) }}
+  {% else %}
+    {{ govukBreadcrumbs({
+      items: [
+        {
+          text: "Digital Prison Services",
+          href: '/'
+        },
+        {
+          text: "Global search",
+          href: '/global-search'
+        }
+      ],
+      classes: 'govuk-!-display-none-print'
+    }) }}
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-width-container govuk-!-margin-top-8">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-l">Global search</h1>
+      </div>
+    </div>
+    <div class="govuk-!-display-none-print">
+      {% include "./searchForm.njk" %}
+    </div>
+  </div>
+{% endblock %}

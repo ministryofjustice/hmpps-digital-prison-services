@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import { RequestHandler, Router } from 'express'
 import type { Services } from '../services'
 import HomepageController from '../controllers/homepageController'
 import whatsNewRouter from './whatsNewRouter'
@@ -7,6 +7,7 @@ import dietaryRequirementsRouter from './dietaryRequirementsRouter'
 import config from '../config'
 import SearchController from '../controllers/searchController'
 import CommonApiRoutes from './common/api'
+import { userHasRoles } from '../utils/utils'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -21,6 +22,16 @@ export default function routes(services: Services): Router {
   )
 
   const searchController = new SearchController(services.dataAccess.prisonerSearchApiClientBuilder)
+
+  const ensureGlobalSearchUser: RequestHandler = (_req, res, next) => {
+    const {
+      user: { userRoles },
+    } = res.locals
+    if (userHasRoles(['GLOBAL_SEARCH'], userRoles)) {
+      return next()
+    }
+    return res.render('notFound', { url: '/' })
+  }
 
   // API routes
   if (config.features.prisonerSearchEnabled) {
@@ -37,6 +48,8 @@ export default function routes(services: Services): Router {
   if (config.features.prisonerSearchEnabled) {
     router.get('/prisoner-search', searchController.localSearch().get())
     router.post('/prisoner-search', searchController.localSearch().post())
+    router.get('/global-search', ensureGlobalSearchUser, searchController.globalSearch().get())
+    router.get('/global-search/results', ensureGlobalSearchUser, searchController.globalSearch().results.get())
   }
 
   // Redirect routes
