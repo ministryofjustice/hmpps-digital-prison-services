@@ -16,9 +16,9 @@ export interface DietaryRequirementsQueryParams extends PagedListQueryParams {
 }
 
 export interface PrisonerSearchQueryParams extends PagedListQueryParams {
+  location: string
   term?: string
   alerts?: string[]
-  location?: string
   cellLocationPrefix?: string
 }
 

@@ -11,10 +11,10 @@ export default class GlobalSearchService {
     clientToken: string,
     globalSearchParams: {
       searchTerm: string
-      page: number
-      gender: GlobalSearchQueryParams['gender']
-      location: GlobalSearchQueryParams['location']
-      dateOfBirth: string
+      page?: number
+      gender?: GlobalSearchQueryParams['gender']
+      location?: GlobalSearchQueryParams['location']
+      dateOfBirth?: string
     },
   ): Promise<PagedList<Prisoner>> {
     const { searchTerm, ...params } = globalSearchParams
