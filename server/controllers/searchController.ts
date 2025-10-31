@@ -1,8 +1,6 @@
 import { isValid, isFuture, isBefore, parse } from 'date-fns'
 import { alertFlagLabels } from '@ministryofjustice/hmpps-connect-dps-shared-items'
 import { Request, Response, RequestHandler } from 'express'
-import { PrisonerSearchClient } from '../data/interfaces/prisonerSearchClient'
-import { RestClientBuilder } from '../data'
 import {
   generateListMetadata,
   GlobalSearchFilterParams,
@@ -10,12 +8,12 @@ import {
   PrisonerSearchQueryParams,
 } from '../utils/generateListMetadata'
 import { calculateAge, formatLocation, formatName, mapToQueryString } from '../utils/utils'
-import { Location } from '../data/interfaces/location'
 import config from '../config'
 import { HmppsError } from '../data/interfaces/hmppsError'
 import Prisoner from '../data/interfaces/prisoner'
 import GlobalSearchService from '../services/globalSearchService'
 import { PrisonUser } from '../interfaces/prisonUser'
+import PrisonerSearchService from '../services/prisonerSearchService'
 
 interface GlobalSearchQueryString {
   page: number
@@ -45,7 +43,7 @@ interface GlobalSearchResult {
 
 export default class SearchController {
   constructor(
-    private readonly prisonerSearchApiClientBuilder: RestClientBuilder<PrisonerSearchClient>,
+    private readonly prisonerSearchService: PrisonerSearchService,
     private readonly globalSearchService: GlobalSearchService,
   ) {}
 
@@ -60,10 +58,9 @@ export default class SearchController {
 
         // Perform the search
         const { results, listMetadata } = await this.performLocationSearch(
-          queryParams,
-          res.locals.user.locations,
-          res.locals.user.activeCaseLoadId,
           req.middleware.clientToken,
+          res.locals.user,
+          queryParams,
         )
 
         return res.render('pages/prisonerSearch/index', {
@@ -279,43 +276,8 @@ export default class SearchController {
     }
   }
 
-  private getInternalLocation(location: string, locations: Location[]): { internalLocation: string } {
-    // this might be an internal location so prisonId is always first 3 characters
-    const prisonId = location.slice(0, 3)
-
-    const mapInternalLocation = (locationPrefix: string, subLocations: boolean) => {
-      if (prisonId !== locationPrefix) {
-        return subLocations ? `${locationPrefix}-` : locationPrefix
-      }
-      return undefined
-    }
-
-    const internalLocationMap = new Map(
-      locations.map(obj => [obj.locationPrefix, mapInternalLocation(obj.locationPrefix, obj.subLocations)]),
-    )
-
-    return { internalLocation: internalLocationMap.get(location) }
-  }
-
-  private async performLocationSearch(
-    queryParams: PrisonerSearchQueryParams,
-    locations: Location[],
-    activeCaseLoadId: string,
-    clientToken: string,
-  ) {
-    const { alerts, sort, term, size, page, showAll, location } = queryParams
-    const selectedAlerts = alerts && alerts.map(alert => alert.split(',')).flat()
-    const prisonerSearchClient = this.prisonerSearchApiClientBuilder(clientToken)
-    const resp = await prisonerSearchClient.locationSearch(activeCaseLoadId, {
-      // This ensures areas with sublocations are handled correctly
-      location: location && this.getInternalLocation(location, locations).internalLocation,
-      size,
-      page,
-      term,
-      alerts: selectedAlerts,
-      sort,
-      showAll,
-    })
+  private async performLocationSearch(clientToken: string, user: PrisonUser, queryParams: PrisonerSearchQueryParams) {
+    const resp = await this.prisonerSearchService.getResults(clientToken, user, queryParams)
 
     // Delete page as it comes from the API
     const paramsForMetadata: PrisonerSearchQueryParams = { ...queryParams, page: undefined }
