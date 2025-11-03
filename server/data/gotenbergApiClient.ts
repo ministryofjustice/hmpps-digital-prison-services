@@ -1,5 +1,5 @@
 import superagent from 'superagent'
-import Agent, { HttpsAgent } from 'agentkeepalive'
+import { HttpAgent, HttpsAgent } from 'agentkeepalive'
 import { ApiConfig } from '@ministryofjustice/hmpps-rest-client'
 import { GotenbergApiClient, PdfRenderRequest } from './interfaces/gotenbergApiClient'
 
@@ -16,10 +16,10 @@ const defaultPage = {
 // Setting preferCssPageSize doesn't have any effect
 // This seems to be a known bug: https://github.com/gotenberg/gotenberg/issues/651
 export default class GotenbergRestApiClient implements GotenbergApiClient {
-  agent: Agent
+  agent: HttpAgent
 
   constructor(private config: ApiConfig) {
-    this.agent = config.url.startsWith('https') ? new HttpsAgent(config.agent) : new Agent(config.agent)
+    this.agent = config.url.startsWith('https') ? new HttpsAgent(config.agent) : new HttpAgent(config.agent)
   }
 
   async renderPdfFromHtml(renderRequest: PdfRenderRequest): Promise<Buffer> {
