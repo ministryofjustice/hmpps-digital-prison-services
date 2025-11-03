@@ -37,6 +37,25 @@ describe('prisonerSearchService', () => {
     expect(resp).toEqual({ example: true })
   })
 
+  it('Handles no optional parameters', async () => {
+    await service.getResults(
+      'clientToken',
+      {
+        activeCaseLoadId: 'LEI',
+        locations: userLocations,
+      } as PrisonUser,
+      { page: 10, size: 25, showAll: false },
+    )
+    expect(prisonerSearchApi.locationSearch).toHaveBeenCalledWith(
+      'LEI',
+      expect.objectContaining({
+        page: 10,
+        size: 25,
+        showAll: false,
+      }),
+    )
+  })
+
   it('Passes params to the location search', async () => {
     await service.getResults(
       'clientToken',

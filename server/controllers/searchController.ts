@@ -1,4 +1,3 @@
-import { isValid, isFuture, isBefore, parse } from 'date-fns'
 import { alertFlagLabels } from '@ministryofjustice/hmpps-connect-dps-shared-items'
 import { Request, Response, RequestHandler } from 'express'
 import {
@@ -14,6 +13,7 @@ import Prisoner from '../data/interfaces/prisoner'
 import GlobalSearchService from '../services/globalSearchService'
 import { PrisonUser } from '../interfaces/prisonUser'
 import PrisonerSearchService from '../services/prisonerSearchService'
+import globalSearchDateValidator from '../utils/globalSearchDateValidator'
 
 interface GlobalSearchQueryString {
   page: number
@@ -199,7 +199,7 @@ export default class SearchController {
     const { clientToken } = req.middleware
     const { user } = res.locals
     const { searchText, gender, dateOfBirth, location, page, referrer } = this.parseGlobalSearchQuery(req.query)
-    const dateErrors = this.validateDate(dateOfBirth)
+    const dateErrors = globalSearchDateValidator(dateOfBirth)
 
     // If these are invalid we can exit early
     if (dateErrors.length > 0 || !searchText) {
@@ -285,7 +285,8 @@ export default class SearchController {
     const results =
       resp.content &&
       resp.content.map(prisoner => ({
-        ...prisoner,
+        prisonerNumber: prisoner.prisonerNumber,
+        currentFacialImageId: prisoner.currentFacialImageId,
         iepLevel: prisoner.currentIncentive?.level.description ?? 'Not entered',
         assignedLivingUnitDesc: formatLocation(prisoner.cellLocation),
         name: formatName(prisoner.firstName, '', prisoner.lastName, { style: 'lastCommaFirst' }),
@@ -302,49 +303,5 @@ export default class SearchController {
     const listMetadata = generateListMetadata(resp, paramsForMetadata, 'result', [], '', true)
 
     return { results, listMetadata }
-  }
-
-  private validateDate(dateOfBirth?: { day: string; month: string; year: string }): HmppsError[] {
-    const { day, month, year } = dateOfBirth
-    const isRealDate = (date: string): boolean => {
-      const dateFormatPattern = /(\d{1,2})([-/,. ])(\d{1,2})[-/,. ](\d{4})/
-
-      if (!dateFormatPattern.test(date)) return false
-      const separator = date.match(dateFormatPattern)[2]
-      return isValid(parse(date, `dd${separator}MM${separator}yyyy`, new Date()))
-    }
-
-    const errors: HmppsError[] = []
-    const date = day && month && year ? `${day}/${month}/${year}` : null
-
-    const missingFields = [day, month, year].filter(it => !it).length
-
-    if (missingFields === 3) {
-      return []
-    }
-
-    if (missingFields >= 1) {
-      if (!day) errors.push({ text: 'Date of birth must include a day', href: '#dobDay' })
-      else if (!month) errors.push({ text: 'Date of birth must include a month', href: '#dobMonth' })
-      else if (!year) errors.push({ text: 'Date of birth must include a year', href: '#dobYear' })
-      return errors
-    }
-
-    if (!isRealDate(date)) {
-      errors.push(
-        { text: 'Enter a date of birth which is a real date', href: '#dobDay' },
-        { text: '', href: '#dobError' },
-      )
-    }
-
-    if (isRealDate(date) && isFuture(date)) {
-      errors.push({ text: `Date of birth must be in the past`, href: `#dobDay` }, { text: '', href: '#dobError' })
-    }
-
-    if (isRealDate(date) && isBefore(date, new Date(1900, 0, 1))) {
-      errors.push({ text: `Date of birth must be after 1900`, href: `#dobDay` }, { text: '', href: '#dobError' })
-    }
-
-    return errors
   }
 }
