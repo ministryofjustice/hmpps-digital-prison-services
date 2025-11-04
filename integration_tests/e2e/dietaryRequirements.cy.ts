@@ -2,7 +2,7 @@ import { Role } from '../../server/enums/role'
 import DietaryRequirementsPage from '../pages/dietaryRequirements'
 import Page from '../pages/page'
 
-context('Currently Out Page', () => {
+context('Dietary requirements report', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.setupUserAuth({ roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`, `ROLE_${Role.DietAndAllergiesReport}`] })

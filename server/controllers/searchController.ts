@@ -14,6 +14,7 @@ import GlobalSearchService from '../services/globalSearchService'
 import { PrisonUser } from '../interfaces/prisonUser'
 import PrisonerSearchService from '../services/prisonerSearchService'
 import globalSearchDateValidator from '../utils/globalSearchDateValidator'
+import { formatDate } from '../utils/dateHelpers'
 
 interface GlobalSearchQueryString {
   page: number
@@ -243,7 +244,7 @@ export default class SearchController {
       prisonerNumber: prisoner.prisonerNumber,
       name: formatName(prisoner.firstName, '', prisoner.lastName, { style: 'lastCommaFirst' }),
       workingName: formatName(prisoner.firstName, '', prisoner.lastName, { style: 'lastCommaFirst' }),
-      dateOfBirth: prisoner.dateOfBirth,
+      dateOfBirth: formatDate(prisoner.dateOfBirth, 'short'),
       currentFacialImageId: prisoner.currentFacialImageId,
       latestLocation: prisoner.locationDescription,
       prisonerProfileUrl: `${config.serviceUrls.prisonerProfile}/prisoner/${prisoner.prisonerNumber}`,
