@@ -17,6 +17,7 @@ import {
 import { formatDate, formatDateTime, formatTime, isWithinLast3Days, timeFromDate, toUnixTimeStamp } from './dateHelpers'
 import config from '../config'
 import { pluralise } from './pluralise'
+import { HmppsError } from '../data/interfaces/hmppsError'
 
 export default function nunjucksSetup(app: express.Express): void {
   app.set('view engine', 'njk')
@@ -72,4 +73,20 @@ export default function nunjucksSetup(app: express.Express): void {
         selected: entry && entry.value === selected,
       })),
   )
+  njkEnv.addFilter('findErrors', (errors: HmppsError[], formFieldIds: string[]) => {
+    if (!errors) return null
+    const fieldIds = formFieldIds.map(field => `#${field}`)
+    const errorIds = errors.map(error => error.href)
+    const firstPresentFieldError = fieldIds.find(fieldId => errorIds.includes(fieldId))
+    if (firstPresentFieldError) {
+      return { text: errors.find(error => error.href === firstPresentFieldError).text }
+    }
+    return null
+  })
+
+  njkEnv.addFilter('hasErrorWithPrefix', (errorsArray: HmppsError[], prefixes: string[]) => {
+    if (!errorsArray) return null
+    const formattedPrefixes = prefixes.map(field => `#${field}`)
+    return errorsArray.some(error => formattedPrefixes.some(prefix => error.href.startsWith(prefix)))
+  })
 }

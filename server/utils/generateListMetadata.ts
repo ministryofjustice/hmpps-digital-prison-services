@@ -16,10 +16,30 @@ export interface DietaryRequirementsQueryParams extends PagedListQueryParams {
 }
 
 export interface PrisonerSearchQueryParams extends PagedListQueryParams {
+  location?: string
   term?: string
   alerts?: string[]
-  location?: string
   cellLocationPrefix?: string
+}
+
+// These are the frontend names for the query params used on the global search page
+export interface GlobalSearchFilterParams extends PagedListQueryParams {
+  searchText?: string
+  genderFilter?: 'ALL' | 'M' | 'F' | 'NK' | 'NS'
+  locationFilter?: 'ALL' | 'IN' | 'OUT'
+  dobDay: string
+  dobMonth: string
+  dobYear: string
+}
+
+export interface GlobalSearchQueryParams extends PagedListQueryParams {
+  prisonerIdentifier?: string
+  firstName?: string
+  lastName?: string
+  gender?: 'ALL' | 'M' | 'F' | 'NK' | 'NS'
+  location?: 'ALL' | 'IN' | 'OUT'
+  dateOfBirth?: string
+  includeAliases?: boolean
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -72,6 +92,7 @@ export interface ListMetadata<TGeneric> {
  * @param itemDescription
  * @param sortOptions
  * @param sortLabel
+ * @param enableShowAll
  */
 export const generateListMetadata = <T extends PagedListQueryParams>(
   pagedList: PagedList<PagedListItem>,

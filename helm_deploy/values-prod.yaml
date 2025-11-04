@@ -33,6 +33,7 @@ generic-service:
     HEALTH_AND_MEDICATION_API_URL: "https://health-and-medication-api.hmpps.service.justice.gov.uk"
     GOTENBERG_API_URL: 'http://hmpps-digital-prison-services-gotenberg'
     PRISONER_SEARCH_API_URL: https://prisoner-search.prison.service.justice.gov.uk
+    LICENCES_URL: https://licences.prison.service.justice.gov.uk
 
     # Service URLs
     CHECK_MY_DIARY_URL: https://checkmydiary.service.justice.gov.uk?fromDPS=true

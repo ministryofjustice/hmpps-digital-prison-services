@@ -11,6 +11,8 @@ import GotenbergRestApiClient from '../data/gotenbergApiClient'
 import AuditService from './auditService'
 import HmppsCache from '../middleware/hmppsCache'
 import { WhatsNewData } from '../data/interfaces/whatsNewData'
+import GlobalSearchService from './globalSearchService'
+import PrisonerSearchService from './prisonerSearchService'
 
 export const services = () => {
   const dataAccess = initDataAccess()
@@ -42,6 +44,8 @@ export const services = () => {
   const contentfulService = new ContentfulService(apolloClient)
   const dietReportingService = new DietReportingService(healthAndMedicationApiClientBuilder, prisonApiClientBuilder)
   const pdfRenderingService = new PdfRenderingService(gotenbergClient)
+  const prisonerSearchService = new PrisonerSearchService(dataAccess.prisonerSearchApiClientBuilder)
+  const globalSearchService = new GlobalSearchService(dataAccess.prisonerSearchApiClientBuilder)
 
   // Caches
   const whatsNewCache = new HmppsCache<WhatsNewData>(config.cache.whatsNewTtl)
@@ -55,6 +59,8 @@ export const services = () => {
     dietReportingService,
     establishmentRollService,
     pdfRenderingService,
+    prisonerSearchService,
+    globalSearchService,
     serviceData,
     userService,
     whatsNewCache,
