@@ -486,7 +486,7 @@ describe('SearchController', () => {
             results: [
               {
                 currentFacialImageId: 1234,
-                dateOfBirth: '1990-01-01',
+                dateOfBirth: '01/01/1990',
                 name: 'Last, First',
                 prisonerNumber: 'A1234BC',
                 prisonerProfileUrl: 'http://localhost:3002/prisoner/A1234BC',
@@ -550,7 +550,7 @@ describe('SearchController', () => {
             results: [
               {
                 currentFacialImageId: 1234,
-                dateOfBirth: '1990-01-01',
+                dateOfBirth: '01/01/1990',
                 name: 'Last, First',
                 prisonerNumber: 'A1234BC',
                 prisonerProfileUrl: 'http://localhost:3002/prisoner/A1234BC',
