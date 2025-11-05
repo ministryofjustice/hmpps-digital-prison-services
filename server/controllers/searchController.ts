@@ -86,10 +86,13 @@ export default class SearchController {
       },
 
       post: (): RequestHandler => (req, res) => {
-        const queryParams = {
+        const queryParams: PrisonerSearchQueryParams = {
           ...req.query,
           sort: req.body.sort,
         }
+
+        // If this is present we should delete it as it's been overridden by the new sort
+        delete queryParams.sortFieldsWithOrder
 
         return res.redirect(`${req.baseUrl}?${mapToQueryString(queryParams)}`)
       },
@@ -265,7 +268,7 @@ export default class SearchController {
    */
   private searchSortFromLegacyField(sortFieldsWithOrder: string): string {
     const [sortField, sortOrder] = sortFieldsWithOrder.split(':')
-    if (sortField === 'assignedLivingUnitDesc') return `cellLocation,${sortOrder}`
+    if (sortField === 'assignedLivingUnitDesc') return `cellLocation,${sortOrder.toLowerCase()}`
     return `${sortField},${sortOrder.toLowerCase()}`
   }
 

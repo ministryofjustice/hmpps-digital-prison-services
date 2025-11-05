@@ -317,6 +317,22 @@ describe('SearchController', () => {
 
         expect(res.redirect).toHaveBeenCalledWith('http://localhost:3000?term=smith&sort=firstName%2Casc')
       })
+
+      it('Redirects to the GET endpoint with the legacy sort param deleted', () => {
+        const req = {
+          baseUrl: 'http://localhost:3000',
+          query: { term: 'smith', sortFieldsWithOrder: 'delete me' },
+          body: { sort: 'firstName,asc' },
+        } as unknown as Request
+
+        const res = {
+          redirect: jest.fn(),
+        } as unknown as Response
+
+        controller.localSearch().post()(req, res, jest.fn())
+
+        expect(res.redirect).toHaveBeenCalledWith('http://localhost:3000?term=smith&sort=firstName%2Casc')
+      })
     })
   })
   describe('Global search', () => {
