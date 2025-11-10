@@ -1,0 +1,100 @@
+{% from "../../macros/hmppsPagedListHeader.njk" import hmppsPagedListHeader %}
+{% from "../../macros/hmppsPagedListFooter.njk" import hmppsPagedListFooter %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% macro dietAndFoodAllergiesHtml(personalDetails) %}
+  {% if personalDetails.medical.length > 0 or personalDetails.foodAllergies.length > 0 or personalDetails.personal.length > 0 or personalDetails.cateringInstructions.length > 0 %}
+    {% if personalDetails.medical.length > 0 %}
+      <span class="govuk-!-font-weight-bold govuk-!-display-block">Medical diet</span>
+      <div class="govuk-!-margin-bottom-2" data-qa="medical-requirements">
+        {% for requirement in personalDetails.medical %}
+          <span class="govuk-!-display-block dietary-requirements">{{ requirement }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% if personalDetails.foodAllergies.length > 0 %}
+      <span class="govuk-!-font-weight-bold govuk-!-display-block">Food allergies</span>
+      <div class="govuk-!-margin-bottom-2" data-qa="food-allergies">
+        {% for allergy in personalDetails.foodAllergies %}
+          <span class="govuk-!-display-block dietary-requirements">{{ allergy }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% if personalDetails.personal.length > 0 %}
+      <span class="govuk-!-font-weight-bold govuk-!-display-block">Personalised</span>
+      <div class="govuk-!-margin-bottom-2" data-qa="personal-requirements">
+        {% for need in personalDetails.personal %}
+          <span class="govuk-!-display-block dietary-requirements">{{ need }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% if personalDetails.cateringInstructions.length > 0 %}
+      <span class="govuk-!-font-weight-bold govuk-!-display-block">Catering instructions</span>
+      <div class="govuk-!-margin-bottom-2" data-qa="catering-instructions">
+        <span class="govuk-!-display-block dietary-requirements">{{ personalDetails.cateringInstructions }}</span>
+      </div>
+    {% endif %}
+  {% else %}
+    <span class="govuk-!-margin-top-1">Not entered</span>
+  {% endif %}
+{% endmacro %}
+
+{% macro nameAndIdHtml(row) %}
+  <a href="{{ config.serviceUrls.prisonerProfile }}/prisoner/{{ row.prisonerNumber }}" class="govuk-link govuk-link--no-visited-state">{{ row.name }}</a>
+  <br />
+  {{ row.prisonerNumber }}
+  {% if row.arrivalDate | isWithinLast3Days %}
+    <br />
+    <span class="arrived-in-last-3-days-badge">Arrived in the last 3 days</span>
+  {% endif %}
+{% endmacro %}
+
+{% set rows = [] %}
+{% for row in content %}
+  {% set rows = (rows.push([
+    { html: nameAndIdHtml(row), classes: "hmpps-dietary-requirements__name" },
+    { text: row.location, classes: "hmpps-dietary-requirements__location" },
+    { html: dietAndFoodAllergiesHtml(row.dietaryRequirements), classes: "hmpps-dietary-requirements__requirements" }
+  ]), rows) %}
+{% endfor %}
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      {{ hmppsPagedListHeader(listMetadata) }}
+    </div>
+  </div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      {{ govukTable({
+        head: [
+          {
+            html: '<a href="' + sorting.nameAndNumber.url + '">Name and prison number</a>',
+            classes: 'hmpps-dietary-requirements__name',
+            attributes: {
+            "data-qa": "name-and-number-header",
+            "aria-sort": sorting.nameAndNumber.direction
+          }
+          },
+          {
+            html: '<a href="' + sorting.location.url + '">Location</a>',
+            classes: 'hmpps-dietary-requirements__location',
+            attributes: {
+            "data-qa": "location-header",
+            "aria-sort": sorting.location.direction
+          }
+          },
+          {
+            text: 'Dietary requirements',
+            classes: 'hmpps-dietary-requirements__requirements'
+          }
+        ],
+        rows: rows
+      }) }}
+    </div>
+  </div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      {{ hmppsPagedListFooter(listMetadata) }}
+    </div>
+  </div>
+{% endblock %}

@@ -84,7 +84,7 @@ export default class DietaryRequirementsController {
         requestId: req.id,
       })
 
-      return res.render('pages/dietaryRequirements', {
+      return res.render('pages/dietaryRequirements/index', {
         content: resp.content.map(this.buildContent),
         listMetadata,
         sorting,

@@ -1,0 +1,51 @@
+{% extends "../../partials/layout.njk" %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% set pageTitle = "Dietary requirements" %}
+{% set mainClasses = "govuk-body govuk-main-wrapper--auto-spacing" %}
+{% set breadCrumbs = [
+    {
+        text: 'Digital Prison Services',
+        href:  '/'
+    }
+] %}
+
+{% block content %}
+  <div class="govuk-width-container govuk-!-margin-top-8">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-l govuk-!-margin-bottom-4">People with dietary requirements in {{ user.activeCaseLoad.description }}</h1>
+        <p class="govuk-body">This information is from the diet and food allergies section on the DPS prisoner profile.</p>
+      </div>
+    </div>
+    {% if content.length > 0 %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full govuk-!-text-align-right">
+          <p class="govuk-body">
+            <a class="hmpps-print-link" target="diet-report-frame" href="/dietary-requirements/print-all?{{ printQuery }}">Print all</a>
+          </p>
+        </div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter">
+          {% include "./searchFilters.njk" %}
+        </div>
+        <div class="govuk-grid-column-three-quarters">
+          {% include "./searchTable.njk" %}
+        </div>
+      </div>
+    {% else %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          {{ govukInsetText({
+            text: "There are no recorded dietary requirements or food allergies."
+          }) }}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+  <iframe id="diet-report-frame" name="diet-report-frame"></iframe>
+{% endblock %}
+
+{% block pageScripts %}
+  <script src={{ "/assets/js/printDietReport.js" | assetMap }}></script>
+{% endblock %}
