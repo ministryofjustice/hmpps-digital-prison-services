@@ -1,7 +1,6 @@
-import { parse, differenceInMonths } from 'date-fns'
+import { differenceInMonths, parse } from 'date-fns'
 import path from 'path'
 import fs from 'fs'
-import config from '../config'
 import { CaseLoad } from '../data/interfaces/caseLoad'
 import { HmppsError } from '../data/interfaces/hmppsError'
 import { SelectItem } from '../data/interfaces/selectItem'
@@ -97,11 +96,6 @@ export const addDefaultSelectedValue = (items: SelectItem[], text: string, value
 
 export const asSelectItem = (items: Record<string, string>[], text: string, value?: string) =>
   items && items.map(entry => ({ value: entry[value || text], text: entry[text] }))
-
-export const baseUrl = (): string => {
-  const urlWithBaseUrl = `${config.serviceUrls.digitalPrisons}`
-  return urlWithBaseUrl
-}
 
 /**
  * Format a person's name with proper capitalisation

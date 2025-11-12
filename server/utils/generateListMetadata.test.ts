@@ -1,5 +1,5 @@
 import { PagedList } from '../data/interfaces/pagedList'
-import { generateListMetadata, QueryParams } from './generateListMetadata'
+import { generateListMetadata, generateListMetadataFromContent, QueryParams } from './generateListMetadata'
 
 const mockPagedData = <T>(content: T[], options?: { totalPages?: number; pageNumber?: number }): PagedList<T> => ({
   content,
@@ -15,6 +15,8 @@ const mockPagedData = <T>(content: T[], options?: { totalPages?: number; pageNum
   },
 })
 
+const mockContent = (size: number) => [...new Array(size).keys()]
+
 describe('generateListMetadata', () => {
   it('Can handle 0 pages', () => {
     const res = generateListMetadata<QueryParams>(mockPagedData([], { totalPages: 0 }), { example: 'foo' }, 'items')
@@ -26,7 +28,7 @@ describe('generateListMetadata', () => {
     expect(res.pagination.pages).toEqual([])
   })
 
-  it('Can handle multiple pages that would not require elipses', () => {
+  it('Can handle multiple pages that would not require ellipses', () => {
     const res = generateListMetadata<QueryParams>(mockPagedData([], { totalPages: 3 }), { example: 'foo' }, 'items')
     expect(res.pagination.pages).toEqual([
       { href: '?page=1&example=foo', selected: true, text: '1' },
@@ -35,7 +37,7 @@ describe('generateListMetadata', () => {
     ])
   })
 
-  it('Can handle multiple pages that would require elipses at the end', () => {
+  it('Can handle multiple pages that would require ellipses at the end', () => {
     const res = generateListMetadata<QueryParams>(mockPagedData([], { totalPages: 10 }), { example: 'foo' }, 'items')
     expect(res.pagination.next).toEqual({ href: '?page=2&example=foo', text: 'Next' })
     expect(res.pagination.previous).toBeUndefined()
@@ -47,7 +49,7 @@ describe('generateListMetadata', () => {
     ])
   })
 
-  it('Can handle multiple pages that would require elipses at the start', () => {
+  it('Can handle multiple pages that would require ellipses at the start', () => {
     const res = generateListMetadata<QueryParams>(
       mockPagedData([], { pageNumber: 10, totalPages: 10 }),
       { example: 'foo' },
@@ -63,7 +65,7 @@ describe('generateListMetadata', () => {
     ])
   })
 
-  it('Can handle multiple pages that would require elipses surrounding the current', () => {
+  it('Can handle multiple pages that would require ellipses surrounding the current', () => {
     const res = generateListMetadata<QueryParams>(
       mockPagedData([], { pageNumber: 5, totalPages: 10 }),
       { example: 'foo' },
@@ -79,6 +81,101 @@ describe('generateListMetadata', () => {
       { href: '?page=6&example=foo', selected: false, text: '6' },
       { text: '...', type: 'dots' },
       { href: '?page=10&example=foo', selected: false, text: '10' },
+    ])
+  })
+})
+
+describe('generateListMetadataFromContent', () => {
+  it('Can handle empty content list', () => {
+    const res = generateListMetadataFromContent<QueryParams>([], {}, 'items')
+    expect(res.pagination.pages).toEqual([])
+    expect(res.pagination.page).toEqual(1)
+    expect(res.pagination.pageSize).toEqual(25)
+    expect(res.pagination.totalPages).toEqual(0)
+    expect(res.pagination.totalElements).toEqual(0)
+    expect(res.pagination.elementsOnPage).toEqual(0)
+  })
+
+  it('Can handle a single page', () => {
+    const res = generateListMetadataFromContent<QueryParams>(mockContent(5), {}, 'items')
+    expect(res.pagination.pages).toEqual([])
+    expect(res.pagination.page).toEqual(1)
+    expect(res.pagination.pageSize).toEqual(25)
+    expect(res.pagination.totalPages).toEqual(1)
+    expect(res.pagination.totalElements).toEqual(5)
+    expect(res.pagination.elementsOnPage).toEqual(5)
+  })
+
+  it('Uses custom page and pageSize values if supplied', () => {
+    const res = generateListMetadataFromContent<QueryParams>(mockContent(5), { page: 2, size: 3 }, 'items')
+    expect(res.pagination.page).toEqual(2)
+    expect(res.pagination.pageSize).toEqual(3)
+    expect(res.pagination.totalPages).toEqual(2)
+    expect(res.pagination.totalElements).toEqual(5)
+    expect(res.pagination.elementsOnPage).toEqual(2)
+  })
+
+  it('Can handle multiple pages that would not require ellipses', () => {
+    const res = generateListMetadataFromContent<QueryParams>(
+      mockContent(5),
+      { page: 1, size: 2, example: 'foo' },
+      'items',
+    )
+    expect(res.pagination.pages).toEqual([
+      { href: '?page=1&size=2&example=foo', selected: true, text: '1' },
+      { href: '?page=2&size=2&example=foo', selected: false, text: '2' },
+      { href: '?page=3&size=2&example=foo', selected: false, text: '3' },
+    ])
+  })
+
+  it('Can handle multiple pages that would require ellipses at the end', () => {
+    const res = generateListMetadataFromContent<QueryParams>(
+      mockContent(20),
+      { page: 1, size: 2, example: 'foo' },
+      'items',
+    )
+    expect(res.pagination.next).toEqual({ href: '?page=2&size=2&example=foo', text: 'Next' })
+    expect(res.pagination.previous).toBeUndefined()
+    expect(res.pagination.pages).toEqual([
+      { href: '?page=1&size=2&example=foo', selected: true, text: '1' },
+      { href: '?page=2&size=2&example=foo', selected: false, text: '2' },
+      { text: '...', type: 'dots' },
+      { href: '?page=10&size=2&example=foo', selected: false, text: '10' },
+    ])
+  })
+
+  it('Can handle multiple pages that would require ellipses at the start', () => {
+    const res = generateListMetadataFromContent<QueryParams>(
+      mockContent(20),
+      { page: 10, size: 2, example: 'foo' },
+      'items',
+    )
+    expect(res.pagination.next).toBeUndefined()
+    expect(res.pagination.previous).toEqual({ href: '?page=9&size=2&example=foo', text: 'Previous' })
+    expect(res.pagination.pages).toEqual([
+      { href: '?page=1&size=2&example=foo', selected: false, text: '1' },
+      { text: '...', type: 'dots' },
+      { href: '?page=9&size=2&example=foo', selected: false, text: '9' },
+      { href: '?page=10&size=2&example=foo', selected: true, text: '10' },
+    ])
+  })
+
+  it('Can handle multiple pages that would require ellipses surrounding the current', () => {
+    const res = generateListMetadataFromContent<QueryParams>(
+      mockContent(20),
+      { page: 5, size: 2, example: 'foo' },
+      'items',
+    )
+    expect(res.pagination.next).toEqual({ href: '?page=6&size=2&example=foo', text: 'Next' })
+    expect(res.pagination.previous).toEqual({ href: '?page=4&size=2&example=foo', text: 'Previous' })
+    expect(res.pagination.pages).toEqual([
+      { href: '?page=1&size=2&example=foo', selected: false, text: '1' },
+      { text: '...', type: 'dots' },
+      { href: '?page=4&size=2&example=foo', selected: false, text: '4' },
+      { href: '?page=5&size=2&example=foo', selected: true, text: '5' },
+      { href: '?page=6&size=2&example=foo', selected: false, text: '6' },
+      { text: '...', type: 'dots' },
+      { href: '?page=10&size=2&example=foo', selected: false, text: '10' },
     ])
   })
 })

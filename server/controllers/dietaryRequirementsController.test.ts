@@ -35,6 +35,7 @@ describe('DietaryRequirementsController', () => {
         middleware: { clientToken: 'clientToken' },
         id: 'abc-123',
         query: {},
+        session: {},
       } as unknown as Request
 
       const res = {

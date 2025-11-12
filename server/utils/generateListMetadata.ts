@@ -103,19 +103,20 @@ export const generateListMetadata = <T extends PagedListQueryParams>(
   enableShowAll?: boolean,
 ): ListMetadata<T> => {
   const query = mapToQueryString(queryParams)
-  const currentPage = pagedList?.metadata ? pagedList.metadata.pageNumber : undefined
+  const currentPage = pagedList?.metadata?.pageNumber
+  const totalPages = pagedList?.metadata?.totalPages
 
   let pages = []
 
-  if (pagedList?.metadata.totalPages > 1 && pagedList?.metadata.totalPages < 8) {
-    pages = [...Array(pagedList.metadata.totalPages).keys()].map(page => {
+  if (totalPages > 1 && totalPages < 8) {
+    pages = [...Array(totalPages).keys()].map(page => {
       return {
         text: `${page + 1}`,
         href: [`?page=${page + 1}`, query].filter(Boolean).join('&'),
         selected: currentPage === page + 1,
       }
     })
-  } else if (pagedList?.metadata.totalPages > 7) {
+  } else if (totalPages > 7) {
     pages.push({
       text: '1',
       href: [`?page=1`, query].filter(Boolean).join('&'),
@@ -126,7 +127,7 @@ export const generateListMetadata = <T extends PagedListQueryParams>(
     let preDots = false
     let postDots = false
     // eslint-disable-next-line no-plusplus
-    for (let i = 2; i < pagedList.metadata.totalPages; i++) {
+    for (let i = 2; i < totalPages; i++) {
       if (pageRange.includes(i)) {
         pages.push({
           text: `${i}`,
@@ -149,9 +150,9 @@ export const generateListMetadata = <T extends PagedListQueryParams>(
     }
 
     pages.push({
-      text: `${pagedList.metadata.totalPages}`,
-      href: [`?page=${pagedList.metadata.totalPages}`, query].filter(Boolean).join('&'),
-      selected: currentPage === pagedList.metadata.totalPages,
+      text: `${totalPages}`,
+      href: [`?page=${totalPages}`, query].filter(Boolean).join('&'),
+      selected: currentPage === totalPages,
     })
   }
 
@@ -199,6 +200,133 @@ export const generateListMetadata = <T extends PagedListQueryParams>(
       totalPages: pagedList?.metadata.totalPages,
       totalElements: pagedList?.metadata.totalElements,
       elementsOnPage: pagedList?.metadata.numberOfElements,
+      pages,
+      viewAllUrl,
+      enableShowAll: enableShowAll === undefined ? false : enableShowAll,
+    },
+  }
+}
+
+/**
+ * Generate metadata for list pages from an array of content. Includes pagination, sorting, filtering...
+ *
+ * @param content
+ * @param queryParams
+ * @param itemDescription
+ * @param sortOptions
+ * @param sortLabel
+ * @param enableShowAll
+ */
+export const generateListMetadataFromContent = <T extends PagedListQueryParams>(
+  content: unknown[],
+  queryParams: T,
+  itemDescription: string,
+  sortOptions?: SortOption[],
+  sortLabel?: string,
+  enableShowAll?: boolean,
+): ListMetadata<T> => {
+  const queryParamsWithoutPage = { ...queryParams, page: undefined as number }
+  const query = mapToQueryString(queryParamsWithoutPage)
+  const currentPage = queryParams.page ?? 1
+  const pageSize = queryParams.showAll ? 99999 : (queryParams.size ?? 25)
+  const totalPages = pageSize > 0 ? Math.ceil(content.length / pageSize) : 0
+
+  let pages = []
+
+  if (totalPages > 1 && totalPages < 8) {
+    pages = [...Array(totalPages).keys()].map(page => {
+      return {
+        text: `${page + 1}`,
+        href: [`?page=${page + 1}`, query].filter(Boolean).join('&'),
+        selected: currentPage === page + 1,
+      }
+    })
+  } else if (totalPages > 7) {
+    pages.push({
+      text: '1',
+      href: [`?page=1`, query].filter(Boolean).join('&'),
+      selected: currentPage === 1,
+    })
+
+    const pageRange = [currentPage - 1, currentPage, currentPage + 1]
+    let preDots = false
+    let postDots = false
+    // eslint-disable-next-line no-plusplus
+    for (let i = 2; i < totalPages; i++) {
+      if (pageRange.includes(i)) {
+        pages.push({
+          text: `${i}`,
+          href: [`?page=${i}`, query].filter(Boolean).join('&'),
+          selected: currentPage === i,
+        })
+      } else if (i < pageRange[0] && !preDots) {
+        pages.push({
+          text: '...',
+          type: 'dots',
+        })
+        preDots = true
+      } else if (i > pageRange[2] && !postDots) {
+        pages.push({
+          text: '...',
+          type: 'dots',
+        })
+        postDots = true
+      }
+    }
+
+    pages.push({
+      text: `${totalPages}`,
+      href: [`?page=${totalPages}`, query].filter(Boolean).join('&'),
+      selected: currentPage === totalPages,
+    })
+  }
+
+  const next =
+    currentPage < totalPages
+      ? {
+          href: [`?page=${currentPage + 1}`, query].filter(Boolean).join('&'),
+          text: 'Next',
+        }
+      : undefined
+
+  const previous =
+    currentPage > 1
+      ? {
+          href: [`?page=${currentPage - 1}`, query].filter(Boolean).join('&'),
+          text: 'Previous',
+        }
+      : undefined
+
+  const viewAllUrl = [`?${mapToQueryString(queryParams)}`, 'showAll=true'].filter(Boolean).join('&')
+
+  return <ListMetadata<T>>{
+    filtering: {
+      ...queryParams,
+      queryParams: { sort: queryParams.sort },
+    },
+    sorting:
+      sortOptions && sortLabel
+        ? {
+            id: 'sort',
+            label: sortLabel,
+            options: sortOptions,
+            sort: queryParams.sort,
+            queryParams: {
+              ...queryParams,
+              sort: undefined,
+            },
+          }
+        : null,
+    pagination: {
+      itemDescription,
+      previous,
+      next,
+      page: currentPage,
+      offset: pageSize * (currentPage - 1),
+      pageSize,
+      totalPages,
+      totalElements: content.length,
+      elementsOnPage: totalPages < 2 || currentPage === totalPages ? content.length % pageSize : pageSize,
       pages,
       viewAllUrl,
       enableShowAll: enableShowAll === undefined ? false : enableShowAll,

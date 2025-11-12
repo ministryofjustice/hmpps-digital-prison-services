@@ -1,4 +1,5 @@
 import { PrisonUser } from '../../interfaces/prisonUser'
+import { CachedDietaryRequirements } from '../../interfaces/CachedDietaryRequirements'
 
 export default {}
 
@@ -6,6 +7,7 @@ declare module 'express-session' {
   // Declare that the session will potentially contain these additional fields
   interface SessionData {
     returnTo: string
+    dietaryRequirements: CachedDietaryRequirements
   }
 }
 
