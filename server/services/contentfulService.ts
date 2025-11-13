@@ -154,7 +154,10 @@ export default class ContentfulService {
   /**
    * Get `outageBanner` entry.
    */
-  public async getOutageBanner(activeCaseLoadId: string | undefined, environment: string): Promise<string> {
+  public async getOutageBanner(
+    activeCaseLoadId: string | undefined,
+    environment: 'local' | 'dev' | 'preprod' | 'prod',
+  ): Promise<string> {
     const prisonsFilter = activeCaseLoadId
       ? { OR: [{ prisons_exists: false }, { prisons_contains_some: activeCaseLoadId }] }
       : { prisons_exists: false }
@@ -287,9 +290,9 @@ export default class ContentfulService {
     }
   }
 
-  private getEnvironmentFilter(environment: string) {
-    if (environment === 'DEV') return { development: true }
-    if (environment === 'PRE-PRODUCTION') return { preProduction: true }
+  private getEnvironmentFilter(environment: 'local' | 'dev' | 'preprod' | 'prod') {
+    if (environment === 'dev') return { development: true }
+    if (environment === 'preprod') return { preProduction: true }
     // Default to production
     return { production: true }
   }

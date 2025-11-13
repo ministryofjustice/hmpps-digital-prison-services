@@ -18,7 +18,8 @@ generic-service:
 
     CONTENTFUL_HOST: https://graphql.eu.contentful.com
     CONTENTFUL_ENVIRONMENT: master
-    ENVIRONMENT_NAME: DEV
+    ENVIRONMENT: dev      # k8s namespace suffix & github environment
+    ENVIRONMENT_NAME: DEV # Phase banner tag label
     HMPPS_AUTH_URL: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
     HMPPS_COOKIE_DOMAIN: digital-dev.prison.service.justice.gov.uk
     HMPPS_COOKIE_NAME: hmpps-session-dev

@@ -13,7 +13,7 @@ export default function setUpHealthChecks(applicationInfo: ApplicationInfo): Rou
   const router = express.Router()
 
   const apiConfig = Object.entries(config.apis).filter(
-    ([name]) => config.environmentName.toUpperCase() !== 'DEV' || ['hmppsAuth', 'tokenVerification'].includes(name),
+    ([name]) => config.environment !== 'dev' || ['hmppsAuth', 'tokenVerification'].includes(name),
   )
 
   const middleware = monitoringMiddleware({
