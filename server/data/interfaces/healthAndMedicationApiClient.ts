@@ -68,6 +68,13 @@ export interface HealthAndMedication {
   }
 }
 
+export interface DietAndAllergy {
+  foodAllergies: ValueWithMetadata<ReferenceDataCodeWithComment[]>
+  medicalDietaryRequirements: ValueWithMetadata<ReferenceDataCodeWithComment[]>
+  personalisedDietaryRequirements: ValueWithMetadata<ReferenceDataCodeWithComment[]>
+  cateringInstructions: ValueWithMetadata<string>
+}
+
 export interface HealthAndMedicationUpdate {
   smokerOrVaper?: string
   foodAllergies?: string[]

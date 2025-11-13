@@ -1,5 +1,39 @@
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+
+{% macro filterCategory(label, options) %}
+  {% if options.length > 0 %}
+    {% set filterOptions = [] %}
+
+    {% for option in options %}
+      {% set filterOptions = (filterOptions.push(
+        {
+          name: option.id,
+          value: option.id,
+          text: option.label + " (" + option.count + ")",
+          id: option.id,
+          checked: option.selected
+        }
+      ), filterOptions) %}
+    {% endfor %}
+
+    <h3 class="govuk-heading-s">{{ label }}</h3>
+
+    {{ govukCheckboxes({
+      idPrefix: "alerts",
+      name: "alerts[]",
+      items: filterOptions
+    }) }}
+  {% endif %}
+{% endmacro %}
+
 {% block content %}
   <div class="govuk-grid-column-full hmpps-dietary-requirements__filters">
     <h2 class="govuk-heading-m">Filter</h2>
+
+    {{ filterCategory("Prisoners", filters.prisoners) }}
+    {{ filterCategory("Location", filters.location) }}
+    {{ filterCategory("Personalised diet", filters.personalisedDiet) }}
+    {{ filterCategory("Medical diet", filters.medicalDiet) }}
+    {{ filterCategory("Food allergies", filters.foodAllergies) }}
   </div>
 {% endblock %}
