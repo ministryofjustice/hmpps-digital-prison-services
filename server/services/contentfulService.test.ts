@@ -78,9 +78,9 @@ describe('ContentfulService', () => {
   })
 
   it.each([
-    { environment: 'DEV', query: { development: true } },
-    { environment: 'PRE-PRODUCTION', query: { preProduction: true } },
-    { environment: 'PRODUCTION', query: { production: true } },
+    { environment: 'dev' as const, query: { development: true } },
+    { environment: 'preprod' as const, query: { preProduction: true } },
+    { environment: 'prod' as const, query: { production: true } },
   ])(
     'Should get the outage banner for the users caseload for the current environment',
     async ({ environment, query }) => {
@@ -99,9 +99,9 @@ describe('ContentfulService', () => {
   )
 
   it.each([
-    { environment: 'DEV', query: { development: true } },
-    { environment: 'PRE-PRODUCTION', query: { preProduction: true } },
-    { environment: 'PRODUCTION', query: { production: true } },
+    { environment: 'dev' as const, query: { development: true } },
+    { environment: 'preprod' as const, query: { preProduction: true } },
+    { environment: 'prod' as const, query: { production: true } },
   ])(
     'Should get the outage banner for the users without a caseload for the current environment',
     async ({ environment, query }) => {

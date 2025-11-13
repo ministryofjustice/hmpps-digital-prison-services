@@ -18,7 +18,8 @@ generic-service:
 
     CONTENTFUL_HOST: https://graphql.eu.contentful.com
     CONTENTFUL_ENVIRONMENT: master
-    ENVIRONMENT_NAME: PRE-PRODUCTION
+    ENVIRONMENT: preprod             # k8s namespace suffix & github environment
+    ENVIRONMENT_NAME: PRE-PRODUCTION # Phase banner tag label
     HMPPS_AUTH_URL: https://sign-in-preprod.hmpps.service.justice.gov.uk/auth
     HMPPS_COOKIE_DOMAIN: digital-preprod.prison.service.justice.gov.uk
     HMPPS_COOKIE_NAME: hmpps-session-preprod
