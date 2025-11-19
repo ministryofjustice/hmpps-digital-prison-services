@@ -28,14 +28,9 @@ export default class DietaryRequirementsController {
         return res.render('notFound', { url: '/' })
       }
 
-      const queryParams: DietaryRequirementsQueryParams = { page: 1, size: 25 }
+      const queryParams: DietaryRequirementsQueryParams = this.readSortingAndFiltersFromQueryParams(req)
       if (req.query.page) queryParams.page = +req.query.page
       if (req.query.showAll) queryParams.showAll = Boolean(req.query.showAll)
-      if (req.query.nameAndNumber) queryParams.nameAndNumber = req.query.nameAndNumber as string
-      if (req.query.location) queryParams.location = req.query.location as string
-      if (req.query.personalDiet) queryParams.personalDiet = this.extractQueryParamsAsArray(req, 'personalDiet')
-      if (req.query.medicalDiet) queryParams.medicalDiet = this.extractQueryParamsAsArray(req, 'medicalDiet')
-      if (req.query.foodAllergies) queryParams.foodAllergies = this.extractQueryParamsAsArray(req, 'foodAllergies')
 
       const sortNameQuery = () => {
         let direction = 'ASC'
@@ -178,12 +173,8 @@ export default class DietaryRequirementsController {
         return res.render('notFound', { url: '/' })
       }
 
-      const queryParams: DietaryRequirementsQueryParams = { page: 1, size: 25, showAll: true }
-      if (req.query.nameAndNumber) queryParams.nameAndNumber = req.query.nameAndNumber as string
-      if (req.query.location) queryParams.location = req.query.location as string
-      if (req.query.personalDiet) queryParams.personalDiet = this.extractQueryParamsAsArray(req, 'personalDiet')
-      if (req.query.medicalDiet) queryParams.medicalDiet = this.extractQueryParamsAsArray(req, 'medicalDiet')
-      if (req.query.foodAllergies) queryParams.foodAllergies = this.extractQueryParamsAsArray(req, 'foodAllergies')
+      const queryParams: DietaryRequirementsQueryParams = this.readSortingAndFiltersFromQueryParams(req)
+      queryParams.showAll = true
 
       const [resp, filters] = await Promise.all([
         this.dietReportingService.getDietaryRequirementsForPrison(clientToken, prisonId, queryParams),
@@ -262,6 +253,19 @@ export default class DietaryRequirementsController {
     return a.name.localeCompare(b.name)
   }
 
+  readSortingAndFiltersFromQueryParams(req: Request): DietaryRequirementsQueryParams {
+    const queryParams: DietaryRequirementsQueryParams = { page: 1, size: 25 }
+    if (req.query.nameAndNumber) queryParams.nameAndNumber = req.query.nameAndNumber as string
+    if (req.query.location) queryParams.location = req.query.location as string
+    if (req.query.personalDiet) queryParams.personalDiet = this.extractQueryParamsAsArray(req, 'personalDiet')
+    if (req.query.medicalDiet) queryParams.medicalDiet = this.extractQueryParamsAsArray(req, 'medicalDiet')
+    if (req.query.foodAllergies) queryParams.foodAllergies = this.extractQueryParamsAsArray(req, 'foodAllergies')
+
+    return queryParams
+  }
+
+  // Where query params are repeated, express will read them as an array, however they will just be strings otherwise
+  // This forces an array even for non-repeated params
   extractQueryParamsAsArray(req: Request, paramName: string): string[] {
     const param = req.query[paramName]
     const returnArray: string[] = []
