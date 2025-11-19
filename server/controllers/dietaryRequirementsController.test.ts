@@ -69,6 +69,7 @@ describe('DietaryRequirementsController', () => {
         query: {
           personalDiet: 'KOSHER',
           foodAllergies: ['PEANUTS', 'MUSTARD'],
+          location: 'DESC',
         },
       } as unknown as Request
 
@@ -87,6 +88,7 @@ describe('DietaryRequirementsController', () => {
         size: 25,
         personalDiet: ['KOSHER'],
         foodAllergies: ['PEANUTS', 'MUSTARD'],
+        location: 'DESC',
       }
 
       const handler = controller.get()
@@ -109,6 +111,8 @@ describe('DietaryRequirementsController', () => {
             medicalDietaryRequirements: [{ count: 1, name: 'Coeliac (cannot eat gluten)', value: 'COELIAC' }],
             personalisedDietaryRequirements: [{ checked: true, count: 7, name: 'Kosher', value: 'KOSHER' }],
           },
+          printQuery: 'personalDiet=KOSHER&foodAllergies=PEANUTS&foodAllergies=MUSTARD&location=DESC',
+          clearAllQuery: 'location=DESC',
         }),
       )
     })

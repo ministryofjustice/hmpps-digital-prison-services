@@ -1,6 +1,5 @@
 import {
   HealthAndMedicationApiClient,
-  HealthAndMedicationFilter,
   HealthAndMedicationForPrison,
 } from '../../data/interfaces/healthAndMedicationApiClient'
 import { PagedList } from '../../data/interfaces/pagedList'
@@ -93,7 +92,7 @@ export const mockHealthAndMedicationFiltersResponse = {
       value: 'KOSHER',
       count: 7,
     },
-  ] as HealthAndMedicationFilter[],
+  ],
 }
 
 const healthAndMedicationApiClientMock: HealthAndMedicationApiClient = {

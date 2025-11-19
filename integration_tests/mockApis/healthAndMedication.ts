@@ -1,4 +1,5 @@
 import { stubFor } from './wiremock'
+import { HealthAndMedicationFilter } from '../../server/data/interfaces/healthAndMedicationApiClient'
 
 export default {
   stubHealthAndMedicationPing: (httpStatus = 200) =>
@@ -87,6 +88,50 @@ export default {
             totalPages: 1,
           },
         },
+      },
+    })
+  },
+  stubHealthAndMedicationFiltersForPrison: (prisonId: string) => {
+    const filters = {
+      foodAllergies: [
+        {
+          name: 'Peanuts',
+          value: 'PEANUTS',
+          count: 3,
+        },
+        {
+          name: 'Mustard',
+          value: 'MUSTARD',
+          count: 4,
+        },
+      ],
+      medicalDietaryRequirements: [
+        {
+          name: 'Coeliac (cannot eat gluten)',
+          value: 'COELIAC',
+          count: 1,
+        },
+      ],
+      personalisedDietaryRequirements: [
+        {
+          name: 'Kosher',
+          value: 'KOSHER',
+          count: 7,
+        },
+      ] as HealthAndMedicationFilter[],
+    }
+
+    return stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: `/health-and-medication/prisons/${prisonId}/filters`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: filters,
       },
     })
   },

@@ -82,7 +82,6 @@ export default class DietaryRequirementsController {
         }
       }
 
-      // TODO fix these (they won't maintain the filters)
       const sorting = {
         nameAndNumber: {
           direction: sortParamToDirection(req.query.nameAndNumber as string),
@@ -138,6 +137,12 @@ export default class DietaryRequirementsController {
           personalDiet: queryParams.personalDiet,
           medicalDiet: queryParams.medicalDiet,
           foodAllergies: queryParams.foodAllergies,
+          nameAndNumber: req.query.nameAndNumber as string,
+          location: req.query.location as string,
+          showAll: req.query.showAll as string,
+        }),
+        hasAppliedFilters: queryParams.personalDiet || queryParams.medicalDiet || queryParams.foodAllergies,
+        clearAllQuery: mapToQueryString({
           nameAndNumber: req.query.nameAndNumber as string,
           location: req.query.location as string,
           showAll: req.query.showAll as string,

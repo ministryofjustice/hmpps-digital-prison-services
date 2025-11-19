@@ -17,17 +17,20 @@
       ), filterOptions) %}
     {% endfor %}
 
-    <h3 class="govuk-heading-s">{{ label }}</h3>
-
-    {{ govukCheckboxes({
-      name: "filters[]",
-      items: filterOptions
-    }) }}
+    <fieldset class="govuk-fieldset" data-qa={{ "filter-group-" + groupId }}>
+      <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+        {{ label }}
+      </legend>
+      {{ govukCheckboxes({
+        name: "filters[]",
+        items: filterOptions
+      }) }}
+    </fieldset>
   {% endif %}
 {% endmacro %}
 
 {% block content %}
-  <div class="govuk-grid-column-full hmpps-dietary-requirements__filters">
+  <div class="govuk-grid-column-full govuk-!-padding-bottom-3 hmpps-dietary-requirements__filters">
     <form method="POST" data-qa="diet-report-filter-form">
       <h2 class="govuk-heading-m govuk-!-margin-top-2">Filter</h2>
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
@@ -38,11 +41,12 @@
       {{ govukButton({
         text: "Apply",
         type: "submit",
-        classes: "govuk-button",
+        classes: "govuk-button govuk-!-margin-bottom-3",
         attributes: {
           'data-qa': 'diet-report-filter-form-submit'
         }
       }) }}
     </form>
+    <a href="/dietary-requirements?{{ clearAllQuery }}" class="govuk-link govuk-link--no-visited-state">Clear filters</a>
   </div>
 {% endblock %}

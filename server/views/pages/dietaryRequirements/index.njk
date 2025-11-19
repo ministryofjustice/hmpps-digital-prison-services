@@ -21,7 +21,9 @@
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full govuk-!-text-align-right">
           <p class="govuk-body">
-            <a class="hmpps-print-link" target="diet-report-frame" href="/dietary-requirements/print-all?{{ printQuery }}">Print all</a>
+            <a class="hmpps-print-link" target="diet-report-frame" href="/dietary-requirements/print-all?{{ printQuery }}">
+              {% if hasAppliedFilters %}Print filtered list{% else %}Print all{% endif %}
+            </a>
           </p>
         </div>
       </div>
