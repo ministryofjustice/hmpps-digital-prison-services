@@ -40,6 +40,10 @@
   }
 }
 
+.hmpps-dietary-requirements__filters {
+  background-color: govuk-colour('light-grey');
+}
+
 .arrived-in-last-3-days-badge {
   display: block;
   width: fit-content;
@@ -85,6 +89,10 @@
 }
 
 .sensitive-info-disclaimer {
+  font-size: 14px;
+}
+
+.active-filters-summary {
   font-size: 14px;
 }
 

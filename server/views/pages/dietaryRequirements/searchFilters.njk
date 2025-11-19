@@ -1,0 +1,48 @@
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro filterCategory(label, groupId, options) %}
+  {% if options.length > 0 %}
+    {% set filterOptions = [] %}
+
+    {% for option in options %}
+      {% set filterOptions = (filterOptions.push(
+        {
+          name: groupId + "[]",
+          value: option.value,
+          text: option.name + " (" + option.count + ")",
+          id: groupId + "-" + option.value,
+          checked: option.checked
+        }
+      ), filterOptions) %}
+    {% endfor %}
+
+    <h3 class="govuk-heading-s">{{ label }}</h3>
+
+    {{ govukCheckboxes({
+      name: "filters[]",
+      items: filterOptions
+    }) }}
+  {% endif %}
+{% endmacro %}
+
+{% block content %}
+  <div class="govuk-grid-column-full hmpps-dietary-requirements__filters">
+    <form method="POST" data-qa="diet-report-filter-form">
+      <h2 class="govuk-heading-m govuk-!-margin-top-2">Filter</h2>
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{ filterCategory("Personalised diet", "personalDiet", filters.personalisedDietaryRequirements) }}
+      {{ filterCategory("Medical diet", "medicalDiet", filters.medicalDietaryRequirements) }}
+      {{ filterCategory("Food allergies", "foodAllergies", filters.foodAllergies) }}
+
+      {{ govukButton({
+        text: "Apply",
+        type: "submit",
+        classes: "govuk-button",
+        attributes: {
+          'data-qa': 'diet-report-filter-form-submit'
+        }
+      }) }}
+    </form>
+  </div>
+{% endblock %}

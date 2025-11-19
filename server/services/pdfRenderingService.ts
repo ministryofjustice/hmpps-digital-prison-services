@@ -17,9 +17,9 @@ export default class PdfRenderingService {
   public async renderDietReport(res: Response, pageData: PdfPageData) {
     return this.renderPdf(
       res,
-      'pages/printDietaryRequirements/header',
-      'pages/printDietaryRequirements/footer',
-      'pages/printDietaryRequirements/content',
+      'pages/dietaryRequirements/print/header',
+      'pages/dietaryRequirements/print/footer',
+      'pages/dietaryRequirements/print/content',
       pageData,
     )
   }
