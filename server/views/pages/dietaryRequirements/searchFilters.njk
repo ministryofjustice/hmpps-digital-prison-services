@@ -17,13 +17,14 @@
       ), filterOptions) %}
     {% endfor %}
 
-    <fieldset class="govuk-fieldset" data-qa={{ "filter-group-" + groupId }}>
+    <fieldset class="hmpps-dietary-requirements__filter-category govuk-fieldset" data-qa={{ "filter-group-" + groupId }}>
       <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
         {{ label }}
       </legend>
       {{ govukCheckboxes({
         name: "filters[]",
-        items: filterOptions
+        items: filterOptions,
+        classes: "govuk-checkboxes--small"
       }) }}
     </fieldset>
   {% endif %}
