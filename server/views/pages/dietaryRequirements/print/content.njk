@@ -1,4 +1,4 @@
-{% extends "../../partials/pdfLayout.njk" %}
+{% extends "../../../partials/pdfLayout.njk" %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
@@ -68,6 +68,10 @@
                 People with dietary requirements in {{ user.activeCaseLoad.description }}
             </h1>
             <p class="sensitive-info-disclaimer">This document includes sensitive information about prisoner dietary requirements.</p>
+
+            {% if activeFilters.length > 0 %}
+              <p class="active-filters-summary">Filters applied: {{ activeFilters | join(', ') }}</p>
+            {% endif %}
         </div>
 
         <div class="govuk-grid-row govuk-!-margin-top-7">

@@ -1,5 +1,9 @@
 import { RestClientBuilder } from '../data'
-import { HealthAndMedicationApiClient, HealthAndMedicationData } from '../data/interfaces/healthAndMedicationApiClient'
+import {
+  HealthAndMedicationApiClient,
+  HealthAndMedicationData,
+  HealthAndMedicationFilters,
+} from '../data/interfaces/healthAndMedicationApiClient'
 import { PagedList } from '../data/interfaces/pagedList'
 import { DietaryRequirementsQueryParams } from '../utils/generateListMetadata'
 import { PrisonApiClient } from '../data/interfaces/prisonApiClient'
@@ -35,5 +39,11 @@ export default class DietReportingService {
       metadata: healthAndMedication.metadata,
       content: healthAndMedicationData,
     }
+  }
+
+  public async getDietaryFiltersForPrison(token: string, prisonId: string): Promise<HealthAndMedicationFilters> {
+    const healthAndMedicationApi = this.healthAndMedicationApiClientBuilder(token)
+
+    return healthAndMedicationApi.getFiltersForPrison(prisonId)
   }
 }

@@ -7,6 +7,7 @@ context('Dietary requirements report', () => {
     cy.task('reset')
     cy.setupUserAuth({ roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`, `ROLE_${Role.DietAndAllergiesReport}`] })
     cy.task('stubHealthAndMedicationForPrison', 'LEI')
+    cy.task('stubHealthAndMedicationFiltersForPrison', 'LEI')
     cy.task('stubLatestArrivalDates')
     cy.setupComponentsData({
       caseLoads: [
@@ -56,6 +57,25 @@ context('Dietary requirements report', () => {
     page.dietaryRequirements().row(2).dietaryRequirements().cateringInstructions().should('not.exist')
   })
 
+  it('Displays the filter options', () => {
+    cy.signIn({ redirectPath: `/dietary-requirements` })
+    cy.visit(`/dietary-requirements`)
+    const page = Page.verifyOnPage(DietaryRequirementsPage)
+
+    page.filters().personalisedDiet().heading().should('contain.text', 'Personalised diet').and('be.visible')
+    page.filters().personalisedDiet().options().should('have.length', 1)
+    page.filters().personalisedDiet().options().eq(0).find('label').should('contain.text', 'Kosher (7)')
+
+    page.filters().medicalDiet().heading().should('contain.text', 'Medical diet').and('be.visible')
+    page.filters().medicalDiet().options().should('have.length', 1)
+    page.filters().medicalDiet().options().eq(0).find('label').should('contain.text', 'Coeliac (cannot eat gluten) (1)')
+
+    page.filters().foodAllergies().heading().should('contain.text', 'Food allergies').and('be.visible')
+    page.filters().foodAllergies().options().should('have.length', 2)
+    page.filters().foodAllergies().options().eq(0).find('label').should('contain.text', 'Mustard (4)')
+    page.filters().foodAllergies().options().eq(1).find('label').should('contain.text', 'Peanuts (3)')
+  })
+
   it(`Displays the 'arrived within last 3 days' badge for new arrivals`, () => {
     cy.signIn({ redirectPath: `/dietary-requirements` })
     cy.visit(`/dietary-requirements`)
@@ -93,15 +113,15 @@ context('Dietary requirements report', () => {
       cy.signIn({ redirectPath: `/dietary-requirements` })
       cy.visit(`/dietary-requirements`)
       const page = Page.verifyOnPage(DietaryRequirementsPage)
-      page.dietaryRequirements().sorting().nameAndNumber().click()
+      page.dietaryRequirements().sorting().nameAndNumber().find('a').click()
       page.dietaryRequirements().sorting().nameAndNumber().should('have.attr', 'aria-sort', 'ascending')
       page.dietaryRequirements().sorting().location().should('have.attr', 'aria-sort', 'none')
-      page.dietaryRequirements().sorting().nameAndNumber().click()
+      page.dietaryRequirements().sorting().nameAndNumber().find('a').click()
       page.dietaryRequirements().sorting().nameAndNumber().should('have.attr', 'aria-sort', 'descending')
-      page.dietaryRequirements().sorting().location().click()
+      page.dietaryRequirements().sorting().location().find('a').click()
       page.dietaryRequirements().sorting().nameAndNumber().should('have.attr', 'aria-sort', 'none')
       page.dietaryRequirements().sorting().location().should('have.attr', 'aria-sort', 'ascending')
-      page.dietaryRequirements().sorting().location().click()
+      page.dietaryRequirements().sorting().location().find('a').click()
       page.dietaryRequirements().sorting().location().should('have.attr', 'aria-sort', 'descending')
     })
   })

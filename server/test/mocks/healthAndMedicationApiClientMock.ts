@@ -66,8 +66,38 @@ export const mockHealthAndMedicationResponse = {
   },
 } as unknown as PagedList<HealthAndMedicationForPrison>
 
+export const mockHealthAndMedicationFiltersResponse = {
+  foodAllergies: [
+    {
+      name: 'Peanuts',
+      value: 'PEANUTS',
+      count: 3,
+    },
+    {
+      name: 'Mustard',
+      value: 'MUSTARD',
+      count: 4,
+    },
+  ],
+  medicalDietaryRequirements: [
+    {
+      name: 'Coeliac (cannot eat gluten)',
+      value: 'COELIAC',
+      count: 1,
+    },
+  ],
+  personalisedDietaryRequirements: [
+    {
+      name: 'Kosher',
+      value: 'KOSHER',
+      count: 7,
+    },
+  ],
+}
+
 const healthAndMedicationApiClientMock: HealthAndMedicationApiClient = {
   getHealthAndMedicationForPrison: jest.fn(async () => mockHealthAndMedicationResponse),
+  getFiltersForPrison: jest.fn(async () => mockHealthAndMedicationFiltersResponse),
 }
 
 export default healthAndMedicationApiClientMock

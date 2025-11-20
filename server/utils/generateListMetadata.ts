@@ -13,6 +13,9 @@ export interface PagedListQueryParams extends QueryParams {
 export interface DietaryRequirementsQueryParams extends PagedListQueryParams {
   nameAndNumber?: string
   location?: string
+  foodAllergies?: string[]
+  medicalDiet?: string[]
+  personalDiet?: string[]
 }
 
 export interface PrisonerSearchQueryParams extends PagedListQueryParams {

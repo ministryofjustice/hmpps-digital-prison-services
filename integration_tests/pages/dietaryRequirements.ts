@@ -22,4 +22,19 @@ export default class DietaryRequirementsPage extends Page {
       location: () => cy.get('table thead th').eq(1),
     }),
   })
+
+  filters = () => ({
+    personalisedDiet: () => ({
+      heading: () => cy.get('[data-qa="filter-group-personalDiet"').find('legend'),
+      options: () => cy.get('[data-qa="filter-group-personalDiet"').find('.govuk-checkboxes__item'),
+    }),
+    medicalDiet: () => ({
+      heading: () => cy.get('[data-qa="filter-group-medicalDiet"').find('legend'),
+      options: () => cy.get('[data-qa="filter-group-medicalDiet"').find('.govuk-checkboxes__item'),
+    }),
+    foodAllergies: () => ({
+      heading: () => cy.get('[data-qa="filter-group-foodAllergies"').find('legend'),
+      options: () => cy.get('[data-qa="filter-group-foodAllergies"').find('.govuk-checkboxes__item'),
+    }),
+  })
 }
