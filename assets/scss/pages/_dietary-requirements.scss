@@ -46,11 +46,15 @@
 
 .hmpps-dietary-requirements__filter-category {
   .govuk-form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
   }
 
   .govuk-fieldset__legend {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
+  }
+
+  .govuk-checkboxes__label:before {
+    background-color: govuk-colour('white');
   }
 }
 
