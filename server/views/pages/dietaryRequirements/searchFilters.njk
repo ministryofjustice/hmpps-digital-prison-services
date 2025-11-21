@@ -31,9 +31,9 @@
 {% endmacro %}
 
 {% block content %}
-  <div class="govuk-grid-column-full govuk-!-padding-bottom-3 hmpps-dietary-requirements__filters">
+  <div class="govuk-grid-column-full govuk-!-padding-bottom-6 hmpps-dietary-requirements__filters">
     <form method="POST" data-qa="diet-report-filter-form">
-      <h2 class="govuk-heading-m govuk-!-margin-top-2">Filter</h2>
+      <h2 class="govuk-heading-m govuk-!-margin-top-6">Filter</h2>
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
       {{ filterCategory("Personalised diet", "personalDiet", filters.personalisedDietaryRequirements) }}
       {{ filterCategory("Medical diet", "medicalDiet", filters.medicalDietaryRequirements) }}
@@ -42,7 +42,7 @@
       {{ govukButton({
         text: "Apply",
         type: "submit",
-        classes: "govuk-button govuk-!-margin-bottom-3",
+        classes: "govuk-button govuk-!-margin-bottom-4",
         attributes: {
           'data-qa': 'diet-report-filter-form-submit'
         }
