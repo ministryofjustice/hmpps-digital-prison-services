@@ -91,24 +91,35 @@
     </div>
     <div class="govuk-!-display-none-print">
       {% include "./searchForm.njk" %}
+      {% if results.length > 0 %}
       <div class="prisoner-search__results-options">
         {% include "./searchOrdering.njk" %}
         {% include "./searchToggles.njk" %}
       </div>
+      {% endif %}
     </div>
-    {{ printLink('Print displayed results', 'right')}}
-    <div class=" govuk-grid-row govuk-!-display-none-print">
-      <div class="govuk-grid-column-full">{{ hmppsPagedListHeader(listMetadata) }}</div>
-    </div>
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        {% if view === 'grid' %}
-          {% include './prisonerSearchGrid.njk' %}
-        {% else %}
-          {% include './prisonerSearchList.njk' %}
-        {% endif %}
+    {% if results.length > 0 %}
+      {{ printLink('Print displayed results', 'right')}}
+      <div class=" govuk-grid-row govuk-!-display-none-print">
+        <div class="govuk-grid-column-full">{{ hmppsPagedListHeader(listMetadata) }}</div>
       </div>
-    </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          {% if view === 'grid' %}
+            {% include './prisonerSearchGrid.njk' %}
+          {% else %}
+            {% include './prisonerSearchList.njk' %}
+          {% endif %}
+        </div>
+      </div>
+    {% else %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          No records found matching search criteria.
+        </div>
+      </div>
+    {% endif %}
+
   </div>
 {% endblock %}
 

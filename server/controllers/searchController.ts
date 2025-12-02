@@ -1,4 +1,4 @@
-import { alertFlagLabels } from '@ministryofjustice/hmpps-connect-dps-shared-items'
+import { AlertFlagLabel, alertFlagLabels } from '@ministryofjustice/hmpps-connect-dps-shared-items'
 import { Request, Response, RequestHandler } from 'express'
 import {
   generateListMetadata,
@@ -40,6 +40,16 @@ interface GlobalSearchResult {
   showProfileLink: boolean
   updateLicenceLink?: string
   showUpdateLicenceLink: boolean
+}
+
+interface PrisonerSearchResult {
+  prisonerNumber: string
+  currentFacialImageId: number
+  iepLevel: string
+  assignedLivingUnitDesc: string
+  name: string
+  alerts: AlertFlagLabel[]
+  age: number
 }
 
 export default class SearchController {
@@ -280,7 +290,22 @@ export default class SearchController {
     }
   }
 
-  private async performLocationSearch(clientToken: string, user: PrisonUser, queryParams: PrisonerSearchQueryParams) {
+  private async performLocationSearch(
+    clientToken: string,
+    user: PrisonUser,
+    queryParams: PrisonerSearchQueryParams,
+  ): Promise<{
+    results: PrisonerSearchResult[]
+    listMetadata: ListMetadata<PrisonerSearchQueryParams>
+  }> {
+    // BEGIN - Ported behaviour from the old search
+    // when the prison-api was used, searching for prisoners not in your caseload returned no results
+    // rightly or wrongly this replicates that behaviour (maybe a 403 error could have been better)
+    const prisonId = queryParams.location?.slice(0, 3)
+    const caseloadIds = user.caseLoads.map(caseload => caseload.caseLoadId)
+    if (prisonId && !caseloadIds.includes(prisonId)) return { results: [], listMetadata: null }
+    // END
+
     const resp = await this.prisonerSearchService.getResults(clientToken, user, queryParams)
 
     // Delete page as it comes from the API
