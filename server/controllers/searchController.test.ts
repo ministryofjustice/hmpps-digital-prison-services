@@ -29,7 +29,7 @@ describe('SearchController', () => {
     prisonerSearchService = {} as PrisonerSearchService
     globalSearchService = { getResultsForUser: jest.fn() } as unknown as GlobalSearchService
     controller = new SearchController(prisonerSearchService, globalSearchService)
-    user = { userId: '123', userRoles: [] } as PrisonUser
+    user = { userId: '123', userRoles: [], caseLoads: [{ caseLoadId: 'LEI' }] } as PrisonUser
   })
 
   afterEach(() => {
@@ -299,6 +299,25 @@ describe('SearchController', () => {
           alerts: ['A'],
         })
       })
+
+      it('Returns empty results when the location prison ID is not in the users caseloads', async () => {
+        const req = {
+          originalUrl: 'originalUrl',
+          query: {
+            location: 'MDI-A',
+          },
+          middleware: { clientToken: 'clientToken' },
+        } as unknown as Request
+
+        await controller.localSearch().get()(req, res, jest.fn())
+
+        expect(res.render).toHaveBeenCalledWith(
+          'pages/prisonerSearch/index',
+          expect.objectContaining({
+            results: [],
+          }),
+        )
+      })
     })
 
     describe('post', () => {
@@ -335,6 +354,7 @@ describe('SearchController', () => {
       })
     })
   })
+
   describe('Global search', () => {
     describe('get', () => {
       it('Loads the page', () => {
