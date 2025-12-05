@@ -14,7 +14,7 @@ import PrisonerSearchRestClient from './prisonerSearchApiClient'
 
 const applicationInfo = applicationInfoSupplier()
 initialiseAppInsights()
-buildAppInsightsClient(applicationInfo)
+const telemetryClient = buildAppInsightsClient(applicationInfo)
 
 export type RestClientBuilder<T> = (token: string) => T
 
@@ -40,6 +40,7 @@ const initialiseDataAccess = () => {
         prisonApiClientBuilder: (token: string) => new PrisonApiRestClient(token),
         healthAndMedicationApiClientBuilder: (token: string) => new HealthAndMedicationRestApiClient(token),
         prisonerSearchApiClientBuilder: (token: string) => new PrisonerSearchRestClient(token),
+        telemetryClient,
       }
     }
     throw new Error('Data access already initialised')

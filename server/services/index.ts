@@ -13,6 +13,7 @@ import HmppsCache from '../middleware/hmppsCache'
 import { WhatsNewData } from '../data/interfaces/whatsNewData'
 import GlobalSearchService from './globalSearchService'
 import PrisonerSearchService from './prisonerSearchService'
+import MetricsService from './metricsService'
 
 export const services = () => {
   const dataAccess = initDataAccess()
@@ -46,6 +47,7 @@ export const services = () => {
   const pdfRenderingService = new PdfRenderingService(gotenbergClient)
   const prisonerSearchService = new PrisonerSearchService(dataAccess.prisonerSearchApiClientBuilder)
   const globalSearchService = new GlobalSearchService(dataAccess.prisonerSearchApiClientBuilder)
+  const metricsService = new MetricsService(dataAccess.telemetryClient)
 
   // Caches
   const whatsNewCache = new HmppsCache<WhatsNewData>(config.cache.whatsNewTtl)
@@ -65,6 +67,7 @@ export const services = () => {
     userService,
     whatsNewCache,
     outageBannerCache,
+    metricsService,
   }
 }
 

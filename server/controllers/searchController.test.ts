@@ -9,6 +9,7 @@ import { calculateAge } from '../utils/utils'
 import { generateListMetadata, ListMetadata, PrisonerSearchQueryParams } from '../utils/generateListMetadata'
 import globalSearchDateValidator from '../utils/globalSearchDateValidator'
 import { HmppsError } from '../data/interfaces/hmppsError'
+import MetricsService from '../services/metricsService'
 
 jest.mock('../utils/generateListMetadata', () => ({
   generateListMetadata: jest.fn(),
@@ -21,6 +22,7 @@ describe('SearchController', () => {
   let controller: SearchController
   let prisonerSearchService: PrisonerSearchService
   let globalSearchService: GlobalSearchService
+  let metricsService: MetricsService
 
   beforeEach(() => {
     ;(globalSearchDateValidator as jest.MockedFunction<typeof globalSearchDateValidator>).mockReturnValue(
@@ -28,7 +30,12 @@ describe('SearchController', () => {
     )
     prisonerSearchService = {} as PrisonerSearchService
     globalSearchService = { getResultsForUser: jest.fn() } as unknown as GlobalSearchService
-    controller = new SearchController(prisonerSearchService, globalSearchService)
+    metricsService = {
+      trackPrisonerSearchQuery: jest.fn(),
+      trackGlobalSearchQuery: jest.fn(),
+    } as unknown as MetricsService
+
+    controller = new SearchController(prisonerSearchService, globalSearchService, metricsService)
     user = { userId: '123', userRoles: [], caseLoads: [{ caseLoadId: 'LEI' }] } as PrisonUser
   })
 
@@ -318,6 +325,48 @@ describe('SearchController', () => {
           }),
         )
       })
+
+      it('Tracks the prisoner search query', async () => {
+        const req = {
+          originalUrl: 'originalUrl',
+          query: {
+            view: 'grid',
+            showAll: 'true',
+            sort: 'lastName,firstName,desc',
+            term: 'smith',
+            page: 2,
+            size: 500,
+            location: 'LEI-A',
+            alerts: ['HA', 'LCE'],
+          },
+          middleware: { clientToken: 'clientToken' },
+        } as unknown as Request
+
+        await controller.localSearch().get()(req, res, jest.fn())
+
+        expect(metricsService.trackPrisonerSearchQuery).toHaveBeenCalledWith({
+          offenderNos: ['A1234BC'],
+          searchTerms: {
+            alerts: ['HA', 'LCE'],
+            location: 'LEI-A',
+            page: 2,
+            showAll: true,
+            size: 500,
+            sort: 'lastName,firstName,desc',
+            term: 'smith',
+            view: 'grid',
+          },
+          user: {
+            caseLoads: [
+              {
+                caseLoadId: 'LEI',
+              },
+            ],
+            userId: '123',
+            userRoles: [],
+          },
+        })
+      })
     })
 
     describe('post', () => {
@@ -597,6 +646,50 @@ describe('SearchController', () => {
             ],
             openFilters: true,
             listMetadata: { pagination: { itemDescription: 'description' } },
+          })
+        })
+
+        it('Tracks the global search query', async () => {
+          const req = {
+            originalUrl: 'http://example.com',
+            middleware: { clientToken: 'clientToken' },
+            query: {
+              referrer: 'licences',
+              searchText: 'smith',
+              dobDay: '12',
+              dobMonth: '12',
+              dobYear: '1990',
+              genderFilter: 'ALL',
+              locationFilter: 'INSIDE',
+            },
+          } as unknown as Request
+
+          const res = {
+            render: jest.fn(),
+            locals: { user },
+          } as unknown as Response
+
+          await controller.globalSearch().results.get()(req, res, jest.fn())
+
+          expect(metricsService.trackGlobalSearchQuery).toHaveBeenCalledWith({
+            offenderNos: ['A1234BC'],
+            openFilterValues: {
+              dobDay: '12',
+              dobMonth: '12',
+              dobYear: '1990',
+              genderFilter: 'ALL',
+              locationFilter: 'INSIDE',
+            },
+            searchText: 'smith',
+            user: {
+              caseLoads: [
+                {
+                  caseLoadId: 'LEI',
+                },
+              ],
+              userId: '123',
+              userRoles: [],
+            },
           })
         })
       })
