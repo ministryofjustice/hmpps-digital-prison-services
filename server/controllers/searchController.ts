@@ -15,6 +15,7 @@ import { PrisonUser } from '../interfaces/prisonUser'
 import PrisonerSearchService from '../services/prisonerSearchService'
 import globalSearchDateValidator from '../utils/globalSearchDateValidator'
 import { formatDate } from '../utils/dateHelpers'
+import MetricsService from '../services/metricsService'
 
 interface GlobalSearchQueryString {
   page: number
@@ -56,6 +57,7 @@ export default class SearchController {
   constructor(
     private readonly prisonerSearchService: PrisonerSearchService,
     private readonly globalSearchService: GlobalSearchService,
+    private readonly metricsService: MetricsService,
   ) {}
 
   backLinkWhitelist: { [key: string]: string } = { licences: config.serviceUrls.licences }
@@ -73,6 +75,12 @@ export default class SearchController {
           res.locals.user,
           queryParams,
         )
+
+        this.metricsService.trackPrisonerSearchQuery({
+          offenderNos: results.map(({ prisonerNumber }) => prisonerNumber),
+          searchTerms: queryParams,
+          user: res.locals.user,
+        })
 
         return res.render('pages/prisonerSearch/index', {
           prisonerProfileBaseUrl: config.serviceUrls.prisonerProfile,
@@ -138,6 +146,13 @@ export default class SearchController {
           const openFilters = Boolean(Object.values(filters).filter(value => value && value !== 'ALL').length)
 
           const { results, listMetadata, errors } = await this.performGlobalSearch(req, res, filters)
+
+          this.metricsService.trackGlobalSearchQuery({
+            offenderNos: results.map(({ prisonerNumber }) => prisonerNumber),
+            user: res.locals.user,
+            openFilterValues: filters,
+            searchText,
+          })
 
           return res.render('pages/globalSearch/results', {
             prisonerProfileBaseUrl: config.serviceUrls.prisonerProfile,
