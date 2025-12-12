@@ -3,7 +3,7 @@ import { configureAllowedScripts } from '@ministryofjustice/hmpps-npm-script-all
 export default configureAllowedScripts({
   allowlist: {
     // Needed for running integration tests:
-    'node_modules/cypress@15.6.0': 'ALLOW',
+    'node_modules/cypress@15.7.1': 'ALLOW',
     // Provides native integration, supporting ability to write dtrace probes for bunyan
     'node_modules/dtrace-provider@0.8.8': 'ALLOW',
     // ESBuild is written in GoLang - this is needed to download prebuilt binaries for the specific platform
