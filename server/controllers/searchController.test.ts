@@ -146,7 +146,6 @@ describe('SearchController', () => {
             encodedOriginalUrl: 'originalUrl',
             listMetadata: generatedMetadata,
             links: {
-              allResults: '/prisoner-search?showAll=true&sort=lastName%2CfirstName%2Casc&page=1&size=50',
               gridView: '/prisoner-search?showAll=false&view=grid&sort=lastName%2CfirstName%2Casc&page=1&size=50',
               listView: '/prisoner-search?showAll=false&view=list&sort=lastName%2CfirstName%2Casc&page=1&size=50',
             },
@@ -208,8 +207,6 @@ describe('SearchController', () => {
             encodedOriginalUrl: 'originalUrl',
             listMetadata: generatedMetadata,
             links: {
-              allResults:
-                '/prisoner-search?showAll=true&view=grid&alerts=HA&alerts=LCE&sort=lastName%2CfirstName%2Cdesc&term=smith&page=2&size=500&location=LEI-A',
               gridView:
                 '/prisoner-search?showAll=true&view=grid&alerts=HA&alerts=LCE&sort=lastName%2CfirstName%2Cdesc&term=smith&page=2&size=500&location=LEI-A',
               listView:

@@ -301,7 +301,6 @@ export default class SearchController {
     return {
       gridView: `/prisoner-search?${mapToQueryString({ ...query, view: 'grid' })}`,
       listView: `/prisoner-search?${mapToQueryString({ ...query, view: 'list' })}`,
-      allResults: `/prisoner-search?${mapToQueryString({ ...query, showAll: true })}`,
     }
   }
 
