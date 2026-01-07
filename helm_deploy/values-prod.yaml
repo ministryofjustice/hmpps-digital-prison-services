@@ -1,6 +1,8 @@
 # Per environment values which override defaults in hmpps-digital-prison-services/values.yaml
 
 generic-service:
+  replicaCount: 8
+
   ingress:
     host: dps.prison.service.justice.gov.uk
     modsecurity_enabled: true
@@ -10,12 +12,6 @@ generic-service:
     # SecRuleUpdateActionById 949110 "pass,log,auditlog"
     # SecRuleUpdateActionById 942440 "pass,log,auditlog"
     # SecRuleUpdateActionById 920300 "pass,log,auditlog"
-
-  autoscaling:
-    enabled: true
-    minReplicas: 8
-    maxReplicas: 16
-    targetCPUUtilizationPercentage: 1600
 
   env:
     INGRESS_URL: https://dps.prison.service.justice.gov.uk
