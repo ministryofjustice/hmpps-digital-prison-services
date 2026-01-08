@@ -91,7 +91,7 @@
         <h1 class="govuk-heading-l">Prisoner search results</h1>
       </div>
     </div>
-    <dl class="govuk-summary-list print-only" aria-hidden="true">
+    <dl class="govuk-summary-list prisoner-search__summary" aria-hidden="true">
       {% if formValues.term.length %}
         <div>
           <dt class="govuk-!-display-inline-block govuk-!-font-weight-bold">Name or prison number:</dt>
@@ -112,6 +112,9 @@
           <dd class="govuk-!-display-inline-block govuk-!-margin-0">{{ printedValues.alerts | join(', ') }}</dd>
         </div>
       {% endif %}
+      <div>
+        <dd class="govuk-!-display-inline-block govuk-!-margin-0">Showing <b>{{ listMetadata.pagination.offset+1 }}</b> to <b>{{ listMetadata.pagination.offset+listMetadata.pagination.elementsOnPage }}</b> of <b>{{ listMetadata.pagination.totalElements }}</b> {{ listMetadata.pagination.totalElements | pluralise(listMetadata.pagination.itemDescription, { includeCount: false }) }}</dd>
+      </div>
     </dl>
     <div class="govuk-!-display-none-print">
       {% include "./searchForm.njk" %}
