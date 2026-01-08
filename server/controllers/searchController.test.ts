@@ -36,7 +36,13 @@ describe('SearchController', () => {
     } as unknown as MetricsService
 
     controller = new SearchController(prisonerSearchService, globalSearchService, metricsService)
-    user = { userId: '123', userRoles: [], caseLoads: [{ caseLoadId: 'LEI' }] } as PrisonUser
+    user = {
+      userId: '123',
+      userRoles: [],
+      caseLoads: [{ caseLoadId: 'LEI' }],
+      activeCaseLoad: { caseLoadId: 'LEI', description: 'Leeds' },
+      locations: [{ locationPrefix: 'LEI-A', description: 'A' }],
+    } as PrisonUser
   })
 
   afterEach(() => {
@@ -217,6 +223,7 @@ describe('SearchController', () => {
               expect.objectContaining({ checked: false, value: ['HA1'] }),
               expect.objectContaining({ checked: true, value: ['LCE'] }),
             ]),
+            printedValues: { alerts: ['ACCT open', 'Care experienced'], location: { text: 'A', value: 'LEI-A' } },
             results: [
               {
                 prisonerNumber: 'A1234BC',
@@ -361,6 +368,16 @@ describe('SearchController', () => {
             ],
             userId: '123',
             userRoles: [],
+            activeCaseLoad: {
+              caseLoadId: 'LEI',
+              description: 'Leeds',
+            },
+            locations: [
+              {
+                description: 'A',
+                locationPrefix: 'LEI-A',
+              },
+            ],
           },
         })
       })
@@ -682,6 +699,16 @@ describe('SearchController', () => {
               caseLoads: [
                 {
                   caseLoadId: 'LEI',
+                },
+              ],
+              activeCaseLoad: {
+                caseLoadId: 'LEI',
+                description: 'Leeds',
+              },
+              locations: [
+                {
+                  description: 'A',
+                  locationPrefix: 'LEI-A',
                 },
               ],
               userId: '123',
