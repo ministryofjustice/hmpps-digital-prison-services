@@ -36,7 +36,13 @@ describe('SearchController', () => {
     } as unknown as MetricsService
 
     controller = new SearchController(prisonerSearchService, globalSearchService, metricsService)
-    user = { userId: '123', userRoles: [], caseLoads: [{ caseLoadId: 'LEI' }] } as PrisonUser
+    user = {
+      userId: '123',
+      userRoles: [],
+      caseLoads: [{ caseLoadId: 'LEI' }],
+      activeCaseLoad: { caseLoadId: 'LEI', description: 'Leeds' },
+      locations: [{ locationPrefix: 'LEI-A', description: 'A' }],
+    } as PrisonUser
   })
 
   afterEach(() => {
@@ -146,7 +152,6 @@ describe('SearchController', () => {
             encodedOriginalUrl: 'originalUrl',
             listMetadata: generatedMetadata,
             links: {
-              allResults: '/prisoner-search?showAll=true&sort=lastName%2CfirstName%2Casc&page=1&size=50',
               gridView: '/prisoner-search?showAll=false&view=grid&sort=lastName%2CfirstName%2Casc&page=1&size=50',
               listView: '/prisoner-search?showAll=false&view=list&sort=lastName%2CfirstName%2Casc&page=1&size=50',
             },
@@ -208,8 +213,6 @@ describe('SearchController', () => {
             encodedOriginalUrl: 'originalUrl',
             listMetadata: generatedMetadata,
             links: {
-              allResults:
-                '/prisoner-search?showAll=true&view=grid&alerts=HA&alerts=LCE&sort=lastName%2CfirstName%2Cdesc&term=smith&page=2&size=500&location=LEI-A',
               gridView:
                 '/prisoner-search?showAll=true&view=grid&alerts=HA&alerts=LCE&sort=lastName%2CfirstName%2Cdesc&term=smith&page=2&size=500&location=LEI-A',
               listView:
@@ -220,6 +223,7 @@ describe('SearchController', () => {
               expect.objectContaining({ checked: false, value: ['HA1'] }),
               expect.objectContaining({ checked: true, value: ['LCE'] }),
             ]),
+            printedValues: { alerts: ['ACCT open', 'Care experienced'], location: { text: 'A', value: 'LEI-A' } },
             results: [
               {
                 prisonerNumber: 'A1234BC',
@@ -364,6 +368,16 @@ describe('SearchController', () => {
             ],
             userId: '123',
             userRoles: [],
+            activeCaseLoad: {
+              caseLoadId: 'LEI',
+              description: 'Leeds',
+            },
+            locations: [
+              {
+                description: 'A',
+                locationPrefix: 'LEI-A',
+              },
+            ],
           },
         })
       })
@@ -685,6 +699,16 @@ describe('SearchController', () => {
               caseLoads: [
                 {
                   caseLoadId: 'LEI',
+                },
+              ],
+              activeCaseLoad: {
+                caseLoadId: 'LEI',
+                description: 'Leeds',
+              },
+              locations: [
+                {
+                  description: 'A',
+                  locationPrefix: 'LEI-A',
                 },
               ],
               userId: '123',

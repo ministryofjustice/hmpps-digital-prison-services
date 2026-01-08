@@ -172,7 +172,7 @@ export const generateListMetadata = <T extends PagedListQueryParams>(
         text: 'Previous',
       }
 
-  const viewAllUrl = [`?${mapToQueryString(queryParams)}`, 'showAll=true'].filter(Boolean).join('&')
+  const viewAllUrl = [`?${mapToQueryString({ ...queryParams, showAll: true })}`].filter(Boolean).join('&')
 
   return <ListMetadata<T>>{
     filtering: {

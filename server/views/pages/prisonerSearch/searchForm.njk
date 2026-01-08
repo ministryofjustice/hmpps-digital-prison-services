@@ -20,7 +20,7 @@
       label: {
         text: "Select location"
       },
-      items: user.locations | asSelectItems('description', 'locationPrefix') | addDefaultSelectedValue('All', user.activeCaseLoadId) | setSelected(formValues.location),
+      items: locationOptions,
       attributes: {
         'data-test': 'prisoner-search-location'
       }

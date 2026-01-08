@@ -82,6 +82,11 @@ export default class SearchController {
           user: res.locals.user,
         })
 
+        const locationOptions = [
+          { value: res.locals.user.activeCaseLoad.caseLoadId, text: res.locals.user.activeCaseLoad.description },
+          ...res.locals.user.locations.map(option => ({ value: option.locationPrefix, text: option.description })),
+        ]
+
         return res.render('pages/prisonerSearch/index', {
           prisonerProfileBaseUrl: config.serviceUrls.prisonerProfile,
           encodedOriginalUrl: encodeURIComponent(req.originalUrl),
@@ -93,6 +98,13 @@ export default class SearchController {
             text: label,
             checked: Boolean(selectedAlerts) && selectedAlerts.some((alert: string) => alertCodes.includes(alert)),
           })),
+          locationOptions,
+          printedValues: {
+            location: locationOptions.find(loc => loc.value === location),
+            alerts: alertFlagLabels
+              .filter(({ alertCodes }) => selectedAlerts?.find((alert: string) => alertCodes.includes(alert)))
+              .map(({ label }) => label),
+          },
           results,
           formValues: {
             location,
@@ -301,7 +313,6 @@ export default class SearchController {
     return {
       gridView: `/prisoner-search?${mapToQueryString({ ...query, view: 'grid' })}`,
       listView: `/prisoner-search?${mapToQueryString({ ...query, view: 'list' })}`,
-      allResults: `/prisoner-search?${mapToQueryString({ ...query, showAll: true })}`,
     }
   }
 
