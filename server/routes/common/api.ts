@@ -14,7 +14,7 @@ export default class CommonApiRoutes {
     const prisonApiClient = this.prisonApiClientBuilder(clientToken)
 
     prisonApiClient
-      .getPrisonerImage(prisonerNumber, fullSizeImage)
+      .getPrisonerImage(prisonerNumber as string, fullSizeImage)
       .then(data => {
         res.set('Cache-control', 'private, max-age=86400')
         res.removeHeader('pragma')
