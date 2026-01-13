@@ -28,7 +28,7 @@ export default class WhatsNewController {
       const { slug } = req.params
 
       try {
-        const whatsNewPost = await this.contentfulService.getWhatsNewPost(slug)
+        const whatsNewPost = await this.contentfulService.getWhatsNewPost(slug as string)
 
         res.render('pages/whatsNewPost', {
           pageTitle: whatsNewPost.title,
