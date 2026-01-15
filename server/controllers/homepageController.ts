@@ -24,7 +24,10 @@ export default class HomepageController {
     return async (req, res) => {
       const { activeCaseLoadId } = res.locals.user
       const userHasPrisonCaseLoad =
-        Boolean(activeCaseLoadId) && activeCaseLoadId !== '' && activeCaseLoadId !== 'CADM_I'
+        Boolean(activeCaseLoadId) &&
+        activeCaseLoadId !== '' &&
+        activeCaseLoadId !== 'CADM_I' &&
+        activeCaseLoadId !== 'ZZGHI'
 
       // Search Section
       const errors = req.flash('errors')
