@@ -10,6 +10,9 @@ import {
   initialiseName,
   mapToQueryString,
   prisonerBelongsToUsersCaseLoad,
+  shouldLinkProfile,
+  shouldShowProfileImage,
+  shouldShowUpdateLicenceLink,
   userHasAllRoles,
   userHasRoles,
 } from './utils'
@@ -17,6 +20,8 @@ import { HmppsError } from '../data/interfaces/hmppsError'
 import { CaseLoad } from '../data/interfaces/caseLoad'
 import { Role } from '../enums/role'
 import { SelectItem } from '../data/interfaces/selectItem'
+import { PrisonUser } from '../interfaces/prisonUser'
+import Prisoner from '../data/interfaces/prisoner'
 
 describe('convert to title case', () => {
   it.each([
@@ -294,5 +299,144 @@ describe('mapToQueryString', () => {
 
   it('should handle encode values', () => {
     expect(mapToQueryString({ key1: "Hi, I'm here" })).toEqual("key1=Hi%2C%20I'm%20here")
+  })
+})
+
+describe('shouldLinkProfile', () => {
+  it.each([
+    [
+      {
+        user: { caseLoad: 'LEI', roles: [] },
+        prisoner: { prisonId: 'LEI', status: 'ACTIVE_IN', bookingId: 1234 },
+        expectedResult: true,
+      },
+    ],
+    [
+      {
+        user: { caseLoad: 'LEI', roles: [] },
+        prisoner: { prisonId: 'ABC', status: 'ACTIVE_IN', bookingId: 1234 },
+        expectedResult: true,
+      },
+    ],
+    [
+      {
+        user: { caseLoad: 'LEI', roles: [] },
+        prisoner: { prisonId: 'OUT', status: 'OUT', bookingId: 1234 },
+        expectedResult: false,
+      },
+    ],
+    [
+      {
+        user: { caseLoad: 'LEI', roles: [Role.InactiveBookings] },
+        prisoner: { prisonId: 'OUT', status: 'OUT', bookingId: 1234 },
+        expectedResult: true,
+      },
+    ],
+    [
+      {
+        user: { caseLoad: 'LEI', roles: [] },
+        prisoner: { prisonId: 'TRN', status: 'ACTIVE_IN', bookingId: 1234 },
+        expectedResult: true,
+      },
+    ],
+  ])('Correctly links the profile', ({ user, prisoner, expectedResult }) => {
+    expect(
+      shouldLinkProfile(
+        { activeCaseLoad: { caseLoadId: user.caseLoad }, userRoles: user.roles } as PrisonUser,
+        { prisonId: prisoner.prisonId, status: prisoner.status, bookingId: prisoner.bookingId } as Prisoner,
+      ),
+    ).toEqual(expectedResult)
+  })
+})
+
+describe('shouldShowProfileImage', () => {
+  it.each([
+    [
+      {
+        user: { caseLoads: ['LEI', 'MDI'] },
+        prisoner: { prisonId: 'LEI' },
+        expectedResult: true,
+      },
+    ],
+    [
+      {
+        user: { caseLoads: ['LEI', 'MDI'] },
+        prisoner: { prisonId: 'TRN' },
+        expectedResult: true,
+      },
+    ],
+    [
+      {
+        user: { caseLoads: ['LEI', 'MDI'] },
+        prisoner: { prisonId: 'MDI' },
+        expectedResult: true,
+      },
+    ],
+    [
+      {
+        user: { caseLoads: ['LEI', 'MDI'] },
+        prisoner: { prisonId: 'ABC' },
+        expectedResult: false,
+      },
+    ],
+  ])('Correctly shows the profile image', ({ user, prisoner, expectedResult }) => {
+    expect(
+      shouldShowProfileImage(
+        {
+          activeCaseLoad: { caseLoadId: user.caseLoads[0] },
+          caseLoads: user.caseLoads.map(id => ({
+            caseLoadId: id,
+          })),
+        } as PrisonUser,
+        { prisonId: prisoner.prisonId } as Prisoner,
+      ),
+    ).toEqual(expectedResult)
+  })
+})
+
+describe('shouldShowUpdateLicenceLink', () => {
+  it.each([
+    [
+      {
+        user: { roles: [] },
+        prisoner: { status: 'ACTIVE_IN', bookingId: 1234 },
+        expectedResult: false,
+      },
+    ],
+    [
+      {
+        user: { roles: [Role.LicencesVary] },
+        prisoner: { status: 'ACTIVE_IN', bookingId: 1234 },
+        expectedResult: false,
+      },
+    ],
+    [
+      {
+        user: { roles: [Role.LicencesReadOnly] },
+        prisoner: { status: 'ACTIVE_IN', bookingId: 1234 },
+        expectedResult: true,
+      },
+    ],
+    [
+      {
+        user: { roles: [Role.LicencesReadOnly, Role.LicencesVary] },
+        prisoner: { status: 'INACTIVE_OUT', bookingId: 1234 },
+        expectedResult: true,
+      },
+    ],
+    [
+      {
+        user: { roles: [Role.LicencesReadOnly, Role.LicencesVary] },
+        prisoner: { status: 'INACTIVE_OUT', bookingId: undefined },
+        expectedResult: false,
+      },
+    ],
+  ])('Correctly links the licence edit URL', ({ user, prisoner, expectedResult }) => {
+    expect(
+      shouldShowUpdateLicenceLink(
+        { userRoles: user.roles } as PrisonUser,
+        { status: prisoner.status, bookingId: prisoner.bookingId } as Prisoner,
+      ),
+    ).toEqual(expectedResult)
   })
 })

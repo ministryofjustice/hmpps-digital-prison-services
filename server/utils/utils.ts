@@ -5,6 +5,9 @@ import { CaseLoad } from '../data/interfaces/caseLoad'
 import { HmppsError } from '../data/interfaces/hmppsError'
 import { SelectItem } from '../data/interfaces/selectItem'
 import logger from '../../logger'
+import { PrisonUser } from '../interfaces/prisonUser'
+import Prisoner from '../data/interfaces/prisoner'
+import { Role } from '../enums/role'
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -185,4 +188,48 @@ export const mapToQueryString = (params: QueryParams): string => {
       return `${key}=${encodeURIComponent(params[key])}`
     })
     .join('&')
+}
+
+/*
+  Whether or the user should see the link to the prisoner's profile.
+  This should be replaced with the permissions service eventually
+ */
+export const shouldLinkProfile = (user: PrisonUser, prisoner: Prisoner): boolean => {
+  const { userRoles, activeCaseLoad } = user
+  const userCanViewInactive = userRoles.includes(Role.InactiveBookings)
+  const currentlyInPrison = ({ status }: Prisoner) => (status && status.startsWith('ACTIVE') ? 'Y' : 'N')
+  const prisonerBooked = prisoner.bookingId > 0
+
+  return (
+    (activeCaseLoad &&
+      ((userCanViewInactive && currentlyInPrison(prisoner) === 'N') || currentlyInPrison(prisoner) === 'Y') &&
+      prisonerBooked) === true
+  )
+}
+
+/*
+  Whether or the user should see the prisoner's profile image.
+  This should be replaced with the permissions service eventually
+ */
+export const shouldShowProfileImage = (user: PrisonUser, prisoner: Prisoner): boolean => {
+  const { activeCaseLoad } = user
+
+  return (
+    activeCaseLoad &&
+    (user.caseLoads.map(({ caseLoadId }) => caseLoadId).includes(prisoner.prisonId) || prisoner.prisonId === 'TRN')
+  )
+}
+
+/*
+  Whether or the user should see the link to update a prisoner's licence.
+  This should be replaced with the permissions service eventually
+ */
+export const shouldShowUpdateLicenceLink = (user: PrisonUser, prisoner: Prisoner): boolean => {
+  const { userRoles } = user
+  const isLicencesUser = userRoles.includes(Role.LicencesReadOnly)
+  const isLicencesVaryUser = userRoles.includes(Role.LicencesVary)
+  const currentlyInPrison = ({ status }: Prisoner) => (status && status.startsWith('ACTIVE') ? 'Y' : 'N')
+  const prisonerBooked = prisoner.bookingId > 0
+
+  return isLicencesUser && (currentlyInPrison(prisoner) === 'Y' || isLicencesVaryUser) && prisonerBooked
 }

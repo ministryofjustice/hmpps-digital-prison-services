@@ -10,6 +10,7 @@ import { generateListMetadata, ListMetadata, PrisonerSearchQueryParams } from '.
 import globalSearchDateValidator from '../utils/globalSearchDateValidator'
 import { HmppsError } from '../data/interfaces/hmppsError'
 import MetricsService from '../services/metricsService'
+import { Role } from '../enums/role'
 
 jest.mock('../utils/generateListMetadata', () => ({
   generateListMetadata: jest.fn(),
@@ -38,7 +39,7 @@ describe('SearchController', () => {
     controller = new SearchController(prisonerSearchService, globalSearchService, metricsService)
     user = {
       userId: '123',
-      userRoles: [],
+      userRoles: [Role.GlobalSearch],
       caseLoads: [{ caseLoadId: 'LEI' }],
       activeCaseLoad: { caseLoadId: 'LEI', description: 'Leeds' },
       locations: [{ locationPrefix: 'LEI-A', description: 'A' }],
@@ -71,6 +72,7 @@ describe('SearchController', () => {
           async (): Promise<PagedList<Prisoner>> => ({
             content: [
               {
+                prisonId: 'LEI',
                 prisonerNumber: 'A1234BC',
                 currentFacialImageId: 1234,
                 currentIncentive: { level: { description: 'Current incentive' } },
@@ -122,6 +124,7 @@ describe('SearchController', () => {
                 firstName: 'First',
                 lastName: 'LAST',
                 prisonerNumber: 'A1234BC',
+                prisonId: 'LEI',
               },
             ],
             metadata: {
@@ -367,7 +370,7 @@ describe('SearchController', () => {
               },
             ],
             userId: '123',
-            userRoles: [],
+            userRoles: [Role.GlobalSearch],
             activeCaseLoad: {
               caseLoadId: 'LEI',
               description: 'Leeds',
@@ -464,6 +467,9 @@ describe('SearchController', () => {
             async (): Promise<PagedList<Prisoner>> => ({
               content: [
                 {
+                  prisonId: 'LEI',
+                  bookingId: 1234,
+                  status: 'ACTIVE_IN',
                   prisonerNumber: 'A1234BC',
                   currentFacialImageId: 1234,
                   currentIncentive: { level: { description: 'Current incentive' } },
@@ -589,9 +595,11 @@ describe('SearchController', () => {
                 name: 'Last, First',
                 prisonerNumber: 'A1234BC',
                 prisonerProfileUrl: 'http://localhost:3002/prisoner/A1234BC',
-                showProfileLink: false,
                 showUpdateLicenceLink: false,
                 workingName: 'Last, First',
+                showProfileLink: true,
+                showProfileImage: true,
+                updateLicenceLink: expect.stringContaining('hdc/taskList/1234'),
               },
             ],
             openFilters: false,
@@ -653,9 +661,11 @@ describe('SearchController', () => {
                 name: 'Last, First',
                 prisonerNumber: 'A1234BC',
                 prisonerProfileUrl: 'http://localhost:3002/prisoner/A1234BC',
-                showProfileLink: false,
+                showProfileLink: true,
+                showProfileImage: true,
                 showUpdateLicenceLink: false,
                 workingName: 'Last, First',
+                updateLicenceLink: expect.stringContaining('hdc/taskList/1234'),
               },
             ],
             openFilters: true,
@@ -712,7 +722,7 @@ describe('SearchController', () => {
                 },
               ],
               userId: '123',
-              userRoles: [],
+              userRoles: [Role.GlobalSearch],
             },
           })
         })
