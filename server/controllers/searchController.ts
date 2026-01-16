@@ -6,7 +6,15 @@ import {
   ListMetadata,
   PrisonerSearchQueryParams,
 } from '../utils/generateListMetadata'
-import { calculateAge, formatLocation, formatName, mapToQueryString } from '../utils/utils'
+import {
+  calculateAge,
+  formatLocation,
+  formatName,
+  mapToQueryString,
+  shouldLinkProfile,
+  shouldShowProfileImage,
+  shouldShowUpdateLicenceLink,
+} from '../utils/utils'
 import config from '../config'
 import { HmppsError } from '../data/interfaces/hmppsError'
 import Prisoner from '../data/interfaces/prisoner'
@@ -273,12 +281,7 @@ export default class SearchController {
   }
 
   private mapPrisonersToGlobalSearchResults(user: PrisonUser, prisoners: Prisoner[]): GlobalSearchResult[] {
-    const { userRoles, activeCaseLoad } = user
-    const currentlyInPrison = ({ status }: Prisoner) => (status && status.startsWith('ACTIVE') ? 'Y' : 'N')
     const prisonerBooked = (prisoner: Prisoner) => prisoner.bookingId > 0
-    const userCanViewInactive = userRoles.includes('INACTIVE_BOOKINGS')
-    const isLicencesUser = userRoles.includes('LICENCE_RO')
-    const isLicencesVaryUser = userRoles.includes('LICENCE_VARY')
 
     return prisoners.map(prisoner => ({
       prisonerNumber: prisoner.prisonerNumber,
@@ -288,15 +291,12 @@ export default class SearchController {
       currentFacialImageId: prisoner.currentFacialImageId,
       latestLocation: prisoner.locationDescription,
       prisonerProfileUrl: `${config.serviceUrls.prisonerProfile}/prisoner/${prisoner.prisonerNumber}`,
-      showProfileLink:
-        (activeCaseLoad &&
-          ((userCanViewInactive && currentlyInPrison(prisoner) === 'N') || currentlyInPrison(prisoner) === 'Y') &&
-          prisonerBooked(prisoner)) === true,
       updateLicenceLink: prisonerBooked(prisoner)
         ? `${config.serviceUrls.licences}/hdc/taskList/${prisoner.bookingId}`
         : undefined,
-      showUpdateLicenceLink:
-        isLicencesUser && (currentlyInPrison(prisoner) === 'Y' || isLicencesVaryUser) && prisonerBooked(prisoner),
+      showUpdateLicenceLink: shouldShowUpdateLicenceLink(user, prisoner),
+      showProfileLink: shouldLinkProfile(user, prisoner),
+      showProfileImage: shouldShowProfileImage(user, prisoner),
     }))
   }
 
