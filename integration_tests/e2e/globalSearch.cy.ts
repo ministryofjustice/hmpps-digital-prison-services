@@ -42,6 +42,7 @@ context('Global search', () => {
         cy.setupComponentsData({
           caseLoads: [
             { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
+            { caseloadFunction: '', caseLoadId: 'MDI', currentlyActive: true, description: 'Moorland', type: '' },
           ],
         })
         cy.task('stubUserCaseLoads', [

@@ -231,7 +231,7 @@ describe('Homepage Controller', () => {
   })
 
   describe('With no prison case load', () => {
-    it.each([undefined, '', 'CADM_I'])('Displays the home page (caseload: %j)', async caseLoadId => {
+    it.each([undefined, '', 'CADM_I', 'ZZGHI'])('Displays the home page (caseload: %j)', async caseLoadId => {
       res.locals = {
         user: {
           userRoles: [Role.GlobalSearch],
