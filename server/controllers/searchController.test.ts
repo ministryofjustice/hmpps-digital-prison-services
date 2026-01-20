@@ -10,6 +10,7 @@ import { generateListMetadata, ListMetadata, PrisonerSearchQueryParams } from '.
 import globalSearchDateValidator from '../utils/globalSearchDateValidator'
 import { HmppsError } from '../data/interfaces/hmppsError'
 import MetricsService from '../services/metricsService'
+import AuditService from '../services/auditService'
 import { Role } from '../enums/role'
 
 jest.mock('../utils/generateListMetadata', () => ({
@@ -24,6 +25,7 @@ describe('SearchController', () => {
   let prisonerSearchService: PrisonerSearchService
   let globalSearchService: GlobalSearchService
   let metricsService: MetricsService
+  let auditService: AuditService
 
   beforeEach(() => {
     ;(globalSearchDateValidator as jest.MockedFunction<typeof globalSearchDateValidator>).mockReturnValue(
@@ -35,11 +37,16 @@ describe('SearchController', () => {
       trackPrisonerSearchQuery: jest.fn(),
       trackGlobalSearchQuery: jest.fn(),
     } as unknown as MetricsService
+    auditService = {
+      auditPrisonerSearch: jest.fn(),
+      auditGlobalSearch: jest.fn(),
+    } as unknown as AuditService
 
-    controller = new SearchController(prisonerSearchService, globalSearchService, metricsService)
+    controller = new SearchController(prisonerSearchService, globalSearchService, metricsService, auditService)
     user = {
+      username: 'USER_NAME',
       userId: '123',
-      userRoles: [Role.GlobalSearch],
+      userRoles: [Role.GlobalSearch, Role.LicencesVary, Role.LicencesReadOnly],
       caseLoads: [{ caseLoadId: 'LEI' }],
       activeCaseLoad: { caseLoadId: 'LEI', description: 'Leeds' },
       locations: [{ locationPrefix: 'LEI-A', description: 'A' }],
@@ -335,6 +342,7 @@ describe('SearchController', () => {
 
       it('Tracks the prisoner search query', async () => {
         const req = {
+          id: 123454321,
           originalUrl: 'originalUrl',
           query: {
             view: 'grid',
@@ -363,25 +371,28 @@ describe('SearchController', () => {
             term: 'smith',
             view: 'grid',
           },
-          user: {
-            caseLoads: [
-              {
-                caseLoadId: 'LEI',
-              },
-            ],
-            userId: '123',
-            userRoles: [Role.GlobalSearch],
-            activeCaseLoad: {
-              caseLoadId: 'LEI',
-              description: 'Leeds',
+          user,
+        })
+
+        expect(auditService.auditPrisonerSearch).toHaveBeenCalledWith({
+          requestId: 123454321,
+          searchDetails: {
+            query: {
+              alerts: ['HA', 'LCE'],
+              location: 'LEI-A',
+              page: 2,
+              showAll: true,
+              size: 500,
+              sort: 'lastName,firstName,desc',
+              term: 'smith',
+              view: 'grid',
             },
-            locations: [
-              {
-                description: 'A',
-                locationPrefix: 'LEI-A',
-              },
-            ],
+            results: {
+              prisonerInformationDisplayed: ['number', 'image', 'profileLink', 'assignedLivingUnit'],
+              prisonerNumbers: ['A1234BC'],
+            },
           },
+          username: 'USER_NAME',
         })
       })
     })
@@ -517,7 +528,7 @@ describe('SearchController', () => {
               filters: {},
               searchText: '',
             },
-            isLicencesUser: false,
+            isLicencesUser: true,
             results: [],
             openFilters: false,
           })
@@ -555,7 +566,7 @@ describe('SearchController', () => {
               },
               searchText: 'smith',
             },
-            isLicencesUser: false,
+            isLicencesUser: true,
             results: [],
             openFilters: true,
           })
@@ -587,7 +598,7 @@ describe('SearchController', () => {
               filters: {},
               searchText: 'smith',
             },
-            isLicencesUser: false,
+            isLicencesUser: true,
             results: [
               {
                 currentFacialImageId: 1234,
@@ -595,7 +606,7 @@ describe('SearchController', () => {
                 name: 'Last, First',
                 prisonerNumber: 'A1234BC',
                 prisonerProfileUrl: 'http://localhost:3002/prisoner/A1234BC',
-                showUpdateLicenceLink: false,
+                showUpdateLicenceLink: true,
                 workingName: 'Last, First',
                 showProfileLink: true,
                 showProfileImage: true,
@@ -653,7 +664,7 @@ describe('SearchController', () => {
               },
               searchText: 'smith',
             },
-            isLicencesUser: false,
+            isLicencesUser: true,
             results: [
               {
                 currentFacialImageId: 1234,
@@ -663,7 +674,7 @@ describe('SearchController', () => {
                 prisonerProfileUrl: 'http://localhost:3002/prisoner/A1234BC',
                 showProfileLink: true,
                 showProfileImage: true,
-                showUpdateLicenceLink: false,
+                showUpdateLicenceLink: true,
                 workingName: 'Last, First',
                 updateLicenceLink: expect.stringContaining('hdc/taskList/1234'),
               },
@@ -675,6 +686,7 @@ describe('SearchController', () => {
 
         it('Tracks the global search query', async () => {
           const req = {
+            id: 1234,
             originalUrl: 'http://example.com',
             middleware: { clientToken: 'clientToken' },
             query: {
@@ -705,24 +717,32 @@ describe('SearchController', () => {
               locationFilter: 'INSIDE',
             },
             searchText: 'smith',
-            user: {
-              caseLoads: [
-                {
-                  caseLoadId: 'LEI',
+            user,
+          })
+
+          expect(auditService.auditGlobalSearch).toHaveBeenCalledWith({
+            username: user.username,
+            requestId: 1234,
+            searchDetails: {
+              query: {
+                dateOfBirth: {
+                  day: '12',
+                  month: '12',
+                  year: '1990',
                 },
-              ],
-              activeCaseLoad: {
-                caseLoadId: 'LEI',
-                description: 'Leeds',
+                gender: 'ALL',
+                location: 'INSIDE',
+                page: 1,
+                referrer: 'licences',
+                searchText: 'smith',
               },
-              locations: [
-                {
-                  description: 'A',
-                  locationPrefix: 'LEI-A',
-                },
-              ],
-              userId: '123',
-              userRoles: [Role.GlobalSearch],
+              results: {
+                licenceLinkedPrisonerNumbers: ['A1234BC'],
+                prisonerInformationDisplayed: ['name', 'workingName', 'prisonerNumber', 'dateOfBirth', 'location'],
+                profilePictureDisplayedPrisonerNumbers: ['A1234BC'],
+                prisonerNumbers: ['A1234BC'],
+                profileLinkedPrisonerNumbers: ['A1234BC'],
+              },
             },
           })
         })

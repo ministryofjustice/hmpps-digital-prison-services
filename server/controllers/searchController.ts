@@ -24,6 +24,7 @@ import PrisonerSearchService from '../services/prisonerSearchService'
 import globalSearchDateValidator from '../utils/globalSearchDateValidator'
 import { formatDate } from '../utils/dateHelpers'
 import MetricsService from '../services/metricsService'
+import AuditService from '../services/auditService'
 
 interface GlobalSearchQueryString {
   page: number
@@ -49,6 +50,7 @@ interface GlobalSearchResult {
   showProfileLink: boolean
   updateLicenceLink?: string
   showUpdateLicenceLink: boolean
+  showProfileImage: boolean
 }
 
 interface PrisonerSearchResult {
@@ -66,6 +68,7 @@ export default class SearchController {
     private readonly prisonerSearchService: PrisonerSearchService,
     private readonly globalSearchService: GlobalSearchService,
     private readonly metricsService: MetricsService,
+    private readonly auditService: AuditService,
   ) {}
 
   backLinkWhitelist: { [key: string]: string } = { licences: config.serviceUrls.licences }
@@ -88,6 +91,21 @@ export default class SearchController {
           offenderNos: results.map(({ prisonerNumber }) => prisonerNumber),
           searchTerms: queryParams,
           user: res.locals.user,
+        })
+
+        this.auditService.auditPrisonerSearch({
+          username: res.locals.user.username,
+          requestId: req.id,
+          searchDetails: {
+            query: queryParams,
+            results: {
+              prisonerNumbers: results.map(({ prisonerNumber }) => prisonerNumber),
+              prisonerInformationDisplayed:
+                view === 'list'
+                  ? ['number', 'image', 'profileLink', 'assignedLivingUnit', 'iepLevel', 'age', 'alertFlags']
+                  : ['number', 'image', 'profileLink', 'assignedLivingUnit'],
+            },
+          },
         })
 
         const locationOptions = [
@@ -153,7 +171,8 @@ export default class SearchController {
           const {
             user: { userRoles },
           } = res.locals
-          const { searchText, location, gender, dateOfBirth, referrer } = this.parseGlobalSearchQuery(req.query)
+          const globalSearchQuery = this.parseGlobalSearchQuery(req.query)
+          const { searchText, location, gender, dateOfBirth, referrer } = globalSearchQuery
           const isLicencesUser = userRoles.includes('LICENCE_RO')
 
           const filters: GlobalSearchFilterParams = {
@@ -172,6 +191,27 @@ export default class SearchController {
             user: res.locals.user,
             openFilterValues: filters,
             searchText,
+          })
+
+          this.auditService.auditGlobalSearch({
+            username: res.locals.user.username,
+            requestId: req.id,
+            searchDetails: {
+              query: globalSearchQuery,
+              results: {
+                prisonerNumbers: results.map(({ prisonerNumber }) => prisonerNumber),
+                prisonerInformationDisplayed: ['name', 'workingName', 'prisonerNumber', 'dateOfBirth', 'location'],
+                licenceLinkedPrisonerNumbers: results
+                  .filter(({ showUpdateLicenceLink }) => showUpdateLicenceLink)
+                  .map(({ prisonerNumber }) => prisonerNumber),
+                profileLinkedPrisonerNumbers: results
+                  .filter(({ showProfileLink }) => showProfileLink)
+                  .map(({ prisonerNumber }) => prisonerNumber),
+                profilePictureDisplayedPrisonerNumbers: results
+                  .filter(({ showProfileImage }) => showProfileImage)
+                  .map(({ prisonerNumber }) => prisonerNumber),
+              },
+            },
           })
 
           return res.render('pages/globalSearch/results', {

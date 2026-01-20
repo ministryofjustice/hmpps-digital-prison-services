@@ -25,6 +25,7 @@ export default function routes(services: Services): Router {
     services.prisonerSearchService,
     services.globalSearchService,
     services.metricsService,
+    services.auditService,
   )
 
   const ensureGlobalSearchUser: RequestHandler = (_req, res, next) => {

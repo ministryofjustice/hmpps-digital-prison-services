@@ -139,6 +139,14 @@
           {% endif %}
         </div>
       </div>
+      <div class="govuk-grid-row govuk-!-display-none-print">
+        <div class="govuk-grid-column-full">{{
+          hmppsPagedListHeader(
+            listMetadata,
+            { header: { classes: 'govuk-!-margin-bottom-0 govuk-!-padding-bottom-0' }, disableShowAll: true }
+          ) }}
+        </div>
+      </div>
     {% else %}
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">

@@ -23,6 +23,7 @@ export interface PrisonerSearchQueryParams extends PagedListQueryParams {
   term?: string
   alerts?: string[]
   cellLocationPrefix?: string
+  view?: string
 }
 
 // These are the frontend names for the query params used on the global search page
