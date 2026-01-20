@@ -109,6 +109,7 @@ describe('SearchController', () => {
           originalUrl: 'originalUrl',
           query: {},
           middleware: { clientToken: 'clientToken' },
+          session: {},
         } as unknown as Request
 
         await controller.localSearch().get()(req, res, jest.fn())
@@ -201,6 +202,7 @@ describe('SearchController', () => {
             alerts: ['HA', 'LCE'],
           },
           middleware: { clientToken: 'clientToken' },
+          session: {},
         } as unknown as Request
 
         await controller.localSearch().get()(req, res, jest.fn())
@@ -216,6 +218,7 @@ describe('SearchController', () => {
           alerts: ['HA', 'LCE'],
         })
 
+        expect(req.session.prisonerNumberImagesPermitted).toEqual(['A1234BC'])
         expect(res.render).toHaveBeenCalledWith(
           'pages/prisonerSearch/index',
           expect.objectContaining({
@@ -266,6 +269,7 @@ describe('SearchController', () => {
             'alerts[]': ['A', 'B'],
           },
           middleware: { clientToken: 'clientToken' },
+          session: {},
         } as unknown as Request
 
         await controller.localSearch().get()(req, res, jest.fn())
@@ -288,6 +292,7 @@ describe('SearchController', () => {
           originalUrl: 'originalUrl',
           query: { sortFieldsWithOrder: legacyParam },
           middleware: { clientToken: 'clientToken' },
+          session: {},
         } as unknown as Request
 
         await controller.localSearch().get()(req, res, jest.fn())
@@ -308,6 +313,7 @@ describe('SearchController', () => {
           originalUrl: 'originalUrl',
           query: params,
           middleware: { clientToken: 'clientToken' },
+          session: {},
         } as unknown as Request
 
         await controller.localSearch().get()(req, res, jest.fn())
@@ -328,6 +334,7 @@ describe('SearchController', () => {
             location: 'MDI-A',
           },
           middleware: { clientToken: 'clientToken' },
+          session: {},
         } as unknown as Request
 
         await controller.localSearch().get()(req, res, jest.fn())
@@ -355,6 +362,7 @@ describe('SearchController', () => {
             alerts: ['HA', 'LCE'],
           },
           middleware: { clientToken: 'clientToken' },
+          session: {},
         } as unknown as Request
 
         await controller.localSearch().get()(req, res, jest.fn())
@@ -403,6 +411,7 @@ describe('SearchController', () => {
           baseUrl: 'http://localhost:3000',
           query: { term: 'smith' },
           body: { sort: 'firstName,asc' },
+          session: {},
         } as unknown as Request
 
         const res = {
@@ -419,6 +428,7 @@ describe('SearchController', () => {
           baseUrl: 'http://localhost:3000',
           query: { term: 'smith', sortFieldsWithOrder: 'delete me' },
           body: { sort: 'firstName,asc' },
+          session: {},
         } as unknown as Request
 
         const res = {
@@ -437,6 +447,7 @@ describe('SearchController', () => {
       it('Loads the page', () => {
         const req = {
           query: {},
+          session: {},
         } as unknown as Request
 
         const res = {
@@ -450,6 +461,7 @@ describe('SearchController', () => {
       it('Loads the page with search term and referrer', () => {
         const req = {
           query: { searchText: 'smith', referrer: 'licences' },
+          session: {},
         } as unknown as Request
 
         const res = {
@@ -510,6 +522,7 @@ describe('SearchController', () => {
             originalUrl: 'http://example.com',
             middleware: { clientToken: 'clientToken' },
             query: {},
+            session: {},
           } as unknown as Request
 
           const res = {
@@ -544,6 +557,7 @@ describe('SearchController', () => {
             originalUrl: 'http://example.com',
             middleware: { clientToken: 'clientToken' },
             query: { searchText: 'smith', dobDay: '50', dobMonth: '12', dobYear: '1990' },
+            session: {},
           } as unknown as Request
 
           const res = {
@@ -577,6 +591,7 @@ describe('SearchController', () => {
             originalUrl: 'http://example.com',
             middleware: { clientToken: 'clientToken' },
             query: { searchText: 'smith' },
+            session: {},
           } as unknown as Request
 
           const res = {
@@ -631,6 +646,7 @@ describe('SearchController', () => {
               genderFilter: 'ALL',
               locationFilter: 'INSIDE',
             },
+            session: {},
           } as unknown as Request
 
           const res = {
@@ -639,6 +655,8 @@ describe('SearchController', () => {
           } as unknown as Response
 
           await controller.globalSearch().results.get()(req, res, jest.fn())
+
+          expect(req.session.prisonerNumberImagesPermitted).toEqual(['A1234BC'])
 
           expect(globalSearchService.getResultsForUser).toHaveBeenCalledWith('clientToken', {
             page: 1,
@@ -698,6 +716,7 @@ describe('SearchController', () => {
               genderFilter: 'ALL',
               locationFilter: 'INSIDE',
             },
+            session: {},
           } as unknown as Request
 
           const res = {
