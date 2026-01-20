@@ -113,6 +113,9 @@ export default class SearchController {
           ...res.locals.user.locations.map(option => ({ value: option.locationPrefix, text: option.description })),
         ]
 
+        // All prisoner image are permitted for local search as they inherently have access to the caseload
+        req.session.prisonerNumberImagesPermitted = results.map(({ prisonerNumber }) => prisonerNumber)
+
         return res.render('pages/prisonerSearch/index', {
           prisonerProfileBaseUrl: config.serviceUrls.prisonerProfile,
           encodedOriginalUrl: encodeURIComponent(req.originalUrl),
@@ -213,6 +216,10 @@ export default class SearchController {
               },
             },
           })
+
+          req.session.prisonerNumberImagesPermitted = results
+            .filter(({ showProfileImage }) => showProfileImage)
+            .map(({ prisonerNumber }) => prisonerNumber)
 
           return res.render('pages/globalSearch/results', {
             prisonerProfileBaseUrl: config.serviceUrls.prisonerProfile,
