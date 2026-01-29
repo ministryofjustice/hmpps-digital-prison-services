@@ -13,7 +13,7 @@ export default class CommonApiRoutes {
     const { prisonerNumberImagesPermitted } = req.session
 
     const fullSizeImage = req.query.fullSizeImage ? req.query.fullSizeImage === 'true' : false
-    if (prisonerNumberImagesPermitted.includes(prisonerNumber as string)) {
+    if (prisonerNumberImagesPermitted?.includes(prisonerNumber as string)) {
       const prisonApiClient = this.prisonApiClientBuilder(clientToken)
 
       prisonApiClient
