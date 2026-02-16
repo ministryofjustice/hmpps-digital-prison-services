@@ -7,4 +7,6 @@ document.querySelector('.js-prisoner-search-clear-alerts').addEventListener('cli
   })
 })
 
-new mojFrontend.SortableTable($('table')[0])
+document.querySelectorAll('.prisoner-search__results-list table').forEach(table => {
+  new mojFrontend.SortableTable(table)
+})
