@@ -88,6 +88,7 @@ describe('SearchController', () => {
                 lastName: 'LAST',
                 alerts: [{ alertCode: 'DONT_SHOW' }, { alertCode: 'PEEP' }],
                 dateOfBirth: '1990-01-01',
+                category: 'A',
               } as Prisoner,
             ],
             metadata: {
@@ -133,6 +134,7 @@ describe('SearchController', () => {
                 lastName: 'LAST',
                 prisonerNumber: 'A1234BC',
                 prisonId: 'LEI',
+                category: 'A',
               },
             ],
             metadata: {
@@ -176,6 +178,7 @@ describe('SearchController', () => {
                 name: 'Last, First',
                 alerts: [expect.objectContaining({ alertCodes: ['PEEP'] })],
                 age: calculateAge('1990-01-01').years,
+                category: 'A',
               },
             ],
             formValues: {
@@ -246,6 +249,7 @@ describe('SearchController', () => {
                 name: 'Last, First',
                 alerts: [expect.objectContaining({ alertCodes: ['PEEP'] })],
                 age: calculateAge('1990-01-01').years,
+                category: 'A',
               },
             ],
             formValues: {
