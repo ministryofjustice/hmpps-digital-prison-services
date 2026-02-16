@@ -1,3 +1,26 @@
+{% macro categoryFlag(categoryText, categoryCode, default = true) %}
+  {% set classes = 'cat-a-status cat-a-status--' + categoryCode if categoryCode in ['A', 'E', 'H', 'P'] %}
+  {% set text %}
+    {% if categoryCode in ['A', 'E'] %}
+      CAT A
+      {% elif categoryCode === 'H' %}
+      CAT A High
+      {% elif categoryCode === 'P' %}
+      CAT A Prov
+    {% else %}
+      {% if default %}
+        {{ categoryText | showDefault('Not entered') }}
+      {% else %}
+        {{ categoryText }}
+      {% endif %}
+    {% endif %}
+  {% endset %}
+
+  <span class="{{ classes | lower }}">
+    {{ text }}
+  </span>
+{% endmacro %}
+
 {% set rows = [] %}
 {% for prisoner in results %}
   {% set prisonerImageUrl = ('/api/prisoner/' + prisoner.prisonerNumber + '/image/data?imageId=' + prisoner.currentFacialImageId) if prisoner.currentFacialImageId else "/assets/images/prisoner-profile-image.png" %}
@@ -15,7 +38,7 @@
     { text: prisoner.assignedLivingUnitDesc },
     { text: prisoner.iepLevel },
     { text: prisoner.age },
-    { html: alertFlags(prisoner.alerts, newLine=false) + categoryFlag('', prisoner.categoryCode, false) }
+    { html: alertFlags(prisoner.alerts, newLine=false) + categoryFlag('', prisoner.category, false) }
   ]), rows) %}
 {% endfor %}
 
