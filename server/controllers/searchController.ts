@@ -399,6 +399,7 @@ export default class SearchController {
           }),
         ),
         age: calculateAge(prisoner.dateOfBirth).years,
+        category: prisoner.category,
       }))
 
     // TODO: use the sorting from the metadata, not done for now as its a design change
