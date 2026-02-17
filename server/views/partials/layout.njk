@@ -30,8 +30,6 @@
     <link href="{{ stylesheet | assetMap }}" rel="stylesheet"/>
   {% endfor %}
 
-  <script src="/assets/js/jquery.min.js"></script>
-
   {% for js in feComponents.jsIncludes %}
     <script src="{{ js }}" nonce="{{ cspNonce }}"></script>
   {% endfor %}
