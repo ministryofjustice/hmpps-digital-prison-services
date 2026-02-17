@@ -4,10 +4,10 @@ import * as mojFrontend from '@ministryofjustice/frontend'
 import { printPage } from './printPage'
 import { sortSelector } from './sortSelector'
 
-document.addEventListener('DOMContentLoaded', function () {
+govukFrontend.initAll()
+mojFrontend.initAll()
+
+document.addEventListener('DOMContentLoaded', () => {
   printPage()
   sortSelector()
 })
-
-govukFrontend.initAll()
-mojFrontend.initAll()

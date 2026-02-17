@@ -1,6 +1,6 @@
 {% macro printLink(linkText = 'Print this page', align = "left") %}
-<div {% if align %} class="text-align-{{ align }}" {% endif %}">
-  <a href="#" class="govuk-link print-link hmpps-print-link govuk-!-display-none-print govuk-!-font-size-16">
+<div {% if align %} class="govuk-!-text-align-{{ align }}" {% endif %}">
+  <a href="#" class="govuk-link js-print-link hmpps-print-link govuk-!-display-none-print govuk-!-font-size-16">
     {{ linkText }}
   </a>
 </div>
