@@ -17,7 +17,7 @@
   },
   "exclude": [
     "node_modules",
-    "assets/**/*.js",
+    "assets/",
     "integration_tests",
     "dist",
     "cypress.config.ts",

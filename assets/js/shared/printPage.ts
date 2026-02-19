@@ -1,5 +1,5 @@
 export function printPage() {
-  const printLinks = document.querySelectorAll('.print-link')
+  const printLinks = document.querySelectorAll<HTMLAnchorElement>('.js-print-link')
 
   if (printLinks?.length) {
     printLinks.forEach(el =>

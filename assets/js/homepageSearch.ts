@@ -1,6 +1,6 @@
-const searchType = document.querySelectorAll('[name=searchType]')
-const locationDropdown = document.getElementById('location')
-const globalNameHintText = document.getElementById('name-hint')
+const searchType = document.querySelectorAll<HTMLInputElement>('[name=searchType]')
+const locationDropdown = document.getElementById('location') as HTMLSelectElement
+const globalNameHintText = document.getElementById('name-hint') as HTMLDivElement
 
 searchType.forEach(el => {
   if (el.checked && el.value === 'global') {
@@ -9,7 +9,7 @@ searchType.forEach(el => {
     globalNameHintText.hidden = false
   }
   el.addEventListener('change', src => {
-    const searchType = src.target.value
+    const searchType = (src.target as HTMLInputElement).value
     if (searchType === 'global') {
       locationDropdown.disabled = true
       locationDropdown.selectedIndex = 0
