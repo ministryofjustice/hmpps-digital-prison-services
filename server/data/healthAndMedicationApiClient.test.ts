@@ -48,6 +48,8 @@ describe('healthAndMedicationApiClient', () => {
       foodAllergies: [],
       medicalDietaryRequirements: [],
       personalisedDietaryRequirements: [],
+      topLocationLevel: [],
+      recentArrival: [],
     }
 
     it('should return data from api', async () => {
@@ -125,6 +127,8 @@ describe('healthAndMedicationApiClient', () => {
         personalDiet: ['KOSHER'],
         medicalDiet: ['COELIAC'],
         foodAllergies: ['PEANUTS', 'SESAME'],
+        topLocationLevel: ['B', 'C'],
+        recentArrival: true,
       }
       fakeHealthAndMedicationApi
         .post(`/prisons/${prisonId}`, {
@@ -135,6 +139,8 @@ describe('healthAndMedicationApiClient', () => {
             personalisedDietaryRequirements: ['KOSHER'],
             medicalDietaryRequirements: ['COELIAC'],
             foodAllergies: ['PEANUTS', 'SESAME'],
+            topLocationLevel: ['B', 'C'],
+            recentArrival: true,
           },
         })
         .matchHeader('authorization', `Bearer ${token.access_token}`)

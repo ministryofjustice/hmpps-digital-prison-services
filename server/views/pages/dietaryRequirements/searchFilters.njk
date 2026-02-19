@@ -35,6 +35,8 @@
     <form method="POST" data-qa="diet-report-filter-form">
       <h2 class="govuk-heading-m govuk-!-margin-top-6">Filter</h2>
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{ filterCategory("Prisoners", "recentArrival", filters.recentArrival) }}
+      {{ filterCategory("Location", "topLocationLevel", filters.topLocationLevel) }}
       {{ filterCategory("Personalised diet", "personalDiet", filters.personalisedDietaryRequirements) }}
       {{ filterCategory("Medical diet", "medicalDiet", filters.medicalDietaryRequirements) }}
       {{ filterCategory("Food allergies", "foodAllergies", filters.foodAllergies) }}

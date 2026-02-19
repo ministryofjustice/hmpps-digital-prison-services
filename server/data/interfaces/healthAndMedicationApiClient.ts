@@ -33,6 +33,7 @@ export interface HealthAndMedicationForPrison {
   firstName: string
   lastName: string
   location: string
+  lastAdmissionDate?: string
   health: HealthAndMedication
 }
 
@@ -48,6 +49,8 @@ export interface HealthAndMedicationFilters {
   foodAllergies: HealthAndMedicationFilter[]
   medicalDietaryRequirements: HealthAndMedicationFilter[]
   personalisedDietaryRequirements: HealthAndMedicationFilter[]
+  topLocationLevel: HealthAndMedicationFilter[]
+  recentArrival: HealthAndMedicationFilter[]
 }
 
 export interface HealthAndMedicationApiClient {

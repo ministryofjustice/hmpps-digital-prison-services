@@ -21,6 +21,7 @@ export default {
         lastName: 'Smith',
         prisonerNumber: 'G4879UP',
         location: 'C-3-010',
+        lastAdmissionDate: '2026-02-10',
         health: {
           dietAndAllergy: {
             medicalDietaryRequirements: {
@@ -39,9 +40,9 @@ export default {
       {
         firstName: 'George',
         lastName: 'Harrison',
-        name: 'George Harrison',
         prisonerNumber: 'G6333VK',
         location: 'B-1-042',
+        lastAdmissionDate: '2026-02-18',
         health: {
           dietAndAllergy: {
             medicalDietaryRequirements: { value: [] },
@@ -55,6 +56,7 @@ export default {
         lastName: 'Thompson',
         prisonerNumber: 'G3101UO',
         location: 'F-5-031',
+        lastAdmissionDate: '2026-01-18',
         health: {
           dietAndAllergy: {
             medicalDietaryRequirements: { value: [] },
@@ -117,6 +119,30 @@ export default {
           name: 'Kosher',
           value: 'KOSHER',
           count: 7,
+        },
+      ] as HealthAndMedicationFilter[],
+      topLocationLevel: [
+        {
+          name: 'B',
+          value: 'B',
+          count: 1,
+        },
+        {
+          name: 'C',
+          value: 'C',
+          count: 1,
+        },
+        {
+          name: 'F',
+          value: 'F',
+          count: 1,
+        },
+      ] as HealthAndMedicationFilter[],
+      recentArrival: [
+        {
+          name: 'Arrived in the last 3 days',
+          value: 'ARRIVED_LAST_3_DAYS',
+          count: 1,
         },
       ] as HealthAndMedicationFilter[],
     }
