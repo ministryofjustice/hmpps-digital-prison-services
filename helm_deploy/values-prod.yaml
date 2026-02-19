@@ -63,7 +63,7 @@ generic-service:
     - police
 
 generic-prometheus-alerts:
-  alertSeverity: hmpps-digital-prison-services-prod
+  alertSeverity: hmpps-connect-dps-prod # sent to #connect-dps-prod-alerts
 
   elastiCacheAlertsClusterIds:
     cp-adaf5bfc3a45ca98-001: "HMPPS Digital Prison Services ElastiCache Cluster Node 1"
