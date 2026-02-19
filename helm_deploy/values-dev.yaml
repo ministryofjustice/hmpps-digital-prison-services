@@ -62,7 +62,7 @@ generic-service:
       - kilco_uat
 
 generic-prometheus-alerts:
-  alertSeverity: hmpps-digital-prison-services-non-prod
+  alertSeverity: hmpps-connect-dps-non-prod # sent to #connect-dps-non-prod-alerts
 
   elastiCacheAlertsClusterIds:
     cp-2e0b1b496ed43082-001: "HMPPS Digital Prison Services ElastiCache Cluster Node 1"
