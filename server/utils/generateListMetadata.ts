@@ -16,6 +16,8 @@ export interface DietaryRequirementsQueryParams extends PagedListQueryParams {
   foodAllergies?: string[]
   medicalDiet?: string[]
   personalDiet?: string[]
+  topLocationLevel?: string[]
+  recentArrival?: boolean
 }
 
 export interface PrisonerSearchQueryParams extends PagedListQueryParams {
@@ -112,7 +114,7 @@ export const generateListMetadata = <T extends PagedListQueryParams>(
   let pages = []
 
   if (pagedList?.metadata.totalPages > 1 && pagedList?.metadata.totalPages < 8) {
-    pages = [...Array(pagedList.metadata.totalPages).keys()].map(page => {
+    pages = Array.from({ length: pagedList.metadata.totalPages }, (_, page) => {
       return {
         text: `${page + 1}`,
         href: [`?page=${page + 1}`, query].filter(Boolean).join('&'),

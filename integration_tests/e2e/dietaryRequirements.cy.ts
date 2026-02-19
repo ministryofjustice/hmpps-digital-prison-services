@@ -74,6 +74,22 @@ context('Dietary requirements report', () => {
     page.filters().foodAllergies().options().should('have.length', 2)
     page.filters().foodAllergies().options().eq(0).find('label').should('contain.text', 'Mustard (4)')
     page.filters().foodAllergies().options().eq(1).find('label').should('contain.text', 'Peanuts (3)')
+
+    page.filters().topLocationLevel().heading().should('contain.text', 'Location').and('be.visible')
+    page.filters().topLocationLevel().options().should('have.length', 3)
+    page.filters().topLocationLevel().options().eq(0).find('label').should('contain.text', 'B (1)')
+    page.filters().topLocationLevel().options().eq(1).find('label').should('contain.text', 'C (1)')
+    page.filters().topLocationLevel().options().eq(2).find('label').should('contain.text', 'F (1)')
+
+    page.filters().recentArrival().heading().should('contain.text', 'Prisoners').and('be.visible')
+    page.filters().recentArrival().options().should('have.length', 1)
+    page
+      .filters()
+      .recentArrival()
+      .options()
+      .eq(0)
+      .find('label')
+      .should('contain.text', 'Arrived in the last 3 days (1)')
   })
 
   it(`Displays the 'arrived within last 3 days' badge for new arrivals`, () => {

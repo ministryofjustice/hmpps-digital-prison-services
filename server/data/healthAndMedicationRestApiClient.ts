@@ -43,11 +43,19 @@ export default class HealthAndMedicationRestApiClient extends RestClient impleme
   }
 
   private filtersFromQuery(query: DietaryRequirementsQueryParams) {
-    if (query.medicalDiet || query.personalDiet || query.foodAllergies) {
+    if (
+      query.medicalDiet ||
+      query.personalDiet ||
+      query.foodAllergies ||
+      query.topLocationLevel ||
+      query.recentArrival
+    ) {
       return {
         foodAllergies: query.foodAllergies,
         medicalDietaryRequirements: query.medicalDiet,
         personalisedDietaryRequirements: query.personalDiet,
+        topLocationLevel: query.topLocationLevel,
+        recentArrival: query.recentArrival,
       }
     }
 

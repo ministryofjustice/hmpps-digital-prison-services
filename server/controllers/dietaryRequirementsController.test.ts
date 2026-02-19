@@ -110,6 +110,14 @@ describe('DietaryRequirementsController', () => {
             ],
             medicalDietaryRequirements: [{ count: 1, name: 'Coeliac (cannot eat gluten)', value: 'COELIAC' }],
             personalisedDietaryRequirements: [{ checked: true, count: 7, name: 'Kosher', value: 'KOSHER' }],
+            topLocationLevel: [
+              { checked: undefined, count: 1, name: 'B', value: 'B' },
+              { checked: undefined, count: 1, name: 'C', value: 'C' },
+              { checked: undefined, count: 1, name: 'F', value: 'F' },
+            ],
+            recentArrival: [
+              { checked: undefined, count: 2, name: 'Arrived in the last 3 days', value: 'ARRIVED_LAST_3_DAYS' },
+            ],
           },
           printQuery: 'personalDiet=KOSHER&foodAllergies=PEANUTS&foodAllergies=MUSTARD&location=DESC',
           clearAllQuery: 'location=DESC',
