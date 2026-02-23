@@ -1,3 +1,5 @@
+import { format } from 'date-fns/format'
+import { subDays } from 'date-fns'
 import { stubFor } from './wiremock'
 import { HealthAndMedicationFilter } from '../../server/data/interfaces/healthAndMedicationApiClient'
 
@@ -42,7 +44,7 @@ export default {
         lastName: 'Harrison',
         prisonerNumber: 'G6333VK',
         location: 'B-1-042',
-        lastAdmissionDate: '2026-02-18',
+        latestArrivalDate: format(subDays(Date.now(), 2), 'yyyy-MM-dd'),
         health: {
           dietAndAllergy: {
             medicalDietaryRequirements: { value: [] },
