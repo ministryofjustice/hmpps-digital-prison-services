@@ -10,6 +10,15 @@ import {
 } from '../test/mocks/healthAndMedicationApiClientMock'
 import { Role } from '../enums/role'
 import { DietaryRequirementsQueryParams } from '../utils/generateListMetadata'
+import config from '../config'
+
+jest.mock('../config')
+
+const mockConfig = jest.mocked(config)
+mockConfig.features = {
+  ...mockConfig.features,
+  locationAndRecentArrivalFilters: true,
+}
 
 describe('DietaryRequirementsController', () => {
   let controller: DietaryRequirementsController
