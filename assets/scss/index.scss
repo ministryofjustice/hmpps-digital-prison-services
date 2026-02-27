@@ -12,7 +12,6 @@ $govuk-page-width: $moj-page-width;
 
 @import '@ministryofjustice/hmpps-connect-dps-shared-items/dist/assets/scss/all';
 
-@import 'helpers';
 @import 'helpers/contentful-body-html';
 
 @import './components/whats-new';
