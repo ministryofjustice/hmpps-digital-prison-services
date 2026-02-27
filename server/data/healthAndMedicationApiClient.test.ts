@@ -19,6 +19,14 @@ jest.mock('../applicationInfo.ts', () => {
   }
 })
 
+jest.mock('../config')
+
+const mockConfig = jest.mocked(config)
+mockConfig.features = {
+  ...mockConfig.features,
+  locationAndRecentArrivalFilters: true,
+}
+
 const token = { access_token: 'token-1', expires_in: 300 }
 const prisonId = 'MDI'
 

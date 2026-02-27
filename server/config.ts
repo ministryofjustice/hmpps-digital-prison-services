@@ -157,5 +157,6 @@ export default {
   },
   features: {
     prisonerSearchEnabled: get('PRISONER_SEARCH_ENABLED', 'false') === 'true',
+    locationAndRecentArrivalFilters: get('HEALTH_AND_MEDICATION_LOCATION_ARRIVAL_FILTERS_ENABLED', 'false') === 'true',
   },
 }

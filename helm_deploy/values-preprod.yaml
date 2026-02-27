@@ -51,6 +51,7 @@ generic-service:
     ACCREDITED_PROGRAMMES_ENABLED: true
     AUDIT_ENABLED: "true"
     PRISONER_SEARCH_ENABLED: true
+    HEALTH_AND_MEDICATION_LOCATION_ARRIVAL_FILTERS_ENABLED: false
 
   allowlist:
     sscl-blackpool: 31.121.5.27/32

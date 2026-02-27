@@ -11,6 +11,7 @@ import {
 import DietReportingService from '../services/dietReportingService'
 import PdfRenderingService from '../services/pdfRenderingService'
 import AuditService from '../services/auditService'
+import config from '../config'
 
 export default class DietaryRequirementsController {
   constructor(
@@ -43,8 +44,8 @@ export default class DietaryRequirementsController {
           personalDiet: queryParams.personalDiet,
           medicalDiet: queryParams.medicalDiet,
           foodAllergies: queryParams.foodAllergies,
-          topLocationLevel: queryParams.topLocationLevel,
-          recentArrival: queryParams.recentArrival ? 'true' : null,
+          topLocationLevel: config.features.locationAndRecentArrivalFilters ? queryParams.topLocationLevel : null,
+          recentArrival: config.features.locationAndRecentArrivalFilters && queryParams.recentArrival ? 'true' : null,
           nameAndNumber: direction,
           location: null,
           showAll: queryParams.showAll,
@@ -62,8 +63,8 @@ export default class DietaryRequirementsController {
           personalDiet: queryParams.personalDiet,
           medicalDiet: queryParams.medicalDiet,
           foodAllergies: queryParams.foodAllergies,
-          topLocationLevel: queryParams.topLocationLevel,
-          recentArrival: queryParams.recentArrival ? 'true' : null,
+          topLocationLevel: config.features.locationAndRecentArrivalFilters ? queryParams.topLocationLevel : null,
+          recentArrival: config.features.locationAndRecentArrivalFilters && queryParams.recentArrival ? 'true' : null,
           location: direction,
           nameAndNumber: null,
           showAll: queryParams.showAll,
@@ -109,10 +110,12 @@ export default class DietaryRequirementsController {
 
       // Mark selected filters and sort into alphabetical order, with "Other ..." options forced to last place where required
       let recentArrivalFilters: HealthAndMedicationFilter[] = []
-      if (Array.isArray(filters.recentArrival)) {
-        recentArrivalFilters = filters.recentArrival
-      } else if (filters.recentArrival) {
-        recentArrivalFilters = [filters.recentArrival]
+      if (config.features.locationAndRecentArrivalFilters) {
+        if (Array.isArray(filters.recentArrival)) {
+          recentArrivalFilters = filters.recentArrival
+        } else if (filters.recentArrival) {
+          recentArrivalFilters = [filters.recentArrival]
+        }
       }
       const filterOptions = {
         foodAllergies: filters.foodAllergies.sort(this.alphabeticalOrderWithOtherInLastPlace).map(filter => ({
@@ -131,10 +134,12 @@ export default class DietaryRequirementsController {
             ...filter,
             checked: queryParams?.medicalDiet?.includes(filter.value),
           })),
-        topLocationLevel: filters.topLocationLevel.sort().map(filter => ({
-          ...filter,
-          checked: queryParams?.topLocationLevel?.includes(filter.value),
-        })),
+        topLocationLevel: config.features.locationAndRecentArrivalFilters
+          ? filters.topLocationLevel.sort().map(filter => ({
+              ...filter,
+              checked: queryParams?.topLocationLevel?.includes(filter.value),
+            }))
+          : [],
         recentArrival: recentArrivalFilters.map(filter => ({
           ...filter,
           checked: queryParams?.recentArrival ? filter.value === 'ARRIVED_LAST_3_DAYS' : undefined,
@@ -150,8 +155,8 @@ export default class DietaryRequirementsController {
           personalDiet: queryParams.personalDiet,
           medicalDiet: queryParams.medicalDiet,
           foodAllergies: queryParams.foodAllergies,
-          topLocationLevel: queryParams.topLocationLevel,
-          recentArrival: queryParams.recentArrival ? 'true' : null,
+          topLocationLevel: config.features.locationAndRecentArrivalFilters ? queryParams.topLocationLevel : null,
+          recentArrival: config.features.locationAndRecentArrivalFilters && queryParams.recentArrival ? 'true' : null,
           nameAndNumber: req.query.nameAndNumber as string,
           location: req.query.location as string,
           showAll: req.query.showAll as string,
@@ -160,8 +165,8 @@ export default class DietaryRequirementsController {
           queryParams.personalDiet ||
           queryParams.medicalDiet ||
           queryParams.foodAllergies ||
-          queryParams.topLocationLevel ||
-          queryParams.recentArrival,
+          (config.features.locationAndRecentArrivalFilters &&
+            (queryParams.topLocationLevel || queryParams.recentArrival)),
         clearAllQuery: mapToQueryString({
           nameAndNumber: req.query.nameAndNumber as string,
           location: req.query.location as string,
@@ -180,8 +185,8 @@ export default class DietaryRequirementsController {
         personalDiet,
         medicalDiet,
         foodAllergies,
-        topLocationLevel,
-        recentArrival: recentArrival ? 'true' : null,
+        topLocationLevel: config.features.locationAndRecentArrivalFilters ? topLocationLevel : null,
+        recentArrival: config.features.locationAndRecentArrivalFilters && recentArrival ? 'true' : null,
         nameAndNumber: nameAndNumber as string,
         location: location as string,
         showAll: showAll && Boolean(showAll),
@@ -224,17 +229,19 @@ export default class DietaryRequirementsController {
         ...(queryParams.foodAllergies?.map(item => filters.foodAllergies.find(filter => filter.value === item)?.name) ??
           []),
       )
-      activeFilters.push(
-        ...(queryParams.topLocationLevel?.map(
-          item => filters.topLocationLevel?.find(filter => filter.value === item)?.name,
-        ) ?? []),
-      )
-      if (queryParams.recentArrival) {
-        const recentArrivalFilter = Array.isArray(filters.recentArrival)
-          ? filters.recentArrival[0]
-          : filters.recentArrival
-        if (recentArrivalFilter) {
-          activeFilters.push(recentArrivalFilter.name)
+      if (config.features.locationAndRecentArrivalFilters) {
+        activeFilters.push(
+          ...(queryParams.topLocationLevel?.map(
+            item => filters.topLocationLevel?.find(filter => filter.value === item)?.name,
+          ) ?? []),
+        )
+        if (queryParams.recentArrival) {
+          const recentArrivalFilter = Array.isArray(filters.recentArrival)
+            ? filters.recentArrival[0]
+            : filters.recentArrival
+          if (recentArrivalFilter) {
+            activeFilters.push(recentArrivalFilter.name)
+          }
         }
       }
 
@@ -300,9 +307,11 @@ export default class DietaryRequirementsController {
     if (req.query.personalDiet) queryParams.personalDiet = this.extractQueryParamsAsArray(req, 'personalDiet')
     if (req.query.medicalDiet) queryParams.medicalDiet = this.extractQueryParamsAsArray(req, 'medicalDiet')
     if (req.query.foodAllergies) queryParams.foodAllergies = this.extractQueryParamsAsArray(req, 'foodAllergies')
-    if (req.query.topLocationLevel)
-      queryParams.topLocationLevel = this.extractQueryParamsAsArray(req, 'topLocationLevel')
-    if (req.query.recentArrival) queryParams.recentArrival = Boolean(req.query.recentArrival)
+    if (config.features.locationAndRecentArrivalFilters) {
+      if (req.query.topLocationLevel)
+        queryParams.topLocationLevel = this.extractQueryParamsAsArray(req, 'topLocationLevel')
+      if (req.query.recentArrival) queryParams.recentArrival = Boolean(req.query.recentArrival)
+    }
 
     return queryParams
   }
