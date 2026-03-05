@@ -112,5 +112,9 @@
     "supertest": "^7.1.4",
     "ts-jest": "^29.4.6",
     "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "diff": "^8.0.3",
+    "serialize-javascript": "^7.0.3"
   }
 }
