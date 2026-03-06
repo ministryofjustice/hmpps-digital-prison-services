@@ -8,5 +8,5 @@ document.querySelector<HTMLAnchorElement>('.js-prisoner-search-clear-alerts')?.a
 })
 
 document.querySelectorAll<HTMLTableElement>('.prisoner-search__results-list table').forEach(table => {
-  new SortableTable(table)
+  new SortableTable(table, {})
 })
