@@ -116,7 +116,7 @@ describe('ChangeCaseloadController', () => {
 
       expect(logger.error).toHaveBeenCalledWith(
         'http://localhost/whereTheyCameFrom',
-        'Caseload ID is missing, not assigned, or does not exist',
+        'Caseload ID is missing, not assigned to user, or does not exist',
       )
       expect(res.status).toHaveBeenCalledWith(500)
       expect(res.render).toHaveBeenCalledWith('error.njk', { url: '/change-caseload' })
@@ -137,7 +137,7 @@ describe('ChangeCaseloadController', () => {
 
       expect(logger.error).toHaveBeenCalledWith(
         'http://localhost/whereTheyCameFrom',
-        'Caseload ID is missing, not assigned, or does not exist',
+        'Caseload ID is missing, not assigned to user, or does not exist',
       )
       expect(res.status).toHaveBeenCalledWith(500)
       expect(res.render).toHaveBeenCalledWith('error.njk', { url: '/change-caseload' })
