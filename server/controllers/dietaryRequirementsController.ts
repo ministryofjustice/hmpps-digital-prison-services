@@ -214,36 +214,43 @@ export default class DietaryRequirementsController {
       ])
       const datetime = format(new Date(), `cccc d MMMM yyyy 'at' HH:mm`)
 
-      const activeFilters: string[] = []
-      activeFilters.push(
-        ...(queryParams.personalDiet?.map(
-          item => filters.personalisedDietaryRequirements.find(filter => filter.value === item)?.name,
-        ) ?? []),
-      )
-      activeFilters.push(
-        ...(queryParams.medicalDiet?.map(
-          item => filters.medicalDietaryRequirements.find(filter => filter.value === item)?.name,
-        ) ?? []),
-      )
-      activeFilters.push(
-        ...(queryParams.foodAllergies?.map(item => filters.foodAllergies.find(filter => filter.value === item)?.name) ??
-          []),
-      )
+      const recentArrivalFilters: string[] = []
+      const locationFilters: string[] = []
       if (config.features.locationAndRecentArrivalFilters) {
-        activeFilters.push(
-          ...(queryParams.topLocationLevel?.map(
-            item => filters.topLocationLevel?.find(filter => filter.value === item)?.name,
-          ) ?? []),
-        )
         if (queryParams.recentArrival) {
           const recentArrivalFilter = Array.isArray(filters.recentArrival)
             ? filters.recentArrival[0]
             : filters.recentArrival
           if (recentArrivalFilter) {
-            activeFilters.push(recentArrivalFilter.name)
+            recentArrivalFilters.push(recentArrivalFilter.name)
           }
         }
+        locationFilters.push(
+          ...(queryParams.topLocationLevel?.map(
+            item => filters.topLocationLevel?.find(filter => filter.value === item)?.name,
+          ) ?? []),
+        )
       }
+
+      const personalisedDietFilters: string[] = []
+      personalisedDietFilters.push(
+        ...(queryParams.personalDiet?.map(
+          item => filters.personalisedDietaryRequirements.find(filter => filter.value === item)?.name,
+        ) ?? []),
+      )
+
+      const medicalDietFilters: string[] = []
+      medicalDietFilters.push(
+        ...(queryParams.medicalDiet?.map(
+          item => filters.medicalDietaryRequirements.find(filter => filter.value === item)?.name,
+        ) ?? []),
+      )
+
+      const foodAllergiesFilters: string[] = []
+      foodAllergiesFilters.push(
+        ...(queryParams.foodAllergies?.map(item => filters.foodAllergies.find(filter => filter.value === item)?.name) ??
+          []),
+      )
 
       await this.auditService.auditDietReportPrint({
         username: res.locals.user.username,
@@ -255,7 +262,11 @@ export default class DietaryRequirementsController {
         footer: { datetime },
         content: {
           content: resp.content.map(this.buildContent),
-          activeFilters: activeFilters.filter(Boolean),
+          recentArrivalFilters: recentArrivalFilters.filter(Boolean),
+          locationFilters: locationFilters.filter(Boolean),
+          personalisedDietFilters: personalisedDietFilters.filter(Boolean),
+          medicalDietFilters: medicalDietFilters.filter(Boolean),
+          foodAllergiesFilters: foodAllergiesFilters.filter(Boolean),
           datetime,
         },
       })

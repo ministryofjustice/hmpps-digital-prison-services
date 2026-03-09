@@ -268,6 +268,8 @@ describe('DietaryRequirementsController', () => {
           personalDiet: ['KOSHER'],
           medicalDiet: ['COELIAC'],
           foodAllergies: ['PEANUTS', 'MUSTARD'],
+          topLocationLevel: ['B', 'C'],
+          recentArrival: 'true',
         },
       } as unknown as Request
 
@@ -287,7 +289,11 @@ describe('DietaryRequirementsController', () => {
       expect(pdfRenderingService.renderDietReport).toHaveBeenCalledWith(res, {
         footer: expect.anything(),
         content: expect.objectContaining({
-          activeFilters: expect.arrayContaining(['Kosher', 'Coeliac (cannot eat gluten)', 'Peanuts', 'Mustard']),
+          recentArrivalFilters: ['Arrived in the last 3 days'],
+          locationFilters: ['B', 'C'],
+          personalisedDietFilters: ['Kosher'],
+          medicalDietFilters: ['Coeliac (cannot eat gluten)'],
+          foodAllergiesFilters: ['Peanuts', 'Mustard'],
         }),
       })
     })
