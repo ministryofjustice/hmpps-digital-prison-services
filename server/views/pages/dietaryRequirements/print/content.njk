@@ -69,8 +69,37 @@
             </h1>
             <p class="sensitive-info-disclaimer">This document includes sensitive information about prisoner dietary requirements.</p>
 
-            {% if activeFilters.length > 0 %}
-              <p class="active-filters-summary">Filters applied: {{ activeFilters | join(', ') }}</p>
+            {% if recentArrivalFilters.length > 0 or locationFilters.length > 0 or personalisedDietFilters.length > 0 or medicalDietFilters.length > 0 or foodAllergiesFilters.length > 0 %}
+              <h2 class="govuk-heading-s govuk-!-margin-bottom-3">Filters Applied</h2>
+              {% if recentArrivalFilters.length > 0 %}
+                <p class="active-filters-summary govuk-!-margin-bottom-2">
+                  <span class="govuk-!-font-weight-bold">Prisoner:</span> {{ recentArrivalFilters | join(', ') }}
+                </p>
+              {% endif %}
+
+              {% if locationFilters.length > 0 %}
+                <p class="active-filters-summary govuk-!-margin-bottom-2">
+                  <span class="govuk-!-font-weight-bold">Location:</span> {{ locationFilters | join(', ') }}
+                </p>
+              {% endif %}
+
+              {% if personalisedDietFilters.length > 0 %}
+                <p class="active-filters-summary govuk-!-margin-bottom-2">
+                  <span class="govuk-!-font-weight-bold">Personalised diet:</span> {{ personalisedDietFilters | join(', ') }}
+                </p>
+              {% endif %}
+
+              {% if medicalDietFilters.length > 0 %}
+                <p class="active-filters-summary govuk-!-margin-bottom-2">
+                  <span class="govuk-!-font-weight-bold">Medical diet:</span> {{ medicalDietFilters | join(', ') }}
+                </p>
+              {% endif %}
+
+              {% if foodAllergiesFilters.length > 0 %}
+                <p class="active-filters-summary govuk-!-margin-bottom-0">
+                  <span class="govuk-!-font-weight-bold">Food allergies:</span> {{ foodAllergiesFilters | join(', ') }}
+                </p>
+              {% endif %}
             {% endif %}
         </div>
 
@@ -88,5 +117,3 @@
         </div>
     </div>
 {% endblock %}
-
-
