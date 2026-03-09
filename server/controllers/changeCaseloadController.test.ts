@@ -119,7 +119,7 @@ describe('ChangeCaseloadController', () => {
         'Caseload ID is missing, not assigned to user, or does not exist',
       )
       expect(res.status).toHaveBeenCalledWith(500)
-      expect(res.render).toHaveBeenCalledWith('error.njk', { url: '/change-caseload' })
+      expect(res.render).toHaveBeenCalledWith('pages/changeCaseload/error.njk', { url: '/change-caseload' })
     })
 
     it('Logs error and renders error page if user somehow tries to set a caseload they are not assigned to', async () => {
@@ -140,7 +140,7 @@ describe('ChangeCaseloadController', () => {
         'Caseload ID is missing, not assigned to user, or does not exist',
       )
       expect(res.status).toHaveBeenCalledWith(500)
-      expect(res.render).toHaveBeenCalledWith('error.njk', { url: '/change-caseload' })
+      expect(res.render).toHaveBeenCalledWith('pages/changeCaseload/error.njk', { url: '/change-caseload' })
     })
   })
 })
