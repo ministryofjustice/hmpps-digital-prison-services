@@ -37,6 +37,9 @@
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
       {{ filterCategory("Prisoners", "recentArrival", filters.recentArrival) }}
       {{ filterCategory("Location", "topLocationLevel", filters.topLocationLevel) }}
+      {% if filters.recentArrival.length > 0 or filters.topLocationLevel.length > 0 %}
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible govuk-!-static-margin-top-0" />
+      {% endif %}
       {{ filterCategory("Personalised diet", "personalDiet", filters.personalisedDietaryRequirements) }}
       {{ filterCategory("Medical diet", "medicalDiet", filters.medicalDietaryRequirements) }}
       {{ filterCategory("Food allergies", "foodAllergies", filters.foodAllergies) }}
