@@ -8,6 +8,7 @@ import config from '../config'
 import SearchController from '../controllers/searchController'
 import CommonApiRoutes from './common/api'
 import { userHasRoles } from '../utils/utils'
+import ChangeCaseloadController from '../controllers/changeCaseloadController'
 
 export default function routes(services: Services): Router {
   const router = Router()
@@ -27,6 +28,8 @@ export default function routes(services: Services): Router {
     services.metricsService,
     services.auditService,
   )
+
+  const changeCaseloadController = new ChangeCaseloadController(services.userService)
 
   const ensureGlobalSearchUser: RequestHandler = (_req, res, next) => {
     const {
@@ -56,6 +59,9 @@ export default function routes(services: Services): Router {
     router.get('/global-search', ensureGlobalSearchUser, searchController.globalSearch().get())
     router.get('/global-search/results', ensureGlobalSearchUser, searchController.globalSearch().results.get())
   }
+
+  router.get('/change-caseload', changeCaseloadController.get())
+  router.post('/change-caseload', changeCaseloadController.post())
 
   // Redirect routes
   router.get('/establishment-roll{*path}', (_req, res) => {
