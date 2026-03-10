@@ -22,7 +22,7 @@
 {% endblock %}
 {% block content %}
 <h1 class="govuk-heading-l">{{title}}</h1>
-<form method="POST" id="changeCaseload">
+<form method="POST" id="changeCaseload" novalidate>
   <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
   {{ govukSelect({
           id: "changeCaseloadSelect",

@@ -47,7 +47,7 @@ export default class ChangeCaseloadController {
       const caseloadToSet = caseLoads.find(caseload => caseload.caseLoadId === caseLoadId)
 
       if (!req.body.caseLoadId || !caseloadToSet) {
-        res.status(500)
+        res.status(400)
         logger.error(req.originalUrl, 'Caseload ID is missing, not assigned to user, or does not exist')
         return res.render('pages/changeCaseload/error.njk', {
           url: '/change-caseload',
