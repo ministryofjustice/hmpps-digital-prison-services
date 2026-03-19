@@ -3,6 +3,7 @@ import { RestClientBuilder } from '../data'
 import { PrisonApiClient } from '../data/interfaces/prisonApiClient'
 import { LocationsInsidePrisonApiClient } from '../data/interfaces/locationsInsidePrisonApiClient'
 
+
 export default class UserService {
   constructor(
     private readonly prisonApiClientBuilder: RestClientBuilder<PrisonApiClient>,
@@ -15,10 +16,13 @@ export default class UserService {
 
   async getUserLocations(prisonId: string, username: string, token: string): Promise<LocationViewmodel[]> {
     const locations = await this.locationsInsidePrisonApiClientBuilder(token).getTopLevelResidentialLocations(prisonId, username)
-    return locations.map( location => ({
-      text: location.localName || location.fullLocationPath,
-      value: `${prisonId}-${location.fullLocationPath}`,
-    }))
+    return locations.map( location => {
+      const hasSublocations = location.subLocations && location.subLocations.length >= 1
+      return {
+        text: location.localName || location.fullLocationPath,
+        value: `${prisonId}-${location.fullLocationPath}${hasSublocations ? '-' : ''}`,
+      }
+    })
   }
 
   setActiveCaseload(token: string, caseLoad: CaseLoad): Promise<Record<string, string>> {

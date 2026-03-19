@@ -4,15 +4,16 @@ import { PrisonUser } from '../interfaces/prisonUser'
 import { Location } from '../data/interfaces/location'
 import { PagedList } from '../data/interfaces/pagedList'
 import Prisoner from '../data/interfaces/prisoner'
+import { LocationViewmodel } from './userService'
 
 describe('prisonerSearchService', () => {
   let prisonerSearchApi: PrisonerSearchClient
   let service: PrisonerSearchService
-  const userLocations: Location[] = [
-    { locationPrefix: 'LEI-1', subLocations: true },
-    { locationPrefix: 'LEI-2', subLocations: false },
-    { locationPrefix: 'LEI-3', subLocations: true },
-  ] as Location[]
+  const userLocations: LocationViewmodel[] = [
+    { value: 'LEI-1', text: 'some desc' },
+    { value: 'LEI-2', text: 'some desc' },
+    { value: 'LEI-3', text: 'some desc' },
+  ]
 
   beforeEach(() => {
     prisonerSearchApi = {
@@ -109,23 +110,6 @@ describe('prisonerSearchService', () => {
         'LEI',
         expect.objectContaining({
           location: 'LEI-2',
-        }),
-      )
-    })
-
-    it('Adds a - to the end of the location with sublocations', async () => {
-      await service.getResults(
-        'clientToken',
-        {
-          activeCaseLoadId: 'LEI',
-          locations: userLocations,
-        } as PrisonUser,
-        { location: 'LEI-1', page: 10, sort: 'lastName,asc', term: 'smith', size: 25, showAll: false, alerts: ['ABC'] },
-      )
-      expect(prisonerSearchApi.locationSearch).toHaveBeenCalledWith(
-        'LEI',
-        expect.objectContaining({
-          location: 'LEI-1-',
         }),
       )
     })

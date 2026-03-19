@@ -38,11 +38,17 @@ describe('User service', () => {
   })
 
   describe('getUserLocations', () => {
-    it('retrieves list of user locations', async () => {
-      const locations = [{ localName: "Wing A", fullLocationPath: "A" }] as PrisonHierarchyDto[]
+    it('retrieves list of user location text and values for use with search', async () => {
+      const locations = [
+        { localName: "Wing A", fullLocationPath: "A" },
+        { localName: "Wing B", fullLocationPath: "B", subLocations: [{} as PrisonHierarchyDto]},
+      ] as PrisonHierarchyDto[]
       locationsApiClient.getTopLevelResidentialLocations.mockResolvedValue(locations)
       const result = await userService.getUserLocations('KMI', 'TEST_USER', token)
-      expect(result).toEqual([{text: "Wing A", value: "KMI-A"} as LocationViewmodel])
+      expect(result).toEqual([
+        {text: "Wing A", value: "KMI-A"} as LocationViewmodel,
+        {text: "Wing B", value: "KMI-B-"} as LocationViewmodel,
+      ])
     })
 
     it('propagates error', async () => {
