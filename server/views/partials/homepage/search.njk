@@ -61,7 +61,7 @@
                         formGroup: {
                             classes: "govuk-form-group__item"
                         },
-                        items: user.locations | asSelectItems('description', 'locationPrefix') | addDefaultSelectedValue('All', user.activeCaseLoadId)
+                        items: user.locations | asSelectItems('text', 'value') | addDefaultSelectedValue('All', user.activeCaseLoadId)
                     }) }}
 
                     <div class="govuk-form-group__button">

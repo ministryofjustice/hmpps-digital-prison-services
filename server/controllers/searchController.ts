@@ -110,7 +110,7 @@ export default class SearchController {
 
         const locationOptions = [
           { value: res.locals.user.activeCaseLoad.caseLoadId, text: res.locals.user.activeCaseLoad.description },
-          ...res.locals.user.locations.map(option => ({ value: option.locationPrefix, text: option.description })),
+          ...res.locals.user.locations.map(option => ({ value: option.value, text: option.text })),
         ]
 
         // All prisoner image are permitted for local search as they inherently have access to the caseload

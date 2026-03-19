@@ -1,7 +1,8 @@
-import UserService from './userService'
+import UserService, { LocationViewmodel } from './userService'
 import PrisonApiRestClient from '../data/prisonApiClient'
 import { CaseLoad } from '../data/interfaces/caseLoad'
-import { Location } from '../data/interfaces/location'
+import LocationsInsidePrisonRestApiClient from '../data/locationsInsidePrisonRestApiClient'
+import PrisonHierarchyDto from '../data/interfaces/prisonHierarchyDto'
 
 jest.mock('../data/prisonApiClient')
 
@@ -9,11 +10,14 @@ const token = 'some token'
 
 describe('User service', () => {
   let prisonApiClient: jest.Mocked<PrisonApiRestClient>
+  let locationsApiClient: jest.Mocked<LocationsInsidePrisonRestApiClient>
   let userService: UserService
 
   beforeEach(() => {
     prisonApiClient = new PrisonApiRestClient(null) as jest.Mocked<PrisonApiRestClient>
-    userService = new UserService(() => prisonApiClient)
+    locationsApiClient = new LocationsInsidePrisonRestApiClient(null) as jest.Mocked<LocationsInsidePrisonRestApiClient>
+    locationsApiClient.getTopLevelResidentialLocations = jest.fn()
+    userService = new UserService(() => prisonApiClient, () => locationsApiClient)
   })
 
   describe('getUserCaseLoads', () => {
@@ -35,18 +39,16 @@ describe('User service', () => {
 
   describe('getUserLocations', () => {
     it('retrieves list of user locations', async () => {
-      const locations = [{ locationId: 12345 }] as Location[]
-      prisonApiClient.getUserLocations.mockResolvedValue(locations)
-
-      const result = await userService.getUserLocations(token)
-
-      expect(result).toEqual(locations)
+      const locations = [{ localName: "Wing A", fullLocationPath: "A" }] as PrisonHierarchyDto[]
+      locationsApiClient.getTopLevelResidentialLocations.mockResolvedValue(locations)
+      const result = await userService.getUserLocations('KMI', 'TEST_USER', token)
+      expect(result).toEqual([{text: "Wing A", value: "KMI-A"} as LocationViewmodel])
     })
 
     it('propagates error', async () => {
-      prisonApiClient.getUserLocations.mockRejectedValue(new Error('some error'))
+      locationsApiClient.getTopLevelResidentialLocations.mockRejectedValue(new Error('some error'))
 
-      await expect(userService.getUserLocations(token)).rejects.toEqual(new Error('some error'))
+      await expect(userService.getUserLocations('KMI', 'TEST_USER', token)).rejects.toEqual(new Error('some error'))
     })
   })
 

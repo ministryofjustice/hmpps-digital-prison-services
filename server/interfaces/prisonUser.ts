@@ -1,5 +1,5 @@
 import { CaseLoad } from '../data/interfaces/caseLoad'
-import { Location } from '../data/interfaces/location'
+import { LocationViewmodel } from '../services/userService'
 
 export type AuthSource = 'nomis' | 'delius' | 'external'
 
@@ -15,6 +15,6 @@ export interface PrisonUser {
   activeCaseLoad: CaseLoad
   activeCaseLoadId: string
   caseLoads: CaseLoad[]
-  locations: Location[]
+  locations: LocationViewmodel[]
   showFeedbackBanner: boolean
 }

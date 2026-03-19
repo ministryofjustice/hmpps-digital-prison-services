@@ -1,6 +1,5 @@
 import { Readable } from 'stream'
 import { CaseLoad } from './interfaces/caseLoad'
-import { Location } from './interfaces/location'
 import { LatestArrivalDateInfo } from './interfaces/latestArrivalDateInfo'
 import config from '../config'
 import PrisonRollCount from './interfaces/prisonRollCount'
@@ -15,10 +14,6 @@ export default class PrisonApiRestClient extends RestClient implements PrisonApi
 
   getUserCaseLoads(): Promise<CaseLoad[]> {
     return this.get<CaseLoad[]>({ path: '/api/users/me/caseLoads', query: 'allCaseloads=true' }, this.token)
-  }
-
-  getUserLocations(): Promise<Location[]> {
-    return this.get<Location[]>({ path: '/api/users/me/locations' }, this.token)
   }
 
   setActiveCaseload(caseLoad: CaseLoad): Promise<Record<string, string>> {

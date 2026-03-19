@@ -56,15 +56,6 @@ describe('prisonApiClient', () => {
     })
   })
 
-  describe('getLocations', () => {
-    it('should return data from api', async () => {
-      mockSuccessfulPrisonApiCall('/api/users/me/locations', locationMock)
-
-      const output = await prisonApiClient.getUserLocations()
-      expect(output).toEqual(locationMock)
-    })
-  })
-
   describe('setActiveCaseLoad', () => {
     it('Should return data from the API', async () => {
       const caseLoadMock = {
