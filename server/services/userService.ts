@@ -21,7 +21,7 @@ export default class UserService {
       username,
     )
     const flattened = flattenLocations(locations)
-    const withoutTopLevel = flattened.filter(location => prisonId !== location.fullLocationPath)
+    const withoutTopLevel = flattened.filter(location => `${prisonId}-` !== location.fullLocationPath)
     return locationsAsViewModels(withoutTopLevel, prisonId)
   }
 
@@ -33,6 +33,9 @@ export default class UserService {
 function flattenLocations(locations: PrisonHierarchyDto[]): PrisonHierarchyDto[] {
   return locations.flatMap(location => {
     const { subLocations, ...rest } = location
+    if (subLocations && subLocations.length >= 1) {
+      rest.fullLocationPath += '-'
+    }
     return [rest as PrisonHierarchyDto, ...(subLocations ? flattenLocations(subLocations) : [])]
   })
 }

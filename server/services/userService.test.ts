@@ -61,7 +61,7 @@ describe('User service', () => {
       const result = await userService.getUserLocations('KMI', 'TEST_USER', token)
       expect(result).toEqual([
         { text: 'Wing A', value: 'KMI-A' } as LocationViewmodel,
-        { text: 'Wing B', value: 'KMI-B' } as LocationViewmodel,
+        { text: 'Wing B', value: 'KMI-B-' } as LocationViewmodel,
         { text: 'B-1', value: 'KMI-B-1' } as LocationViewmodel,
       ])
     })
