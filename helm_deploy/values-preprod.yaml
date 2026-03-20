@@ -31,6 +31,7 @@ generic-service:
     TOKEN_VERIFICATION_API_URL: https://token-verification-api-preprod.prison.service.justice.gov.uk
     HEALTH_AND_MEDICATION_API_URL: "https://health-and-medication-api-preprod.hmpps.service.justice.gov.uk"
     GOTENBERG_API_URL: 'http://hmpps-digital-prison-services-gotenberg'
+    RESIDENTIAL_LOCATIONS_API_URL: https://locations-inside-prison-api-preprod.hmpps.service.justice.gov.uk
 
     # Service URLs
     CHECK_MY_DIARY_URL: https://check-my-diary-preprod.prison.service.justice.gov.uk?fromDPS=true
