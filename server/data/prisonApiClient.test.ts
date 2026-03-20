@@ -2,7 +2,6 @@ import nock from 'nock'
 import config from '../config'
 import PrisonApiClient from './prisonApiClient'
 import { ApplicationInfo } from '../applicationInfo'
-import { locationMock } from '../mocks/locationMock'
 
 jest.mock('../applicationInfo.ts', () => {
   return {

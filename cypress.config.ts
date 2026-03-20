@@ -3,6 +3,7 @@ import { resetStubs } from './integration_tests/mockApis/wiremock'
 import auth from './integration_tests/mockApis/auth'
 import tokenVerification from './integration_tests/mockApis/tokenVerification'
 import prison from './integration_tests/mockApis/prison'
+import locationsInsidePrison from './integration_tests/mockApis/locationsInsidePrison'
 import contentful from './integration_tests/mockApis/contentful'
 import dps from './integration_tests/mockApis/dps'
 import feComponents from './integration_tests/mockApis/feComponents'
@@ -31,6 +32,7 @@ export default defineConfig({
         ...tokenVerification,
         ...prison,
         ...prisonerSearch,
+        ...locationsInsidePrison,
         ...contentful,
         ...dps,
         ...feComponents,

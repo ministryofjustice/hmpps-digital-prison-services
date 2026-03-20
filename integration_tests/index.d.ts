@@ -1,7 +1,6 @@
 import Service from '@ministryofjustice/hmpps-connect-dps-components/dist/types/Service'
 import Component from '@ministryofjustice/hmpps-connect-dps-components/dist/types/Component'
 import { CaseLoad } from '../server/data/interfaces/caseLoad'
-import { Location } from '../server/data/interfaces/location'
 import { UserToken } from './mockApis/auth'
 
 declare global {
@@ -14,9 +13,7 @@ declare global {
       signIn(options?: { failOnStatusCode?: boolean; redirectPath?: string }): Chainable<AUTWindow>
 
       setupUserAuth(
-        options?: UserToken & {
-          locations?: Location[]
-        },
+        options?: UserToken,
       ): Chainable<AUTWindow>
 
       setupComponentsData(options?: {

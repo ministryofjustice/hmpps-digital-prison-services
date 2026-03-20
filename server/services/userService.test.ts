@@ -40,14 +40,22 @@ describe('User service', () => {
   describe('getUserLocations', () => {
     it('retrieves list of user location text and values for use with search', async () => {
       const locations = [
-        { localName: "Wing A", fullLocationPath: "A" },
-        { localName: "Wing B", fullLocationPath: "B", subLocations: [{} as PrisonHierarchyDto]},
+        { localName: "KMI", 
+          fullLocationPath: "KMI",
+          subLocations: [
+            { localName: "Wing A", fullLocationPath: "A" } as PrisonHierarchyDto,
+            { localName: "Wing B", fullLocationPath: "B", subLocations: [
+              { localName: undefined, fullLocationPath: "B-1" } as PrisonHierarchyDto,
+            ]},
+          ]
+        },
       ] as PrisonHierarchyDto[]
       locationsApiClient.getTopLevelResidentialLocations.mockResolvedValue(locations)
       const result = await userService.getUserLocations('KMI', 'TEST_USER', token)
       expect(result).toEqual([
         {text: "Wing A", value: "KMI-A"} as LocationViewmodel,
-        {text: "Wing B", value: "KMI-B-"} as LocationViewmodel,
+        {text: "Wing B", value: "KMI-B"} as LocationViewmodel,
+        {text: "B-1", value: "KMI-B-1"} as LocationViewmodel,
       ])
     })
 

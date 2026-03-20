@@ -1,7 +1,6 @@
 import { PrisonerSearchClient } from '../data/interfaces/prisonerSearchClient'
 import PrisonerSearchService from './prisonerSearchService'
 import { PrisonUser } from '../interfaces/prisonUser'
-import { Location } from '../data/interfaces/location'
 import { PagedList } from '../data/interfaces/pagedList'
 import Prisoner from '../data/interfaces/prisoner'
 import { LocationViewmodel } from './userService'

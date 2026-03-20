@@ -2,6 +2,7 @@ import { CaseLoad } from '../data/interfaces/caseLoad'
 import { RestClientBuilder } from '../data'
 import { PrisonApiClient } from '../data/interfaces/prisonApiClient'
 import { LocationsInsidePrisonApiClient } from '../data/interfaces/locationsInsidePrisonApiClient'
+import PrisonHierarchyDto from '../data/interfaces/prisonHierarchyDto'
 
 
 export default class UserService {
@@ -16,18 +17,34 @@ export default class UserService {
 
   async getUserLocations(prisonId: string, username: string, token: string): Promise<LocationViewmodel[]> {
     const locations = await this.locationsInsidePrisonApiClientBuilder(token).getTopLevelResidentialLocations(prisonId, username)
-    return locations.map( location => {
-      const hasSublocations = location.subLocations && location.subLocations.length >= 1
-      return {
-        text: location.localName || location.fullLocationPath,
-        value: `${prisonId}-${location.fullLocationPath}${hasSublocations ? '-' : ''}`,
-      }
-    })
+    const flattened = flattenLocations(locations)
+    return locationsAsViewModel(flattened, prisonId)
   }
 
   setActiveCaseload(token: string, caseLoad: CaseLoad): Promise<Record<string, string>> {
     return this.prisonApiClientBuilder(token).setActiveCaseload(caseLoad)
   }
+}
+
+function flattenLocations(locations: PrisonHierarchyDto[]): PrisonHierarchyDto[] {
+  return locations.flatMap(location => {
+    const { subLocations, ...rest } = location;
+    return [
+      rest as PrisonHierarchyDto,
+      ...(subLocations ? flattenLocations(subLocations) : [])
+    ]
+  })
+}
+
+function locationsAsViewModel(flattenedLocations: PrisonHierarchyDto[], prisonId: string): LocationViewmodel[] {
+  return flattenedLocations
+    .filter(location => prisonId !== location.fullLocationPath)
+    .map(location => {
+        return {
+          text: location.localName || location.fullLocationPath,
+          value: `${prisonId}-${location.fullLocationPath}`
+        } as LocationViewmodel
+      })
 }
 
 export interface LocationViewmodel {

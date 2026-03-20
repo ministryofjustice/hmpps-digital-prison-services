@@ -2,8 +2,6 @@ import { format } from 'date-fns/format'
 import { subDays } from 'date-fns'
 import { stubFor } from './wiremock'
 import { CaseLoad } from '../../server/data/interfaces/caseLoad'
-import { Location } from '../../server/data/interfaces/location'
-import { locationsMock } from '../../server/mocks/locationMock'
 import { userDetailsMock } from '../../server/test/mocks/userDetailsMock'
 import { prisonEstablishmentRollSummaryMock } from '../../server/mocks/prisonRollCountSummaryMock'
 
@@ -33,22 +31,6 @@ export default {
           'Content-Type': 'application/json;charset=UTF-8',
         },
         jsonBody: caseLoads.length > 0 ? caseLoads : [],
-      },
-    })
-  },
-
-  stubUserLocations: (locations: Location[] = locationsMock) => {
-    return stubFor({
-      request: {
-        method: 'GET',
-        urlPattern: `/prison/api/users/me/locations`,
-      },
-      response: {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
-        jsonBody: locations.length > 0 ? locations : [],
       },
     })
   },
