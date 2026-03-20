@@ -124,7 +124,7 @@ export default class SearchController {
           links: this.buildLinksForPage(queryParams),
           alertOptions: alertFlagLabels.map(({ alertCodes, label }) => ({
             value: alertCodes,
-            text: label,  
+            text: label,
             checked: Boolean(selectedAlerts) && selectedAlerts.some((alert: string) => alertCodes.includes(alert)),
           })),
           locationOptions,

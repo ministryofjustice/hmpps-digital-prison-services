@@ -1,7 +1,7 @@
 import nock from 'nock'
+import { AuthenticationClient } from '@ministryofjustice/hmpps-rest-client'
 import config from '../config'
 import LocationsInsidePrisonRestApiClient from './locationsInsidePrisonRestApiClient'
-import { AuthenticationClient } from '@ministryofjustice/hmpps-rest-client'
 import LocationsApiLocation from './interfaces/prisonHierarchyDto'
 
 describe('LocationsInsidePrisonRestApiClient', () => {
@@ -28,10 +28,7 @@ describe('LocationsInsidePrisonRestApiClient', () => {
   })
 
   const mockSuccessfulGet = <T>(url: string, response: T) => {
-    fakeApi
-      .get(url)
-      .matchHeader('authorization', `Bearer ${token}`)
-      .reply(200, response)
+    fakeApi.get(url).matchHeader('authorization', `Bearer ${token}`).reply(200, response)
   }
 
   describe('getTopLevelResidentialLocations', () => {
@@ -48,14 +45,10 @@ describe('LocationsInsidePrisonRestApiClient', () => {
           status: 'ACTIVE',
           fullLocationPath: 'A',
           subLocations: [],
-          
         } as LocationsApiLocation,
       ]
 
-      mockSuccessfulGet(
-        `/locations/prison/${prisonId}/residential-first-level`,
-        mockResponse
-      )
+      mockSuccessfulGet(`/locations/prison/${prisonId}/residential-first-level`, mockResponse)
 
       const result = await client.getTopLevelResidentialLocations(prisonId, username)
 

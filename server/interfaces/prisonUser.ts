@@ -1,5 +1,5 @@
 import { CaseLoad } from '../data/interfaces/caseLoad'
-import { LocationViewmodel } from '../services/userService'
+import { LocationViewmodel } from '../services/interfaces/LocationViewModel'
 
 export type AuthSource = 'nomis' | 'delius' | 'external'
 

@@ -17,7 +17,12 @@ import MetricsService from './metricsService'
 
 export const services = () => {
   const dataAccess = initDataAccess()
-  const { applicationInfo, prisonApiClientBuilder, healthAndMedicationApiClientBuilder, locationsInsidePrisonApiClientBuilder} = dataAccess
+  const {
+    applicationInfo,
+    prisonApiClientBuilder,
+    healthAndMedicationApiClientBuilder,
+    locationsInsidePrisonApiClientBuilder,
+  } = dataAccess
 
   const userService = new UserService(prisonApiClientBuilder, locationsInsidePrisonApiClientBuilder)
   const establishmentRollService = new EstablishmentRollService(prisonApiClientBuilder)

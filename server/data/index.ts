@@ -41,7 +41,8 @@ const initialiseDataAccess = () => {
         prisonApiClientBuilder: (token: string) => new PrisonApiRestClient(token),
         healthAndMedicationApiClientBuilder: (token: string) => new HealthAndMedicationRestApiClient(token),
         prisonerSearchApiClientBuilder: (token: string) => new PrisonerSearchRestClient(token),
-        locationsInsidePrisonApiClientBuilder: (token: string) => new LocationsInsidePrisonRestApiClient(hmppsAuthClient),
+        locationsInsidePrisonApiClientBuilder: (_token: string) =>
+          new LocationsInsidePrisonRestApiClient(hmppsAuthClient),
         telemetryClient,
       }
     }

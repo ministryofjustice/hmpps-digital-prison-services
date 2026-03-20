@@ -12,9 +12,7 @@ declare global {
        */
       signIn(options?: { failOnStatusCode?: boolean; redirectPath?: string }): Chainable<AUTWindow>
 
-      setupUserAuth(
-        options?: UserToken,
-      ): Chainable<AUTWindow>
+      setupUserAuth(options?: UserToken): Chainable<AUTWindow>
 
       setupComponentsData(options?: {
         header?: Component

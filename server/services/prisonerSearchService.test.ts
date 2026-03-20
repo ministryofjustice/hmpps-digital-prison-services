@@ -3,7 +3,7 @@ import PrisonerSearchService from './prisonerSearchService'
 import { PrisonUser } from '../interfaces/prisonUser'
 import { PagedList } from '../data/interfaces/pagedList'
 import Prisoner from '../data/interfaces/prisoner'
-import { LocationViewmodel } from './userService'
+import { LocationViewmodel } from './interfaces/LocationViewModel'
 
 describe('prisonerSearchService', () => {
   let prisonerSearchApi: PrisonerSearchClient

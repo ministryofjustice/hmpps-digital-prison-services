@@ -1,5 +1,5 @@
 import { stubFor } from './wiremock'
-import { prisonHierarchyMock } from '../../server/mocks/locationMock'
+import locationMock from '../../server/mocks/locationMock'
 import PrisonHierarchyDto from '../../server/data/interfaces/prisonHierarchyDto'
 
 export default {
@@ -16,7 +16,7 @@ export default {
       },
     }),
 
-  stubUserLocations: (locations: PrisonHierarchyDto[] = prisonHierarchyMock, prisonPattern: string = '[^/]+') => {
+  stubUserLocations: (locations: PrisonHierarchyDto[] = locationMock, prisonPattern: string = '[^/]+') => {
     return stubFor({
       request: {
         method: 'GET',

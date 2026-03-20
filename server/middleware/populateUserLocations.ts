@@ -1,6 +1,6 @@
-import { RequestHandler } from "express"
-import { UserService } from "../services"
-import logger from "../../logger"
+import { RequestHandler } from 'express'
+import { UserService } from '../services'
+import logger from '../../logger'
 
 export default function populateUserLocations(userService: UserService): RequestHandler {
   return async (req, res, next) => {

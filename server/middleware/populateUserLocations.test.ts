@@ -1,12 +1,12 @@
-import { Request, Response, NextFunction } from "express"
-import populateUserLocations from "./populateUserLocations"
-import { UserService } from "../services"
-import logger from "../../logger"
-import { PrisonUser } from "../interfaces/prisonUser"
+import { Request, Response, NextFunction } from 'express'
+import populateUserLocations from './populateUserLocations'
+import { UserService } from '../services'
+import logger from '../../logger'
+import { PrisonUser } from '../interfaces/prisonUser'
 
-jest.mock("../../logger")
+jest.mock('../../logger')
 
-describe("populateUserLocations middleware", () => {
+describe('populateUserLocations middleware', () => {
   let userService: Partial<UserService>
   let req: Partial<Request>
   let res: Partial<Response>
@@ -22,10 +22,10 @@ describe("populateUserLocations middleware", () => {
     res = {
       locals: {
         user: {
-          authSource: "nomis",
-          activeCaseLoadId: "MDI",
-          username: "TEST_USER",
-          token: "token123",
+          authSource: 'nomis',
+          activeCaseLoadId: 'MDI',
+          username: 'TEST_USER',
+          token: 'token123',
         } as PrisonUser,
       },
     }
@@ -34,25 +34,25 @@ describe("populateUserLocations middleware", () => {
     jest.clearAllMocks()
   })
 
-  it("should populate user locations when returned from service", async () => {
-    const locations = ["LOC1", "LOC2"]
+  it('should populate user locations when returned from service', async () => {
+    const locations = ['LOC1', 'LOC2']
     ;(userService.getUserLocations as jest.Mock).mockResolvedValue(locations)
 
     const middleware = populateUserLocations(userService as UserService)
     await middleware(req as Request, res as Response, next)
 
-    expect(userService.getUserLocations).toHaveBeenCalledWith("MDI", "TEST_USER", "token123")
+    expect(userService.getUserLocations).toHaveBeenCalledWith('MDI', 'TEST_USER', 'token123')
     expect(res.locals.user.locations).toEqual(locations)
     expect(next).toHaveBeenCalled()
   })
 
-  it("should log info when no locations are returned", async () => {
+  it('should log info when no locations are returned', async () => {
     ;(userService.getUserLocations as jest.Mock).mockResolvedValue(null)
 
     const middleware = populateUserLocations(userService as UserService)
     await middleware(req as Request, res as Response, next)
 
-    expect(logger.info).toHaveBeenCalledWith("No user locations available")
+    expect(logger.info).toHaveBeenCalledWith('No user locations available')
     expect(next).toHaveBeenCalled()
   })
 
@@ -66,14 +66,14 @@ describe("populateUserLocations middleware", () => {
     expect(next).toHaveBeenCalled()
   })
 
-  it("should handle errors and call next with error", async () => {
-    const error = new Error("Service failed")
+  it('should handle errors and call next with error', async () => {
+    const error = new Error('Service failed')
     ;(userService.getUserLocations as jest.Mock).mockRejectedValue(error)
 
     const middleware = populateUserLocations(userService as UserService)
     await middleware(req as Request, res as Response, next)
 
-    expect(logger.error).toHaveBeenCalledWith(error, "Failed to retrieve locations for: TEST_USER")
+    expect(logger.error).toHaveBeenCalledWith(error, 'Failed to retrieve locations for: TEST_USER')
     expect(next).toHaveBeenCalledWith(error)
   })
 })

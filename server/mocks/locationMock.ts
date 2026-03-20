@@ -1,6 +1,6 @@
 import PrisonHierarchyDto from '../data/interfaces/prisonHierarchyDto'
 
-export const prisonHierarchyMock: PrisonHierarchyDto[] = [
+export default [
   {
     locationId: '-1',
     locationType: 'INST',
@@ -37,9 +37,9 @@ export const prisonHierarchyMock: PrisonHierarchyDto[] = [
             localName: 'B-wing section 1',
             level: 2,
             status: 'ACTIVE',
-          }
+          },
         ],
       },
     ],
   },
-]
+] as PrisonHierarchyDto[]
