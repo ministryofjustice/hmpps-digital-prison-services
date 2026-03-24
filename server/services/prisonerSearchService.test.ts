@@ -3,12 +3,12 @@ import PrisonerSearchService from './prisonerSearchService'
 import { PrisonUser } from '../interfaces/prisonUser'
 import { PagedList } from '../data/interfaces/pagedList'
 import Prisoner from '../data/interfaces/prisoner'
-import { LocationViewmodel } from './interfaces/LocationViewModel'
+import { LocationViewModel } from './interfaces/LocationViewModel'
 
 describe('prisonerSearchService', () => {
   let prisonerSearchApi: PrisonerSearchClient
   let service: PrisonerSearchService
-  const userLocations: LocationViewmodel[] = [
+  const userLocations: LocationViewModel[] = [
     { value: 'LEI-1', text: 'some desc' },
     { value: 'LEI-2', text: 'some desc' },
     { value: 'LEI-3', text: 'some desc' },

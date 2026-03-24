@@ -3,7 +3,7 @@ import { RestClientBuilder } from '../data'
 import { PrisonApiClient } from '../data/interfaces/prisonApiClient'
 import { LocationsInsidePrisonApiClient } from '../data/interfaces/locationsInsidePrisonApiClient'
 import PrisonHierarchyDto from '../data/interfaces/prisonHierarchyDto'
-import { LocationViewmodel } from './interfaces/LocationViewModel'
+import { LocationViewModel } from './interfaces/LocationViewModel'
 
 export default class UserService {
   constructor(
@@ -15,14 +15,15 @@ export default class UserService {
     return this.prisonApiClientBuilder(token).getUserCaseLoads()
   }
 
-  async getUserLocations(prisonId: string, username: string, token: string): Promise<LocationViewmodel[]> {
+  async getUserLocations(prisonId: string, username: string, token: string): Promise<LocationViewModel[]> {
     const locations = await this.locationsInsidePrisonApiClientBuilder(token).getTopLevelResidentialLocations(
       prisonId,
       username,
     )
     const flattened = flattenLocations(locations)
-    const withoutTopLevel = flattened.filter(location => `${prisonId}-` !== location.fullLocationPath)
-    return locationsAsViewModels(withoutTopLevel, prisonId)
+    const onlyActive = flattened.filter(location => location.status === 'ACTIVE')
+    const withoutLevelZero = onlyActive.filter(location => `${prisonId}-` !== location.fullLocationPath)
+    return locationsAsViewModels(withoutLevelZero, prisonId)
   }
 
   setActiveCaseload(token: string, caseLoad: CaseLoad): Promise<Record<string, string>> {
@@ -40,11 +41,11 @@ function flattenLocations(locations: PrisonHierarchyDto[]): PrisonHierarchyDto[]
   })
 }
 
-function locationsAsViewModels(flattenedLocations: PrisonHierarchyDto[], prisonId: string): LocationViewmodel[] {
+function locationsAsViewModels(flattenedLocations: PrisonHierarchyDto[], prisonId: string): LocationViewModel[] {
   return flattenedLocations.map(location => {
     return {
       text: location.localName || location.fullLocationPath,
       value: `${prisonId}-${location.fullLocationPath}`,
-    } as LocationViewmodel
+    } as LocationViewModel
   })
 }

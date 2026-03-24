@@ -131,11 +131,11 @@ export default {
       ui_url: get('ESTABLISHMENT_ROLL_URL', 'http://localhost:8082', requiredInProduction),
     },
     locationsInsidePrisonApi: {
-      url: get('RESIDENTIAL_LOCATIONS_API_URL', 'http://localhost:8082', requiredInProduction),
+      url: get('LOCATIONS_INSIDE_PRISON_API_URL', 'http://localhost:8082', requiredInProduction),
       healthPath: '/health/ping',
       timeout: {
-        response: Number(get('RESIDENTIAL_LOCATIONS_API_TIMEOUT_RESPONSE', 3000)),
-        deadline: Number(get('RESIDENTIAL_LOCATIONS_API_TIMEOUT_DEADLINE', 3000)),
+        response: Number(get('LOCATIONS_INSIDE_PRISON_API_TIMEOUT_RESPONSE', 3000)),
+        deadline: Number(get('LOCATIONS_INSIDE_PRISON_API_TIMEOUT_DEADLINE', 3000)),
       },
       agent: new AgentConfig(Number(get('LOCATIONS_INSIDE_PRISON_API_TIMEOUT_DEADLINE', 3000))),
     },

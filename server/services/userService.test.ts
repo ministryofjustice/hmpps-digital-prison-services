@@ -3,7 +3,7 @@ import PrisonApiRestClient from '../data/prisonApiClient'
 import { CaseLoad } from '../data/interfaces/caseLoad'
 import LocationsInsidePrisonRestApiClient from '../data/locationsInsidePrisonRestApiClient'
 import PrisonHierarchyDto from '../data/interfaces/prisonHierarchyDto'
-import { LocationViewmodel } from './interfaces/LocationViewModel'
+import { LocationViewModel } from './interfaces/LocationViewModel'
 
 jest.mock('../data/prisonApiClient')
 
@@ -42,16 +42,18 @@ describe('User service', () => {
   })
 
   describe('getUserLocations', () => {
-    it('retrieves list of user location text and values for use with search', async () => {
+    it('retrieves list of active location text and values for use with search', async () => {
       const locations = [
         {
           localName: 'KMI',
           fullLocationPath: 'KMI',
           subLocations: [
-            { localName: 'Wing A', fullLocationPath: 'A' } as PrisonHierarchyDto,
+            { localName: 'Wing A', fullLocationPath: 'A', status: 'ACTIVE' } as PrisonHierarchyDto,
+            { localName: 'Old Wing', fullLocationPath: 'A', status: 'INACTIVE' } as PrisonHierarchyDto,
             {
               localName: 'Wing B',
               fullLocationPath: 'B',
+              status: 'ACTIVE',
               subLocations: [{ localName: undefined, fullLocationPath: 'B-1' } as PrisonHierarchyDto],
             },
           ],
@@ -60,9 +62,9 @@ describe('User service', () => {
       locationsApiClient.getTopLevelResidentialLocations.mockResolvedValue(locations)
       const result = await userService.getUserLocations('KMI', 'TEST_USER', token)
       expect(result).toEqual([
-        { text: 'Wing A', value: 'KMI-A' } as LocationViewmodel,
-        { text: 'Wing B', value: 'KMI-B-' } as LocationViewmodel,
-        { text: 'B-1', value: 'KMI-B-1' } as LocationViewmodel,
+        { text: 'Wing A', value: 'KMI-A' } as LocationViewModel,
+        { text: 'Wing B', value: 'KMI-B-' } as LocationViewModel,
+        { text: 'B-1', value: 'KMI-B-1' } as LocationViewModel,
       ])
     })
 

@@ -1,4 +1,4 @@
-export interface LocationViewmodel {
+export interface LocationViewModel {
   text: string
   value: string
 }

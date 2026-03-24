@@ -5,6 +5,6 @@ export default interface PrisonHierarchyDto {
   fullLocationPath: string
   localName?: string
   level: number
-  status: string
+  status: 'ACTIVE' | 'INACTIVE' | 'ARCHIVED' | 'DRAFT'
   subLocations?: PrisonHierarchyDto[]
 }
