@@ -60,7 +60,7 @@ describe('User service', () => {
         },
       ] as PrisonHierarchyDto[]
       locationsApiClient.getTopLevelResidentialLocations.mockResolvedValue(locations)
-      const result = await userService.getUserLocations('KMI', 'TEST_USER', token)
+      const result = await userService.getUserLocations('KMI', 'TEST_USER')
       expect(result).toEqual([
         { text: 'Wing A', value: 'KMI-A' } as LocationViewModel,
         { text: 'Wing B', value: 'KMI-B-' } as LocationViewModel,
@@ -71,7 +71,7 @@ describe('User service', () => {
     it('propagates error', async () => {
       locationsApiClient.getTopLevelResidentialLocations.mockRejectedValue(new Error('some error'))
 
-      await expect(userService.getUserLocations('KMI', 'TEST_USER', token)).rejects.toEqual(new Error('some error'))
+      await expect(userService.getUserLocations('KMI', 'TEST_USER')).rejects.toEqual(new Error('some error'))
     })
   })
 

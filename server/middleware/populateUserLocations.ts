@@ -7,7 +7,7 @@ export default function populateUserLocations(userService: UserService): Request
     try {
       if (res.locals.user && res.locals.user.authSource === 'nomis') {
         const { activeCaseLoadId, username, token } = res.locals.user
-        const locations = await userService.getUserLocations(activeCaseLoadId, username, token)
+        const locations = await userService.getUserLocations(activeCaseLoadId, username)
         if (locations && Array.isArray(locations)) {
           res.locals.user.locations = locations
         } else {
