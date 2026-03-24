@@ -41,7 +41,7 @@ describe('populateUserLocations middleware', () => {
     const middleware = populateUserLocations(userService as UserService)
     await middleware(req as Request, res as Response, next)
 
-    expect(userService.getUserLocations).toHaveBeenCalledWith('MDI', 'TEST_USER', 'token123')
+    expect(userService.getUserLocations).toHaveBeenCalledWith('MDI', 'TEST_USER')
     expect(res.locals.user.locations).toEqual(locations)
     expect(next).toHaveBeenCalled()
   })

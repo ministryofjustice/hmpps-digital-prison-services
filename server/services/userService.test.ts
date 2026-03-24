@@ -54,7 +54,7 @@ describe('User service', () => {
               localName: 'Wing B',
               fullLocationPath: 'B',
               status: 'ACTIVE',
-              subLocations: [{ localName: undefined, fullLocationPath: 'B-1' } as PrisonHierarchyDto],
+              subLocations: [{ localName: undefined, fullLocationPath: 'B-1', status: 'ACTIVE'} as PrisonHierarchyDto],
             },
           ],
         },
