@@ -17,6 +17,8 @@ const applicationInfo = applicationInfoSupplier()
 initialiseAppInsights()
 const telemetryClient = buildAppInsightsClient(applicationInfo)
 
+export type SystemTokenRestClientBuilder<T> = () => T
+
 export type RestClientBuilder<T> = (token: string) => T
 
 // This lexical binding of the initialised flag ensures that
@@ -41,8 +43,7 @@ const initialiseDataAccess = () => {
         prisonApiClientBuilder: (token: string) => new PrisonApiRestClient(token),
         healthAndMedicationApiClientBuilder: (token: string) => new HealthAndMedicationRestApiClient(token),
         prisonerSearchApiClientBuilder: (token: string) => new PrisonerSearchRestClient(token),
-        locationsInsidePrisonApiClientBuilder: (_token: string) =>
-          new LocationsInsidePrisonRestApiClient(hmppsAuthClient),
+        locationsInsidePrisonApiClientBuilder: () => new LocationsInsidePrisonRestApiClient(hmppsAuthClient),
         telemetryClient,
       }
     }

@@ -1,5 +1,5 @@
 import { CaseLoad } from '../data/interfaces/caseLoad'
-import { RestClientBuilder } from '../data'
+import { SystemTokenRestClientBuilder, RestClientBuilder } from '../data'
 import { PrisonApiClient } from '../data/interfaces/prisonApiClient'
 import { LocationsInsidePrisonApiClient } from '../data/interfaces/locationsInsidePrisonApiClient'
 import PrisonHierarchyDto from '../data/interfaces/prisonHierarchyDto'
@@ -8,15 +8,15 @@ import { LocationViewModel } from './interfaces/LocationViewModel'
 export default class UserService {
   constructor(
     private readonly prisonApiClientBuilder: RestClientBuilder<PrisonApiClient>,
-    private readonly locationsInsidePrisonApiClientBuilder: RestClientBuilder<LocationsInsidePrisonApiClient>,
+    private readonly locationsInsidePrisonApiClientBuilder: SystemTokenRestClientBuilder<LocationsInsidePrisonApiClient>,
   ) {}
 
   getUserCaseLoads(token: string): Promise<CaseLoad[]> {
     return this.prisonApiClientBuilder(token).getUserCaseLoads()
   }
 
-  async getUserLocations(prisonId: string, username: string, token: string): Promise<LocationViewModel[]> {
-    const locations = await this.locationsInsidePrisonApiClientBuilder(token).getTopLevelResidentialLocations(
+  async getUserLocations(prisonId: string, username: string): Promise<LocationViewModel[]> {
+    const locations = await this.locationsInsidePrisonApiClientBuilder().getTopLevelResidentialLocations(
       prisonId,
       username,
     )
