@@ -1,7 +1,9 @@
 import UserService from './userService'
 import PrisonApiRestClient from '../data/prisonApiClient'
 import { CaseLoad } from '../data/interfaces/caseLoad'
-import { Location } from '../data/interfaces/location'
+import LocationsInsidePrisonRestApiClient from '../data/locationsInsidePrisonRestApiClient'
+import PrisonHierarchyDto from '../data/interfaces/prisonHierarchyDto'
+import { LocationViewModel } from './interfaces/LocationViewModel'
 
 jest.mock('../data/prisonApiClient')
 
@@ -9,11 +11,17 @@ const token = 'some token'
 
 describe('User service', () => {
   let prisonApiClient: jest.Mocked<PrisonApiRestClient>
+  let locationsApiClient: jest.Mocked<LocationsInsidePrisonRestApiClient>
   let userService: UserService
 
   beforeEach(() => {
     prisonApiClient = new PrisonApiRestClient(null) as jest.Mocked<PrisonApiRestClient>
-    userService = new UserService(() => prisonApiClient)
+    locationsApiClient = new LocationsInsidePrisonRestApiClient(null) as jest.Mocked<LocationsInsidePrisonRestApiClient>
+    locationsApiClient.getTopLevelResidentialLocations = jest.fn()
+    userService = new UserService(
+      () => prisonApiClient,
+      () => locationsApiClient,
+    )
   })
 
   describe('getUserCaseLoads', () => {
@@ -34,19 +42,36 @@ describe('User service', () => {
   })
 
   describe('getUserLocations', () => {
-    it('retrieves list of user locations', async () => {
-      const locations = [{ locationId: 12345 }] as Location[]
-      prisonApiClient.getUserLocations.mockResolvedValue(locations)
-
-      const result = await userService.getUserLocations(token)
-
-      expect(result).toEqual(locations)
+    it('retrieves list of active location text and values for use with search', async () => {
+      const locations = [
+        {
+          localName: 'KMI',
+          fullLocationPath: 'KMI',
+          subLocations: [
+            { localName: 'Wing A', fullLocationPath: 'A', status: 'ACTIVE' } as PrisonHierarchyDto,
+            { localName: 'Old Wing', fullLocationPath: 'A', status: 'INACTIVE' } as PrisonHierarchyDto,
+            {
+              localName: 'Wing B',
+              fullLocationPath: 'B',
+              status: 'ACTIVE',
+              subLocations: [{ localName: undefined, fullLocationPath: 'B-1', status: 'ACTIVE' } as PrisonHierarchyDto],
+            },
+          ],
+        },
+      ] as PrisonHierarchyDto[]
+      locationsApiClient.getTopLevelResidentialLocations.mockResolvedValue(locations)
+      const result = await userService.getUserLocations('KMI', 'TEST_USER')
+      expect(result).toEqual([
+        { text: 'Wing A', value: 'KMI-A' } as LocationViewModel,
+        { text: 'Wing B', value: 'KMI-B-' } as LocationViewModel,
+        { text: 'B-1', value: 'KMI-B-1' } as LocationViewModel,
+      ])
     })
 
     it('propagates error', async () => {
-      prisonApiClient.getUserLocations.mockRejectedValue(new Error('some error'))
+      locationsApiClient.getTopLevelResidentialLocations.mockRejectedValue(new Error('some error'))
 
-      await expect(userService.getUserLocations(token)).rejects.toEqual(new Error('some error'))
+      await expect(userService.getUserLocations('KMI', 'TEST_USER')).rejects.toEqual(new Error('some error'))
     })
   })
 

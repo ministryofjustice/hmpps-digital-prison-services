@@ -6,7 +6,7 @@ Cypress.Commands.add('signIn', (options = { failOnStatusCode: true, redirectPath
 
 Cypress.Commands.add('setupUserAuth', (options = {}) => {
   cy.task('stubSignIn', options)
-  cy.task('stubUserLocations', options.locations)
+  cy.task('stubUserLocations')
 })
 
 Cypress.Commands.add('setupComponentsData', (options = {}) => {

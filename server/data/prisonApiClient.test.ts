@@ -2,7 +2,6 @@ import nock from 'nock'
 import config from '../config'
 import PrisonApiClient from './prisonApiClient'
 import { ApplicationInfo } from '../applicationInfo'
-import { locationMock } from '../mocks/locationMock'
 
 jest.mock('../applicationInfo.ts', () => {
   return {
@@ -53,15 +52,6 @@ describe('prisonApiClient', () => {
 
       const output = await prisonApiClient.getUserCaseLoads()
       expect(output).toEqual(caseloadMock)
-    })
-  })
-
-  describe('getLocations', () => {
-    it('should return data from api', async () => {
-      mockSuccessfulPrisonApiCall('/api/users/me/locations', locationMock)
-
-      const output = await prisonApiClient.getUserLocations()
-      expect(output).toEqual(locationMock)
     })
   })
 

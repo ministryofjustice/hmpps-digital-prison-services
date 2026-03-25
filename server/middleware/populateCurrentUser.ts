@@ -1,11 +1,10 @@
 import { RequestHandler } from 'express'
 import { jwtDecode } from 'jwt-decode'
 import logger from '../../logger'
-import UserService from '../services/userService'
 import { convertToTitleCase } from '../utils/utils'
 import { Role } from '../enums/role'
 
-export function populateCurrentUser(): RequestHandler {
+export default function populateCurrentUser(): RequestHandler {
   return async (req, res, next) => {
     try {
       const {
@@ -33,25 +32,6 @@ export function populateCurrentUser(): RequestHandler {
       next()
     } catch (error) {
       logger.error(error, `Failed to populate user details for: ${res.locals.user && res.locals.user.username}`)
-      next(error)
-    }
-  }
-}
-
-export function getUserLocations(userService: UserService): RequestHandler {
-  return async (req, res, next) => {
-    try {
-      if (res.locals.user && res.locals.user.authSource === 'nomis') {
-        const locations = await userService.getUserLocations(res.locals.user.token)
-        if (locations && Array.isArray(locations)) {
-          res.locals.user.locations = locations.filter(location => location.locationId !== -1)
-        } else {
-          logger.info('No user locations available')
-        }
-      }
-      next()
-    } catch (error) {
-      logger.error(error, `Failed to retrieve locations for: ${res.locals.user && res.locals.user.username}`)
       next(error)
     }
   }

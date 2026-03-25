@@ -49,7 +49,7 @@ describe('SearchController', () => {
       userRoles: [Role.GlobalSearch, Role.LicencesVary, Role.LicencesReadOnly],
       caseLoads: [{ caseLoadId: 'LEI' }],
       activeCaseLoad: { caseLoadId: 'LEI', description: 'Leeds' },
-      locations: [{ locationPrefix: 'LEI-A', description: 'A' }],
+      locations: [{ value: 'LEI-A', text: 'A' }],
     } as PrisonUser
   })
 

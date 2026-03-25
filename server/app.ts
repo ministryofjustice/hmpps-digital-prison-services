@@ -8,7 +8,6 @@ import authorisationMiddleware from './middleware/authorisationMiddleware'
 
 import setUpAuthentication from './middleware/setUpAuthentication'
 import setUpCsrf from './middleware/setUpCsrf'
-import setUpCurrentUser from './middleware/setUpCurrentUser'
 import setUpHealthChecks from './middleware/setUpHealthChecks'
 import setUpStaticResources from './middleware/setUpStaticResources'
 import setUpWebRequestParsing from './middleware/setupRequestParsing'
@@ -23,6 +22,8 @@ import logger from '../logger'
 import config from './config'
 import { ensureActiveCaseLoadSet } from './middleware/ensureActiveCaseLoadSet'
 import populateClientToken from './middleware/populateClientToken'
+import populateCurrentUser from './middleware/populateCurrentUser'
+import populateUserLocations from './middleware/populateUserLocations'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -42,7 +43,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpAuthentication())
   app.use(authorisationMiddleware(['ROLE_PRISON']))
   app.use(setUpCsrf())
-  app.use(setUpCurrentUser(services))
+  app.use(populateCurrentUser())
   app.use(populateClientToken(services.dataAccess.hmppsAuthClient))
 
   app.get(
@@ -56,7 +57,7 @@ export default function createApp(services: Services): express.Application {
   )
   app.use(retrieveCaseLoadData({ logger, prisonApiConfig: config.apis.prisonApi }))
   app.use(ensureActiveCaseLoadSet(services.userService))
-
+  app.use(populateUserLocations(services.userService))
   app.use(routes(services))
 
   app.use(setUpPageNotFound)

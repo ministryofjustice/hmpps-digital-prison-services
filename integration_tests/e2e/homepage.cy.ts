@@ -48,7 +48,7 @@ context('Homepage (with FE Components services)', () => {
       page.search().nameField().should('be.visible')
       page.search().nameHintText().should('not.be.visible')
       page.search().locationField().should('be.visible').and('contain.text', 'All')
-      page.search().locationField().children().should('have.length', 3)
+      page.search().locationField().children().should('have.length', 4)
       page.search().viewAllLink().should('be.visible').and('contain.text', 'Leeds (HMP)')
     })
 
@@ -147,7 +147,7 @@ context('Homepage - no global search', () => {
     page.search().localGlobalRadios().should('not.exist')
     page.search().nameField().should('be.visible')
     page.search().locationField().should('be.visible').and('contain.text', 'All')
-    page.search().locationField().children().should('have.length', 3)
+    page.search().locationField().children().should('have.length', 4)
     page.search().viewAllLink().should('be.visible').and('contain.text', 'Leeds (HMP)')
   })
 })
