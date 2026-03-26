@@ -1,13 +1,7 @@
-{% extends "../../partials/layout.njk" %}
+{% extends "partials/layout.njk" %}
+
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% from "../../macros/hmppsPagedListHeader.njk" import hmppsPagedListHeader %}
-{% from "../../macros/hmppsPagedListFooter.njk" import hmppsPagedListFooter %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
-{% from "govuk/components/select/macro.njk" import govukSelect %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
-{% from "govuk/components/details/macro.njk" import govukDetails %}
-{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
 
 {% set pageTitle = "Global search" %}
 {% set mainClasses = "govuk-body govuk-main-wrapper--auto-spacing" %}

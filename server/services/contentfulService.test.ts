@@ -15,7 +15,7 @@ describe('ContentfulService', () => {
   let apolloClient: jest.Mocked<ApolloClient>
 
   beforeEach(() => {
-    apolloClient = new ApolloClient(null) as jest.Mocked<ApolloClient>
+    apolloClient = jest.mocked(new ApolloClient(null))
     contentfulService = new ContentfulService(apolloClient)
   })
 

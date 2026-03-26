@@ -9,22 +9,22 @@ $govuk-page-width: $moj-page-width;
 
 @import '@ministryofjustice/hmpps-connect-dps-components/dist/assets/footer';
 @import '@ministryofjustice/hmpps-connect-dps-components/dist/assets/header-bar';
-
 @import '@ministryofjustice/hmpps-connect-dps-shared-items/dist/assets/scss/all';
 
 @import 'helpers/contentful-body-html';
 
-@import './components/whats-new';
-@import './components/print-link';
 @import './components/alert-flags';
-@import './components/pagination';
+@import './components/paged-list';
+@import './components/print-link';
 @import './components/sortable-table';
+@import './components/whats-new';
+
+@import './pages/dietary-requirements';
 @import './pages/homepage';
 @import './pages/managed-page';
+@import './pages/prisoner-search';
 @import './pages/whats-new';
 @import './pages/whats-new-post';
-@import './pages/dietary-requirements';
-@import './pages/prisoner-search';
 
 @import 'overrides/local';
 @import 'overrides/print';

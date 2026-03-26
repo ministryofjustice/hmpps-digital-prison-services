@@ -100,7 +100,7 @@ export default class DietaryRequirementsController {
       ])
       delete queryParams.page
 
-      const listMetadata = generateListMetadata(resp, queryParams, 'result', [], '', true)
+      const listMetadata = generateListMetadata(resp, queryParams, 'result', true)
 
       await this.auditService.auditDietReportView({
         username: res.locals.user.username,

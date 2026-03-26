@@ -14,7 +14,15 @@ import {
   userHasAllRoles,
   userHasRoles,
 } from './utils'
-import { formatDate, formatDateTime, formatTime, isWithinLast3Days, timeFromDate, toUnixTimeStamp } from './dateHelpers'
+import {
+  formatDate,
+  formatDateISO,
+  formatDateTime,
+  formatTime,
+  isWithinLast3Days,
+  timeFromDate,
+  toUnixTimeStamp,
+} from './dateHelpers'
 import config from '../config'
 import { pluralise } from './pluralise'
 import { HmppsError } from '../data/interfaces/hmppsError'
@@ -58,6 +66,7 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('addDefaultSelectedValue', addDefaultSelectedValue)
   njkEnv.addFilter('asSelectItems', asSelectItem)
   njkEnv.addFilter('formatDate', formatDate)
+  njkEnv.addFilter('formatDateISO', formatDateISO)
   njkEnv.addFilter('formatDateTime', formatDateTime)
   njkEnv.addFilter('formatTime', formatTime)
   njkEnv.addFilter('formatName', formatName)

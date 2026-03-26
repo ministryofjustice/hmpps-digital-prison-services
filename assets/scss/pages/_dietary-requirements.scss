@@ -42,6 +42,7 @@
 
 .hmpps-dietary-requirements__filters {
   background-color: govuk-colour('light-grey');
+  @include govuk-responsive-margin(4, 'bottom');
 }
 
 .hmpps-dietary-requirements__filter-category {

@@ -11,6 +11,7 @@ import {
 } from '../data/interfaces/whatsNewPost'
 import { OutageBannerQuery, OutageBannerQueryVariables } from '../data/interfaces/outageBanner'
 import { ManagedPage, ManagedPagesQuery, ManagedPagesQueryVariables } from '../data/interfaces/managedPage'
+import type { Pagination } from '../data/interfaces/pagination'
 
 export default class ContentfulService {
   constructor(private readonly apolloClient: ApolloClient) {}
@@ -61,12 +62,12 @@ export default class ContentfulService {
     const totalPages = Math.ceil(total / pageSize)
     const pages = [...Array.from({ length: totalPages }, (_, i) => i + 1)].map(page => {
       return {
-        text: `${page}`,
+        number: `${page}`,
         href: `?page=${page}`,
-        selected: currentPage === page,
+        current: currentPage === page,
       }
     })
-    const pagination = {
+    const pagination: Pagination = {
       itemDescription: 'post',
       previous: currentPage > 1 ? { href: `?page=${currentPage - 1}`, text: 'Previous' } : undefined,
       next: currentPage < totalPages ? { href: `?page=${currentPage + 1}`, text: 'Next' } : undefined,
@@ -77,6 +78,7 @@ export default class ContentfulService {
       totalElements: total,
       elementsOnPage: 10,
       pages,
+      enableShowAll: false,
     }
 
     return {

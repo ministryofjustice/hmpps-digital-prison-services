@@ -7,10 +7,11 @@ export const paginationMock: Pagination = {
   offset: 0,
   page: 1,
   pageSize: 1,
-  pages: [{ href: '#', text: '1', selected: true }],
+  pages: [{ href: '#', number: '1', current: true }],
   previous: { href: '#', text: 'Previous' },
   totalElements: 1,
   totalPages: 1,
+  enableShowAll: false,
 }
 
 export default { paginationMock }

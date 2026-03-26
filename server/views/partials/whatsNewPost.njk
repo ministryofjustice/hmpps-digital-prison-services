@@ -1,0 +1,5 @@
+<article class="whats-new-post">
+  <time class="whats-new-post__date" datetime="{{ post.date | formatDateISO }}">{{ post.date | formatDate('long') }}</time>
+  <a href="/whats-new/{{ post.slug }}" class="govuk-link govuk-link--no-visited-state">{{ post.title }}</a>
+  <div class="whats-new-post__summary">{{ post.summary }}</div>
+</article>

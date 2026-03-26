@@ -101,10 +101,6 @@
         padding-left: govuk-spacing(2);
       }
 
-      path {
-        fill: $govuk-link-colour;
-      }
-
       svg {
         margin-left: 10px;
       }
@@ -112,11 +108,6 @@
       &--active {
         text-decoration: none;
         color: $govuk-text-colour !important;
-
-
-        path {
-          fill: $govuk-text-colour !important;
-        }
       }
     }
   }

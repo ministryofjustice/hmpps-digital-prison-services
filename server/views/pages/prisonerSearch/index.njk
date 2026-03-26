@@ -1,13 +1,8 @@
-{% extends "../../partials/layout.njk" %}
-{% from "../../macros/hmppsPagedListHeader.njk" import hmppsPagedListHeader %}
-{% from "../../macros/hmppsPagedListFooter.njk" import hmppsPagedListFooter %}
-{% from "macros/printLink.njk" import printLink %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
-{% from "govuk/components/select/macro.njk" import govukSelect %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
+{% extends "partials/layout.njk" %}
+
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
-{% from "govuk/components/details/macro.njk" import govukDetails %}
-{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "macros/pagedList.njk" import pagedList %}
+{% from "macros/printLink.njk" import printLink %}
 
 {% set additionalStylesheets = ['/assets/css/searchPage.css'] %}
 
@@ -62,7 +57,7 @@
 {% endmacro %}
 
 {% block content %}
-  <div class="govuk-width-container govuk-!-margin-top-8">
+  <div class="prisoner-search govuk-width-container govuk-!-margin-top-8">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-l">Prisoner search results</h1>
@@ -104,26 +99,17 @@
     </div>
     {% if results.length > 0 %}
       {{ printLink('Print displayed results', 'right')}}
-      <div class=" govuk-grid-row govuk-!-display-none-print">
-        <div class="govuk-grid-column-full">{{ hmppsPagedListHeader(listMetadata) }}</div>
-      </div>
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-          {% if view === 'grid' %}
-            {% include './prisonerSearchGrid.njk' %}
-          {% else %}
-            {% include './prisonerSearchList.njk' %}
-          {% endif %}
+      {% call pagedList(listMetadata) %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full">
+            {% if view === 'grid' %}
+              {% include './prisonerSearchGrid.njk' %}
+            {% else %}
+              {% include './prisonerSearchList.njk' %}
+            {% endif %}
+          </div>
         </div>
-      </div>
-      <div class="govuk-grid-row govuk-!-display-none-print">
-        <div class="govuk-grid-column-full">{{
-          hmppsPagedListHeader(
-            listMetadata,
-            { header: { classes: 'govuk-!-margin-bottom-0 govuk-!-padding-bottom-0' }, disableShowAll: true }
-          ) }}
-        </div>
-      </div>
+      {% endcall %}
     {% else %}
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">

@@ -1,15 +1,11 @@
-import Page, { PageElement } from './page'
+import Page, { type PageElement } from './page'
 
 export default class WhatsNewPage extends Page {
   constructor() {
     super('What’s new in DPS')
   }
 
-  whatsNew = () => {
-    const whatsNewSection = (): PageElement => cy.get('.dps-whats-new')
-
-    return {
-      whatsNewPost: () => whatsNewSection().find('.whats-new-post'),
-    }
+  get whatsNewPosts(): PageElement {
+    return cy.get('.whats-new-post')
   }
 }
