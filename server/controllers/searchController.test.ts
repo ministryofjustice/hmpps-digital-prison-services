@@ -112,7 +112,6 @@ describe('SearchController', () => {
           page: 1,
           size: 50,
           sort: 'lastName,firstName,asc',
-          showAll: false,
         })
         expect(generateListMetadata).toHaveBeenCalledWith(
           {
@@ -142,7 +141,6 @@ describe('SearchController', () => {
             },
           },
           {
-            showAll: false,
             size: 50,
             sort: 'lastName,firstName,asc',
           },
@@ -156,8 +154,8 @@ describe('SearchController', () => {
             encodedOriginalUrl: 'originalUrl',
             listMetadata: generatedMetadata,
             links: {
-              gridView: '/prisoner-search?showAll=false&view=grid&sort=lastName%2CfirstName%2Casc&page=1&size=50',
-              listView: '/prisoner-search?showAll=false&view=list&sort=lastName%2CfirstName%2Casc&page=1&size=50',
+              gridView: '/prisoner-search?view=grid&sort=lastName%2CfirstName%2Casc&page=1&size=50',
+              listView: '/prisoner-search?view=list&sort=lastName%2CfirstName%2Casc&page=1&size=50',
             },
             alertOptions: expect.anything(),
             results: [
@@ -295,7 +293,6 @@ describe('SearchController', () => {
         expect(prisonerSearchService.getResults).toHaveBeenCalledWith('clientToken', user, {
           page: 1,
           size: 50,
-          showAll: false,
           sort: mappedParam,
         })
       })
@@ -316,7 +313,6 @@ describe('SearchController', () => {
         expect(prisonerSearchService.getResults).toHaveBeenCalledWith('clientToken', user, {
           page: 1,
           size: 50,
-          showAll: false,
           sort: 'lastName,firstName,asc',
           alerts: ['A'],
         })
