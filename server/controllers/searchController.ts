@@ -257,7 +257,7 @@ export default class SearchController {
       query['alerts[]'] && (Array.isArray(query['alerts[]']) ? query['alerts[]'] : [query['alerts[]']])
 
     return {
-      showAll: viewAll === 'true' || showAll === 'true',
+      showAll: viewAll === 'true' || showAll === 'true' ? true : undefined,
       view: view as string,
       alerts: (legacyAlerts ?? alerts) as string[],
       sort: (sortFieldsWithOrder ? this.searchSortFromLegacyField(sortFieldsWithOrder as string) : sort) as string,
