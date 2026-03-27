@@ -1,4 +1,5 @@
-import { PagedList } from '../data/interfaces/pagedList'
+import type { PagedList } from '../data/interfaces/pagedList'
+import type { Pagination, Page } from '../data/interfaces/pagination'
 import { mapToQueryString } from './utils'
 
 export type QueryParamValue = string | number | boolean
@@ -54,41 +55,15 @@ export interface PagedListItem {
   // Dietary Requirement
 }
 
-export interface SortOption {
-  value: string
-  description: string
-}
-
-export interface SortParams {
-  id: string
-  label: string
-  options: SortOption[]
-  sort: string
-  queryParams: QueryParams
-}
-
 export interface ListMetadata<TGeneric> {
   filtering: {
     queryParams?: { [key: string]: string | number | boolean }
   } & TGeneric
-  sorting?: SortParams
-  pagination: {
-    itemDescription: string
-    previous: { href: string; text: string }
-    next: { href: string; text: string }
-    page: number
-    offset: number
-    pageSize: number
-    totalPages: number
-    totalElements: number
-    elementsOnPage: number
-    pages: { href: string; text: string; selected: boolean; type?: string }[]
-    viewAllUrl?: string
-  }
+  pagination: Pagination
 }
 
 /**
- * Generate metadata for list pages, including pagination, sorting, filtering
+ * Generate metadata for list pages, including pagination and filtering
  *
  * For the current page and pages array, the value is incremented by 1 as the API uses a zero based array
  * but users expect page numbers in url, etc to be one based.
@@ -96,36 +71,32 @@ export interface ListMetadata<TGeneric> {
  * @param pagedList
  * @param queryParams
  * @param itemDescription
- * @param sortOptions
- * @param sortLabel
  * @param enableShowAll
  */
 export const generateListMetadata = <T extends PagedListQueryParams>(
   pagedList: PagedList<PagedListItem>,
   queryParams: T,
   itemDescription: string,
-  sortOptions?: SortOption[],
-  sortLabel?: string,
-  enableShowAll?: boolean,
+  enableShowAll: boolean = false,
 ): ListMetadata<T> => {
   const query = mapToQueryString(queryParams)
   const currentPage = pagedList?.metadata ? pagedList.metadata.pageNumber : undefined
 
-  let pages = []
+  let pages: Page[] = []
 
   if (pagedList?.metadata.totalPages > 1 && pagedList?.metadata.totalPages < 8) {
     pages = Array.from({ length: pagedList.metadata.totalPages }, (_, page) => {
       return {
-        text: `${page + 1}`,
+        number: `${page + 1}`,
         href: [`?page=${page + 1}`, query].filter(Boolean).join('&'),
-        selected: currentPage === page + 1,
+        current: currentPage === page + 1,
       }
     })
   } else if (pagedList?.metadata.totalPages > 7) {
     pages.push({
-      text: '1',
+      number: '1',
       href: [`?page=1`, query].filter(Boolean).join('&'),
-      selected: currentPage === 1,
+      current: currentPage === 1,
     })
 
     const pageRange = [currentPage - 1, currentPage, currentPage + 1]
@@ -135,29 +106,23 @@ export const generateListMetadata = <T extends PagedListQueryParams>(
     for (let i = 2; i < pagedList.metadata.totalPages; i++) {
       if (pageRange.includes(i)) {
         pages.push({
-          text: `${i}`,
+          number: `${i}`,
           href: [`?page=${i}`, query].filter(Boolean).join('&'),
-          selected: currentPage === i,
+          current: currentPage === i,
         })
       } else if (i < pageRange[0] && !preDots) {
-        pages.push({
-          text: '...',
-          type: 'dots',
-        })
+        pages.push({ ellipsis: true })
         preDots = true
       } else if (i > pageRange[2] && !postDots) {
-        pages.push({
-          text: '...',
-          type: 'dots',
-        })
+        pages.push({ ellipsis: true })
         postDots = true
       }
     }
 
     pages.push({
-      text: `${pagedList.metadata.totalPages}`,
+      number: `${pagedList.metadata.totalPages}`,
       href: [`?page=${pagedList.metadata.totalPages}`, query].filter(Boolean).join('&'),
-      selected: currentPage === pagedList.metadata.totalPages,
+      current: currentPage === pagedList.metadata.totalPages,
     })
   }
 
@@ -175,26 +140,13 @@ export const generateListMetadata = <T extends PagedListQueryParams>(
         text: 'Previous',
       }
 
-  const viewAllUrl = [`?${mapToQueryString({ ...queryParams, showAll: true })}`].filter(Boolean).join('&')
+  const viewAllUrl = ['?showAll=true', query].filter(Boolean).join('&')
 
   return <ListMetadata<T>>{
     filtering: {
       ...queryParams,
       queryParams: { sort: queryParams.sort },
     },
-    sorting:
-      sortOptions && sortLabel
-        ? {
-            id: 'sort',
-            label: sortLabel,
-            options: sortOptions,
-            sort: queryParams.sort,
-            queryParams: {
-              ...queryParams,
-              sort: undefined,
-            },
-          }
-        : null,
     pagination: {
       itemDescription,
       previous,
@@ -207,7 +159,7 @@ export const generateListMetadata = <T extends PagedListQueryParams>(
       elementsOnPage: pagedList?.metadata.numberOfElements,
       pages,
       viewAllUrl,
-      enableShowAll: enableShowAll === undefined ? false : enableShowAll,
+      enableShowAll,
     },
   }
 }

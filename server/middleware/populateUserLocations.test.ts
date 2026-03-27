@@ -35,8 +35,11 @@ describe('populateUserLocations middleware', () => {
   })
 
   it('should populate user locations when returned from service', async () => {
-    const locations = ['LOC1', 'LOC2']
-    ;(userService.getUserLocations as jest.Mock).mockResolvedValue(locations)
+    const locations = [
+      { text: 'Location 1', value: 'LOC1' },
+      { text: 'Location 2', value: 'LOC2' },
+    ]
+    jest.mocked(userService.getUserLocations).mockResolvedValue(locations)
 
     const middleware = populateUserLocations(userService as UserService)
     await middleware(req as Request, res as Response, next)
@@ -47,7 +50,7 @@ describe('populateUserLocations middleware', () => {
   })
 
   it('should log info when no locations are returned', async () => {
-    ;(userService.getUserLocations as jest.Mock).mockResolvedValue(null)
+    jest.mocked(userService.getUserLocations).mockResolvedValue(null)
 
     const middleware = populateUserLocations(userService as UserService)
     await middleware(req as Request, res as Response, next)
@@ -68,7 +71,7 @@ describe('populateUserLocations middleware', () => {
 
   it('should handle errors and call next with error', async () => {
     const error = new Error('Service failed')
-    ;(userService.getUserLocations as jest.Mock).mockRejectedValue(error)
+    jest.mocked(userService.getUserLocations).mockRejectedValue(error)
 
     const middleware = populateUserLocations(userService as UserService)
     await middleware(req as Request, res as Response, next)

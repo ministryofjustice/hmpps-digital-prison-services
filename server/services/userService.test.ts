@@ -15,8 +15,8 @@ describe('User service', () => {
   let userService: UserService
 
   beforeEach(() => {
-    prisonApiClient = new PrisonApiRestClient(null) as jest.Mocked<PrisonApiRestClient>
-    locationsApiClient = new LocationsInsidePrisonRestApiClient(null) as jest.Mocked<LocationsInsidePrisonRestApiClient>
+    prisonApiClient = jest.mocked(new PrisonApiRestClient(null))
+    locationsApiClient = jest.mocked(new LocationsInsidePrisonRestApiClient(null))
     locationsApiClient.getTopLevelResidentialLocations = jest.fn()
     userService = new UserService(
       () => prisonApiClient,

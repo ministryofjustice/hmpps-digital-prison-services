@@ -18,11 +18,11 @@ context('Whats New', () => {
   context('Whats New', () => {
     it('should display whats new data', () => {
       const page = Page.verifyOnPage(WhatsNewPage)
-      page.whatsNew().whatsNewPost().should('have.length', 3)
-      page.whatsNew().whatsNewPost().first().find('.whats-new-post__date').should('have.text', '27 July 2023')
-      page.whatsNew().whatsNewPost().first().find('a').should('have.text', 'Whats new one')
-      page.whatsNew().whatsNewPost().first().find('a').should('have.attr', 'href', '/whats-new/whats-new-one')
-      page.whatsNew().whatsNewPost().first().find('.whats-new-post__summary').should('have.text', 'Summary')
+      page.whatsNewPosts.should('have.length', 3)
+      page.whatsNewPosts.first().find('.whats-new-post__date').should('have.text', '27 July 2023')
+      page.whatsNewPosts.first().find('a').should('have.text', 'Whats new one')
+      page.whatsNewPosts.first().find('a').should('have.attr', 'href', '/whats-new/whats-new-one')
+      page.whatsNewPosts.first().find('.whats-new-post__summary').should('have.text', 'Summary')
     })
   })
 })

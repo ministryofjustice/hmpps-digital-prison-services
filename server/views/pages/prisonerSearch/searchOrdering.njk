@@ -1,3 +1,6 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
 {% set orderOptions = [
   { value: 'lastName,firstName,asc', text: 'Last name, First name - A to Z' },
   { value: 'lastName,firstName,desc', text: 'Last name, First name - Z to A' },
@@ -5,14 +8,14 @@
   { value: 'cellLocation,desc', text: 'Location - Z to A then numbers' }
 ] %}
 
-        {% if view !== 'grid' %}
-          {% set orderOptions = (orderOptions.push(
-            { value: 'dateOfBirth,desc', text: 'Age - youngest to oldest' },
-            { value: 'dateOfBirth,asc', text: 'Age - oldest to youngest' }
-          ), orderOptions) %}
-        {% endif %}
+{% if view !== 'grid' %}
+  {% set orderOptions = (orderOptions.push(
+    { value: 'dateOfBirth,desc', text: 'Age - youngest to oldest' },
+    { value: 'dateOfBirth,asc', text: 'Age - oldest to youngest' }
+  ), orderOptions) %}
+{% endif %}
 
-<form method="POST" class="horizontal-form" data-test="prisoner-search-order-form">
+<form method="POST" class="horizontal-form" data-test="prisoner-search-order-form" novalidate>
   <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
   {{ govukSelect({
     id: "sort",
@@ -30,10 +33,9 @@
     text: "Reorder",
     type: "submit",
     classes: "govuk-button--secondary",
+    preventDoubleClick: true,
     attributes: {
       'data-test': 'prisoner-search-order-form-submit'
     }
   }) }}
 </form>
-
-

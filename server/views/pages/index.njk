@@ -1,4 +1,4 @@
-{% extends "../partials/layout.njk" %}
+{% extends "partials/layout.njk" %}
 
 {% set pageTitle = "Home" %}
 {% set mainClasses = "govuk-body" %}
@@ -10,22 +10,22 @@
 
 {% block content %}
 
-  {% include "../partials/homepage/outageBanner.njk" %}
-  {% include "../partials/homepage/hero.njk" %}
+  {% include "partials/homepage/outageBanner.njk" %}
+  {% include "partials/homepage/hero.njk" %}
   {% if userHasPrisonCaseLoad %}
-    {% include "../partials/homepage/search.njk" %}
+    {% include "partials/homepage/search.njk" %}
   {% endif %}
   <div class="govuk-width-container">
-    {% include "../partials/homepage/services.njk" %}
+    {% include "partials/homepage/services.njk" %}
     {% if userHasPrisonCaseLoad %}
       <hr class="govuk-section-break--l">
-      {% include "../partials/homepage/today.njk" %}
+      {% include "partials/homepage/today.njk" %}
     {% endif %}
   </div>
   <hr class="today-section-break--blue govuk-width-container">
   <div class="govuk-width-container dps-homepage-flex-container">
-    {% include "../partials/homepage/whats-new.njk" %}
-    {% include "../partials/homepage/help.njk" %}
+    {% include "partials/homepage/whats-new.njk" %}
+    {% include "partials/homepage/help.njk" %}
   </div>
 
 {% endblock %}

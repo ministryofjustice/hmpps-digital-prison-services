@@ -1,8 +1,8 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/details/macro.njk" import govukDetails %}
-{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 
 {% macro errorClass(field) -%}
   {{ ' govuk-input--error' if errors | hasErrorWithPrefix([field, 'dobError']) else '' }}
@@ -94,7 +94,7 @@
   <a href="{{ clearUrl }}" data-test="clear-link" class="govuk-body govuk-link govuk-link--no-visited-state">Clear</a>
 {% endset %}
 
-<form novalidate="novalidate" class="prisoner-search__form" data-test="global-search-form" action="/global-search/results">
+<form class="prisoner-search__form" data-test="global-search-form" action="/global-search/results" novalidate>
   <input type="hidden" name="referrer" value="{{ referrer }}" />
   <div class="horizontal-form govuk-!-margin-bottom-3">
     {{ govukInput({
@@ -121,6 +121,7 @@
     {{ govukButton({
       text: "Search",
       type: "submit",
+      preventDoubleClick: true,
       attributes: {
         'data-test': 'global-search-submit'
       }
@@ -137,4 +138,3 @@
     }
   }) }}
 </form>
-

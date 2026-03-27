@@ -1,6 +1,4 @@
 .dps-whats-new {
-  @include whats-new;
-
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -8,24 +6,12 @@
   margin-top: 40px;
 
   .whats-new-list {
+    width: 100%;
     max-width: 770px;
-
-    .moj-pagination:first-of-type {
-      margin-bottom: 30px;
-    }
-
-    .moj-pagination:last-of-type {
-      margin-top: 30px;
-    }
   }
 
   .whats-new-related-content {
     border-top: 4px solid govuk-colour('blue');
     width: 270px;
-
-    a {
-      display: inline-block;
-      margin-bottom: 8px;
-    }
   }
 }

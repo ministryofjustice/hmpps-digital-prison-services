@@ -1,3 +1,5 @@
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
 {% set rows = [] %}
 {% for prisoner in results %}
   {% set prisonerImageUrl = ('/api/prisoner/' + prisoner.prisonerNumber + '/image/data?imageId=' + prisoner.currentFacialImageId if (prisoner.currentFacialImageId and prisoner.showProfileImage) else '/assets/images/prisoner-profile-image.png') %}

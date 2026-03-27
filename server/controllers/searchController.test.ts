@@ -13,10 +13,7 @@ import MetricsService from '../services/metricsService'
 import AuditService from '../services/auditService'
 import { Role } from '../enums/role'
 
-jest.mock('../utils/generateListMetadata', () => ({
-  generateListMetadata: jest.fn(),
-}))
-
+jest.mock('../utils/generateListMetadata')
 jest.mock('../utils/globalSearchDateValidator')
 
 describe('SearchController', () => {
@@ -28,9 +25,7 @@ describe('SearchController', () => {
   let auditService: AuditService
 
   beforeEach(() => {
-    ;(globalSearchDateValidator as jest.MockedFunction<typeof globalSearchDateValidator>).mockReturnValue(
-      [] as HmppsError[],
-    )
+    jest.mocked(globalSearchDateValidator).mockReturnValue([])
     prisonerSearchService = {} as PrisonerSearchService
     globalSearchService = { getResultsForUser: jest.fn() } as unknown as GlobalSearchService
     metricsService = {
@@ -71,9 +66,7 @@ describe('SearchController', () => {
           render: jest.fn(),
           redirect: jest.fn(),
         } as unknown as Response
-        ;(generateListMetadata as jest.MockedFunction<typeof generateListMetadata>).mockReturnValueOnce(
-          generatedMetadata,
-        )
+        jest.mocked(generateListMetadata).mockReturnValueOnce(generatedMetadata)
 
         prisonerSearchService.getResults = jest.fn(
           async (): Promise<PagedList<Prisoner>> => ({
@@ -154,8 +147,6 @@ describe('SearchController', () => {
             sort: 'lastName,firstName,asc',
           },
           'result',
-          [],
-          '',
           true,
         )
         expect(res.render).toHaveBeenCalledWith(
@@ -486,9 +477,7 @@ describe('SearchController', () => {
           pagination: { itemDescription: 'description' },
         } as ListMetadata<PrisonerSearchQueryParams>
         beforeEach(() => {
-          ;(generateListMetadata as jest.MockedFunction<typeof generateListMetadata>).mockReturnValueOnce(
-            generatedMetadata,
-          )
+          jest.mocked(generateListMetadata).mockReturnValueOnce(generatedMetadata)
 
           globalSearchService.getResultsForUser = jest.fn(
             async (): Promise<PagedList<Prisoner>> => ({
@@ -552,10 +541,8 @@ describe('SearchController', () => {
         })
 
         it('Renders the page when the date is invalid', async () => {
-          const dateErrors = [{ href: '#dobDay', text: 'Dob day is incorrect' }]
-          ;(globalSearchDateValidator as jest.MockedFunction<typeof globalSearchDateValidator>).mockReturnValue(
-            dateErrors,
-          )
+          const dateErrors: HmppsError[] = [{ href: '#dobDay', text: 'Dob day is incorrect' }]
+          jest.mocked(globalSearchDateValidator).mockReturnValue(dateErrors)
 
           const req = {
             originalUrl: 'http://example.com',

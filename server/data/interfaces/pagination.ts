@@ -8,6 +8,15 @@ export interface Pagination {
   totalPages: number
   totalElements: number
   elementsOnPage: number
-  pages: { href: string; text: string; selected: boolean; type?: string }[]
+  pages: Page[]
   viewAllUrl?: string
+  enableShowAll: boolean
 }
+
+export type Page =
+  | {
+      number: string
+      href: string
+      current?: boolean
+    }
+  | { ellipsis: true }

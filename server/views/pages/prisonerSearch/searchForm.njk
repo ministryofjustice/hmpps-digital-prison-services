@@ -1,4 +1,9 @@
-<form novalidate="novalidate" class="prisoner-search__form" data-test="prisoner-search-form">
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
+<form class="prisoner-search__form" data-test="prisoner-search-form" novalidate>
   <div class="horizontal-form govuk-!-margin-bottom-3">
     {{ govukInput({
       id: "term",
@@ -28,7 +33,8 @@
 
     {{ govukButton({
       text: "Search",
-      type: "submit"
+      type: "submit",
+      preventDoubleClick: true
     }) }}
     <input type="hidden" name="feature" value={{ formValues.feature }} />
   </div>

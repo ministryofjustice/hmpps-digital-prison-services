@@ -1,6 +1,5 @@
-{% from "../../macros/hmppsPagedListHeader.njk" import hmppsPagedListHeader %}
-{% from "../../macros/hmppsPagedListFooter.njk" import hmppsPagedListFooter %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "macros/pagedList.njk" import pagedList %}
 
 {% macro dietAndFoodAllergiesHtml(personalDetails) %}
   {% if personalDetails.medical.length > 0 or personalDetails.foodAllergies.length > 0 or personalDetails.personal.length > 0 or personalDetails.cateringInstructions.length > 0 %}
@@ -57,44 +56,37 @@
     { html: dietAndFoodAllergiesHtml(row.dietaryRequirements), classes: "hmpps-dietary-requirements__requirements" }
   ]), rows) %}
 {% endfor %}
+
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-      {{ hmppsPagedListHeader(listMetadata) }}
+  {% call pagedList(listMetadata) %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        {{ govukTable({
+          head: [
+            {
+              html: '<a href="' + sorting.nameAndNumber.url + '">Name and prison number</a>',
+              classes: 'hmpps-dietary-requirements__name',
+              attributes: {
+              "data-qa": "name-and-number-header",
+              "aria-sort": sorting.nameAndNumber.direction
+            }
+            },
+            {
+              html: '<a href="' + sorting.location.url + '">Location</a>',
+              classes: 'hmpps-dietary-requirements__location',
+              attributes: {
+              "data-qa": "location-header",
+              "aria-sort": sorting.location.direction
+            }
+            },
+            {
+              text: 'Dietary requirements',
+              classes: 'hmpps-dietary-requirements__requirements'
+            }
+          ],
+          rows: rows
+        }) }}
+      </div>
     </div>
-  </div>
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-      {{ govukTable({
-        head: [
-          {
-            html: '<a href="' + sorting.nameAndNumber.url + '">Name and prison number</a>',
-            classes: 'hmpps-dietary-requirements__name',
-            attributes: {
-            "data-qa": "name-and-number-header",
-            "aria-sort": sorting.nameAndNumber.direction
-          }
-          },
-          {
-            html: '<a href="' + sorting.location.url + '">Location</a>',
-            classes: 'hmpps-dietary-requirements__location',
-            attributes: {
-            "data-qa": "location-header",
-            "aria-sort": sorting.location.direction
-          }
-          },
-          {
-            text: 'Dietary requirements',
-            classes: 'hmpps-dietary-requirements__requirements'
-          }
-        ],
-        rows: rows
-      }) }}
-    </div>
-  </div>
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-      {{ hmppsPagedListFooter(listMetadata) }}
-    </div>
-  </div>
+  {% endcall %}
 {% endblock %}

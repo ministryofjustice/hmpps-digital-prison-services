@@ -315,14 +315,8 @@ export default class SearchController {
 
     const resp = await this.globalSearchService.getResultsForUser(clientToken, globalSearchParams)
     const results = this.mapPrisonersToGlobalSearchResults(user, resp.content)
-    const listMetadata = generateListMetadata<GlobalSearchFilterParams>(
-      resp,
-      { page: undefined, searchText, referrer, ...filters },
-      'result',
-      [],
-      '',
-      false,
-    )
+    const paramsForMetadata: GlobalSearchFilterParams = { page: undefined, searchText, referrer, ...filters }
+    const listMetadata = generateListMetadata(resp, paramsForMetadata, 'result')
 
     return { results, listMetadata, errors: [] }
   }
@@ -402,8 +396,7 @@ export default class SearchController {
         category: prisoner.category,
       }))
 
-    // TODO: use the sorting from the metadata, not done for now as its a design change
-    const listMetadata = generateListMetadata(resp, paramsForMetadata, 'result', [], '', true)
+    const listMetadata = generateListMetadata(resp, paramsForMetadata, 'result', true)
 
     return { results, listMetadata }
   }
