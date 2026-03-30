@@ -35,6 +35,21 @@
           {% include "./searchTable.njk" %}
         </div>
       </div>
+    {% elif hasAppliedFilters %}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter">
+          {% include "./searchFilters.njk" %}
+        </div>
+        <div class="govuk-grid-column-three-quarters">
+          <p class="moj-pagination__results hmpps-dietary-requirements__no-results"><b>0</b> {{ listMetadata.pagination.totalElements | pluralise(listMetadata.pagination.itemDescription, { includeCount: false }) }}</p>
+          <p class="govuk-body">No results match your selected filters.</p>
+          <p class="govuk-body govuk-!-margin-bottom-1">You can:</p>
+          <ul class="govuk-list govuk-list--bullet">
+            <li>change the filters</li>
+            <li>clear the filters to view all dietary requirements</li>
+          </ul>
+        </div>
+      </div>
     {% else %}
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">

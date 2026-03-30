@@ -133,6 +133,49 @@ describe('DietaryRequirementsController', () => {
         }),
       )
     })
+
+    it('Renders filters and no results message inline when filters are applied but return no results', async () => {
+      const req = {
+        middleware: { clientToken: 'clientToken' },
+        id: 'abc-123',
+        query: {
+          personalDiet: 'KOSHER',
+        },
+      } as unknown as Request
+
+      const res = {
+        locals: {
+          user: {
+            username: 'USER_NAME',
+            activeCaseLoadId: 'LEI',
+            userRoles: [Role.DietAndAllergiesReport],
+          },
+        },
+        render: jest.fn(),
+      } as unknown as Response
+
+      ;(dietReportingService.getDietaryRequirementsForPrison as jest.Mock).mockResolvedValueOnce({
+        content: [],
+        metadata: {
+          pageNumber: 0,
+          pageSize: 25,
+          totalElements: 0,
+          totalPages: 0,
+          numberOfElements: 0,
+          offset: 0,
+          first: true,
+          last: true,
+        },
+      })
+
+      const handler = controller.get()
+      await handler(req, res, jest.fn())
+
+      const renderCall = (res.render as jest.Mock).mock.calls[0][1]
+      expect(renderCall.content).toEqual([])
+      expect(renderCall.hasAppliedFilters).toBeTruthy()
+      expect(renderCall.listMetadata.pagination.totalElements).toEqual(0)
+    })
   })
 
   describe('post', () => {
