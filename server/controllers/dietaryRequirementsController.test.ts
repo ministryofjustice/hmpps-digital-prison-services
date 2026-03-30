@@ -154,11 +154,11 @@ describe('DietaryRequirementsController', () => {
         render: jest.fn(),
       } as unknown as Response
 
-      ;(dietReportingService.getDietaryRequirementsForPrison as jest.Mock).mockResolvedValueOnce({
+      jest.mocked(dietReportingService.getDietaryRequirementsForPrison).mockResolvedValueOnce({
         content: [],
         metadata: {
           pageNumber: 0,
-          pageSize: 25,
+          size: 25,
           totalElements: 0,
           totalPages: 0,
           numberOfElements: 0,

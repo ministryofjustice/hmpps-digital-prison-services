@@ -41,7 +41,7 @@
           {% include "./searchFilters.njk" %}
         </div>
         <div class="govuk-grid-column-three-quarters">
-          <p class="moj-pagination__results hmpps-dietary-requirements__no-results"><b>0</b> {{ listMetadata.pagination.totalElements | pluralise(listMetadata.pagination.itemDescription, { includeCount: false }) }}</p>
+          <p class="govuk-!-text-align-right"><b>0</b> {{ listMetadata.pagination.totalElements | pluralise(listMetadata.pagination.itemDescription, { includeCount: false }) }}</p>
           <p class="govuk-body">No results match your selected filters.</p>
           <p class="govuk-body govuk-!-margin-bottom-1">You can:</p>
           <ul class="govuk-list govuk-list--bullet">
