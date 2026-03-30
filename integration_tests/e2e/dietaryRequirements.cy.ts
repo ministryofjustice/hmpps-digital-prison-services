@@ -141,4 +141,36 @@ context('Dietary requirements report', () => {
       page.dietaryRequirements().sorting().location().should('have.attr', 'aria-sort', 'descending')
     })
   })
+
+  context('No results when filters applied', () => {
+    beforeEach(() => {
+      cy.task('reset')
+      cy.setupUserAuth({ roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`, `ROLE_${Role.DietAndAllergiesReport}`] })
+      cy.task('stubHealthAndMedicationForPrisonEmptyResults', 'LEI')
+      cy.task('stubHealthAndMedicationFiltersForPrison', 'LEI')
+      cy.task('stubLatestArrivalDates')
+      cy.setupComponentsData({
+        caseLoads: [
+          { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
+        ],
+      })
+    })
+
+    it('Shows filter sidebar and no results message inline when filters return zero results', () => {
+      cy.signIn({ redirectPath: `/dietary-requirements` })
+      cy.visit(`/dietary-requirements?personalDiet=KOSHER`)
+      const page = Page.verifyOnPage(DietaryRequirementsPage)
+
+      page.filters().personalisedDiet().heading().should('contain.text', 'Personalised diet').and('be.visible')
+      page.filters().personalisedDiet().options().eq(0).find('input').should('be.checked')
+
+      cy.contains('No results match your selected filters.').should('be.visible')
+      cy.contains('change the filters').should('be.visible')
+      cy.contains('clear the filters to view all dietary requirements').should('be.visible')
+
+      cy.get('table').should('not.exist')
+
+      cy.contains('0 results').should('be.visible')
+    })
+  })
 })
