@@ -46,7 +46,6 @@ describe('ChangeCaseloadController', () => {
       expect(res.render).toHaveBeenCalledWith(
         'pages/changeCaseload/changeCaseload',
         expect.objectContaining({
-          title: 'Change your location',
           options: renderedOptions,
           backUrl: expectedBackUrl,
         }),

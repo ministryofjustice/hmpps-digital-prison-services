@@ -4,6 +4,8 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
+{% set pageTitle =  "Change your location" %}
+
 {% block beforeContent %}
   {% if backUrl %}
     {{ govukBackLink({
@@ -23,7 +25,7 @@
 {% endblock %}
 
 {% block content %}
-  <h1 class="govuk-heading-l">{{ title }}</h1>
+  <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
   <form method="POST" id="changeCaseload" novalidate>
     <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
     {{ govukSelect({

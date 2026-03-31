@@ -30,7 +30,6 @@ export default class ChangeCaseloadController {
       }
 
       return res.render('pages/changeCaseload/changeCaseload', {
-        title: 'Change your location',
         options,
         backUrl,
       })
