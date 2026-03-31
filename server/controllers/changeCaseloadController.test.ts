@@ -15,6 +15,33 @@ describe('ChangeCaseloadController', () => {
   const styal = { caseLoadId: 'STI', description: 'Styal' } as CaseLoad
   const caseloads = [kirkham, moorland]
 
+  const makeReq = ({
+    backUrlInQueryParams,
+    backUrlInHeaders,
+    body,
+  }: {
+    backUrlInQueryParams?: string
+    backUrlInHeaders?: string
+    body?: object
+  } = {}) =>
+    ({
+      method: body ? 'POST' : 'GET',
+      body,
+      originalUrl: backUrlInQueryParams ? `/change-caseload?backUrl=${backUrlInQueryParams}` : '/change-caseload',
+      query: { backUrl: backUrlInQueryParams },
+      get(header: string) {
+        return header === 'referrer' && backUrlInHeaders
+      },
+    }) as unknown as Request
+
+  const makeResWithCaseloads = (cc: CaseLoad[]) =>
+    ({
+      locals: { user: { caseLoads: cc, token: 'token' } },
+      redirect: jest.fn(),
+      render: jest.fn(),
+      status: jest.fn(),
+    }) as unknown as Response
+
   const renderedOptions = caseloads.map(caseload => ({
     value: caseload.caseLoadId,
     text: caseload.description,
@@ -29,17 +56,9 @@ describe('ChangeCaseloadController', () => {
   })
 
   describe('get', () => {
-    it('Renders changeCaseload page with options and backUrl', async () => {
-      const expectedBackUrl = 'http://localhost/whereTheyCameFrom?queries=values'
-      const req = { headers: { referer: expectedBackUrl } } as unknown as Request
-      const res = {
-        locals: {
-          user: {
-            caseLoads: caseloads,
-          },
-        },
-        render: jest.fn(),
-      } as unknown as Response
+    it('Renders changeCaseload page with options and no backUrl', async () => {
+      const req = makeReq()
+      const res = makeResWithCaseloads(caseloads)
 
       await controller.get()(req, res, jest.fn())
 
@@ -47,21 +66,44 @@ describe('ChangeCaseloadController', () => {
         'pages/changeCaseload/changeCaseload',
         expect.objectContaining({
           options: renderedOptions,
+          backUrl: undefined,
+        }),
+      )
+    })
+
+    it('Renders changeCaseload page with backUrl from backUrl query parameter', async () => {
+      const expectedBackUrl = 'http://localhost/whereTheyCameFrom?queries=values'
+      const req = makeReq({ backUrlInQueryParams: expectedBackUrl })
+      const res = makeResWithCaseloads(caseloads)
+
+      await controller.get()(req, res, jest.fn())
+
+      expect(res.render).toHaveBeenCalledWith(
+        'pages/changeCaseload/changeCaseload',
+        expect.objectContaining({
+          backUrl: expectedBackUrl,
+        }),
+      )
+    })
+
+    it('Renders changeCaseload page with backUrl from Referrer header', async () => {
+      const expectedBackUrl = 'http://localhost/whereTheyCameFrom?queries=values'
+      const req = makeReq({ backUrlInHeaders: expectedBackUrl })
+      const res = makeResWithCaseloads(caseloads)
+
+      await controller.get()(req, res, jest.fn())
+
+      expect(res.render).toHaveBeenCalledWith(
+        'pages/changeCaseload/changeCaseload',
+        expect.objectContaining({
           backUrl: expectedBackUrl,
         }),
       )
     })
 
     it('Does not set backUrl if referer is the change-caseload page', async () => {
-      const req = { headers: { referer: 'http://localhost/change-caseload' } } as unknown as Request
-      const res = {
-        locals: {
-          user: {
-            caseLoads: caseloads,
-          },
-        },
-        render: jest.fn(),
-      } as unknown as Response
+      const req = makeReq({ backUrlInHeaders: 'http://localhost/change-caseload' })
+      const res = makeResWithCaseloads(caseloads)
 
       await controller.get()(req, res, jest.fn())
 
@@ -74,11 +116,8 @@ describe('ChangeCaseloadController', () => {
     })
 
     it('Redirects to / if user has only one caseload', async () => {
-      const req = {} as unknown as Request
-      const res = {
-        locals: { user: { caseLoads: [kirkham] } },
-        redirect: jest.fn(),
-      } as unknown as Response
+      const req = makeReq()
+      const res = makeResWithCaseloads([kirkham])
 
       await controller.get()(req, res, jest.fn())
 
@@ -88,11 +127,10 @@ describe('ChangeCaseloadController', () => {
 
   describe('post', () => {
     it('Sets active caseload and redirects to /', async () => {
-      const req = { body: { caseLoadId: moorland.caseLoadId }, originalUrl: '/change-caseload' } as unknown as Request
-      const res = {
-        locals: { user: { token: 'token', caseLoads: caseloads } },
-        redirect: jest.fn(),
-      } as unknown as Response
+      const req = makeReq({
+        body: { caseLoadId: moorland.caseLoadId },
+      })
+      const res = makeResWithCaseloads(caseloads)
 
       await controller.post()(req, res, jest.fn())
 
@@ -104,17 +142,15 @@ describe('ChangeCaseloadController', () => {
     })
 
     it('Logs error and renders error page if caseLoadId is missing', async () => {
-      const req = { body: {}, originalUrl: 'http://localhost/whereTheyCameFrom' } as unknown as Request
-      const res = {
-        locals: { user: { token: 'token', caseLoads: caseloads } },
-        status: jest.fn().mockReturnThis(),
-        render: jest.fn(),
-      } as unknown as Response
+      const req = makeReq({
+        body: {},
+      })
+      const res = makeResWithCaseloads(caseloads)
 
       await controller.post()(req, res, jest.fn())
 
       expect(logger.error).toHaveBeenCalledWith(
-        'http://localhost/whereTheyCameFrom',
+        '/change-caseload',
         'Caseload ID is missing, not assigned to user, or does not exist',
       )
       expect(res.status).toHaveBeenCalledWith(400)
@@ -122,20 +158,15 @@ describe('ChangeCaseloadController', () => {
     })
 
     it('Logs error and renders error page if user somehow tries to set a caseload they are not assigned to', async () => {
-      const req = {
+      const req = makeReq({
         body: { caseLoadId: styal.caseLoadId },
-        originalUrl: 'http://localhost/whereTheyCameFrom',
-      } as unknown as Request
-      const res = {
-        locals: { user: { token: 'token', caseLoads: caseloads } },
-        status: jest.fn().mockReturnThis(),
-        render: jest.fn(),
-      } as unknown as Response
+      })
+      const res = makeResWithCaseloads(caseloads)
 
       await controller.post()(req, res, jest.fn())
 
       expect(logger.error).toHaveBeenCalledWith(
-        'http://localhost/whereTheyCameFrom',
+        '/change-caseload',
         'Caseload ID is missing, not assigned to user, or does not exist',
       )
       expect(res.status).toHaveBeenCalledWith(400)
