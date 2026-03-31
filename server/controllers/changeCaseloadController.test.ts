@@ -115,13 +115,27 @@ describe('ChangeCaseloadController', () => {
       )
     })
 
-    it('Redirects to / if user has only one caseload', async () => {
-      const req = makeReq()
-      const res = makeResWithCaseloads([kirkham])
+    describe('if user has only one caseload', () => {
+      it.each([
+        { scenario: 'to home page', makeReqParams: {}, expectedRedirect: '/' },
+        {
+          scenario: 'to provided backUrl',
+          makeReqParams: { backUrlInQueryParams: 'https://dps.service.justice.gov.uk/' },
+          expectedRedirect: 'https://dps.service.justice.gov.uk/',
+        },
+        {
+          scenario: 'back to referrer',
+          makeReqParams: { backUrlInHeaders: 'http://localhost/whereTheyCameFrom' },
+          expectedRedirect: 'http://localhost/whereTheyCameFrom',
+        },
+      ])('Redirects $scenario', async ({ makeReqParams, expectedRedirect }) => {
+        const req = makeReq(makeReqParams)
+        const res = makeResWithCaseloads([kirkham])
 
-      await controller.get()(req, res, jest.fn())
+        await controller.get()(req, res, jest.fn())
 
-      expect(res.redirect).toHaveBeenCalledWith('/')
+        expect(res.redirect).toHaveBeenCalledWith(expectedRedirect)
+      })
     })
   })
 

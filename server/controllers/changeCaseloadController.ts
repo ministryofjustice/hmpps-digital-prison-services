@@ -12,19 +12,19 @@ export default class ChangeCaseloadController {
         user: { caseLoads },
       } = res.locals
 
+      const backUrl: string | undefined = [req.query?.backUrl, req.get('referrer')]
+        .filter(url => typeof url === 'string')
+        .filter(isSafeForRedirect)
+        .find(url => !new URL(url).pathname.match(/\/change-caseload\/?/))
+
       if (caseLoads.length <= 1) {
-        return res.redirect('/')
+        return res.redirect(backUrl || '/')
       }
 
       const options = caseLoads.map(caseload => ({
         value: caseload.caseLoadId,
         text: caseload.description,
       }))
-
-      const backUrl: string | undefined = [req.query?.backUrl, req.get('referrer')]
-        .filter(url => typeof url === 'string')
-        .filter(isSafeForRedirect)
-        .find(url => !new URL(url).pathname.match(/\/change-caseload\/?/))
 
       return res.render('pages/changeCaseload/changeCaseload', {
         options,
