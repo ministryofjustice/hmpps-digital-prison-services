@@ -28,6 +28,9 @@
   <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
   <form method="POST" id="changeCaseload" novalidate>
     <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+    {% if backUrl %}
+      <input type="hidden" name="backUrl" value="{{ backUrl }}" />
+    {% endif %}
     {{ govukSelect({
       id: "changeCaseloadSelect",
       name: "caseLoadId",

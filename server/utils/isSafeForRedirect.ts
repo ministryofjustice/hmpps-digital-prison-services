@@ -8,7 +8,7 @@ const safeHostSuffixes = ['.service.justice.gov.uk']
  * https is required in production and for external hosts.
  */
 // eslint-disable-next-line import/prefer-default-export
-export function isSafeForRedirect(url: string): boolean {
+export function isSafeForRedirect(url: unknown): url is string {
   const { domain, production } = config
   const { hostname: homepageHostname } = new URL(domain)
   if (typeof url !== 'string') {

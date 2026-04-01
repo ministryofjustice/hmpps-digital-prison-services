@@ -71,24 +71,24 @@ describe('ChangeCaseloadController', () => {
       )
     })
 
-    it('Renders changeCaseload page with backUrl from backUrl query parameter', async () => {
-      const expectedBackUrl = 'http://localhost/whereTheyCameFrom?queries=values'
-      const req = makeReq({ backUrlInQueryParams: expectedBackUrl })
-      const res = makeResWithCaseloads(caseloads)
-
-      await controller.get()(req, res, jest.fn())
-
-      expect(res.render).toHaveBeenCalledWith(
-        'pages/changeCaseload/changeCaseload',
-        expect.objectContaining({
-          backUrl: expectedBackUrl,
-        }),
-      )
-    })
-
-    it('Renders changeCaseload page with backUrl from Referrer header', async () => {
-      const expectedBackUrl = 'http://localhost/whereTheyCameFrom?queries=values'
-      const req = makeReq({ backUrlInHeaders: expectedBackUrl })
+    const safeBackUrl = 'http://localhost/whereTheyCameFrom?queries=values'
+    it.each([
+      {
+        scenario: 'from backUrl query parameter',
+        req: makeReq({ backUrlInQueryParams: safeBackUrl }),
+        expectedBackUrl: safeBackUrl,
+      },
+      {
+        scenario: 'from Referrer header',
+        req: makeReq({ backUrlInHeaders: safeBackUrl }),
+        expectedBackUrl: safeBackUrl,
+      },
+      {
+        scenario: 'ignored since it was unsafe',
+        req: makeReq({ backUrlInQueryParams: 'https://gov.uk/' }),
+        expectedBackUrl: undefined,
+      },
+    ])('Renders changeCaseload page with backUrl $scenario', async ({ req, expectedBackUrl }) => {
       const res = makeResWithCaseloads(caseloads)
 
       await controller.get()(req, res, jest.fn())
@@ -117,7 +117,7 @@ describe('ChangeCaseloadController', () => {
 
     describe('if user has only one caseload', () => {
       it.each([
-        { scenario: 'to home page', makeReqParams: {}, expectedRedirect: '/' },
+        { scenario: 'to home page by default', makeReqParams: {}, expectedRedirect: '/' },
         {
           scenario: 'to provided backUrl',
           makeReqParams: { backUrlInQueryParams: 'https://dps.service.justice.gov.uk/' },
@@ -140,10 +140,29 @@ describe('ChangeCaseloadController', () => {
   })
 
   describe('post', () => {
-    it('Sets active caseload and redirects to /', async () => {
-      const req = makeReq({
-        body: { caseLoadId: moorland.caseLoadId },
-      })
+    it.each([
+      {
+        scenario: '/ by default',
+        req: makeReq({
+          body: { caseLoadId: moorland.caseLoadId },
+        }),
+        expectedRedirect: '/',
+      },
+      {
+        scenario: '/ if back url is unsafe',
+        req: makeReq({
+          body: { caseLoadId: moorland.caseLoadId, backUrl: '/page=1' },
+        }),
+        expectedRedirect: '/',
+      },
+      {
+        scenario: 'where they came from',
+        req: makeReq({
+          body: { caseLoadId: moorland.caseLoadId, backUrl: 'http://localhost/whereTheyCameFrom' },
+        }),
+        expectedRedirect: 'http://localhost/whereTheyCameFrom',
+      },
+    ])('Sets active caseload and redirects to $scenario', async ({ req, expectedRedirect }) => {
       const res = makeResWithCaseloads(caseloads)
 
       await controller.post()(req, res, jest.fn())
@@ -152,29 +171,16 @@ describe('ChangeCaseloadController', () => {
         caseLoadId: moorland.caseLoadId,
         description: moorland.description,
       })
-      expect(res.redirect).toHaveBeenCalledWith('/')
+      expect(res.redirect).toHaveBeenCalledWith(expectedRedirect)
     })
 
-    it('Logs error and renders error page if caseLoadId is missing', async () => {
-      const req = makeReq({
-        body: {},
-      })
-      const res = makeResWithCaseloads(caseloads)
-
-      await controller.post()(req, res, jest.fn())
-
-      expect(logger.error).toHaveBeenCalledWith(
-        '/change-caseload',
-        'Caseload ID is missing, not assigned to user, or does not exist',
-      )
-      expect(res.status).toHaveBeenCalledWith(400)
-      expect(res.render).toHaveBeenCalledWith('pages/changeCaseload/error.njk', { url: '/change-caseload' })
-    })
-
-    it('Logs error and renders error page if user somehow tries to set a caseload they are not assigned to', async () => {
-      const req = makeReq({
-        body: { caseLoadId: styal.caseLoadId },
-      })
+    it.each([
+      { scenario: 'caseLoadId is missing', req: makeReq({ body: {} }) },
+      {
+        scenario: 'user somehow tries to set a caseload they are not assigned to',
+        req: makeReq({ body: { caseLoadId: styal.caseLoadId } }),
+      },
+    ])('Logs error and renders error page if $scenario', async ({ req }) => {
       const res = makeResWithCaseloads(caseloads)
 
       await controller.post()(req, res, jest.fn())

@@ -13,7 +13,6 @@ export default class ChangeCaseloadController {
       } = res.locals
 
       const backUrl: string | undefined = [req.query?.backUrl, req.get('referrer')]
-        .filter(url => typeof url === 'string')
         .filter(isSafeForRedirect)
         .find(url => !new URL(url).pathname.match(/\/change-caseload\/?/))
 
@@ -35,7 +34,8 @@ export default class ChangeCaseloadController {
 
   public post(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { caseLoadId }: { caseLoadId: string | undefined } = req.body
+      const { caseLoadId, backUrl: unsafeBackUrl }: Partial<Body> = req.body
+      const backUrl = isSafeForRedirect(unsafeBackUrl) ? unsafeBackUrl : '/'
       const {
         user: { token, caseLoads },
       } = res.locals
@@ -51,7 +51,12 @@ export default class ChangeCaseloadController {
       }
 
       await this.userService.setActiveCaseload(token, caseloadToSet)
-      return res.redirect('/')
+      return res.redirect(backUrl)
     }
   }
+}
+
+interface Body {
+  caseLoadId: string
+  backUrl: string
 }
