@@ -61,12 +61,16 @@ describe('isSafeForRedirect()', () => {
       config.production = false
     })
 
-    it.each(['http://localhost/', 'http://localhost:3000/'])(
+    it.each(['http://localhost:3000', 'http://localhost:3000/whats-new'])(
       'should consider %j to be safe despite not being secure',
       url => {
         expect(isSafeForRedirect(url)).toBe(true)
       },
     )
+
+    it('should not consider http://localhost/ to be safe because the port does not match', () => {
+      expect(isSafeForRedirect('http://localhost/')).toBe(false)
+    })
 
     it.each([
       'http://dps.prison.service.justice.gov.uk/whats-new?search=2025',

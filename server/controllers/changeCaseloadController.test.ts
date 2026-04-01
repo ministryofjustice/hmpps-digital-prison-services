@@ -71,7 +71,7 @@ describe('ChangeCaseloadController', () => {
       )
     })
 
-    const safeBackUrl = 'http://localhost/whereTheyCameFrom?queries=values'
+    const safeBackUrl = 'http://localhost:3000/whereTheyCameFrom?queries=values'
     it.each([
       {
         scenario: 'from backUrl query parameter',
@@ -102,7 +102,7 @@ describe('ChangeCaseloadController', () => {
     })
 
     it('Does not set backUrl if referer is the change-caseload page', async () => {
-      const req = makeReq({ backUrlInHeaders: 'http://localhost/change-caseload' })
+      const req = makeReq({ backUrlInHeaders: 'http://localhost:3000/change-caseload' })
       const res = makeResWithCaseloads(caseloads)
 
       await controller.get()(req, res, jest.fn())
@@ -125,8 +125,8 @@ describe('ChangeCaseloadController', () => {
         },
         {
           scenario: 'back to referrer',
-          makeReqParams: { backUrlInHeaders: 'http://localhost/whereTheyCameFrom' },
-          expectedRedirect: 'http://localhost/whereTheyCameFrom',
+          makeReqParams: { backUrlInHeaders: 'http://localhost:3000/whereTheyCameFrom' },
+          expectedRedirect: 'http://localhost:3000/whereTheyCameFrom',
         },
       ])('Redirects $scenario', async ({ makeReqParams, expectedRedirect }) => {
         const req = makeReq(makeReqParams)
@@ -158,9 +158,9 @@ describe('ChangeCaseloadController', () => {
       {
         scenario: 'where they came from',
         req: makeReq({
-          body: { caseLoadId: moorland.caseLoadId, backUrl: 'http://localhost/whereTheyCameFrom' },
+          body: { caseLoadId: moorland.caseLoadId, backUrl: 'http://localhost:3000/whereTheyCameFrom' },
         }),
-        expectedRedirect: 'http://localhost/whereTheyCameFrom',
+        expectedRedirect: 'http://localhost:3000/whereTheyCameFrom',
       },
     ])('Sets active caseload and redirects to $scenario', async ({ req, expectedRedirect }) => {
       const res = makeResWithCaseloads(caseloads)
