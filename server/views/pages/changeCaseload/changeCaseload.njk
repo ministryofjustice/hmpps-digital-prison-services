@@ -1,47 +1,47 @@
+{% extends "partials/layout.njk" %}
+
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle =  "Change your location" %}
 
 {% block beforeContent %}
   {% if backUrl %}
     {{ govukBackLink({
-        text: "Back",
-        href: backUrl
-      }) }}
+      text: "Back",
+      href: backUrl
+    }) }}
   {% else %}
     {{ govukBreadcrumbs({
-        items: [
-            {
-                text: "Digital Prison Services",
-                href: '/'
-            }
-        ]
+      items: [
+        {
+          text: "Digital Prison Services",
+          href: '/'
+        }
+      ]
     }) }}
   {% endif %}
 {% endblock %}
+
 {% block content %}
-<h1 class="govuk-heading-l">{{title}}</h1>
-<form method="POST" id="changeCaseload" novalidate>
-  <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-  {{ govukSelect({
-          id: "changeCaseloadSelect",
-          name: "caseLoadId",
-          label: {
-              text: "Select an establishment"
-          },
-          items: options | setSelected(user.activeCaseLoad.caseLoadId)
-      }) }}
-  {{ govukButton({
+  <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+  <form method="POST" id="changeCaseload" novalidate>
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+    {% if backUrl %}
+      <input type="hidden" name="backUrl" value="{{ backUrl }}" />
+    {% endif %}
+    {{ govukSelect({
+      id: "changeCaseloadSelect",
+      name: "caseLoadId",
+      label: {
+        text: "Select an establishment"
+      },
+      items: options | setSelected(user.activeCaseLoad.caseLoadId)
+    }) }}
+    {{ govukButton({
       text: "Submit",
       preventDoubleClick: true
-  }) }}
-
-  {{ govukButton({
-      text: "Cancel",
-      element: 'a',
-      href: backUrl,
-      classes: "govuk-button--secondary"
     }) }}
-</form>
+  </form>
 {% endblock %}

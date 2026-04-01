@@ -24,7 +24,7 @@ context('Change Caseload Page', () => {
 
   it('should show error if user somehow inputs invalid data', () => {
     const page = Page.verifyOnPage(ChangeCaseloadPage)
-    cy.get('select#changeCaseloadSelect').then($select => {
+    page.select().then($select => {
       $select.val('INVALID_CASELOAD')
       $select.trigger('change')
     })
