@@ -68,6 +68,13 @@ describe('User service', () => {
       ])
     })
 
+    it('retrieves empty of active locations for admin caseload', async () => {
+      locationsApiClient.getTopLevelResidentialLocations.mockResolvedValue([])
+      const result = await userService.getUserLocations('CADM_I', 'TEST_USER')
+      expect(locationsApiClient.getTopLevelResidentialLocations).not.toHaveBeenCalled()
+      expect(result).toEqual([])
+    })
+
     it('propagates error', async () => {
       locationsApiClient.getTopLevelResidentialLocations.mockRejectedValue(new Error('some error'))
 
