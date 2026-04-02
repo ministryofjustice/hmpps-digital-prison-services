@@ -10,7 +10,7 @@
         {
           name: groupId + "[]",
           value: option.value,
-          text: option.name + " (" + option.count + ")",
+          html: option.name + " (<span class='filter-count' data-filter-group='" + groupId + "' data-filter-value='" + option.value + "'>" + option.count + "</span>)",
           id: groupId + "-" + option.value,
           checked: option.checked
         }
@@ -32,7 +32,7 @@
 
 {% block content %}
   <div class="govuk-grid-column-full govuk-!-padding-bottom-6 hmpps-dietary-requirements__filters">
-    <form method="POST" id="diet-report-filter-form" data-qa="diet-report-filter-form" novalidate>
+    <form method="POST" id="diet-report-filter-form" data-qa="diet-report-filter-form" data-dynamic-filters="/dietary-requirements/filters" data-filter-mapping='{"personalDiet":"personalisedDietaryRequirements","medicalDiet":"medicalDietaryRequirements"}' novalidate>
       <h2 class="govuk-heading-m govuk-!-margin-top-6">Filter</h2>
       <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
       {{ filterCategory("Prisoners", "recentArrival", filters.recentArrival) }}

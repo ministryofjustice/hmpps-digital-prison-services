@@ -116,6 +116,36 @@ context('Dietary requirements report', () => {
       .and('not.include.text', 'Arrived in the last 3 days')
   })
 
+  it('Dynamically updates filter counts when a checkbox is changed', () => {
+    cy.signIn({ redirectPath: `/dietary-requirements` })
+    cy.visit(`/dietary-requirements`)
+    const page = Page.verifyOnPage(DietaryRequirementsPage)
+
+    page.filters().personalisedDiet().options().eq(0).find('label .filter-count').should('contain.text', '7')
+    page.filters().foodAllergies().options().eq(0).find('label .filter-count').should('contain.text', '4')
+
+    // Select location B - this triggers the AJAX call to fetch updated counts
+    page.filters().topLocationLevel().options().eq(0).find('input').check()
+
+    // Verify the checkbox is actually checked
+    page.filters().topLocationLevel().options().eq(0).find('input').should('be.checked')
+
+    page
+      .filters()
+      .topLocationLevel()
+      .options()
+      .eq(1)
+      .find('label .filter-count')
+      .should('not.have.class', 'filter-count--loading')
+    page
+      .filters()
+      .topLocationLevel()
+      .options()
+      .eq(2)
+      .find('label .filter-count')
+      .should('not.have.class', 'filter-count--loading')
+  })
+
   context('Sorting', () => {
     it('Defaults to no sorting', () => {
       cy.signIn({ redirectPath: `/dietary-requirements` })

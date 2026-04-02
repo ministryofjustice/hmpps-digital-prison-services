@@ -13,6 +13,7 @@ export default function dietaryRequirementsRouter(services: Services): Router {
 
   router.get('/', dietaryRequirementsController.get())
   router.post('/', dietaryRequirementsController.post())
+  router.get('/filters', dietaryRequirementsController.getFilterCounts())
   router.get('/print-all', dietaryRequirementsController.printAll())
 
   return router
