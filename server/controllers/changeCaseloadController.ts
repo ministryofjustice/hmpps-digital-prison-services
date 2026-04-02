@@ -1,6 +1,7 @@
 import { Request, RequestHandler, Response } from 'express'
 import logger from '../../logger'
 import { UserService } from '../services'
+import { isSafeForRedirect } from '../utils/isSafeForRedirect'
 
 export default class ChangeCaseloadController {
   constructor(private readonly userService: UserService) {}
@@ -11,8 +12,12 @@ export default class ChangeCaseloadController {
         user: { caseLoads },
       } = res.locals
 
+      const backUrl: string | undefined = [req.query?.backUrl, req.get('referrer')]
+        .filter(isSafeForRedirect)
+        .find(url => !new URL(url).pathname.match(/\/change-caseload\/?/))
+
       if (caseLoads.length <= 1) {
-        return res.redirect('/')
+        return res.redirect(backUrl || '/')
       }
 
       const options = caseLoads.map(caseload => ({
@@ -20,17 +25,7 @@ export default class ChangeCaseloadController {
         text: caseload.description,
       }))
 
-      let backUrl: string
-
-      if (req.headers.referer) {
-        const referer = new URL(req.headers.referer)
-        if (!referer.pathname.match(/\/change-caseload\/?/)) {
-          backUrl = req.headers.referer
-        }
-      }
-
       return res.render('pages/changeCaseload/changeCaseload', {
-        title: 'Change your location',
         options,
         backUrl,
       })
@@ -39,7 +34,8 @@ export default class ChangeCaseloadController {
 
   public post(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { caseLoadId }: { caseLoadId: string } = req.body
+      const { caseLoadId, backUrl: unsafeBackUrl }: Partial<Body> = req.body
+      const backUrl = isSafeForRedirect(unsafeBackUrl) ? unsafeBackUrl : '/'
       const {
         user: { token, caseLoads },
       } = res.locals
@@ -55,7 +51,12 @@ export default class ChangeCaseloadController {
       }
 
       await this.userService.setActiveCaseload(token, caseloadToSet)
-      return res.redirect('/')
+      return res.redirect(backUrl)
     }
   }
+}
+
+interface Body {
+  caseLoadId: string
+  backUrl: string
 }

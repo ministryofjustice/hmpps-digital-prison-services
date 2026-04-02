@@ -28,6 +28,11 @@ $hmpps-paged-list-min-size: 770px;
 
   .govuk-pagination, .hmpps-paged-list__results, .hmpps-paged-list__view-all {
     margin-bottom: govuk-spacing(2);
+
+    @include govuk-media-query($until: tablet) {
+      text-align: center;
+      width: 100%;
+    }
   }
 
   .hmpps-paged-list__results {
