@@ -41,9 +41,13 @@ export default class DietReportingService {
     }
   }
 
-  public async getDietaryFiltersForPrison(token: string, prisonId: string): Promise<HealthAndMedicationFilters> {
+  public async getDietaryFiltersForPrison(
+    token: string,
+    prisonId: string,
+    filters?: Record<string, string[]>,
+  ): Promise<HealthAndMedicationFilters> {
     const healthAndMedicationApi = this.healthAndMedicationApiClientBuilder(token)
 
-    return healthAndMedicationApi.getFiltersForPrison(prisonId)
+    return healthAndMedicationApi.getFiltersForPrison(prisonId, filters)
   }
 }

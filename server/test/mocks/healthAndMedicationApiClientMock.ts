@@ -123,7 +123,9 @@ export const mockHealthAndMedicationFiltersResponse = {
 
 const healthAndMedicationApiClientMock: HealthAndMedicationApiClient = {
   getHealthAndMedicationForPrison: jest.fn(async () => mockHealthAndMedicationResponse),
-  getFiltersForPrison: jest.fn(async () => mockHealthAndMedicationFiltersResponse),
+  getFiltersForPrison: jest.fn(
+    async (_prisonId: string, _filters?: Record<string, string[]>) => mockHealthAndMedicationFiltersResponse,
+  ),
 }
 
 export default healthAndMedicationApiClientMock

@@ -59,5 +59,5 @@ export interface HealthAndMedicationApiClient {
     queryParams: DietaryRequirementsQueryParams,
   ): Promise<PagedList<HealthAndMedicationForPrison>>
 
-  getFiltersForPrison(prisonId: string): Promise<HealthAndMedicationFilters>
+  getFiltersForPrison(prisonId: string, filters?: Record<string, string[]>): Promise<HealthAndMedicationFilters>
 }
