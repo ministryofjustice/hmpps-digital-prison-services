@@ -6,12 +6,17 @@ import { Role } from '../enums/role'
 import {
   HealthAndMedicationData,
   HealthAndMedicationFilter,
+  HealthAndMedicationFilters,
   ReferenceDataCodeWithComment,
 } from '../data/interfaces/healthAndMedicationApiClient'
 import DietReportingService from '../services/dietReportingService'
 import PdfRenderingService from '../services/pdfRenderingService'
 import AuditService from '../services/auditService'
 import config from '../config'
+import mergeFilterCounts from '../utils/facetedFilterUtils'
+
+const DIETARY_FIELDS = ['personalisedDietaryRequirements', 'medicalDietaryRequirements', 'foodAllergies']
+const LOCATION_FIELDS = ['topLocationLevel', 'recentArrival']
 
 export default class DietaryRequirementsController {
   constructor(
@@ -93,11 +98,26 @@ export default class DietaryRequirementsController {
         },
       }
 
-      // Remove page as this comes from the API
-      const [resp, filters] = await Promise.all([
+      const dietaryConstraints = this.buildConstraints(queryParams, 'dietary')
+      const locationConstraints = this.buildConstraints(queryParams, 'location')
+
+      const [resp, fullFilterResponse, locationFilterResponse, dietaryFilterResponse] = await Promise.all([
         this.dietReportingService.getDietaryRequirementsForPrison(clientToken, prisonId, queryParams),
         this.dietReportingService.getDietaryFiltersForPrison(clientToken, prisonId),
+        this.dietReportingService.getDietaryFiltersForPrison(
+          clientToken,
+          prisonId,
+          Object.keys(dietaryConstraints).length > 0 ? dietaryConstraints : undefined,
+        ),
+        this.dietReportingService.getDietaryFiltersForPrison(
+          clientToken,
+          prisonId,
+          Object.keys(locationConstraints).length > 0 ? locationConstraints : undefined,
+        ),
       ])
+
+      const filters = this.mergeFacetedFilters(fullFilterResponse, locationFilterResponse, dietaryFilterResponse)
+
       delete queryParams.page
 
       const listMetadata = generateListMetadata(resp, queryParams, 'result', true)
@@ -108,7 +128,6 @@ export default class DietaryRequirementsController {
         requestId: req.id,
       })
 
-      // Mark selected filters and sort into alphabetical order, with "Other ..." options forced to last place where required
       let recentArrivalFilters: HealthAndMedicationFilter[] = []
       if (config.features.locationAndRecentArrivalFilters) {
         if (Array.isArray(filters.recentArrival)) {
@@ -193,6 +212,37 @@ export default class DietaryRequirementsController {
       })
 
       res.redirect(`/dietary-requirements?${queryString}`)
+    }
+  }
+
+  public getFilterCounts(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      try {
+        const { clientToken } = req.middleware
+        const prisonId = res.locals.user.activeCaseLoadId
+
+        const dietaryConstraints = this.collectQueryConstraints(req, DIETARY_FIELDS)
+        const locationConstraints = this.collectQueryConstraints(req, LOCATION_FIELDS)
+
+        const [fullFilterCounts, locationCounts, dietaryCounts] = await Promise.all([
+          this.dietReportingService.getDietaryFiltersForPrison(clientToken, prisonId),
+          this.dietReportingService.getDietaryFiltersForPrison(
+            clientToken,
+            prisonId,
+            Object.keys(dietaryConstraints).length > 0 ? dietaryConstraints : undefined,
+          ),
+          this.dietReportingService.getDietaryFiltersForPrison(
+            clientToken,
+            prisonId,
+            Object.keys(locationConstraints).length > 0 ? locationConstraints : undefined,
+          ),
+        ])
+
+        res.json(this.mergeFacetedFilters(fullFilterCounts, locationCounts, dietaryCounts))
+      } catch (error) {
+        const status = error?.status ?? 500
+        res.status(status).json({ status, error: error.message })
+      }
     }
   }
 
@@ -302,12 +352,8 @@ export default class DietaryRequirementsController {
   }
 
   alphabeticalOrderWithOtherInLastPlace = (a: HealthAndMedicationFilter, b: HealthAndMedicationFilter) => {
-    if (a.value === 'OTHER') {
-      return 1
-    }
-    if (b.value === 'OTHER') {
-      return -1
-    }
+    if (a.value === 'OTHER') return 1
+    if (b.value === 'OTHER') return -1
     return a.name.localeCompare(b.name)
   }
 
@@ -323,24 +369,63 @@ export default class DietaryRequirementsController {
         queryParams.topLocationLevel = this.extractQueryParamsAsArray(req, 'topLocationLevel')
       if (req.query.recentArrival) queryParams.recentArrival = Boolean(req.query.recentArrival)
     }
-
     return queryParams
   }
 
-  // Where query params are repeated, express will read them as an array, however they will just be strings otherwise
-  // This forces an array even for non-repeated params
   extractQueryParamsAsArray(req: Request, paramName: string): string[] {
     const param = req.query[paramName]
-    const returnArray: string[] = []
+    if (Array.isArray(param)) return param.map(e => e as string)
+    if (param) return [param as string]
+    return []
+  }
 
-    if (Array.isArray(param)) {
-      for (const e of param) {
-        returnArray.push(e as string)
-      }
-    } else if (param) {
-      returnArray.push(param as string)
+  private mergeFacetedFilters(
+    full: HealthAndMedicationFilters,
+    constrainedByDietary: HealthAndMedicationFilters,
+    constrainedByLocation: HealthAndMedicationFilters,
+  ): HealthAndMedicationFilters {
+    return {
+      personalisedDietaryRequirements: mergeFilterCounts(
+        full?.personalisedDietaryRequirements ?? [],
+        constrainedByLocation?.personalisedDietaryRequirements,
+      ),
+      medicalDietaryRequirements: mergeFilterCounts(
+        full?.medicalDietaryRequirements ?? [],
+        constrainedByLocation?.medicalDietaryRequirements,
+      ),
+      foodAllergies: mergeFilterCounts(full?.foodAllergies ?? [], constrainedByLocation?.foodAllergies),
+      topLocationLevel: mergeFilterCounts(full?.topLocationLevel ?? [], constrainedByDietary?.topLocationLevel),
+      recentArrival: mergeFilterCounts(full?.recentArrival ?? [], constrainedByDietary?.recentArrival),
     }
+  }
 
-    return returnArray
+  private buildConstraints(
+    queryParams: DietaryRequirementsQueryParams,
+    group: 'dietary' | 'location',
+  ): Record<string, string[]> {
+    const constraints: Record<string, string[]> = {}
+    if (group === 'dietary') {
+      if (queryParams.personalDiet) constraints.personalisedDietaryRequirements = queryParams.personalDiet
+      if (queryParams.medicalDiet) constraints.medicalDietaryRequirements = queryParams.medicalDiet
+      if (queryParams.foodAllergies) constraints.foodAllergies = queryParams.foodAllergies
+    } else if (group === 'location' && config.features.locationAndRecentArrivalFilters) {
+      if (queryParams.topLocationLevel) constraints.topLocationLevel = queryParams.topLocationLevel
+      if (queryParams.recentArrival) constraints.recentArrival = ['ARRIVED_LAST_3_DAYS']
+    }
+    return constraints
+  }
+
+  private collectQueryConstraints(req: Request, fields: string[]): Record<string, string[]> {
+    const constraints: Record<string, string[]> = {}
+    for (const key of fields) {
+      const param = req.query[key]
+      if (param) {
+        constraints[key] = Array.isArray(param) ? (param as string[]) : [param as string]
+      }
+    }
+    if (fields.includes('topLocationLevel') && req.query.recentArrival) {
+      constraints.recentArrival = ['ARRIVED_LAST_3_DAYS']
+    }
+    return constraints
   }
 }

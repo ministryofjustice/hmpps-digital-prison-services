@@ -152,7 +152,7 @@ export default {
     return stubFor({
       request: {
         method: 'GET',
-        urlPattern: `/health-and-medication/prisons/${prisonId}/filters`,
+        urlPathPattern: `/health-and-medication/prisons/${prisonId}/filters`,
       },
       response: {
         status: 200,

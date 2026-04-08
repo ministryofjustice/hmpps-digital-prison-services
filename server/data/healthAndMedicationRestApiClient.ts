@@ -33,11 +33,12 @@ export default class HealthAndMedicationRestApiClient extends RestClient impleme
     )
   }
 
-  async getFiltersForPrison(prisonId: string): Promise<HealthAndMedicationFilters> {
+  async getFiltersForPrison(prisonId: string, filters?: Record<string, string[]>): Promise<HealthAndMedicationFilters> {
+    const params = new URLSearchParams()
+    if (filters) Object.entries(filters).forEach(([key, values]) => values?.forEach(v => params.append(key, v)))
+    const query = params.toString()
     return this.get<HealthAndMedicationFilters>(
-      {
-        path: `/prisons/${prisonId}/filters`,
-      },
+      { path: `/prisons/${prisonId}/filters${query ? `?${query}` : ''}` },
       this.token,
     )
   }
