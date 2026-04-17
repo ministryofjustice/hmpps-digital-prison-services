@@ -16,11 +16,11 @@ export default class UserService {
   }
 
   async getUserLocations(prisonId: string, username: string): Promise<LocationViewModel[]> {
-    const locations = await this.locationsInsidePrisonApiClientBuilder().getTopLevelResidentialLocations(
-      prisonId,
-      username,
-    )
-    const flattened = flattenLocations(locations)
+    const locations =
+      prisonId !== 'CADM_I'
+        ? await this.locationsInsidePrisonApiClientBuilder().getTopLevelResidentialLocations(prisonId, username)
+        : []
+    const flattened = flattenLocations(Array.isArray(locations) ? locations : [])
     const onlyActive = flattened.filter(location => location.status === 'ACTIVE')
     const withoutLevelZero = onlyActive.filter(location => `${prisonId}-` !== location.fullLocationPath)
     return locationsAsViewModels(withoutLevelZero, prisonId)

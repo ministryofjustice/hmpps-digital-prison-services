@@ -105,11 +105,8 @@ export default {
       agent: new AgentConfig(Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000))),
       enabled: get('TOKEN_VERIFICATION_ENABLED', 'false') === 'true',
     },
-    mercurySubmit: {
-      url: process.env.MERCURY_SUBMIT_URL,
-      privateBetaDate: parseDate(process.env.MERCURY_SUBMIT_PRIVATE_BETA_ENABLED_DATE),
-      enabled_prisons: process.env.MERCURY_SUBMIT_PRIVATE_BETA_ENABLED_PRISONS || '',
-      liveDate: parseDate(process.env.MERCURY_SUBMIT_LIVE_ENABLED_DATE),
+    submitIntelligenceReport: {
+      url: process.env.SUBMIT_INTELLIGENCE_REPORT_URL,
     },
     checkMyDiary: {
       ui_url: process.env.CHECK_MY_DIARY_URL,

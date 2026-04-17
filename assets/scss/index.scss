@@ -14,6 +14,7 @@ $govuk-page-width: $moj-page-width;
 @import 'helpers/contentful-body-html';
 
 @import './components/alert-flags';
+@import './components/dynamic-filters';
 @import './components/paged-list';
 @import './components/print-link';
 @import './components/sortable-table';

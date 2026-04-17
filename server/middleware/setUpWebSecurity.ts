@@ -29,7 +29,13 @@ export default function setUpWebSecurity(): Router {
     'fonts.googleapis.com',
     (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`,
   ]
-  const formAction = [`'self' ${config.apis.hmppsAuth.externalUrl} ${config.serviceUrls.digitalPrisons}`]
+  const formAction = [
+    "'self'",
+    config.apis.hmppsAuth.externalUrl,
+    config.serviceUrls.digitalPrisons,
+    // allows redirect back to “safe” hosts after caseload switch
+    'https://*.service.justice.gov.uk',
+  ]
   const imgSrc = [
     "'self'",
     'data:',

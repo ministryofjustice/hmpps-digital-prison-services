@@ -1,0 +1,31 @@
+@keyframes bounce-dots {
+  0%,
+  94%,
+  100% {
+    opacity: 0.6;
+    transform: translateY(0);
+  }
+
+  33% {
+    opacity: 1;
+    transform: translateY(-0.3em);
+  }
+}
+
+.filter-count--loading {
+  display: inline-block;
+  letter-spacing: 0.05em;
+
+  .dot {
+    display: inline-block;
+    animation: bounce-dots 0.85s ease-in-out infinite;
+
+    &-2 {
+      animation-delay: 0.1s;
+    }
+
+    &-3 {
+      animation-delay: 0.2s;
+    }
+  }
+}

@@ -152,7 +152,7 @@ export default {
     return stubFor({
       request: {
         method: 'GET',
-        urlPattern: `/health-and-medication/prisons/${prisonId}/filters`,
+        urlPathPattern: `/health-and-medication/prisons/${prisonId}/filters`,
       },
       response: {
         status: 200,
@@ -160,6 +160,33 @@ export default {
           'Content-Type': 'application/json;charset=UTF-8',
         },
         jsonBody: filters,
+      },
+    })
+  },
+  stubHealthAndMedicationForPrisonEmptyResults: (prisonId: string) => {
+    return stubFor({
+      request: {
+        method: 'POST',
+        urlPattern: `/health-and-medication/prisons/${prisonId}`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: {
+          content: [],
+          metadata: {
+            first: true,
+            last: true,
+            numberOfElements: 0,
+            offset: 0,
+            pageNumber: 1,
+            size: 25,
+            totalElements: 0,
+            totalPages: 0,
+          },
+        },
       },
     })
   },
