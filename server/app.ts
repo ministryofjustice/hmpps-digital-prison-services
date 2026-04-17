@@ -8,6 +8,7 @@ import authorisationMiddleware from './middleware/authorisationMiddleware'
 
 import setUpAuthentication from './middleware/setUpAuthentication'
 import setUpCsrf from './middleware/setUpCsrf'
+import setUpCurrentUser from './middleware/setUpCurrentUser'
 import setUpHealthChecks from './middleware/setUpHealthChecks'
 import setUpStaticResources from './middleware/setUpStaticResources'
 import setUpWebRequestParsing from './middleware/setupRequestParsing'
@@ -22,7 +23,6 @@ import logger from '../logger'
 import config from './config'
 import { ensureActiveCaseLoadSet } from './middleware/ensureActiveCaseLoadSet'
 import populateClientToken from './middleware/populateClientToken'
-import populateCurrentUser from './middleware/populateCurrentUser'
 import populateUserLocations from './middleware/populateUserLocations'
 
 export default function createApp(services: Services): express.Application {
@@ -43,7 +43,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpAuthentication())
   app.use(authorisationMiddleware(['ROLE_PRISON']))
   app.use(setUpCsrf())
-  app.use(populateCurrentUser())
+  app.use(setUpCurrentUser())
   app.use(populateClientToken(services.dataAccess.hmppsAuthClient))
 
   app.get(
