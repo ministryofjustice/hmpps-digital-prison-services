@@ -108,7 +108,7 @@ describe('prisonerSearchService', () => {
       expect(prisonerSearchApi.locationSearch).toHaveBeenCalledWith(
         'LEI',
         expect.objectContaining({
-          location: 'LEI-2',
+          location: 'LEI-2-',
         }),
       )
     })
