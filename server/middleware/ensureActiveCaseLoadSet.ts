@@ -12,7 +12,7 @@ export function ensureActiveCaseLoadSet(userService: UserService): RequestHandle
       if (res.locals.user && res.locals.user.caseLoads) {
         const activeCaseLoad = await getActiveCaseload(res.locals.user.caseLoads, userService, res.locals.user)
         res.locals.user.activeCaseLoad = activeCaseLoad
-        res.locals.user.activeCaseLoadId = activeCaseLoad?.caseLoadId
+        res.locals.user.activeCaseLoadId = activeCaseLoad.caseLoadId
       }
       return next()
     } catch (error) {
@@ -22,11 +22,7 @@ export function ensureActiveCaseLoadSet(userService: UserService): RequestHandle
   }
 }
 
-async function getActiveCaseload(
-  caseloads: CaseLoad[],
-  userService: UserService,
-  user: PrisonUser,
-): Promise<CaseLoad | null> {
+async function getActiveCaseload(caseloads: CaseLoad[], userService: UserService, user: PrisonUser): Promise<CaseLoad> {
   const activeCaseload = caseloads.find(caseload => caseload.currentlyActive)
   if (activeCaseload) {
     return activeCaseload
@@ -39,7 +35,9 @@ async function getActiveCaseload(
     return potentialCaseLoad
   }
 
-  return null
+  throw new Error(
+    `No potential caseloads for user: ${user.username} (hmpps-micro-frontend-components likely set DEFAULT_USER_ACCESS)`,
+  )
 }
 
 export default { ensureActiveCaseLoadSet }
