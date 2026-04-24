@@ -7,7 +7,7 @@ import { PrisonUser } from '../interfaces/prisonUser'
 export function ensureActiveCaseLoadSet(userService: UserService): RequestHandler {
   return async (_req, res, next) => {
     try {
-      if (res.locals.user && !res.locals.user.caseLoads.length) {
+      if (res.locals.user && !res.locals.user.caseLoads?.length) {
         throw new Error(`User ${res.locals.user.username} has no caseloads. User is likely to have default access.`)
       }
 
