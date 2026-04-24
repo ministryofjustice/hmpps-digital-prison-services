@@ -183,13 +183,11 @@ context('Homepage - No caseloads', () => {
     cy.setupComponentsData({ caseLoads: [] })
     cy.task('stubWhatsNewPosts')
     cy.task('stubOutageBanner')
-
-    cy.signIn()
-    cy.visit('/')
   })
 
-  it('Homepage is visible', () => {
-    Page.verifyOnPage(IndexPage)
+  it('Homepage is NOT visible', () => {
+    cy.signIn({ failOnStatusCode: false, redirectPath: '/' })
+    cy.get('h1').should('contain.text', 'User USER1 has no caseloads.')
   })
 })
 
