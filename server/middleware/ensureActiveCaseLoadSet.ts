@@ -9,12 +9,16 @@ export function ensureActiveCaseLoadSet(userService: UserService): RequestHandle
     try {
       if (res.locals.user && res.locals.user.activeCaseLoad && res.locals.user.activeCaseLoadId) return next()
 
-      if (res.locals.user && res.locals.user.caseLoads) {
+      if (res.locals.user && res.locals.user.caseLoads?.length) {
         const activeCaseLoad = await getActiveCaseload(res.locals.user.caseLoads, userService, res.locals.user)
         res.locals.user.activeCaseLoad = activeCaseLoad
         res.locals.user.activeCaseLoadId = activeCaseLoad?.caseLoadId
+        return next()
       }
-      return next()
+
+      return next(
+        new Error(`User ${res.locals.user.username} has no caseloads. User is likely to have default access.`),
+      )
     } catch (error) {
       logger.error(error, `Failed to initialise active case load for: ${res.locals.user && res.locals.user.username}`)
       return next(error)

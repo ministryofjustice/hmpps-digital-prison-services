@@ -5,7 +5,15 @@ import Page from '../pages/page'
 context('SignIn', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubUserCaseLoads')
+    cy.task('stubUserCaseLoads', [
+      {
+        caseLoadId: 'LEI',
+        currentlyActive: true,
+        description: '',
+        type: '',
+        caseloadFunction: '',
+      },
+    ])
     cy.task('stubUserLocations')
     cy.task('stubWhatsNewPosts')
     cy.task('stubOutageBanner')
