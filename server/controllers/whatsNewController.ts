@@ -34,8 +34,7 @@ export default class WhatsNewController {
           pageTitle: whatsNewPost.title,
           whatsNewPost,
         })
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (_error) {
+      } catch {
         res.render('notFound')
       }
     }
