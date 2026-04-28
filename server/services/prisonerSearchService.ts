@@ -12,7 +12,7 @@ export default class PrisonerSearchService {
 
     const prisonerSearchClient = this.prisonerSearchApiClientBuilder(clientToken)
     return prisonerSearchClient.locationSearch(activeCaseLoadId, {
-      location: location === activeCaseLoadId ? '' : `${location}-`, // Dash added to ensure correct results.
+      location: (location === activeCaseLoadId || !location) ? '' : `${location}-`, // Dash added to ensure correct results.
       size,
       page,
       term,
