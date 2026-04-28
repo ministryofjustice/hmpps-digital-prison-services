@@ -156,6 +156,10 @@ export default {
   analytics: {
     tagManagerContainerId: get('TAG_MANAGER_CONTAINER_ID', ''),
   },
+  sentry: {
+    dsn: get('SENTRY_DSN', null, requiredInProduction),
+    environment: get('SENTRY_ENVIRONMENT', 'local', requiredInProduction) as 'local' | 'dev' | 'preprod' | 'prod',
+  },
   feedbackSurveyUrl: 'https://www.smartsurvey.co.uk/s/43EWY0/',
   cache: {
     whatsNewTtl: Number(get('WHATS_NEW_CACHE_TTL', 10)),

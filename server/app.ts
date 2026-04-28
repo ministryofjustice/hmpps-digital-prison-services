@@ -24,6 +24,7 @@ import { ensureActiveCaseLoadSet } from './middleware/ensureActiveCaseLoadSet'
 import populateClientToken from './middleware/populateClientToken'
 import populateCurrentUser from './middleware/populateCurrentUser'
 import populateUserLocations from './middleware/populateUserLocations'
+import { setUpSentry, setUpSentryErrorHandler } from './middleware/setUpSentry'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -32,6 +33,7 @@ export default function createApp(services: Services): express.Application {
   app.set('trust proxy', true)
   app.set('port', process.env.PORT || 3000)
 
+  setUpSentry()
   app.use(appInsightsMiddleware())
   app.use(setUpHealthChecks(services.applicationInfo))
   app.use(setUpWebSecurity())
@@ -61,6 +63,7 @@ export default function createApp(services: Services): express.Application {
   app.use(routes(services))
 
   app.use(setUpPageNotFound)
+  setUpSentryErrorHandler(app)
   app.use(errorHandler(process.env.NODE_ENV === 'production'))
 
   return app
