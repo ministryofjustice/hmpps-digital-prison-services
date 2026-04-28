@@ -96,6 +96,31 @@ describe('prisonerSearchService', () => {
       )
     })
 
+    it('Used empty string as location when location is falsey', async () => {
+      await service.getResults(
+        'clientToken',
+        {
+          activeCaseLoadId: 'LEI',
+          locations: userLocations,
+        } as PrisonUser,
+        {
+          location: undefined,
+          page: 10,
+          sort: 'lastName,asc',
+          term: 'smith',
+          size: 25,
+          showAll: false,
+          alerts: ['ABC'],
+        },
+      )
+      expect(prisonerSearchApi.locationSearch).toHaveBeenCalledWith(
+        'LEI',
+        expect.objectContaining({
+          location: '',
+        }),
+      )
+    })
+
     it('Keeps the location when it matches one of the users locations which does not have sublocations', async () => {
       await service.getResults(
         'clientToken',
