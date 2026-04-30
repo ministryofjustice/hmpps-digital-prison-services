@@ -308,7 +308,7 @@ export default class SearchController {
       gender,
       dateOfBirth:
         dateOfBirth.day && dateOfBirth.month && dateOfBirth.year
-          ? `${dateOfBirth.year}-${dateOfBirth.month}-${dateOfBirth.day}`
+          ? `${dateOfBirth.year}-${dateOfBirth.month.padStart(2, '0')}-${dateOfBirth.day.padStart(2, '0')}`
           : undefined,
       location,
     }

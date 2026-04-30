@@ -627,8 +627,8 @@ describe('SearchController', () => {
             query: {
               referrer: 'licences',
               searchText: 'smith',
-              dobDay: '12',
-              dobMonth: '12',
+              dobDay: '2',
+              dobMonth: '9',
               dobYear: '1990',
               genderFilter: 'ALL',
               locationFilter: 'INSIDE',
@@ -648,7 +648,7 @@ describe('SearchController', () => {
           expect(globalSearchService.getResultsForUser).toHaveBeenCalledWith('clientToken', {
             page: 1,
             searchTerm: 'smith',
-            dateOfBirth: '1990-12-12',
+            dateOfBirth: '1990-09-02',
             gender: 'ALL',
             location: 'INSIDE',
           })
@@ -661,8 +661,8 @@ describe('SearchController', () => {
             prisonerProfileBaseUrl: expect.anything(),
             formValues: {
               filters: {
-                dobDay: '12',
-                dobMonth: '12',
+                dobDay: '2',
+                dobMonth: '9',
                 dobYear: '1990',
                 genderFilter: 'ALL',
                 locationFilter: 'INSIDE',
