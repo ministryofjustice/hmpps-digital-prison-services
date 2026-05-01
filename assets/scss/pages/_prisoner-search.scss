@@ -93,7 +93,7 @@
       color: $govuk-link-colour;
 
       &--list {
-        border-right: 1px solid $govuk-text-colour;
+        border-right: 1px solid govuk-functional-colour(text);
         padding-right: govuk-spacing(2);
       }
 
@@ -107,7 +107,7 @@
 
       &--active {
         text-decoration: none;
-        color: $govuk-text-colour !important;
+        color: govuk-functional-colour(text) !important;
       }
     }
   }
