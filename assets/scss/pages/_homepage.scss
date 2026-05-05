@@ -57,7 +57,7 @@
   }
 
   .dps-homepage-search {
-    background-color: govuk-colour("black", $variant: "tint-95");
+    background-color: govuk-functional-colour(template-background);
     padding: 25px 0;
 
     .govuk-radios__label {
@@ -207,5 +207,5 @@
 
 .dps-homepage-services-outage {
   border-color: govuk-colour('red');
-  background-color: govuk-colour("black", $variant: "tint-95");
+  background-color: govuk-functional-colour(template-background);
 }

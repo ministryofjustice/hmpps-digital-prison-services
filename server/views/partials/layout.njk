@@ -42,7 +42,7 @@
 
 {% block pageTitle %}{{ pageTitle + ' - ' + applicationName if pageTitle else applicationName }}{% endblock %}
 
-{% block header %}
+{% block govukHeader %}
   {{ feComponents.header | safe }}
 {% endblock %}
 
@@ -72,6 +72,6 @@
   {% endblock %}
 {% endblock %}
 
-{% block footer %}
+{% block govukFooter %}
   {{ feComponents.footer | safe }}
 {% endblock %}
