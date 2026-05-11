@@ -410,7 +410,7 @@ export default class DietaryRequirementsController {
       if (queryParams.foodAllergies) constraints.foodAllergies = queryParams.foodAllergies
     } else if (group === 'location' && config.features.locationAndRecentArrivalFilters) {
       if (queryParams.topLocationLevel) constraints.topLocationLevel = queryParams.topLocationLevel
-      if (queryParams.recentArrival) constraints.recentArrival = ['ARRIVED_LAST_3_DAYS']
+      if (queryParams.recentArrival) constraints.recentArrival = ['true']
     }
     return constraints
   }
@@ -424,7 +424,7 @@ export default class DietaryRequirementsController {
       }
     }
     if (fields.includes('topLocationLevel') && req.query.recentArrival) {
-      constraints.recentArrival = ['ARRIVED_LAST_3_DAYS']
+      constraints.recentArrival = ['true']
     }
     return constraints
   }

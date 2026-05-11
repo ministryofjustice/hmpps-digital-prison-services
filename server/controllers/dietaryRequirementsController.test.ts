@@ -191,7 +191,7 @@ describe('DietaryRequirementsController', () => {
         description: 'location only',
         query: { topLocationLevel: ['B', 'C'], recentArrival: 'true' },
         expectedDietaryConstraints: undefined,
-        expectedLocationConstraints: { topLocationLevel: ['B', 'C'], recentArrival: ['ARRIVED_LAST_3_DAYS'] },
+        expectedLocationConstraints: { topLocationLevel: ['B', 'C'], recentArrival: ['true'] },
       },
       {
         description: 'both dietary and location',
@@ -207,7 +207,7 @@ describe('DietaryRequirementsController', () => {
           medicalDietaryRequirements: ['COELIAC'],
           foodAllergies: ['PEANUTS'],
         },
-        expectedLocationConstraints: { topLocationLevel: ['B'], recentArrival: ['ARRIVED_LAST_3_DAYS'] },
+        expectedLocationConstraints: { topLocationLevel: ['B'], recentArrival: ['true'] },
       },
     ])(
       'Fetches faceted filters correctly for $description',
@@ -386,13 +386,13 @@ describe('DietaryRequirementsController', () => {
         description: 'location + recent arrival',
         query: { topLocationLevel: 'B', recentArrival: 'true' },
         expectedDietaryConstraints: undefined,
-        expectedLocationConstraints: { topLocationLevel: ['B'], recentArrival: ['ARRIVED_LAST_3_DAYS'] },
+        expectedLocationConstraints: { topLocationLevel: ['B'], recentArrival: ['true'] },
       },
       {
         description: 'all filter types combined',
         query: {
           topLocationLevel: ['A', 'B'],
-          recentArrival: 'true',
+          recentArrival: ['true'],
           personalisedDietaryRequirements: ['VEGAN'],
           medicalDietaryRequirements: ['COELIAC'],
           foodAllergies: ['PEANUTS'],
@@ -404,7 +404,7 @@ describe('DietaryRequirementsController', () => {
         },
         expectedLocationConstraints: {
           topLocationLevel: ['A', 'B'],
-          recentArrival: ['ARRIVED_LAST_3_DAYS'],
+          recentArrival: ['true'],
         },
       },
     ])(
