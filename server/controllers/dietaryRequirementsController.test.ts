@@ -181,17 +181,22 @@ describe('DietaryRequirementsController', () => {
       {
         description: 'dietary only',
         query: { personalDiet: 'KOSHER', foodAllergies: ['PEANUTS', 'MUSTARD'] },
-        expectedDietaryConstraints: {
-          personalisedDietaryRequirements: ['KOSHER'],
-          foodAllergies: ['PEANUTS', 'MUSTARD'],
-        },
-        expectedLocationConstraints: undefined,
+        expectedConstraints: [
+          undefined,
+          {},
+          { personalisedDietaryRequirements: ['KOSHER'], foodAllergies: ['PEANUTS', 'MUSTARD'] },
+          { personalisedDietaryRequirements: ['KOSHER'], foodAllergies: ['PEANUTS', 'MUSTARD'] },
+        ],
       },
       {
         description: 'location only',
         query: { topLocationLevel: ['B', 'C'], recentArrival: 'true' },
-        expectedDietaryConstraints: undefined,
-        expectedLocationConstraints: { topLocationLevel: ['B', 'C'], recentArrival: ['true'] },
+        expectedConstraints: [
+          undefined,
+          { topLocationLevel: ['B', 'C'], recentArrival: ['true'] },
+          { recentArrival: ['true'] },
+          { topLocationLevel: ['B', 'C'] },
+        ],
       },
       {
         description: 'both dietary and location',
@@ -202,47 +207,57 @@ describe('DietaryRequirementsController', () => {
           topLocationLevel: 'B',
           recentArrival: 'true',
         },
-        expectedDietaryConstraints: {
-          personalisedDietaryRequirements: ['KOSHER'],
-          medicalDietaryRequirements: ['COELIAC'],
-          foodAllergies: ['PEANUTS'],
-        },
-        expectedLocationConstraints: { topLocationLevel: ['B'], recentArrival: ['true'] },
-      },
-    ])(
-      'Fetches faceted filters correctly for $description',
-      async ({ query, expectedDietaryConstraints, expectedLocationConstraints }) => {
-        const req = {
-          middleware: { clientToken: 'clientToken' },
-          id: 'abc-123',
-          query,
-        } as unknown as Request
-
-        const res = {
-          locals: {
-            user: { username: 'USER_NAME', activeCaseLoadId: 'LEI', userRoles: [Role.DietAndAllergiesReport] },
+        expectedConstraints: [
+          undefined,
+          { topLocationLevel: ['B'], recentArrival: ['true'] },
+          {
+            personalisedDietaryRequirements: ['KOSHER'],
+            medicalDietaryRequirements: ['COELIAC'],
+            foodAllergies: ['PEANUTS'],
+            recentArrival: ['true'],
           },
-          render: jest.fn(),
-        } as unknown as Response
-
-        await controller.get()(req, res, jest.fn())
-
-        expect(dietReportingService.getDietaryFiltersForPrison).toHaveBeenCalledTimes(3)
-        expect(dietReportingService.getDietaryFiltersForPrison).toHaveBeenNthCalledWith(1, 'clientToken', 'LEI')
-        expect(dietReportingService.getDietaryFiltersForPrison).toHaveBeenNthCalledWith(
-          2,
-          'clientToken',
-          'LEI',
-          expectedDietaryConstraints,
-        )
-        expect(dietReportingService.getDietaryFiltersForPrison).toHaveBeenNthCalledWith(
-          3,
-          'clientToken',
-          'LEI',
-          expectedLocationConstraints,
-        )
+          {
+            personalisedDietaryRequirements: ['KOSHER'],
+            medicalDietaryRequirements: ['COELIAC'],
+            foodAllergies: ['PEANUTS'],
+            topLocationLevel: ['B'],
+          },
+        ],
       },
-    )
+    ])('Fetches faceted filters correctly for $description', async ({ query, expectedConstraints }) => {
+      const req = {
+        middleware: { clientToken: 'clientToken' },
+        id: 'abc-123',
+        query,
+      } as unknown as Request
+
+      const res = {
+        locals: {
+          user: { username: 'USER_NAME', activeCaseLoadId: 'LEI', userRoles: [Role.DietAndAllergiesReport] },
+        },
+        render: jest.fn(),
+      } as unknown as Response
+
+      await controller.get()(req, res, jest.fn())
+
+      expect(dietReportingService.getDietaryFiltersForPrison).toHaveBeenCalledTimes(4)
+      expectedConstraints.forEach((constraints, index) => {
+        if (constraints === undefined) {
+          expect(dietReportingService.getDietaryFiltersForPrison).toHaveBeenNthCalledWith(
+            index + 1,
+            'clientToken',
+            'LEI',
+          )
+        } else {
+          expect(dietReportingService.getDietaryFiltersForPrison).toHaveBeenNthCalledWith(
+            index + 1,
+            'clientToken',
+            'LEI',
+            constraints,
+          )
+        }
+      })
+    })
   })
 
   describe('post', () => {
@@ -370,73 +385,84 @@ describe('DietaryRequirementsController', () => {
       {
         description: 'no filters selected',
         query: {},
-        expectedDietaryConstraints: undefined,
-        expectedLocationConstraints: undefined,
+        expectedConstraints: [undefined, {}, {}, {}],
       },
       {
         description: 'dietary only',
-        query: { personalisedDietaryRequirements: ['VEGAN', 'VEGETARIAN'], foodAllergies: ['PEANUTS'] },
-        expectedDietaryConstraints: {
-          personalisedDietaryRequirements: ['VEGAN', 'VEGETARIAN'],
-          foodAllergies: ['PEANUTS'],
-        },
-        expectedLocationConstraints: undefined,
+        query: { personalDiet: ['VEGAN', 'VEGETARIAN'], foodAllergies: ['PEANUTS'] },
+        expectedConstraints: [
+          undefined,
+          {},
+          { personalisedDietaryRequirements: ['VEGAN', 'VEGETARIAN'], foodAllergies: ['PEANUTS'] },
+          { personalisedDietaryRequirements: ['VEGAN', 'VEGETARIAN'], foodAllergies: ['PEANUTS'] },
+        ],
       },
       {
         description: 'location + recent arrival',
         query: { topLocationLevel: 'B', recentArrival: 'true' },
-        expectedDietaryConstraints: undefined,
-        expectedLocationConstraints: { topLocationLevel: ['B'], recentArrival: ['true'] },
+        expectedConstraints: [
+          undefined,
+          { topLocationLevel: ['B'], recentArrival: ['true'] },
+          { recentArrival: ['true'] },
+          { topLocationLevel: ['B'] },
+        ],
       },
       {
         description: 'all filter types combined',
         query: {
           topLocationLevel: ['A', 'B'],
           recentArrival: ['true'],
-          personalisedDietaryRequirements: ['VEGAN'],
-          medicalDietaryRequirements: ['COELIAC'],
+          personalDiet: ['VEGAN'],
+          medicalDiet: ['COELIAC'],
           foodAllergies: ['PEANUTS'],
         },
-        expectedDietaryConstraints: {
-          personalisedDietaryRequirements: ['VEGAN'],
-          medicalDietaryRequirements: ['COELIAC'],
-          foodAllergies: ['PEANUTS'],
-        },
-        expectedLocationConstraints: {
-          topLocationLevel: ['A', 'B'],
-          recentArrival: ['true'],
-        },
+        expectedConstraints: [
+          undefined,
+          { topLocationLevel: ['A', 'B'], recentArrival: ['true'] },
+          {
+            personalisedDietaryRequirements: ['VEGAN'],
+            medicalDietaryRequirements: ['COELIAC'],
+            foodAllergies: ['PEANUTS'],
+            recentArrival: ['true'],
+          },
+          {
+            personalisedDietaryRequirements: ['VEGAN'],
+            medicalDietaryRequirements: ['COELIAC'],
+            foodAllergies: ['PEANUTS'],
+            topLocationLevel: ['A', 'B'],
+          },
+        ],
       },
-    ])(
-      'Splits facets correctly for $description',
-      async ({ query, expectedDietaryConstraints, expectedLocationConstraints }) => {
-        const res = filterCountsRes()
-        await controller.getFilterCounts()(filterCountsReq(query), res, jest.fn())
+    ])('Splits facets correctly for $description', async ({ query, expectedConstraints }) => {
+      const res = filterCountsRes()
+      await controller.getFilterCounts()(filterCountsReq(query), res, jest.fn())
 
-        expect(dietReportingService.getDietaryFiltersForPrison).toHaveBeenCalledTimes(3)
-        expect(dietReportingService.getDietaryFiltersForPrison).toHaveBeenNthCalledWith(1, 'clientToken', 'LEI')
-        expect(dietReportingService.getDietaryFiltersForPrison).toHaveBeenNthCalledWith(
-          2,
-          'clientToken',
-          'LEI',
-          expectedDietaryConstraints,
-        )
-        expect(dietReportingService.getDietaryFiltersForPrison).toHaveBeenNthCalledWith(
-          3,
-          'clientToken',
-          'LEI',
-          expectedLocationConstraints,
-        )
+      expect(dietReportingService.getDietaryFiltersForPrison).toHaveBeenCalledTimes(4)
+      expectedConstraints.forEach((constraints, index) => {
+        if (constraints === undefined) {
+          expect(dietReportingService.getDietaryFiltersForPrison).toHaveBeenNthCalledWith(
+            index + 1,
+            'clientToken',
+            'LEI',
+          )
+        } else {
+          expect(dietReportingService.getDietaryFiltersForPrison).toHaveBeenNthCalledWith(
+            index + 1,
+            'clientToken',
+            'LEI',
+            constraints,
+          )
+        }
+      })
 
-        expect(res.json).toHaveBeenCalledWith({
-          personalisedDietaryRequirements: mockHealthAndMedicationFiltersResponse.personalisedDietaryRequirements,
-          medicalDietaryRequirements: mockHealthAndMedicationFiltersResponse.medicalDietaryRequirements,
-          foodAllergies: mockHealthAndMedicationFiltersResponse.foodAllergies,
-          topLocationLevel: mockHealthAndMedicationFiltersResponse.topLocationLevel,
-          recentArrival: mockHealthAndMedicationFiltersResponse.recentArrival,
-        })
-      },
-    )
+      expect(res.json).toHaveBeenCalledWith({
+        personalisedDietaryRequirements: mockHealthAndMedicationFiltersResponse.personalisedDietaryRequirements,
+        medicalDietaryRequirements: mockHealthAndMedicationFiltersResponse.medicalDietaryRequirements,
+        foodAllergies: mockHealthAndMedicationFiltersResponse.foodAllergies,
+        topLocationLevel: mockHealthAndMedicationFiltersResponse.topLocationLevel,
+        recentArrival: mockHealthAndMedicationFiltersResponse.recentArrival,
+      })
+    })
   })
 
   describe('printAll', () => {
