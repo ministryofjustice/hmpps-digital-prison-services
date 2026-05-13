@@ -25,6 +25,7 @@ import globalSearchDateValidator from '../utils/globalSearchDateValidator'
 import { formatDate } from '../utils/dateHelpers'
 import MetricsService from '../services/metricsService'
 import AuditService from '../services/auditService'
+import logger from '../../logger'
 
 interface GlobalSearchQueryString {
   page: number
@@ -388,7 +389,11 @@ export default class SearchController {
         name: formatName(prisoner.firstName, '', prisoner.lastName, { style: 'lastCommaFirst' }),
         alerts: alertFlagLabels.filter(alertFlag =>
           alertFlag.alertCodes.some(alert => {
-            const alertsDetails = prisoner.alerts.map((a: { alertCode: string }) => a.alertCode)
+            if (!prisoner.alerts) {
+              logger.warn(`Prisoner ${prisoner.prisonerNumber} has no alerts property`)
+            }
+
+            const alertsDetails = prisoner.alerts?.map((a: { alertCode: string }) => a.alertCode)
             return alertsDetails && alertsDetails.includes(alert)
           }),
         ),
