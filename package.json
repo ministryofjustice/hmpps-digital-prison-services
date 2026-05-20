@@ -43,7 +43,7 @@
     "@ministryofjustice/hmpps-connect-dps-components": "5.5.0",
     "@ministryofjustice/hmpps-connect-dps-shared-items": "3.7.4",
     "@ministryofjustice/hmpps-monitoring": "1.1.0",
-    "@ministryofjustice/hmpps-rest-client": "1.2.1",
+    "@ministryofjustice/hmpps-rest-client": "2.1.0",
     "@sentry/node": "10.53.1",
     "agentkeepalive": "^4.6.0",
     "applicationinsights": "^2.9.8",
