@@ -1,21 +1,14 @@
-/*
- * Do appinsights first as it does some magic instrumentation work, i.e. it affects other 'require's
- * In particular, applicationinsights automatically collects bunyan logs
- */
 import { AuthenticationClient, InMemoryTokenStore, RedisTokenStore } from '@ministryofjustice/hmpps-auth-clients'
-import { buildAppInsightsClient, initialiseAppInsights } from '../utils/azureAppInsights'
-import applicationInfoSupplier from '../applicationInfo'
 import { createRedisClient } from './redisClient'
 import config from '../config'
 import PrisonApiRestClient from './prisonApiClient'
-import HealthAndMedicationRestApiClient from './healthAndMedicationRestApiClient'
-import logger from '../../logger'
 import PrisonerSearchRestClient from './prisonerSearchApiClient'
 import LocationsInsidePrisonRestApiClient from './locationsInsidePrisonRestApiClient'
+import HealthAndMedicationRestApiClient from './healthAndMedicationRestApiClient'
+import logger from '../../logger'
+import applicationInfoSupplier from '../applicationInfo'
 
 const applicationInfo = applicationInfoSupplier()
-initialiseAppInsights()
-const telemetryClient = buildAppInsightsClient(applicationInfo)
 
 export type SystemTokenRestClientBuilder<T> = () => T
 
@@ -44,7 +37,6 @@ const initialiseDataAccess = () => {
         healthAndMedicationApiClientBuilder: (token: string) => new HealthAndMedicationRestApiClient(token),
         prisonerSearchApiClientBuilder: (token: string) => new PrisonerSearchRestClient(token),
         locationsInsidePrisonApiClientBuilder: () => new LocationsInsidePrisonRestApiClient(hmppsAuthClient),
-        telemetryClient,
       }
     }
     throw new Error('Data access already initialised')
