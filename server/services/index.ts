@@ -42,6 +42,9 @@ export const services = () => {
       watchQuery: {
         fetchPolicy: 'no-cache',
       },
+      query: {
+        fetchPolicy: 'no-cache',
+      },
     },
   })
   const gotenbergClient = new GotenbergRestApiClient(config.apis.gotenberg)
