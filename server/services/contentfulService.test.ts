@@ -1,4 +1,4 @@
-import { ApolloClient, ObservableQuery } from '@apollo/client'
+import { ApolloClient, InMemoryCache, HttpLink, ObservableQuery } from '@apollo/client'
 import ContentfulService from './contentfulService'
 import {
   whatsNewPostCollectionMock,
@@ -8,14 +8,17 @@ import {
 } from '../mocks/whatsNewPostsMock'
 import { managedPagesCollectionMock, managedPagesMock } from '../mocks/managedPagesMock'
 
-jest.mock('@apollo/client/core')
-
 describe('ContentfulService', () => {
   let contentfulService: ContentfulService
   let apolloClient: jest.Mocked<ApolloClient>
 
   beforeEach(() => {
-    apolloClient = jest.mocked(new ApolloClient(null))
+    apolloClient = jest.mocked(
+      new ApolloClient({
+        cache: new InMemoryCache(),
+        link: new HttpLink({}),
+      }),
+    )
     contentfulService = new ContentfulService(apolloClient)
   })
 

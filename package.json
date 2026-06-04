@@ -34,7 +34,7 @@
     "npm": "^11"
   },
   "dependencies": {
-    "@apollo/client": "4.1.9",
+    "@apollo/client": "4.2.0",
     "@contentful/rich-text-html-renderer": "17.2.2",
     "@contentful/rich-text-types": "17.2.7",
     "@ministryofjustice/frontend": "9.0.0",
@@ -44,7 +44,7 @@
     "@ministryofjustice/hmpps-connect-dps-shared-items": "4.0.0",
     "@ministryofjustice/hmpps-monitoring": "2.1.0",
     "@ministryofjustice/hmpps-rest-client": "2.1.0",
-    "@sentry/node": "10.54.0",
+    "@sentry/node": "10.55.0",
     "agentkeepalive": "^4.6.0",
     "applicationinsights": "^2.9.8",
     "body-parser": "^2.2.2",
