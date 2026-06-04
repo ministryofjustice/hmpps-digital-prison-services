@@ -15,7 +15,7 @@ services:
       - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0
 
   redis:
-    image: 'redis:7.2'
+    image: 'redis:8.8'
     networks:
       - hmpps
     container_name: redis
