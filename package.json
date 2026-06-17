@@ -34,7 +34,7 @@
     "npm": "^11"
   },
   "dependencies": {
-    "@apollo/client": "4.2.2",
+    "@apollo/client": "4.2.3",
     "@contentful/rich-text-html-renderer": "17.2.2",
     "@contentful/rich-text-types": "17.2.7",
     "@ministryofjustice/frontend": "9.0.0",
@@ -95,7 +95,7 @@
     "audit-ci": "^7.1.0",
     "aws-sdk-client-mock": "^4.1.0",
     "cookie-session": "^2.1.1",
-    "cypress": "15.16.0",
+    "cypress": "15.17.0",
     "cypress-multi-reporters": "^2.0.5",
     "del": "8.0.1",
     "esbuild": "0.28.1",
