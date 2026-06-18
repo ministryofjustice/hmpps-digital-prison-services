@@ -96,13 +96,13 @@ context('Homepage (with FE Components services)', () => {
         .contains(prisonEstablishmentRollSummaryMock.numCurrentPopulation)
       page.today().populationCard().find('a').contains('Establishment roll')
 
-      page.today().inTodayCard().should('be.visible').find('h3').contains('Arrived today')
+      page.today().inTodayCard().should('be.visible').find('h3').contains('In today')
       page.today().inTodayCard().find('.today-card__count').contains(prisonEstablishmentRollSummaryMock.numArrivedToday)
-      page.today().inTodayCard().find('a').contains('Arrived today')
+      page.today().inTodayCard().find('a').contains('In today')
 
       page.today().outTodayCard().should('be.visible').find('h3').contains('Out today')
       page.today().outTodayCard().find('.today-card__count').contains(prisonEstablishmentRollSummaryMock.numOutToday)
-      page.today().outTodayCard().find('a').contains('People out today')
+      page.today().outTodayCard().find('a').contains('Out today')
     })
   })
 
