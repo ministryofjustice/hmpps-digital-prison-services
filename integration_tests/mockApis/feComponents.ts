@@ -1,6 +1,6 @@
+import type CaseLoad from '@ministryofjustice/hmpps-connect-dps-components/dist/types/CaseLoad'
 import type Service from '@ministryofjustice/hmpps-connect-dps-components/dist/types/Service'
 import { stubFor } from './wiremock'
-import { CaseLoad } from '../../server/data/interfaces/caseLoad'
 
 export default {
   stubFeComponents: (
@@ -35,7 +35,7 @@ export default {
           footer: { html: '', css: [], javascript: [] },
           meta: {
             caseLoads,
-            activeCaseLoad: caseLoads.find(caseLoad => caseLoad.currentlyActive === true),
+            activeCaseLoad: caseLoads.find(caseLoad => caseLoad.currentlyActive),
             services: options.services || [
               {
                 id: 'check-my-diary',
