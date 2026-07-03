@@ -3,7 +3,6 @@ import express from 'express'
 import { getFrontendComponents, retrieveCaseLoadData } from '@ministryofjustice/hmpps-connect-dps-components'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
-import { appInsightsMiddleware } from './utils/azureAppInsights'
 import authorisationMiddleware from './middleware/authorisationMiddleware'
 
 import setUpAuthentication from './middleware/setUpAuthentication'
@@ -14,7 +13,7 @@ import setUpWebRequestParsing from './middleware/setupRequestParsing'
 import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setUpWebSession from './middleware/setUpWebSession'
 
-import routes from './routes'
+import routes, { standardGetPaths } from './routes'
 import type { Services } from './services'
 import setUpPageNotFound from './middleware/setUpPageNotFound'
 import setUpEnvironmentName from './middleware/setUpEnvironmentName'
@@ -25,6 +24,8 @@ import populateClientToken from './middleware/populateClientToken'
 import populateCurrentUser from './middleware/populateCurrentUser'
 import populateUserLocations from './middleware/populateUserLocations'
 import { setUpSentry, setUpSentryErrorHandler } from './middleware/setUpSentry'
+import addUserMetadataToLogs from './middleware/addUserMetadataToLogs'
+import forGetRequestsMatching from './utils/forGetRequestsMatching'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -34,7 +35,6 @@ export default function createApp(services: Services): express.Application {
   app.set('port', process.env.PORT || 3000)
 
   setUpSentry()
-  app.use(appInsightsMiddleware())
   app.use(setUpHealthChecks(services.applicationInfo))
   app.use(setUpWebSecurity())
   app.use(setUpWebSession())
@@ -48,18 +48,21 @@ export default function createApp(services: Services): express.Application {
   app.use(populateCurrentUser())
   app.use(populateClientToken(services.dataAccess.hmppsAuthClient))
 
-  app.get(
-    /^(?!\/api).*/,
-    getFrontendComponents({
-      logger,
-      componentApiConfig: config.apis.componentApi,
-      dpsUrl: config.serviceUrls.digitalPrisons,
-      requestOptions: { includeSharedData: true },
-    }),
+  app.use(
+    forGetRequestsMatching(
+      [standardGetPaths],
+      getFrontendComponents({
+        logger,
+        componentApiConfig: config.apis.componentApi,
+        dpsUrl: config.serviceUrls.digitalPrisons,
+        requestOptions: { includeSharedData: true },
+      }),
+    ),
   )
   app.use(retrieveCaseLoadData({ logger, prisonApiConfig: config.apis.prisonApi }))
   app.use(ensureActiveCaseLoadSet(services.userService))
   app.use(populateUserLocations(services.userService))
+  app.use(addUserMetadataToLogs())
   app.use(routes(services))
 
   app.use(setUpPageNotFound)

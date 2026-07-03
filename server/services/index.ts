@@ -55,7 +55,7 @@ export const services = () => {
   const pdfRenderingService = new PdfRenderingService(gotenbergClient)
   const prisonerSearchService = new PrisonerSearchService(dataAccess.prisonerSearchApiClientBuilder)
   const globalSearchService = new GlobalSearchService(dataAccess.prisonerSearchApiClientBuilder)
-  const metricsService = new MetricsService(dataAccess.telemetryClient)
+  const metricsService = new MetricsService()
 
   // Caches
   const whatsNewCache = new HmppsCache<WhatsNewData>(config.cache.whatsNewTtl)
