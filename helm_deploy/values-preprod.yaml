@@ -54,11 +54,12 @@ generic-service:
 
   allowlist:
     groups:
-    - internal
-    - prisons
-    - private_prisons
-    - police
-    - sscl
+      - digital_staff_and_mojo
+      - moj_cloud_platform
+      - prisons
+      - private_prisons
+      - police
+      - sscl
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-connect-dps-non-prod # sent to #connect-dps-non-prod-alerts
