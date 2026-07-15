@@ -68,34 +68,32 @@ describe('SearchController', () => {
         } as unknown as Response
         jest.mocked(generateListMetadata).mockReturnValueOnce(generatedMetadata)
 
-        prisonerSearchService.getResults = jest.fn(
-          async (): Promise<PagedList<Prisoner>> => ({
-            content: [
-              {
-                prisonId: 'LEI',
-                prisonerNumber: 'A1234BC',
-                currentFacialImageId: 1234,
-                currentIncentive: { level: { description: 'Current incentive' } },
-                cellLocation: 'RECP',
-                firstName: 'First',
-                lastName: 'LAST',
-                alerts: [{ alertCode: 'DONT_SHOW' }, { alertCode: 'PEEP' }],
-                dateOfBirth: '1990-01-01',
-                category: 'A',
-              } as Prisoner,
-            ],
-            metadata: {
-              first: true,
-              last: true,
-              offset: 0,
-              pageNumber: 0,
-              size: 1,
-              numberOfElements: 1,
-              totalElements: 1,
-              totalPages: 1,
-            },
-          }),
-        )
+        prisonerSearchService.getResults = jest.fn(async (): Promise<PagedList<Prisoner>> => ({
+          content: [
+            {
+              prisonId: 'LEI',
+              prisonerNumber: 'A1234BC',
+              currentFacialImageId: 1234,
+              currentIncentive: { level: { description: 'Current incentive' } },
+              cellLocation: 'RECP',
+              firstName: 'First',
+              lastName: 'LAST',
+              alerts: [{ alertCode: 'DONT_SHOW' }, { alertCode: 'PEEP' }],
+              dateOfBirth: '1990-01-01',
+              category: 'A',
+            } as Prisoner,
+          ],
+          metadata: {
+            first: true,
+            last: true,
+            offset: 0,
+            pageNumber: 0,
+            size: 1,
+            numberOfElements: 1,
+            totalElements: 1,
+            totalPages: 1,
+          },
+        }))
       })
 
       it('Loads the page correctly with no query params', async () => {
@@ -475,35 +473,33 @@ describe('SearchController', () => {
         beforeEach(() => {
           jest.mocked(generateListMetadata).mockReturnValueOnce(generatedMetadata)
 
-          globalSearchService.getResultsForUser = jest.fn(
-            async (): Promise<PagedList<Prisoner>> => ({
-              content: [
-                {
-                  prisonId: 'LEI',
-                  bookingId: 1234,
-                  status: 'ACTIVE_IN',
-                  prisonerNumber: 'A1234BC',
-                  currentFacialImageId: 1234,
-                  currentIncentive: { level: { description: 'Current incentive' } },
-                  cellLocation: 'RECP',
-                  firstName: 'First',
-                  lastName: 'LAST',
-                  alerts: [{ alertCode: 'DONT_SHOW' }, { alertCode: 'PEEP' }],
-                  dateOfBirth: '1990-01-01',
-                } as Prisoner,
-              ],
-              metadata: {
-                first: true,
-                last: true,
-                offset: 0,
-                pageNumber: 0,
-                size: 1,
-                numberOfElements: 1,
-                totalElements: 1,
-                totalPages: 1,
-              },
-            }),
-          )
+          globalSearchService.getResultsForUser = jest.fn(async (): Promise<PagedList<Prisoner>> => ({
+            content: [
+              {
+                prisonId: 'LEI',
+                bookingId: 1234,
+                status: 'ACTIVE_IN',
+                prisonerNumber: 'A1234BC',
+                currentFacialImageId: 1234,
+                currentIncentive: { level: { description: 'Current incentive' } },
+                cellLocation: 'RECP',
+                firstName: 'First',
+                lastName: 'LAST',
+                alerts: [{ alertCode: 'DONT_SHOW' }, { alertCode: 'PEEP' }],
+                dateOfBirth: '1990-01-01',
+              } as Prisoner,
+            ],
+            metadata: {
+              first: true,
+              last: true,
+              offset: 0,
+              pageNumber: 0,
+              size: 1,
+              numberOfElements: 1,
+              totalElements: 1,
+              totalPages: 1,
+            },
+          }))
         })
 
         it('Renders the page when no params are given', async () => {

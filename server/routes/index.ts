@@ -10,6 +10,10 @@ import CommonApiRoutes from './common/api'
 import { userHasRoles } from '../utils/utils'
 import ChangeCaseloadController from '../controllers/changeCaseloadController'
 
+export function standardGetPaths(path: string): boolean {
+  return !/^(\/api)/.test(path)
+}
+
 export default function routes(services: Services): Router {
   const router = Router()
   const commonApiRoutes = new CommonApiRoutes(services.dataAccess.prisonApiClientBuilder)

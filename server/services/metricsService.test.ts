@@ -1,11 +1,22 @@
-import { TelemetryClient } from 'applicationinsights'
+import { telemetry } from '@ministryofjustice/hmpps-azure-telemetry'
 import MetricsService from './metricsService'
 import { PrisonUser } from '../interfaces/prisonUser'
 
+jest.mock('@ministryofjustice/hmpps-azure-telemetry', () => ({
+  telemetry: {
+    trackEvent: jest.fn(),
+  },
+}))
+
 describe('metricsService', () => {
+  const trackEventMock = telemetry.trackEvent as jest.Mock
+
+  afterEach(() => {
+    jest.resetAllMocks()
+  })
+
   it('Tracks the prisoner search query', () => {
-    const client = { trackEvent: jest.fn() } as unknown as TelemetryClient
-    const service = new MetricsService(client)
+    const service = new MetricsService()
     service.trackPrisonerSearchQuery({
       offenderNos: ['ABC'],
       searchTerms: {
@@ -15,22 +26,16 @@ describe('metricsService', () => {
       user: { activeCaseLoad: { caseLoadId: 'MDI' }, username: 'UserName' } as PrisonUser,
     })
 
-    expect(client.trackEvent).toHaveBeenCalledWith({
-      name: 'PrisonerSearch',
-      properties: {
-        caseLoadId: 'MDI',
-        filters: {
-          foo: 'bar',
-        },
-        offenderNos: ['ABC'],
-        username: 'UserName',
-      },
+    expect(trackEventMock).toHaveBeenCalledWith('PrisonerSearch', {
+      caseLoadId: 'MDI',
+      filters: JSON.stringify({ foo: 'bar' }),
+      offenderNos: JSON.stringify(['ABC']),
+      username: 'UserName',
     })
   })
 
   it('Tracks the global search query', () => {
-    const client = { trackEvent: jest.fn() } as unknown as TelemetryClient
-    const service = new MetricsService(client)
+    const service = new MetricsService()
     service.trackGlobalSearchQuery({
       offenderNos: ['ABC'],
       openFilterValues: {
@@ -41,17 +46,12 @@ describe('metricsService', () => {
       searchText: 'Search text',
     })
 
-    expect(client.trackEvent).toHaveBeenCalledWith({
-      name: 'GlobalSearch',
-      properties: {
-        caseLoadId: 'MDI',
-        filters: {
-          foo: 'bar',
-        },
-        offenderNos: ['ABC'],
-        username: 'UserName',
-        searchText: 'Search text',
-      },
+    expect(trackEventMock).toHaveBeenCalledWith('GlobalSearch', {
+      caseLoadId: 'MDI',
+      filters: JSON.stringify({ foo: 'bar' }),
+      offenderNos: JSON.stringify(['ABC']),
+      username: 'UserName',
+      searchText: 'Search text',
     })
   })
 })
