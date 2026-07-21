@@ -34,7 +34,7 @@
     "npm": "^11"
   },
   "dependencies": {
-    "@apollo/client": "4.2.6",
+    "@apollo/client": "4.2.7",
     "@contentful/rich-text-html-renderer": "17.2.2",
     "@contentful/rich-text-types": "17.2.7",
     "@ministryofjustice/frontend": "9.0.0",
@@ -90,8 +90,8 @@
     "@types/nunjucks": "^3.2.6",
     "@types/passport": "^1.0.17",
     "@types/passport-oauth2": "^1.8.0",
-    "@types/superagent": "^8.1.10",
-    "@types/supertest": "^7.2.0",
+    "@types/superagent": "^8.1.11",
+    "@types/supertest": "^7.2.1",
     "audit-ci": "^7.1.0",
     "aws-sdk-client-mock": "^4.1.0",
     "cookie-session": "^2.1.1",
@@ -123,7 +123,7 @@
     "@opentelemetry/sdk-trace-web": "2.8.0",
     "brace-expansion": "5.0.7",
     "diff": "^9.0.0",
-    "js-yaml": "^5.1.0",
+    "js-yaml": "^5.2.1",
     "serialize-javascript": "^7.0.3"
   }
 }
