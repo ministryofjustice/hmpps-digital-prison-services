@@ -37,7 +37,7 @@
     "@apollo/client": "4.2.7",
     "@contentful/rich-text-html-renderer": "17.2.2",
     "@contentful/rich-text-types": "17.2.7",
-    "@ministryofjustice/frontend": "9.0.0",
+    "@ministryofjustice/frontend": "10.0.0",
     "@ministryofjustice/hmpps-audit-client": "1.1.3",
     "@ministryofjustice/hmpps-auth-clients": "3.0.0",
     "@ministryofjustice/hmpps-azure-telemetry": "1.0.2",
