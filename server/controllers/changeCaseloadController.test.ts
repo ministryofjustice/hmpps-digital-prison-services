@@ -156,11 +156,32 @@ describe('ChangeCaseloadController', () => {
         expectedRedirect: '/',
       },
       {
-        scenario: 'where they came from',
+        scenario: 'where they came from, flagging the caseload change',
         req: makeReq({
           body: { caseLoadId: moorland.caseLoadId, backUrl: 'http://localhost:3000/whereTheyCameFrom' },
         }),
-        expectedRedirect: 'http://localhost:3000/whereTheyCameFrom',
+        expectedRedirect: 'http://localhost:3000/whereTheyCameFrom?caseloadChanged=true',
+      },
+      {
+        scenario: 'where they came from, keeping their existing query string',
+        req: makeReq({
+          body: { caseLoadId: moorland.caseLoadId, backUrl: 'http://localhost:3000/prison/BFI?status=ACTIVE&page=3' },
+        }),
+        expectedRedirect: 'http://localhost:3000/prison/BFI?status=ACTIVE&page=3&caseloadChanged=true',
+      },
+      {
+        scenario: 'where they came from, with the marker before the fragment',
+        req: makeReq({
+          body: { caseLoadId: moorland.caseLoadId, backUrl: 'http://localhost:3000/prison/BFI#results' },
+        }),
+        expectedRedirect: 'http://localhost:3000/prison/BFI?caseloadChanged=true#results',
+      },
+      {
+        scenario: 'where they came from, without repeating a marker already present',
+        req: makeReq({
+          body: { caseLoadId: moorland.caseLoadId, backUrl: 'http://localhost:3000/prison/BFI?caseloadChanged=true' },
+        }),
+        expectedRedirect: 'http://localhost:3000/prison/BFI?caseloadChanged=true',
       },
     ])('Sets active caseload and redirects to $scenario', async ({ req, expectedRedirect }) => {
       const res = makeResWithCaseloads(caseloads)

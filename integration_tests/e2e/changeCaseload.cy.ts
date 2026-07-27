@@ -22,6 +22,20 @@ context('Change Caseload Page', () => {
     cy.url().should('eq', `${Cypress.config().baseUrl}/`)
   })
 
+  it('should return the user to where they came from, flagging the caseload change', () => {
+    const backUrl = `${Cypress.config().baseUrl}/?status=ACTIVE`
+    cy.visit(`/change-caseload?backUrl=${encodeURIComponent(backUrl)}`)
+
+    const page = Page.verifyOnPage(ChangeCaseloadPage)
+    page.select().select('MDI')
+    page.submitButton().click()
+
+    // Services being returned to need to know the caseload changed, since their url may still name
+    // the prison the user has just left
+    cy.location('pathname').should('eq', '/')
+    cy.location('search').should('eq', '?status=ACTIVE&caseloadChanged=true')
+  })
+
   it('should show error if user somehow inputs invalid data', () => {
     const page = Page.verifyOnPage(ChangeCaseloadPage)
     page.select().then($select => {
