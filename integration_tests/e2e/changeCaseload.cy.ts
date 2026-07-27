@@ -23,17 +23,35 @@ context('Change Caseload Page', () => {
   })
 
   it('should return the user to where they came from, flagging the caseload change', () => {
-    const backUrl = `${Cypress.config().baseUrl}/?status=ACTIVE`
+    // A backUrl on another service, which is the case that matters: isSafeForRedirect only trusts
+    // config.domain or an https .service.justice.gov.uk host, and config.domain is not the port the
+    // app is served on under feature.env
+    const backUrl = 'https://digital-dev.prison.service.justice.gov.uk/prison/KMI?status=ACTIVE'
     cy.visit(`/change-caseload?backUrl=${encodeURIComponent(backUrl)}`)
 
-    const page = Page.verifyOnPage(ChangeCaseloadPage)
-    page.select().select('MDI')
-    page.submitButton().click()
+    Page.verifyOnPage(ChangeCaseloadPage)
+    cy.get('input[name="backUrl"]').should('have.value', backUrl)
 
-    // Services being returned to need to know the caseload changed, since their url may still name
-    // the prison the user has just left
-    cy.location('pathname').should('eq', '/')
-    cy.location('search').should('eq', '?status=ACTIVE&caseloadChanged=true')
+    // Submitted by request rather than by clicking, so the assertion can see the redirect itself
+    // instead of the browser trying to follow it off-site
+    cy.get('input[name="_csrf"]')
+      .invoke('val')
+      .then(csrfToken => {
+        cy.request({
+          method: 'POST',
+          url: '/change-caseload',
+          form: true,
+          body: { caseLoadId: 'MDI', backUrl, _csrf: csrfToken },
+          followRedirect: false,
+        }).then(response => {
+          expect(response.status).to.eq(302)
+          // Services being returned to need to know the caseload changed, since their url may still
+          // name the prison the user has just left
+          expect(response.headers.location).to.eq(
+            'https://digital-dev.prison.service.justice.gov.uk/prison/KMI?status=ACTIVE&caseloadChanged=true',
+          )
+        })
+      })
   })
 
   it('should show error if user somehow inputs invalid data', () => {
