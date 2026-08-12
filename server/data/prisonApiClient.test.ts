@@ -33,28 +33,6 @@ describe('prisonApiClient', () => {
     nock.cleanAll()
   })
 
-  const mockSuccessfulPrisonApiCall = <TReturnData>(url: string, returnData: TReturnData) => {
-    fakePrisonApi.get(url).matchHeader('authorization', `Bearer ${token.access_token}`).reply(200, returnData)
-  }
-
-  describe('getCaseLoads', () => {
-    const caseloadMock = [
-      {
-        caseLoadId: 'LEI',
-        description: 'Leeds (HMP)',
-        type: 'INST',
-        caseloadFunction: 'GENERAL',
-        currentlyActive: true,
-      },
-    ]
-    it('should return data from api', async () => {
-      mockSuccessfulPrisonApiCall('/api/users/me/caseLoads?allCaseloads=true', caseloadMock)
-
-      const output = await prisonApiClient.getUserCaseLoads()
-      expect(output).toEqual(caseloadMock)
-    })
-  })
-
   describe('setActiveCaseLoad', () => {
     it('Should return data from the API', async () => {
       const caseLoadMock = {

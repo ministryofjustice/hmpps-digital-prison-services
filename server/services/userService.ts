@@ -11,10 +11,6 @@ export default class UserService {
     private readonly locationsInsidePrisonApiClientBuilder: SystemTokenRestClientBuilder<LocationsInsidePrisonApiClient>,
   ) {}
 
-  getUserCaseLoads(token: string): Promise<CaseLoad[]> {
-    return this.prisonApiClientBuilder(token).getUserCaseLoads()
-  }
-
   async getUserLocations(prisonId: string, username: string): Promise<LocationViewModel[]> {
     const locations =
       prisonId !== 'CADM_I'

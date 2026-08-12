@@ -1,7 +1,6 @@
 import { PrisonApiClient } from '../../data/interfaces/prisonApiClient'
 
 const prisonApiClientMock: PrisonApiClient = {
-  getUserCaseLoads: jest.fn(),
   setActiveCaseload: jest.fn(),
   getPrisonRollCountSummary: jest.fn(),
   getLatestArrivalDates: jest.fn(),
