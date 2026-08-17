@@ -4,7 +4,6 @@ import EstablishmentRollSummary from '../../services/interfaces/establishmentRol
 import { LatestArrivalDateInfo } from './latestArrivalDateInfo'
 
 export interface PrisonApiClient {
-  getUserCaseLoads(): Promise<CaseLoad[]>
   setActiveCaseload(caseLoad: CaseLoad): Promise<Record<string, string>>
   getPrisonRollCountSummary(prisonId: string): Promise<EstablishmentRollSummary>
   getLatestArrivalDates(prisonerNumbers: string[]): Promise<LatestArrivalDateInfo[]>

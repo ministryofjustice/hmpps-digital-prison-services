@@ -12,10 +12,6 @@ export default class PrisonApiRestClient extends RestClient implements PrisonApi
     super('Prison API', config.apis.prisonApi, token)
   }
 
-  getUserCaseLoads(): Promise<CaseLoad[]> {
-    return this.get<CaseLoad[]>({ path: '/api/users/me/caseLoads', query: 'allCaseloads=true' }, this.token)
-  }
-
   setActiveCaseload(caseLoad: CaseLoad): Promise<Record<string, string>> {
     return this.put<Record<string, string>>({ path: '/api/users/me/activeCaseLoad', data: caseLoad }, this.token)
   }
