@@ -24,23 +24,6 @@ describe('User service', () => {
     )
   })
 
-  describe('getUserCaseLoads', () => {
-    it('retrieves list of user case loads', async () => {
-      const caseLoads = [{ caseLoadId: 'MDI' }] as CaseLoad[]
-      prisonApiClient.getUserCaseLoads.mockResolvedValue(caseLoads)
-
-      const result = await userService.getUserCaseLoads(token)
-
-      expect(result).toEqual(caseLoads)
-    })
-
-    it('propagates error', async () => {
-      prisonApiClient.getUserCaseLoads.mockRejectedValue(new Error('some error'))
-
-      await expect(userService.getUserCaseLoads(token)).rejects.toEqual(new Error('some error'))
-    })
-  })
-
   describe('getUserLocations', () => {
     it('retrieves list of active location text and values for use with search', async () => {
       const locations = [

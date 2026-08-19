@@ -369,7 +369,8 @@ export default class SearchController {
     // BEGIN - Ported behaviour from the old search
     // when the prison-api was used, searching for prisoners not in your caseload returned no results
     // rightly or wrongly this replicates that behaviour (maybe a 403 error could have been better)
-    const prisonId = queryParams.location?.slice(0, 3)
+    const location = typeof queryParams.location === 'string' ? queryParams.location : undefined
+    const prisonId = location?.slice(0, 3)
     const caseloadIds = user.caseLoads.map(caseload => caseload.caseLoadId)
     if (prisonId && !caseloadIds.includes(prisonId)) return { results: [], listMetadata: null }
     // END
