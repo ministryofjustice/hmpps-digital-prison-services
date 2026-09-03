@@ -3,7 +3,7 @@ import { UserService } from '../services'
 import logger from '../../logger'
 
 export default function populateUserLocations(userService: UserService): RequestHandler {
-  return async (req, res, next) => {
+  return async (_req, res, next) => {
     try {
       if (res.locals.user && res.locals.user.authSource === 'nomis') {
         const { activeCaseLoadId, username } = res.locals.user

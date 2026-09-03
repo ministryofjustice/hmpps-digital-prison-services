@@ -5,6 +5,7 @@
     "noEmit": true,
     "lib": ["dom", "dom.iterable", "es2020"],
     "strict": true,
+    "noUnusedParameters": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "sourceMap": true,

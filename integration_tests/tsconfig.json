@@ -3,6 +3,7 @@
   "compilerOptions": {
     "strict": false,
     "noEmit": true,
+    "noUnusedParameters": true,
     "target": "es2021",
     "lib": ["dom", "es2021"],
     "types": ["cypress"],
