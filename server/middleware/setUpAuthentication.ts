@@ -30,7 +30,7 @@ passport.use(
       state: true,
       customHeaders: { Authorization: generateOauthClientToken() },
     },
-    (token, refreshToken, params, profile, done) => {
+    (token, _refreshToken, params, _profile, done) => {
       return done(null, { token, username: params.user_name, authSource: params.auth_source })
     },
   ),
@@ -51,7 +51,7 @@ export default function setUpAuthentication(): Router {
       componentApiConfig: config.apis.componentApi,
       dpsUrl: config.serviceUrls.digitalPrisons,
     }),
-    (req, res) => {
+    (_req, res) => {
       res.status(401)
       return res.render('autherror')
     },
@@ -102,7 +102,7 @@ export default function setUpAuthentication(): Router {
     } else res.redirect(authSignOutUrl)
   })
 
-  router.use('/account-details', (req, res) => {
+  router.use('/account-details', (_req, res) => {
     res.redirect(`${authUrl}/account-details?${authParameters}`)
   })
 

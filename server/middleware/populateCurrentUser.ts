@@ -5,7 +5,7 @@ import { convertToTitleCase } from '../utils/utils'
 import { Role } from '../enums/role'
 
 export default function populateCurrentUser(): RequestHandler {
-  return async (req, res, next) => {
+  return async (_req, res, next) => {
     try {
       const {
         name,
