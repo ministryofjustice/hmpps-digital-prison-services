@@ -1,6 +1,6 @@
 import { telemetry } from '@ministryofjustice/hmpps-azure-telemetry'
 import MetricsService from './metricsService'
-import { PrisonUser } from '../interfaces/prisonUser'
+import { PrisonUser } from '../interfaces/hmppsUser'
 
 jest.mock('@ministryofjustice/hmpps-azure-telemetry', () => ({
   telemetry: {

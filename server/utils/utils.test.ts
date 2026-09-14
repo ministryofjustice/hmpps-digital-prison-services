@@ -20,7 +20,7 @@ import { HmppsError } from '../data/interfaces/hmppsError'
 import { CaseLoad } from '../data/interfaces/caseLoad'
 import { Role } from '../enums/role'
 import { SelectItem } from '../data/interfaces/selectItem'
-import { PrisonUser } from '../interfaces/prisonUser'
+import { PrisonUser } from '../interfaces/hmppsUser'
 import Prisoner from '../data/interfaces/prisoner'
 
 describe('convert to title case', () => {

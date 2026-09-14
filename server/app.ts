@@ -1,4 +1,5 @@
 import express from 'express'
+import { telemetryMiddleware } from '@ministryofjustice/hmpps-azure-telemetry'
 
 import { getFrontendComponents, retrieveCaseLoadData } from '@ministryofjustice/hmpps-connect-dps-components'
 import nunjucksSetup from './utils/nunjucksSetup'
@@ -47,6 +48,8 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpCsrf())
   app.use(populateCurrentUser())
   app.use(populateClientToken(services.dataAccess.hmppsAuthClient))
+  // For prison users, register the `addUserMetadataToTelemetry` middleware after middleware that retrieves caseload data.
+  app.use(telemetryMiddleware.addUserMetadataToTelemetry())
 
   app.use(
     forGetRequestsMatching(
