@@ -5,7 +5,7 @@ import { CaseLoad } from '../data/interfaces/caseLoad'
 import { HmppsError } from '../data/interfaces/hmppsError'
 import { SelectItem } from '../data/interfaces/selectItem'
 import logger from '../../logger'
-import { PrisonUser } from '../interfaces/prisonUser'
+import { PrisonUser } from '../interfaces/hmppsUser'
 import Prisoner from '../data/interfaces/prisoner'
 import { Role } from '../enums/role'
 

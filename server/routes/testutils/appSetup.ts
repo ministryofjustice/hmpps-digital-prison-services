@@ -7,7 +7,7 @@ import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
 import type { Services } from '../../services'
 import type { ApplicationInfo } from '../../applicationInfo'
-import { PrisonUser } from '../../interfaces/prisonUser'
+import { PrisonUser } from '../../interfaces/hmppsUser'
 
 jest.mock('../../applicationInfo.ts', () => {
   return {
@@ -27,6 +27,7 @@ export const user = {
   firstName: 'first',
   lastName: 'last',
   userId: 'id',
+  userUuid: '11111111-1111-1111-1111-111111111111',
   token: 'token',
   username: 'user1',
   displayName: 'First Last',

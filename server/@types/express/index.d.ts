@@ -1,4 +1,4 @@
-import { PrisonUser } from '../../interfaces/prisonUser'
+import { PrisonUser } from '../../interfaces/hmppsUser'
 
 export default {}
 

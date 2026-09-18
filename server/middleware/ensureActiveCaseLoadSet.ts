@@ -2,7 +2,7 @@ import { RequestHandler } from 'express'
 import logger from '../../logger'
 import UserService from '../services/userService'
 import { CaseLoad } from '../data/interfaces/caseLoad'
-import { PrisonUser } from '../interfaces/prisonUser'
+import { HmppsUser } from '../interfaces/hmppsUser'
 
 export function ensureActiveCaseLoadSet(userService: UserService): RequestHandler {
   return async (_req, res, next) => {
@@ -29,7 +29,7 @@ export function ensureActiveCaseLoadSet(userService: UserService): RequestHandle
 async function getActiveCaseload(
   caseloads: CaseLoad[],
   userService: UserService,
-  user: PrisonUser,
+  user: HmppsUser,
 ): Promise<CaseLoad | null> {
   const activeCaseload = caseloads.find(caseload => caseload.currentlyActive)
   if (activeCaseload) {

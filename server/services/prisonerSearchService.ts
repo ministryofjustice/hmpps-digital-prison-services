@@ -1,7 +1,7 @@
 import { RestClientBuilder } from '../data'
 import { PrisonerSearchClient } from '../data/interfaces/prisonerSearchClient'
 import { PrisonerSearchQueryParams } from '../utils/generateListMetadata'
-import { PrisonUser } from '../interfaces/prisonUser'
+import { PrisonUser } from '../interfaces/hmppsUser'
 
 export default class PrisonerSearchService {
   constructor(private readonly prisonerSearchApiClientBuilder: RestClientBuilder<PrisonerSearchClient>) {}

@@ -1,4 +1,5 @@
-import express from 'express'
+import express, { Request } from 'express'
+import { telemetryMiddleware } from '@ministryofjustice/hmpps-azure-telemetry'
 
 import { getFrontendComponents, retrieveCaseLoadData } from '@ministryofjustice/hmpps-connect-dps-components'
 import nunjucksSetup from './utils/nunjucksSetup'
@@ -24,7 +25,6 @@ import populateClientToken from './middleware/populateClientToken'
 import populateCurrentUser from './middleware/populateCurrentUser'
 import populateUserLocations from './middleware/populateUserLocations'
 import { setUpSentry, setUpSentryErrorHandler } from './middleware/setUpSentry'
-import addUserMetadataToLogs from './middleware/addUserMetadataToLogs'
 import forGetRequestsMatching from './utils/forGetRequestsMatching'
 
 export default function createApp(services: Services): express.Application {
@@ -62,7 +62,11 @@ export default function createApp(services: Services): express.Application {
   app.use(retrieveCaseLoadData({ logger, prisonApiConfig: config.apis.prisonApi }))
   app.use(ensureActiveCaseLoadSet(services.userService))
   app.use(populateUserLocations(services.userService))
-  app.use(addUserMetadataToLogs())
+  app.use(
+    telemetryMiddleware.addUserMetadataToTelemetry({
+      getAttributes: (req: Request) => ({ username: req.user?.username }),
+    }),
+  )
   app.use(routes(services))
 
   app.use(setUpPageNotFound)

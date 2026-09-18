@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import populateUserLocations from './populateUserLocations'
 import { UserService } from '../services'
 import logger from '../../logger'
-import { PrisonUser } from '../interfaces/prisonUser'
+import { PrisonUser } from '../interfaces/hmppsUser'
 
 jest.mock('../../logger')
 
@@ -60,6 +60,7 @@ describe('populateUserLocations middleware', () => {
   })
 
   it("should call next without fetching locations if authSource is not 'nomis'", async () => {
+    // @ts-expect-error Intentionally using a non-nomis auth source to verify the guard clause.
     res.locals.user.authSource = 'external'
 
     const middleware = populateUserLocations(userService as UserService)
