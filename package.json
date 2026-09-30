@@ -45,7 +45,7 @@
     "@ministryofjustice/hmpps-connect-dps-shared-items": "5.2.1",
     "@ministryofjustice/hmpps-monitoring": "2.1.0",
     "@ministryofjustice/hmpps-rest-client": "2.2.0",
-    "@sentry/node": "10.75.0",
+    "@sentry/node": "10.75.2",
     "agentkeepalive": "^4.6.0",
     "body-parser": "^2.3.0",
     "bunyan": "^1.8.15",
@@ -67,7 +67,7 @@
     "passport": "^0.7.0",
     "passport-oauth2": "^1.8.0",
     "redis": "6.2.1",
-    "superagent": "^10.3.0",
+    "superagent": "^10.4.0",
     "url-value-parser": "^2.2.0"
   },
   "devDependencies": {
@@ -120,7 +120,7 @@
     "@opentelemetry/resources": "2.8.0",
     "@opentelemetry/sdk-trace-base": "2.8.0",
     "@opentelemetry/sdk-trace-web": "2.8.0",
-    "brace-expansion": "5.0.9",
+    "brace-expansion": ">=5.0.12",
     "diff": "^9.0.0",
     "serialize-javascript": "^7.0.3",
     "proxy-addr": "2.0.8",
