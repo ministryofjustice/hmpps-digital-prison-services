@@ -1,3 +1,5 @@
+@use 'govuk-frontend/dist/govuk';
+
 .dps-homepage-container {
   max-width: unset;
   margin-left: auto;
@@ -11,7 +13,7 @@
 
   .dps-outage-banner {
     min-height: 70px;
-    background-color: rgba(govuk-colour('red'), 0.2);
+    background-color: rgba(govuk.govuk-colour('red'), 0.2);
 
     div {
       padding: 22px 0;
@@ -23,13 +25,13 @@
 
       a:link,
       a:visited {
-        color: govuk-functional-colour(text);
+        color: govuk.govuk-functional-colour(text);
       }
     }
   }
 
   header.dps-header {
-    background-color: rgba(govuk-colour("blue", $variant: "tint-25"), 0.2);
+    background-color: rgba(govuk.govuk-colour('blue', $variant: 'tint-25'), 0.2);
     padding: 25px 0;
 
     div {
@@ -57,7 +59,7 @@
   }
 
   .dps-homepage-search {
-    background-color: govuk-functional-colour(template-background);
+    background-color: govuk.govuk-functional-colour(template-background);
     padding: 25px 0;
 
     .govuk-radios__label {
@@ -94,7 +96,7 @@
     }
 
     .govuk-radios__label:before {
-      background-color: govuk-colour('white');
+      background-color: govuk.govuk-colour('white');
     }
   }
 
@@ -117,8 +119,8 @@
         top: 29px;
         transform: translateY(0px) rotate(45deg) scale(1);
         width: 8px;
-        border-right: 2px solid govuk-colour('black');
-        border-top: 2px solid govuk-colour('black');
+        border-right: 2px solid govuk.govuk-colour('black');
+        border-top: 2px solid govuk.govuk-colour('black');
       }
 
       a:after {
@@ -132,8 +134,8 @@
       }
     }
     grid-template-columns: auto auto auto;
-    column-gap: govuk-spacing(7);
-    row-gap: govuk-spacing(4);
+    column-gap: govuk.govuk-spacing(7);
+    row-gap: govuk.govuk-spacing(4);
     @media (max-width: 768px) {
       grid-template-columns: auto;
     }
@@ -142,7 +144,7 @@
     }
     .hmpps-service-item {
       li.hmpps-service-link::marker {
-        color: govuk-colour('blue');
+        color: govuk.govuk-colour('blue');
       }
       min-height: 120px;
     }
@@ -162,8 +164,8 @@
       height: 198px;
       width: 270px;
       padding: 15px 15px 20px 15px;
-      border: 1px solid govuk-colour('black');
-      box-shadow: 0 4px govuk-colour("black", $variant: "tint-80");
+      border: 1px solid govuk.govuk-colour('black');
+      box-shadow: 0 4px govuk.govuk-colour('black', $variant: 'tint-80');
 
       &__count {
         font-size: 48px;
@@ -172,7 +174,7 @@
 
       &__link {
         padding-top: 15px;
-        border-top: 1px solid govuk-colour("black", $variant: "tint-80");
+        border-top: 1px solid govuk.govuk-colour('black', $variant: 'tint-80');
         margin-top: auto;
       }
     }
@@ -180,7 +182,7 @@
 
   .today-section-break--blue {
     height: 3px;
-    background-color: govuk-colour('blue');
+    background-color: govuk.govuk-colour('blue');
     border: none;
     margin-top: 35px;
     margin-bottom: 30px;
@@ -206,6 +208,6 @@
 }
 
 .dps-homepage-services-outage {
-  border-color: govuk-colour('red');
-  background-color: govuk-functional-colour(template-background);
+  border-color: govuk.govuk-colour('red');
+  background-color: govuk.govuk-functional-colour(template-background);
 }

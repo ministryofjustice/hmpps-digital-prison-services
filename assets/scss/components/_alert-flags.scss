@@ -1,4 +1,6 @@
 @use 'sass:color';
+@use 'govuk-frontend/dist/govuk';
+@use '@ministryofjustice/hmpps-connect-dps-shared-items/dist/assets/dps/components/alert-flag/alert-flag';
 
 .alerts-list {
   @extend %govuk-list;
@@ -31,9 +33,8 @@
   }
 
   &--p {
-    border: 3px dashed;
     color: #00437b;
-    border-color: #00437b;
+    border: 3px dashed #00437b;
   }
 }
 
