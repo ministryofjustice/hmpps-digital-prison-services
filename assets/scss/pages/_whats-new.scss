@@ -1,3 +1,5 @@
+@use 'govuk-frontend/dist/govuk';
+
 .dps-whats-new {
   display: flex;
   flex-wrap: wrap;
@@ -11,7 +13,7 @@
   }
 
   .whats-new-related-content {
-    border-top: 4px solid govuk-colour('blue');
+    border-top: 4px solid govuk.govuk-colour('blue');
     width: 270px;
   }
 }
