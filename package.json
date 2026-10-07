@@ -73,7 +73,7 @@
   "devDependencies": {
     "@jgoz/esbuild-plugin-typecheck": "^5.0.0",
     "@ministryofjustice/eslint-config-hmpps": "1.0.3",
-    "@ministryofjustice/frontend-types": "2.0.2",
+    "@ministryofjustice/frontend-types": "2.0.3",
     "@ministryofjustice/hmpps-precommit-hooks": "3.0.2",
     "@tsconfig/node24": "24.0.5",
     "@types/bunyan": "^1.8.11",
@@ -94,7 +94,7 @@
     "audit-ci": "^7.1.0",
     "aws-sdk-client-mock": "^4.1.0",
     "cookie-session": "^2.1.1",
-    "cypress": "16.1.0",
+    "cypress": "16.1.1",
     "cypress-multi-reporters": "^2.0.5",
     "del": "8.0.1",
     "esbuild": "0.28.2",
