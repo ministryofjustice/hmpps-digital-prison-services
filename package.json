@@ -45,7 +45,7 @@
     "@ministryofjustice/hmpps-connect-dps-shared-items": "5.3.2",
     "@ministryofjustice/hmpps-monitoring": "2.1.0",
     "@ministryofjustice/hmpps-rest-client": "2.2.0",
-    "@sentry/node": "11.1.0",
+    "@sentry/node": "11.2.0",
     "agentkeepalive": "^4.6.0",
     "body-parser": "^2.3.0",
     "bunyan": "^1.8.15",
