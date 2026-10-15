@@ -1,5 +1,6 @@
 import Page from '../pages/page'
 import PrisonerSearch from '../pages/prisonerSearch'
+import { prisonerMockDataA } from '../mockApis/prisonerSearch'
 
 context('Prisoner search', () => {
   beforeEach(() => {
@@ -20,7 +21,7 @@ context('Prisoner search', () => {
       },
     ])
     cy.task('stubLocationSearch', { prisonId: 'LEI' })
-    cy.signIn({ redirectPath: `/prisoner-search` })
+    cy.signIn({ redirectPath: '/prisoner-search' })
   })
 
   it('Should load the page', () => {
@@ -31,7 +32,8 @@ context('Prisoner search', () => {
     page.prisoners().row(0).name().find('a').should('have.attr', 'href').should('include', '/prisoner/G6123VU')
     page.prisoners().row(0).prisonNumber().should('contain.text', 'G6123VU')
     page.prisoners().row(0).incentiveLevel().should('contain.text', 'Standard')
-    page.prisoners().row(0).age().should('contain.text', '35')
+    const ageInYears = Math.round((Date.now() - Date.parse(prisonerMockDataA.dateOfBirth)) / 1000 / 60 / 60 / 24 / 365)
+    page.prisoners().row(0).age().should('contain.text', ageInYears.toString())
     page.prisoners().row(0).alerts().should('contain.text', 'PEEP')
   })
 })

@@ -1,7 +1,7 @@
 import { stubFor } from './wiremock'
 import Prisoner from '../../server/data/interfaces/prisoner'
 
-const prisonerMockDataA: Prisoner = {
+export const prisonerMockDataA: Prisoner = {
   currentFacialImageId: 1234,
   prisonerNumber: 'G6123VU',
   pncNumber: '08/359381C',
