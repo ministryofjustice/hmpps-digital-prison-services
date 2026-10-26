@@ -34,7 +34,7 @@
     "npm": "^12"
   },
   "dependencies": {
-    "@apollo/client": "4.3.3",
+    "@apollo/client": "4.3.4",
     "@contentful/rich-text-html-renderer": "17.2.3",
     "@contentful/rich-text-types": "17.2.7",
     "@ministryofjustice/frontend": "11.1.0",
@@ -47,7 +47,7 @@
     "@ministryofjustice/hmpps-rest-client": "2.2.0",
     "@sentry/node": "11.8.0",
     "agentkeepalive": "^4.6.0",
-    "body-parser": "^2.3.0",
+    "body-parser": "^2.4.0",
     "bunyan": "^1.8.15",
     "bunyan-format": "^0.2.1",
     "compression": "^1.8.2",
@@ -124,15 +124,14 @@
     "diff": "^9.0.0",
     "moment": "2.31.0",
     "proxy-addr": "2.0.8",
-    "qs": "^6.16.1",
-    "serialize-javascript": "^7.0.3"
+    "serialize-javascript": "^7.1.4"
+
   },
   "allowScripts": {
     "@parcel/watcher@2.6.0": true,
     "cypress@16.2.0": true,
     "dtrace-provider@0.8.8": false,
     "esbuild@0.28.2": true,
-    "fsevents@2.3.2": true,
     "fsevents@2.3.3": true,
     "unrs-resolver@1.12.2": true
   }
