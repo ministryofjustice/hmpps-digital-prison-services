@@ -34,7 +34,7 @@
     "npm": "^12"
   },
   "dependencies": {
-    "@apollo/client": "4.3.4",
+    "@apollo/client": "4.3.5",
     "@contentful/rich-text-html-renderer": "17.2.3",
     "@contentful/rich-text-types": "17.2.7",
     "@ministryofjustice/frontend": "12.0.0",
