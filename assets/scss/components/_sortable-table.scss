@@ -1,3 +1,5 @@
+@use 'govuk-frontend/dist/govuk';
+
 [aria-sort] a {
   display: inline-block;
 }
@@ -24,11 +26,11 @@
 
 [aria-sort] a:focus {
   outline: 3px solid rgba(0, 0, 0, 0);
-  color: #0b0c0c;
-  background-color: #fd0;
+  color: govuk.govuk-colour('black');
+  background-color: govuk.govuk-functional-colour(focus);
   box-shadow:
-    0 -2px #fd0,
-    0 4px #0b0c0c;
+    0 -2px govuk.govuk-functional-colour(focus),
+    0 4px govuk.govuk-colour('black');
   text-decoration: none;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;

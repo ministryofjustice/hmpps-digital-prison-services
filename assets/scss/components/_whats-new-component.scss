@@ -1,0 +1,18 @@
+@use 'govuk-frontend/dist/govuk';
+
+.whats-new-post {
+  border-bottom: 1px solid govuk.govuk-functional-colour(border);
+  margin-bottom: 20px;
+
+  .whats-new-post__date {
+    display: block;
+    @include govuk.govuk-font($size: 16);
+    color: govuk.govuk-colour('black', $variant: 'tint-25');
+    margin-bottom: 5px;
+  }
+
+  .whats-new-post__summary {
+    margin-top: 15px;
+    margin-bottom: 20px;
+  }
+}
