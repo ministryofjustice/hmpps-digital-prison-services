@@ -2,6 +2,7 @@ import { Request, RequestHandler, Response } from 'express'
 import logger from '../../logger'
 import { UserService } from '../services'
 import { isSafeForRedirect } from '../utils/isSafeForRedirect'
+import withCaseloadChangedMarker from '../utils/withCaseloadChangedMarker'
 
 export default class ChangeCaseloadController {
   constructor(private readonly userService: UserService) {}
@@ -35,7 +36,10 @@ export default class ChangeCaseloadController {
   public post(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { caseLoadId, backUrl: unsafeBackUrl }: Partial<Body> = req.body
-      const backUrl = isSafeForRedirect(unsafeBackUrl) ? unsafeBackUrl : '/'
+      // Tell the service we send them back to that the caseload has changed, so it can refresh a url
+      // that names the prison they have just left. The home page works this out for itself, so the
+      // fallback stays a bare '/'.
+      const backUrl = isSafeForRedirect(unsafeBackUrl) ? withCaseloadChangedMarker(unsafeBackUrl) : '/'
       const {
         user: { token, caseLoads },
       } = res.locals
