@@ -64,6 +64,8 @@ interface PrisonerSearchResult {
   age: number
 }
 
+const MAX_RESULTS_WINDOW = 10000
+
 export default class SearchController {
   constructor(
     private readonly prisonerSearchService: PrisonerSearchService,
@@ -272,7 +274,7 @@ export default class SearchController {
   private parseGlobalSearchQuery(query: Request['query']): GlobalSearchQueryString {
     return {
       page: query.page ? Number(query.page) : 1,
-      searchText: (query.searchText ?? '') as string,
+      searchText: typeof query.searchText === 'string' ? query.searchText.trim() : '',
       location: query.locationFilter as GlobalSearchFilterParams['locationFilter'],
       gender: query.genderFilter as GlobalSearchFilterParams['genderFilter'],
       referrer: query.referrer as string,
@@ -297,10 +299,14 @@ export default class SearchController {
     const { user } = res.locals
     const { searchText, gender, dateOfBirth, location, page, referrer } = this.parseGlobalSearchQuery(req.query)
     const dateErrors = globalSearchDateValidator(dateOfBirth)
+    const validatedSearchText = searchText.replace(/,/g, ' ').replace(/\s+/g, ' ').trim()
 
-    // If these are invalid we can exit early
-    if (dateErrors.length > 0 || !searchText) {
-      return { results: [], errors: dateErrors }
+    if (dateErrors.length > 0 || !validatedSearchText) {
+      const errors = [...dateErrors]
+      if (!validatedSearchText && dateErrors.length === 0) {
+        errors.push({ text: 'Enter a name or prison number', href: '#searchText' })
+      }
+      return { results: [], errors }
     }
 
     const globalSearchParams = {
@@ -315,9 +321,24 @@ export default class SearchController {
     }
 
     const resp = await this.globalSearchService.getResultsForUser(clientToken, globalSearchParams)
+
+    if (!resp?.content) {
+      return {
+        results: [],
+        errors: [
+          { text: 'There was a problem with your search. Try again or refine your search.', href: '#searchText' },
+        ],
+      }
+    }
+
     const results = this.mapPrisonersToGlobalSearchResults(user, resp.content)
+    const maxPages = Math.floor(MAX_RESULTS_WINDOW / resp.metadata.size)
+    const respWithMaxPages = {
+      ...resp,
+      metadata: { ...resp.metadata, totalPages: Math.min(resp.metadata.totalPages, maxPages) },
+    }
     const paramsForMetadata: GlobalSearchFilterParams = { page: undefined, searchText, referrer, ...filters }
-    const listMetadata = generateListMetadata(resp, paramsForMetadata, 'result')
+    const listMetadata = generateListMetadata(respWithMaxPages, paramsForMetadata, 'result')
 
     return { results, listMetadata, errors: [] }
   }
