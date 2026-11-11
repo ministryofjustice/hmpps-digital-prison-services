@@ -64,8 +64,6 @@ interface PrisonerSearchResult {
   age: number
 }
 
-const MAX_RESULTS_WINDOW = 10000
-
 export default class SearchController {
   constructor(
     private readonly prisonerSearchService: PrisonerSearchService,
@@ -332,13 +330,8 @@ export default class SearchController {
     }
 
     const results = this.mapPrisonersToGlobalSearchResults(user, resp.content)
-    const maxPages = Math.floor(MAX_RESULTS_WINDOW / resp.metadata.size)
-    const respWithMaxPages = {
-      ...resp,
-      metadata: { ...resp.metadata, totalPages: Math.min(resp.metadata.totalPages, maxPages) },
-    }
     const paramsForMetadata: GlobalSearchFilterParams = { page: undefined, searchText, referrer, ...filters }
-    const listMetadata = generateListMetadata(respWithMaxPages, paramsForMetadata, 'result')
+    const listMetadata = generateListMetadata(resp, paramsForMetadata, 'result')
 
     return { results, listMetadata, errors: [] }
   }
