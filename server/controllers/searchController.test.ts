@@ -520,7 +520,7 @@ describe('SearchController', () => {
           expect(globalSearchService.getResultsForUser).not.toHaveBeenCalled()
           expect(res.render).toHaveBeenCalledWith('pages/globalSearch/results', {
             encodedOriginalUrl: encodeURIComponent('http://example.com'),
-            errors: [],
+            errors: [{ text: 'Enter a name or prison number', href: '#searchText' }],
             prisonerProfileBaseUrl: expect.anything(),
             formValues: {
               filters: {},
@@ -747,6 +747,67 @@ describe('SearchController', () => {
               },
             },
           })
+        })
+
+        it.each([
+          ['empty', ''],
+          ['a space', ' '],
+          ['a comma', ','],
+          ['commas and spaces', ' , '],
+        ])('Renders the page with an error when the search text is %s', async (_description, searchText) => {
+          jest.mocked(globalSearchDateValidator).mockReturnValue([])
+
+          const req = {
+            originalUrl: 'http://example.com',
+            middleware: { clientToken: 'clientToken' },
+            query: { searchText },
+            session: {},
+          } as unknown as Request
+
+          const res = {
+            render: jest.fn(),
+            locals: { user },
+          } as unknown as Response
+
+          await controller.globalSearch().results.get()(req, res, jest.fn())
+          expect(globalSearchService.getResultsForUser).not.toHaveBeenCalled()
+          expect(res.render).toHaveBeenCalledWith(
+            'pages/globalSearch/results',
+            expect.objectContaining({
+              errors: [{ text: 'Enter a name or prison number', href: '#searchText' }],
+              results: [],
+            }),
+          )
+        })
+
+        it('Renders the page with an error when the search API fails', async () => {
+          jest.mocked(globalSearchDateValidator).mockReturnValue([])
+          globalSearchService.getResultsForUser = jest.fn(async () => new Error('400') as never)
+
+          const req = {
+            originalUrl: 'http://example.com',
+            middleware: { clientToken: 'clientToken' },
+            query: { searchText: 'smith', page: '501' },
+            session: {},
+          } as unknown as Request
+
+          const res = {
+            render: jest.fn(),
+            locals: { user },
+          } as unknown as Response
+
+          await controller.globalSearch().results.get()(req, res, jest.fn())
+
+          expect(globalSearchService.getResultsForUser).toHaveBeenCalled()
+          expect(res.render).toHaveBeenCalledWith(
+            'pages/globalSearch/results',
+            expect.objectContaining({
+              errors: [
+                { text: 'There was a problem with your search. Try again or refine your search.', href: '#searchText' },
+              ],
+              results: [],
+            }),
+          )
         })
       })
     })
