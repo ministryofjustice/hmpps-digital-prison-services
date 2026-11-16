@@ -1,3 +1,5 @@
+@use 'govuk-frontend/dist/govuk';
+
 // This fixes the spacing where the flex basis breaks
 .prisoner-search__results-grid * {
   box-sizing: border-box;
@@ -12,7 +14,7 @@
     width: 100%;
   }
 
-  @include govuk-media-query($from: desktop) {
+  @include govuk.govuk-media-query($from: desktop) {
     display: flex;
     flex-flow: row wrap;
 
@@ -22,7 +24,7 @@
     }
 
     > div {
-      margin-right: govuk-spacing(3);
+      margin-right: govuk.govuk-spacing(3);
     }
 
     .date-picker-container input {
@@ -30,12 +32,12 @@
     }
 
     label {
-      margin-bottom: govuk-spacing(1);
+      margin-bottom: govuk.govuk-spacing(1);
     }
 
     button {
-      margin-right: govuk-spacing(3);
-      margin-bottom: $govuk-border-width-form-element;
+      margin-right: govuk.govuk-spacing(3);
+      margin-bottom: govuk.$govuk-border-width-form-element;
     }
 
     a {
@@ -51,33 +53,33 @@
 
 .prisoner-search {
   &__form {
-    margin-bottom: govuk-spacing(6);
-    padding: govuk-spacing(3);
-    background-color: govuk-functional-colour(template-background);
+    margin-bottom: govuk.govuk-spacing(6);
+    padding: govuk.govuk-spacing(3);
+    background-color: govuk.govuk-functional-colour(template-background);
   }
 
   &__alerts {
-    @include govuk-media-query($from: mobile) {
+    @include govuk.govuk-media-query($from: mobile) {
       display: flex;
       flex-wrap: wrap;
     }
 
     .govuk-checkboxes__item {
-      @include govuk-media-query($from: mobile) {
+      @include govuk.govuk-media-query($from: mobile) {
         flex-basis: 50%;
       }
 
-      @include govuk-media-query($from: desktop) {
+      @include govuk.govuk-media-query($from: desktop) {
         flex-basis: 25%;
       }
     }
   }
 
   &__results-options {
-    @include govuk-media-query($from: desktop) {
+    @include govuk.govuk-media-query($from: desktop) {
       display: flex;
       justify-content: space-between;
-      margin-bottom: govuk-spacing(6);
+      margin-bottom: govuk.govuk-spacing(6);
       align-items: baseline;
     }
   }
@@ -85,20 +87,20 @@
   &__toggles {
     display: flex;
     justify-content: flex-end;
-    margin-bottom: govuk-spacing(3);
+    margin-bottom: govuk.govuk-spacing(3);
 
     &__toggle {
       display: flex;
       align-items: center;
-      color: $govuk-link-colour;
+      color: govuk.govuk-functional-colour(link);
 
       &--list {
-        border-right: 1px solid govuk-functional-colour(text);
-        padding-right: govuk-spacing(2);
+        border-right: 1px solid govuk.govuk-functional-colour(text);
+        padding-right: govuk.govuk-spacing(2);
       }
 
       &--grid {
-        padding-left: govuk-spacing(2);
+        padding-left: govuk.govuk-spacing(2);
       }
 
       svg {
@@ -107,7 +109,7 @@
 
       &--active {
         text-decoration: none;
-        color: govuk-functional-colour(text) !important;
+        color: govuk.govuk-functional-colour(text) !important;
       }
     }
   }
@@ -151,27 +153,27 @@
     }
 
     &-grid {
-      margin: 0 (-$govuk-gutter-half) govuk-spacing(3);
+      margin: 0 #{-(govuk.$govuk-gutter-half)} govuk.govuk-spacing(3);
 
-      @include govuk-media-query($from: mobile) {
+      @include govuk.govuk-media-query($from: mobile) {
         display: flex;
         flex-wrap: wrap;
       }
 
       &__prisoner {
-        @include govuk-media-query($from: mobile) {
+        @include govuk.govuk-media-query($from: mobile) {
           flex-basis: 50%;
         }
 
-        @include govuk-media-query($from: desktop) {
+        @include govuk.govuk-media-query($from: desktop) {
           flex-basis: 33.333%;
         }
 
-        @include govuk-media-query($from: 950px) {
+        @include govuk.govuk-media-query($from: 950px) {
           flex-basis: 20%;
         }
 
-        padding: $govuk-gutter-half;
+        padding: govuk.$govuk-gutter-half;
 
         @media print {
           width: 25%;
@@ -183,7 +185,7 @@
             text-decoration: none;
 
             // Remove url from links in printed view
-            &[href^="/"], &[href^="http://"], &[href^="https://"]
+            &[href^='/'], &[href^='http://'], &[href^='https://']
             {
               &::after {
                 content: '';
@@ -204,12 +206,12 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color: govuk-functional-colour(template-background);
+  background-color: govuk.govuk-functional-colour(template-background);
 
   &__image {
     width: 100%;
 
-    @include govuk-media-query($from: mobile) {
+    @include govuk.govuk-media-query($from: mobile) {
       height: 250px;
       object-fit: cover;
 
@@ -220,6 +222,6 @@
   }
 
   &__details {
-    padding: govuk-spacing(3);
+    padding: govuk.govuk-spacing(3);
   }
 }

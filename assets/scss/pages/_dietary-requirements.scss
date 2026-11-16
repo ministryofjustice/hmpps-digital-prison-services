@@ -1,3 +1,5 @@
+@use 'govuk-frontend/dist/govuk';
+
 .dietary-requirements {
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -41,8 +43,8 @@
 }
 
 .hmpps-dietary-requirements__filters {
-  background-color: govuk-functional-colour(template-background);
-  @include govuk-responsive-margin(4, 'bottom');
+  background-color: govuk.govuk-functional-colour(template-background);
+  @include govuk.govuk-responsive-margin(4, 'bottom');
 }
 
 .hmpps-dietary-requirements__filter-category {
@@ -55,7 +57,7 @@
   }
 
   .govuk-checkboxes__label:before {
-    background-color: govuk-colour('white');
+    background-color: govuk.govuk-colour('white');
   }
 }
 
@@ -71,7 +73,7 @@
     display: block;
     width: fit-content;
     background-color: #e1e2e3;
-    color: govuk-functional-colour(text);
+    color: govuk.govuk-functional-colour(text);
     padding: 5px;
     margin-top: 10px;
   }
@@ -80,7 +82,7 @@
 .dietary-requirements-print-table {
   th {
     padding-left: 5px;
-    background-color: govuk-functional-colour(template-background);
+    background-color: govuk.govuk-functional-colour(template-background);
   }
 
   td {
@@ -91,8 +93,8 @@
 .classification-banner {
   display: block;
   width: fit-content;
-  background-color: govuk-colour('red');
-  color: govuk-colour('white');
+  background-color: govuk.govuk-colour('red');
+  color: govuk.govuk-colour('white');
   font-weight: bold;
   padding: 0 10px 0 10px;
   margin-bottom: 10px;

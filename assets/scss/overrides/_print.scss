@@ -1,4 +1,6 @@
-@include govuk-media-query($media-type: print) {
+@use 'govuk-frontend/dist/govuk';
+
+@include govuk.govuk-media-query($media-type: print) {
   // govuk-frontend overrides
   .govuk-heading-l {
     font-size: 19pt;
@@ -39,11 +41,11 @@
 
     &:link,
     &:visited {
-      color: govuk-functional-colour(text);
+      color: govuk.govuk-functional-colour(text);
     }
 
     // Remove url from links in printed view within a table
-    &[href^="/"], &[href^="http://"], &[href^="https://"] {
+    &[href^='/'], &[href^='http://'], &[href^='https://'] {
       &::after {
         content: '';
       }

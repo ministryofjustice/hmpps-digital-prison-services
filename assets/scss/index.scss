@@ -1,31 +1,24 @@
-$govuk-global-styles: true;
-$path: '/assets/images/';
+@use 'govuk-frontend/dist/govuk' with (
+  $govuk-global-styles: true,
+  $govuk-page-width: 1170px,
+);
+@use '@ministryofjustice/frontend/moj/all';
+@use '@ministryofjustice/hmpps-connect-dps-components/dist/assets/all' as dps-components;
+@use '@ministryofjustice/hmpps-connect-dps-shared-items/dist/assets/scss/all' as dps-shared-items;
 
-$moj-page-width: 1170px;
-$govuk-page-width: $moj-page-width;
+@use './overrides/local';
+@use './overrides/print';
 
-@import 'govuk-frontend/dist/govuk/index';
-@import '@ministryofjustice/frontend/moj/all';
+@use './components/alert-flags';
+@use './components/dynamic-filters';
+@use './components/paged-list';
+@use './components/print-link';
+@use './components/sortable-table';
+@use './components/whats-new-component';
 
-@import '@ministryofjustice/hmpps-connect-dps-components/dist/assets/footer';
-@import '@ministryofjustice/hmpps-connect-dps-components/dist/assets/header-bar';
-@import '@ministryofjustice/hmpps-connect-dps-shared-items/dist/assets/scss/all';
-
-@import 'helpers/contentful-body-html';
-
-@import './components/alert-flags';
-@import './components/dynamic-filters';
-@import './components/paged-list';
-@import './components/print-link';
-@import './components/sortable-table';
-@import './components/whats-new';
-
-@import './pages/dietary-requirements';
-@import './pages/homepage';
-@import './pages/managed-page';
-@import './pages/prisoner-search';
-@import './pages/whats-new';
-@import './pages/whats-new-post';
-
-@import 'overrides/local';
-@import 'overrides/print';
+@use './pages/dietary-requirements';
+@use './pages/homepage';
+@use './pages/managed-page';
+@use './pages/prisoner-search';
+@use './pages/whats-new';
+@use './pages/whats-new-post';

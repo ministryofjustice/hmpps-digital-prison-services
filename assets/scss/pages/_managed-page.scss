@@ -1,3 +1,5 @@
+@use '../helpers/contentful-body-html';
+
 .hmpps-managed-page {
   &__body {
     @extend %contentful-body-html;
