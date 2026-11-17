@@ -27,6 +27,10 @@ describe('LocationsInsidePrisonRestApiClient', () => {
     nock.cleanAll()
   })
 
+  afterAll(() => {
+    nock.restore()
+  })
+
   const mockSuccessfulGet = <T>(url: string, response: T) => {
     fakeApi.get(url).matchHeader('authorization', `Bearer ${token}`).reply(200, response)
   }

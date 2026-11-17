@@ -44,6 +44,10 @@ describe('healthAndMedicationApiClient', () => {
     nock.cleanAll()
   })
 
+  afterAll(() => {
+    nock.restore()
+  })
+
   const mockSuccessfulHealthAndMedicationApiCall = <TReturnData>(url: string, returnData: TReturnData) => {
     fakeHealthAndMedicationApi
       .get(url)

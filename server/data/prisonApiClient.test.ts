@@ -33,6 +33,10 @@ describe('prisonApiClient', () => {
     nock.cleanAll()
   })
 
+  afterAll(() => {
+    nock.restore()
+  })
+
   describe('setActiveCaseLoad', () => {
     it('Should return data from the API', async () => {
       const caseLoadMock = {
