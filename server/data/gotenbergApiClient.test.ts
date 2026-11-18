@@ -1,11 +1,11 @@
-import nock, { Body } from 'nock'
+import nock from 'nock'
 import config from '../config'
 import { GotenbergApiClient, PdfRenderRequest } from './interfaces/gotenbergApiClient'
 import GotenbergRestApiClient from './gotenbergApiClient'
 
 const gotenbergConfig = config.apis.gotenberg
 
-const requestBodyMatches = (body: Body, expected: Record<string, { value: string; filename?: string }>) => {
+const requestBodyMatches = (body: nock.Body, expected: Record<string, { value: string; filename?: string }>) => {
   return Object.entries(expected).every(value => {
     if (value[1].filename) {
       return (
@@ -29,6 +29,10 @@ describe('Gotenberg client', () => {
   afterEach(() => {
     jest.resetAllMocks()
     nock.cleanAll()
+  })
+
+  afterAll(() => {
+    nock.restore()
   })
 
   it('Should send a PDF render request to Gotenberg', async () => {
