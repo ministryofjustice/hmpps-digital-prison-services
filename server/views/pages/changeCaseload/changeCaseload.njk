@@ -31,6 +31,9 @@
     {% if backUrl %}
       <input type="hidden" name="backUrl" value="{{ backUrl }}" />
     {% endif %}
+    {% if switchNotice %}
+      <input type="hidden" name="caseloadChanged" value="true" />
+    {% endif %}
     {{ govukSelect({
       id: "changeCaseloadSelect",
       name: "caseLoadId",

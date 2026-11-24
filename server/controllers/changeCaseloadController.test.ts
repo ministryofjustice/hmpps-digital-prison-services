@@ -3,6 +3,7 @@ import logger from '../../logger'
 import ChangeCaseloadController from './changeCaseloadController'
 import { UserService } from '../services'
 import { CaseLoad } from '../data/interfaces/caseLoad'
+import config from '../config'
 
 jest.mock('../../logger')
 
@@ -19,24 +20,26 @@ describe('ChangeCaseloadController', () => {
     backUrlInQueryParams,
     backUrlInHeaders,
     body,
+    caseloadChanged,
   }: {
     backUrlInQueryParams?: string
     backUrlInHeaders?: string
     body?: object
+    caseloadChanged?: string
   } = {}) =>
     ({
       method: body ? 'POST' : 'GET',
       body,
       originalUrl: backUrlInQueryParams ? `/change-caseload?backUrl=${backUrlInQueryParams}` : '/change-caseload',
-      query: { backUrl: backUrlInQueryParams },
+      query: { backUrl: backUrlInQueryParams, caseloadChanged },
       get(header: string) {
         return header === 'referrer' && backUrlInHeaders
       },
     }) as unknown as Request
 
-  const makeResWithCaseloads = (cc: CaseLoad[]) =>
+  const makeResWithCaseloads = (cc: CaseLoad[], activeCaseLoad?: CaseLoad) =>
     ({
-      locals: { user: { caseLoads: cc, token: 'token' } },
+      locals: { user: { caseLoads: cc, token: 'token', activeCaseLoad } },
       redirect: jest.fn(),
       render: jest.fn(),
       status: jest.fn(),
@@ -115,6 +118,27 @@ describe('ChangeCaseloadController', () => {
       )
     })
 
+    it.each([
+      { scenario: 'is set when caseloadChanged is true', caseloadChanged: 'true', expectedSwitchNotice: true },
+      {
+        scenario: 'is not set when caseloadChanged is absent',
+        caseloadChanged: undefined,
+        expectedSwitchNotice: false,
+      },
+    ])('switchNotice $scenario', async ({ caseloadChanged, expectedSwitchNotice }) => {
+      const req = makeReq({ caseloadChanged })
+      const res = makeResWithCaseloads(caseloads)
+
+      await controller.get()(req, res, jest.fn())
+
+      expect(res.render).toHaveBeenCalledWith(
+        'pages/changeCaseload/changeCaseload',
+        expect.objectContaining({
+          switchNotice: expectedSwitchNotice,
+        }),
+      )
+    })
+
     describe('if user has only one caseload', () => {
       it.each([
         { scenario: 'to home page by default', makeReqParams: {}, expectedRedirect: '/' },
@@ -172,6 +196,50 @@ describe('ChangeCaseloadController', () => {
         description: moorland.description,
       })
       expect(res.redirect).toHaveBeenCalledWith(expectedRedirect)
+    })
+
+    describe('when the caseload change notice is requested', () => {
+      const safeBackUrl = 'http://localhost:3000/whereTheyCameFrom?queries=values'
+
+      it.each([
+        {
+          scenario: 'does not append params when the flag is not sent',
+          body: { caseLoadId: moorland.caseLoadId, backUrl: safeBackUrl },
+          expectedRedirect: safeBackUrl,
+        },
+        {
+          scenario: 'appends both params to the existing query when the caseload switches',
+          body: { caseLoadId: moorland.caseLoadId, backUrl: safeBackUrl, caseloadChanged: 'true' },
+          expectedRedirect: `${safeBackUrl}&caseload-switched-from=KMI&caseload-switched-to=MDI`,
+        },
+        {
+          scenario: 'keeps the host of an absolute backUrl on another trusted host',
+          body: {
+            caseLoadId: moorland.caseLoadId,
+            backUrl: 'https://dps.service.justice.gov.uk/whereTheyCameFrom',
+            caseloadChanged: 'true',
+          },
+          expectedRedirect:
+            'https://dps.service.justice.gov.uk/whereTheyCameFrom?caseload-switched-from=KMI&caseload-switched-to=MDI',
+        },
+        {
+          scenario: 'does not append params when the same caseload is selected',
+          body: { caseLoadId: kirkham.caseLoadId, backUrl: safeBackUrl, caseloadChanged: 'true' },
+          expectedRedirect: safeBackUrl,
+        },
+        {
+          scenario: 'redirects to home with params when backUrl is missing',
+          body: { caseLoadId: moorland.caseLoadId, caseloadChanged: 'true' },
+          expectedRedirect: `${new URL('/', config.domain).toString()}?caseload-switched-from=KMI&caseload-switched-to=MDI`,
+        },
+      ])('$scenario', async ({ body, expectedRedirect }) => {
+        const req = makeReq({ body })
+        const res = makeResWithCaseloads(caseloads, kirkham)
+
+        await controller.post()(req, res, jest.fn())
+
+        expect(res.redirect).toHaveBeenCalledWith(expectedRedirect)
+      })
     })
 
     it.each([

@@ -1,5 +1,6 @@
 import { Request, RequestHandler, Response } from 'express'
 import logger from '../../logger'
+import config from '../config'
 import { UserService } from '../services'
 import { isSafeForRedirect } from '../utils/isSafeForRedirect'
 
@@ -16,6 +17,8 @@ export default class ChangeCaseloadController {
         .filter(isSafeForRedirect)
         .find(url => !new URL(url).pathname.match(/\/change-caseload\/?/))
 
+      const switchNotice = req.query?.caseloadChanged === 'true'
+
       if (caseLoads.length <= 1) {
         return res.redirect(backUrl || '/')
       }
@@ -28,17 +31,19 @@ export default class ChangeCaseloadController {
       return res.render('pages/changeCaseload/changeCaseload', {
         options,
         backUrl,
+        switchNotice,
       })
     }
   }
 
   public post(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { caseLoadId, backUrl: unsafeBackUrl }: Partial<Body> = req.body
+      const { caseLoadId, backUrl: unsafeBackUrl, caseloadChanged }: Partial<Body> = req.body
       const backUrl = isSafeForRedirect(unsafeBackUrl) ? unsafeBackUrl : '/'
       const {
         user: { token, caseLoads },
       } = res.locals
+      const previousCaseLoadId: string | undefined = res.locals.user.activeCaseLoad?.caseLoadId
 
       const caseloadToSet = caseLoads.find(caseload => caseload.caseLoadId === caseLoadId)
 
@@ -51,6 +56,14 @@ export default class ChangeCaseloadController {
       }
 
       await this.userService.setActiveCaseload(token, caseloadToSet)
+
+      if (caseloadChanged === 'true' && previousCaseLoadId && previousCaseLoadId !== caseloadToSet.caseLoadId) {
+        const redirectUrl = new URL(backUrl, config.domain)
+        redirectUrl.searchParams.set('caseload-switched-from', previousCaseLoadId)
+        redirectUrl.searchParams.set('caseload-switched-to', caseloadToSet.caseLoadId)
+        return res.redirect(redirectUrl.toString())
+      }
+
       return res.redirect(backUrl)
     }
   }
@@ -59,4 +72,5 @@ export default class ChangeCaseloadController {
 interface Body {
   caseLoadId: string
   backUrl: string
+  caseloadChanged: string
 }
