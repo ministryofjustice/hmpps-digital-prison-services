@@ -21,6 +21,7 @@ export const services = () => {
     applicationInfo,
     prisonApiClientBuilder,
     healthAndMedicationApiClientBuilder,
+    prisonerSearchApiClientBuilder,
     locationsInsidePrisonApiClientBuilder,
   } = dataAccess
 
@@ -53,8 +54,8 @@ export const services = () => {
   const contentfulService = new ContentfulService(apolloClient)
   const dietReportingService = new DietReportingService(healthAndMedicationApiClientBuilder, prisonApiClientBuilder)
   const pdfRenderingService = new PdfRenderingService(gotenbergClient)
-  const prisonerSearchService = new PrisonerSearchService(dataAccess.prisonerSearchApiClientBuilder)
-  const globalSearchService = new GlobalSearchService(dataAccess.prisonerSearchApiClientBuilder)
+  const prisonerSearchService = new PrisonerSearchService(prisonerSearchApiClientBuilder)
+  const globalSearchService = new GlobalSearchService(prisonerSearchApiClientBuilder)
   const metricsService = new MetricsService()
 
   // Caches
