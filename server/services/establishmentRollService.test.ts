@@ -16,7 +16,7 @@ describe('establishmentRollService', () => {
     })
 
     it('should return the data from the API', async () => {
-      prisonApiClientMock.getPrisonRollCountSummary = jest.fn().mockResolvedValue(prisonEstablishmentRollSummaryMock)
+      prisonApiClientMock.getPrisonRollCountSummary.mockResolvedValue(prisonEstablishmentRollSummaryMock)
       const establishmentRollSummary = await establishmentRollService.getEstablishmentRollSummary('token', 'LEI')
       expect(establishmentRollSummary).toEqual(prisonEstablishmentRollSummaryMock)
     })

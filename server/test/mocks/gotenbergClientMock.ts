@@ -1,6 +1,6 @@
-import { GotenbergApiClient } from '../../data/interfaces/gotenbergApiClient'
+import type { GotenbergApiClient } from '../../data/interfaces/gotenbergApiClient'
 
-const gotenbergApiClientMock: GotenbergApiClient = {
+const gotenbergApiClientMock: jest.Mocked<GotenbergApiClient> = {
   renderPdfFromHtml: jest.fn(),
 }
 
