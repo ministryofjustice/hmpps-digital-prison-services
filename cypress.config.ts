@@ -10,6 +10,7 @@ import feComponents from './integration_tests/mockApis/feComponents'
 import healthAndMedication from './integration_tests/mockApis/healthAndMedication'
 import gotenberg from './integration_tests/mockApis/gotenberg'
 import prisonerSearch from './integration_tests/mockApis/prisonerSearch'
+import permissions from './integration_tests/mockApis/permissions'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -38,6 +39,7 @@ export default defineConfig({
         ...feComponents,
         ...healthAndMedication,
         ...gotenberg,
+        ...permissions,
       })
     },
     baseUrl: 'http://localhost:3007',

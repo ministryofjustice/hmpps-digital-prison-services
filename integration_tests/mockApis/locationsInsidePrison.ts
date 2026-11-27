@@ -1,20 +1,11 @@
-import { stubFor } from './wiremock'
+import type { SuperAgentRequest } from 'superagent'
+import { stubFor, stubPing } from './wiremock'
 import locationMock from '../../server/mocks/locationMock'
 import PrisonHierarchyDto from '../../server/data/interfaces/prisonHierarchyDto'
 
 export default {
-  stubLocationsInsidePrisonPing: (httpStatus = 200) =>
-    stubFor({
-      request: {
-        method: 'GET',
-        urlPattern: '/locations-api/health/ping',
-      },
-      response: {
-        status: httpStatus,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: { status: httpStatus === 200 ? 'UP' : 'DOWN' },
-      },
-    }),
+  stubLocationsInsidePrisonPing: (httpStatus = 200): SuperAgentRequest =>
+    stubPing('/locationsinsideprison', httpStatus),
 
   stubUserLocations: (locations: PrisonHierarchyDto[] = locationMock, prisonPattern: string = '[^/]+') => {
     return stubFor({
