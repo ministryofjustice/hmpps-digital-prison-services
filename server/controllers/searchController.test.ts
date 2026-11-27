@@ -1,43 +1,61 @@
-import { Request, Response } from 'express'
+import type { Request, Response } from 'express'
+import { InternalServerError } from 'http-errors'
 import SearchController from './searchController'
-import PrisonerSearchService from '../services/prisonerSearchService'
-import GlobalSearchService from '../services/globalSearchService'
-import Prisoner from '../data/interfaces/prisoner'
-import { PagedList } from '../data/interfaces/pagedList'
-import { PrisonUser } from '../interfaces/hmppsUser'
+import config from '../config'
+import type PrisonerSearchService from '../services/prisonerSearchService'
+import type GlobalSearchService from '../services/globalSearchService'
+import type MetricsService from '../services/metricsService'
+import type AuditService from '../services/auditService'
+import type { PermissionsApiClient } from '../data/interfaces/permissionsApiClient'
+import type Prisoner from '../data/interfaces/prisoner'
+import type { HmppsError } from '../data/interfaces/hmppsError'
+import type { PrisonUser } from '../interfaces/hmppsUser'
+import type { Pagination } from '../data/interfaces/pagination'
 import { calculateAge } from '../utils/utils'
 import { generateListMetadata, ListMetadata, PrisonerSearchQueryParams } from '../utils/generateListMetadata'
+import auditServiceMock from '../test/mocks/auditServiceMock'
+import { permissionsApiClientMock } from '../test/mocks/permissionsApiClientMock'
 import globalSearchDateValidator from '../utils/globalSearchDateValidator'
-import { HmppsError } from '../data/interfaces/hmppsError'
-import MetricsService from '../services/metricsService'
-import AuditService from '../services/auditService'
 import { Role } from '../enums/role'
 
 jest.mock('../utils/generateListMetadata')
 jest.mock('../utils/globalSearchDateValidator')
 
+let wasHighProfilePrisonersEnabled: boolean
+beforeAll(() => {
+  wasHighProfilePrisonersEnabled = config.features.highProfilePrisonersEnabled
+})
+afterEach(() => {
+  config.features.highProfilePrisonersEnabled = wasHighProfilePrisonersEnabled
+})
+
 describe('SearchController', () => {
   let user: PrisonUser
   let controller: SearchController
-  let prisonerSearchService: PrisonerSearchService
-  let globalSearchService: GlobalSearchService
-  let metricsService: MetricsService
-  let auditService: AuditService
+  let prisonerSearchService: jest.Mocked<PrisonerSearchService>
+  let globalSearchService: jest.Mocked<GlobalSearchService>
+  let metricsService: jest.Mocked<MetricsService>
+  let auditService: jest.Mocked<AuditService>
+  let permissionsApiClient: jest.Mocked<PermissionsApiClient>
 
   beforeEach(() => {
     jest.mocked(globalSearchDateValidator).mockReturnValue([])
-    prisonerSearchService = {} as PrisonerSearchService
-    globalSearchService = { getResultsForUser: jest.fn() } as unknown as GlobalSearchService
+    prisonerSearchService = { getResults: jest.fn() } as unknown as jest.Mocked<PrisonerSearchService>
+    globalSearchService = { getResultsForUser: jest.fn() } as unknown as jest.Mocked<GlobalSearchService>
     metricsService = {
       trackPrisonerSearchQuery: jest.fn(),
       trackGlobalSearchQuery: jest.fn(),
-    } as unknown as MetricsService
-    auditService = {
-      auditPrisonerSearch: jest.fn(),
-      auditGlobalSearch: jest.fn(),
-    } as unknown as AuditService
+    } as unknown as jest.Mocked<MetricsService>
+    auditService = auditServiceMock()
+    permissionsApiClient = permissionsApiClientMock()
 
-    controller = new SearchController(prisonerSearchService, globalSearchService, metricsService, auditService)
+    controller = new SearchController(
+      prisonerSearchService,
+      globalSearchService,
+      metricsService,
+      auditService,
+      () => permissionsApiClient,
+    )
     user = {
       username: 'USER_NAME',
       userId: '123',
@@ -68,7 +86,7 @@ describe('SearchController', () => {
         } as unknown as Response
         jest.mocked(generateListMetadata).mockReturnValueOnce(generatedMetadata)
 
-        prisonerSearchService.getResults = jest.fn(async (): Promise<PagedList<Prisoner>> => ({
+        prisonerSearchService.getResults.mockResolvedValue({
           content: [
             {
               prisonId: 'LEI',
@@ -93,7 +111,7 @@ describe('SearchController', () => {
             totalElements: 1,
             totalPages: 1,
           },
-        }))
+        })
       })
 
       it('Loads the page correctly with no query params', async () => {
@@ -465,15 +483,19 @@ describe('SearchController', () => {
         })
       })
     })
+
     describe('results', () => {
       describe('get', () => {
-        const generatedMetadata = {
-          pagination: { itemDescription: 'description' },
-        } as ListMetadata<PrisonerSearchQueryParams>
+        const generatedMetadata: ListMetadata<PrisonerSearchQueryParams> = {
+          pagination: {
+            itemDescription: 'description',
+          } as Pagination,
+          filtering: {},
+        }
         beforeEach(() => {
           jest.mocked(generateListMetadata).mockReturnValueOnce(generatedMetadata)
 
-          globalSearchService.getResultsForUser = jest.fn(async (): Promise<PagedList<Prisoner>> => ({
+          globalSearchService.getResultsForUser.mockResolvedValue({
             content: [
               {
                 prisonId: 'LEI',
@@ -483,6 +505,7 @@ describe('SearchController', () => {
                 currentFacialImageId: 1234,
                 currentIncentive: { level: { description: 'Current incentive' } },
                 cellLocation: 'RECP',
+                locationDescription: 'Leeds (HMP & YOI)',
                 firstName: 'First',
                 lastName: 'LAST',
                 alerts: [{ alertCode: 'DONT_SHOW' }, { alertCode: 'PEEP' }],
@@ -499,7 +522,7 @@ describe('SearchController', () => {
               totalElements: 1,
               totalPages: 1,
             },
-          }))
+          })
         })
 
         it('Renders the page when no params are given', async () => {
@@ -606,13 +629,14 @@ describe('SearchController', () => {
                 prisonerProfileUrl: 'http://localhost:3002/prisoner/A1234BC',
                 showUpdateLicenceLink: true,
                 workingName: 'Last, First',
+                latestLocation: 'Leeds (HMP & YOI)',
                 showProfileLink: true,
                 showProfileImage: true,
                 updateLicenceLink: expect.stringContaining('hdc/taskList/1234'),
               },
             ],
             openFilters: false,
-            listMetadata: { pagination: { itemDescription: 'description' } },
+            listMetadata: { pagination: { itemDescription: 'description' }, filtering: {} },
           })
         })
 
@@ -677,11 +701,138 @@ describe('SearchController', () => {
                 showProfileImage: true,
                 showUpdateLicenceLink: true,
                 workingName: 'Last, First',
+                latestLocation: 'Leeds (HMP & YOI)',
                 updateLicenceLink: expect.stringContaining('hdc/taskList/1234'),
               },
             ],
             openFilters: true,
-            listMetadata: { pagination: { itemDescription: 'description' } },
+            listMetadata: { pagination: { itemDescription: 'description' }, filtering: {} },
+          })
+        })
+
+        describe('high-profile prisoners', () => {
+          let req: Request
+          let res: Response
+
+          beforeEach(() => {
+            globalSearchService.getResultsForUser.mockResolvedValue({
+              content: [
+                {
+                  prisonId: 'LEI',
+                  bookingId: 1234,
+                  status: 'ACTIVE_IN',
+                  prisonerNumber: 'A1234BC',
+                  currentFacialImageId: 1234,
+                  currentIncentive: { level: { description: 'Current incentive' } },
+                  cellLocation: 'RECP',
+                  locationDescription: 'Leeds (HMP & YOI)',
+                  firstName: 'First',
+                  lastName: 'LAST',
+                  alerts: [{ alertCode: 'DONT_SHOW' }, { alertCode: 'PEEP' }],
+                  dateOfBirth: '1990-01-01',
+                },
+                {
+                  prisonId: 'LEI',
+                  bookingId: 1235,
+                  status: 'ACTIVE_IN',
+                  prisonerNumber: 'G6123VU',
+                  currentFacialImageId: 746523,
+                  currentIncentive: { level: { description: 'Current incentive' } },
+                  cellLocation: 'A-1-014',
+                  locationDescription: 'Leeds (HMP & YOI)',
+                  firstName: 'First',
+                  lastName: 'LAST',
+                  alerts: [],
+                  dateOfBirth: '2002-01-01',
+                },
+              ] as Prisoner[],
+              metadata: {
+                first: true,
+                last: true,
+                offset: 0,
+                pageNumber: 0,
+                size: 2,
+                numberOfElements: 2,
+                totalElements: 2,
+                totalPages: 1,
+              },
+            })
+
+            req = {
+              originalUrl: 'http://example.com',
+              middleware: { clientToken: 'clientToken' },
+              query: {
+                referrer: 'licences',
+                searchText: 'smith',
+                dobDay: '2',
+                dobMonth: '9',
+                dobYear: '1990',
+                genderFilter: 'ALL',
+                locationFilter: 'INSIDE',
+              },
+              session: {},
+            } as unknown as Request
+
+            res = {
+              render: jest.fn(),
+              locals: { user },
+            } as unknown as Response
+          })
+
+          it('should not check permissions api by default', async () => {
+            await controller.globalSearch().results.get()(req, res, jest.fn())
+
+            expect(res.render).toHaveBeenCalledWith(
+              'pages/globalSearch/results',
+              expect.objectContaining({
+                results: [
+                  expect.objectContaining({
+                    prisonerNumber: 'A1234BC',
+                    latestLocation: 'Leeds (HMP & YOI)',
+                  }),
+                  expect.objectContaining({
+                    prisonerNumber: 'G6123VU',
+                    latestLocation: 'Leeds (HMP & YOI)',
+                  }),
+                ],
+              }),
+            )
+            expect(permissionsApiClient.checkHighProfilePrisonerStatuses).not.toHaveBeenCalled()
+          })
+
+          it('should hide location of high-profile prisoners when enabled', async () => {
+            config.features.highProfilePrisonersEnabled = true
+            permissionsApiClient.checkHighProfilePrisonerStatuses.mockResolvedValue(new Set(['G6123VU']))
+
+            await controller.globalSearch().results.get()(req, res, jest.fn())
+
+            expect(res.render).toHaveBeenCalledWith(
+              'pages/globalSearch/results',
+              expect.objectContaining({
+                results: [
+                  expect.objectContaining({
+                    prisonerNumber: 'A1234BC',
+                    latestLocation: 'Leeds (HMP & YOI)',
+                  }),
+                  expect.objectContaining({
+                    prisonerNumber: 'G6123VU',
+                    latestLocation: 'Restricted',
+                  }),
+                ],
+              }),
+            )
+            expect(permissionsApiClient.checkHighProfilePrisonerStatuses).toHaveBeenCalledWith(['A1234BC', 'G6123VU'])
+          })
+
+          it('should throw an error if permissions api returns one', async () => {
+            config.features.highProfilePrisonersEnabled = true
+            permissionsApiClient.checkHighProfilePrisonerStatuses.mockRejectedValue(new InternalServerError())
+
+            await expect(controller.globalSearch().results.get()(req, res, jest.fn())).rejects.toThrow(
+              'Internal Server Error',
+            )
+
+            expect(res.render).not.toHaveBeenCalled()
           })
         })
 

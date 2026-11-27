@@ -48,6 +48,7 @@ generic-service:
     AUDIT_ENABLED: "true"
     PRISONER_SEARCH_ENABLED: true
     HEALTH_AND_MEDICATION_LOCATION_ARRIVAL_FILTERS_ENABLED: true
+    HIGH_PROFILE_PRISONERS_ENABLED: "false"
 
   allowlist:
     groups:

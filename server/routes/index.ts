@@ -31,6 +31,7 @@ export default function routes(services: Services): Router {
     services.globalSearchService,
     services.metricsService,
     services.auditService,
+    services.dataAccess.permissionsApiClientBuilder,
   )
 
   const changeCaseloadController = new ChangeCaseloadController(services.userService)

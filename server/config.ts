@@ -174,6 +174,7 @@ export default {
     outageBannerTtl: Number(get('OUTAGE_BANNER_CACHE_TTL', 1)),
   },
   features: {
+    highProfilePrisonersEnabled: get('HIGH_PROFILE_PRISONERS_ENABLED', 'false') === 'true',
     prisonerSearchEnabled: get('PRISONER_SEARCH_ENABLED', 'false') === 'true',
     locationAndRecentArrivalFilters: get('HEALTH_AND_MEDICATION_LOCATION_ARRIVAL_FILTERS_ENABLED', 'false') === 'true',
   },
