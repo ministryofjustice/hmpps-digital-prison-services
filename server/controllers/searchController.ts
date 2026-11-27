@@ -337,6 +337,12 @@ export default class SearchController {
           prisoners.map(({ prisonerNumber }) => prisonerNumber),
         )
       : new Set<string>()
+    const isHighProfilePrisonerOutsideCaseloads = ({ prisonerNumber, prisonId }: Prisoner) =>
+      highProfilePrisonerNumberSet.has(prisonerNumber) &&
+      prisonId &&
+      prisonId !== 'TRN' &&
+      prisonId !== 'OUT' &&
+      !user.caseLoads.some(caseLoad => caseLoad.caseLoadId === prisonId)
 
     return prisoners.map(prisoner => ({
       prisonerNumber: prisoner.prisonerNumber,
@@ -344,9 +350,7 @@ export default class SearchController {
       workingName: formatName(prisoner.firstName, '', prisoner.lastName, { style: 'lastCommaFirst' }),
       dateOfBirth: formatDate(prisoner.dateOfBirth, 'short'),
       currentFacialImageId: prisoner.currentFacialImageId,
-      latestLocation: highProfilePrisonerNumberSet.has(prisoner.prisonerNumber)
-        ? 'Restricted'
-        : prisoner.locationDescription,
+      latestLocation: isHighProfilePrisonerOutsideCaseloads(prisoner) ? 'Restricted' : prisoner.locationDescription,
       prisonerProfileUrl: `${config.serviceUrls.prisonerProfile}/prisoner/${prisoner.prisonerNumber}`,
       updateLicenceLink:
         prisoner.bookingId > 0 ? `${config.serviceUrls.licences}/hdc/taskList/${prisoner.bookingId}` : undefined,

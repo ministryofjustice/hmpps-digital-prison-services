@@ -714,60 +714,55 @@ describe('SearchController', () => {
           let req: Request
           let res: Response
 
-          beforeEach(() => {
-            globalSearchService.getResultsForUser.mockResolvedValue({
-              content: [
-                {
-                  prisonId: 'LEI',
-                  bookingId: 1234,
-                  status: 'ACTIVE_IN',
-                  prisonerNumber: 'A1234BC',
-                  currentFacialImageId: 1234,
-                  currentIncentive: { level: { description: 'Current incentive' } },
-                  cellLocation: 'RECP',
-                  locationDescription: 'Leeds (HMP & YOI)',
-                  firstName: 'First',
-                  lastName: 'LAST',
-                  alerts: [{ alertCode: 'DONT_SHOW' }, { alertCode: 'PEEP' }],
-                  dateOfBirth: '1990-01-01',
-                },
-                {
-                  prisonId: 'LEI',
-                  bookingId: 1235,
-                  status: 'ACTIVE_IN',
-                  prisonerNumber: 'G6123VU',
-                  currentFacialImageId: 746523,
-                  currentIncentive: { level: { description: 'Current incentive' } },
-                  cellLocation: 'A-1-014',
-                  locationDescription: 'Leeds (HMP & YOI)',
-                  firstName: 'First',
-                  lastName: 'LAST',
-                  alerts: [],
-                  dateOfBirth: '2002-01-01',
-                },
-              ] as Prisoner[],
-              metadata: {
-                first: true,
-                last: true,
-                offset: 0,
-                pageNumber: 0,
-                size: 2,
-                numberOfElements: 2,
-                totalElements: 2,
-                totalPages: 1,
-              },
-            })
+          const prisonerInCaseloads1 = {
+            prisonId: 'LEI',
+            bookingId: 1234,
+            status: 'ACTIVE_IN',
+            prisonerNumber: 'A1234BC',
+            currentFacialImageId: 1234,
+            currentIncentive: { level: { description: 'Current incentive' } },
+            cellLocation: 'RECP',
+            locationDescription: 'Leeds (HMP & YOI)',
+            firstName: 'First',
+            lastName: 'LAST',
+            alerts: [{ alertCode: 'DONT_SHOW' }, { alertCode: 'PEEP' }],
+            dateOfBirth: '1990-01-01',
+          } as Prisoner
+          const prisonerInCaseloads2 = {
+            prisonId: 'LEI',
+            bookingId: 1235,
+            status: 'ACTIVE_IN',
+            prisonerNumber: 'G6123VU',
+            currentFacialImageId: 746523,
+            currentIncentive: { level: { description: 'Current incentive' } },
+            cellLocation: 'A-1-014',
+            locationDescription: 'Leeds (HMP & YOI)',
+            firstName: 'First',
+            lastName: 'LAST',
+            alerts: [],
+            dateOfBirth: '2002-01-01',
+          } as Prisoner
+          const prisonerOutsideCaseloads1 = {
+            prisonId: 'BXI',
+            bookingId: 1236,
+            status: 'ACTIVE_IN',
+            prisonerNumber: 'B2222BB',
+            currentFacialImageId: 433,
+            currentIncentive: { level: { description: 'Current incentive' } },
+            cellLocation: 'C-2-102',
+            locationDescription: 'Brixton (HMP)',
+            firstName: 'First',
+            lastName: 'LAST',
+            alerts: [],
+            dateOfBirth: '1973-01-01',
+          } as Prisoner
 
+          beforeEach(() => {
             req = {
               originalUrl: 'http://example.com',
               middleware: { clientToken: 'clientToken' },
               query: {
-                referrer: 'licences',
-                searchText: 'smith',
-                dobDay: '2',
-                dobMonth: '9',
-                dobYear: '1990',
-                genderFilter: 'ALL',
+                searchText: 'LAST',
                 locationFilter: 'INSIDE',
               },
               session: {},
@@ -780,6 +775,20 @@ describe('SearchController', () => {
           })
 
           it('should not check permissions api by default', async () => {
+            globalSearchService.getResultsForUser.mockResolvedValue({
+              content: [prisonerInCaseloads1, prisonerInCaseloads2, prisonerOutsideCaseloads1],
+              metadata: {
+                first: true,
+                last: true,
+                offset: 0,
+                pageNumber: 0,
+                size: 3,
+                numberOfElements: 3,
+                totalElements: 3,
+                totalPages: 1,
+              },
+            })
+
             await controller.globalSearch().results.get()(req, res, jest.fn())
 
             expect(res.render).toHaveBeenCalledWith(
@@ -793,6 +802,10 @@ describe('SearchController', () => {
                   expect.objectContaining({
                     prisonerNumber: 'G6123VU',
                     latestLocation: 'Leeds (HMP & YOI)',
+                  }),
+                  expect.objectContaining({
+                    prisonerNumber: 'B2222BB',
+                    latestLocation: 'Brixton (HMP)',
                   }),
                 ],
               }),
@@ -800,9 +813,23 @@ describe('SearchController', () => {
             expect(permissionsApiClient.checkHighProfilePrisonerStatuses).not.toHaveBeenCalled()
           })
 
-          it('should hide location of high-profile prisoners when enabled', async () => {
+          it('should not hide location of high-profile prisoners in caseloads when enabled', async () => {
             config.features.highProfilePrisonersEnabled = true
             permissionsApiClient.checkHighProfilePrisonerStatuses.mockResolvedValue(new Set(['G6123VU']))
+
+            globalSearchService.getResultsForUser.mockResolvedValue({
+              content: [prisonerInCaseloads1, prisonerInCaseloads2],
+              metadata: {
+                first: true,
+                last: true,
+                offset: 0,
+                pageNumber: 0,
+                size: 3,
+                numberOfElements: 3,
+                totalElements: 3,
+                totalPages: 1,
+              },
+            })
 
             await controller.globalSearch().results.get()(req, res, jest.fn())
 
@@ -816,7 +843,7 @@ describe('SearchController', () => {
                   }),
                   expect.objectContaining({
                     prisonerNumber: 'G6123VU',
-                    latestLocation: 'Restricted',
+                    latestLocation: 'Leeds (HMP & YOI)',
                   }),
                 ],
               }),
@@ -824,15 +851,72 @@ describe('SearchController', () => {
             expect(permissionsApiClient.checkHighProfilePrisonerStatuses).toHaveBeenCalledWith(['A1234BC', 'G6123VU'])
           })
 
+          it('should hide location of high-profile prisoners outside caseloads when enabled', async () => {
+            config.features.highProfilePrisonersEnabled = true
+            permissionsApiClient.checkHighProfilePrisonerStatuses.mockResolvedValue(new Set(['B2222BB']))
+
+            globalSearchService.getResultsForUser.mockResolvedValue({
+              content: [prisonerInCaseloads1, prisonerOutsideCaseloads1],
+              metadata: {
+                first: true,
+                last: true,
+                offset: 0,
+                pageNumber: 0,
+                size: 3,
+                numberOfElements: 3,
+                totalElements: 3,
+                totalPages: 1,
+              },
+            })
+
+            await controller.globalSearch().results.get()(req, res, jest.fn())
+
+            expect(res.render).toHaveBeenCalledWith(
+              'pages/globalSearch/results',
+              expect.objectContaining({
+                results: [
+                  expect.objectContaining({
+                    prisonerNumber: 'A1234BC',
+                    latestLocation: 'Leeds (HMP & YOI)',
+                  }),
+                  expect.objectContaining({
+                    prisonerNumber: 'B2222BB',
+                    latestLocation: 'Restricted',
+                  }),
+                ],
+              }),
+            )
+            expect(permissionsApiClient.checkHighProfilePrisonerStatuses).toHaveBeenCalledWith(['A1234BC', 'B2222BB'])
+          })
+
           it('should throw an error if permissions api returns one', async () => {
             config.features.highProfilePrisonersEnabled = true
             permissionsApiClient.checkHighProfilePrisonerStatuses.mockRejectedValue(new InternalServerError())
+
+            globalSearchService.getResultsForUser.mockResolvedValue({
+              content: [prisonerInCaseloads1, prisonerInCaseloads2, prisonerOutsideCaseloads1],
+              metadata: {
+                first: true,
+                last: true,
+                offset: 0,
+                pageNumber: 0,
+                size: 3,
+                numberOfElements: 3,
+                totalElements: 3,
+                totalPages: 1,
+              },
+            })
 
             await expect(controller.globalSearch().results.get()(req, res, jest.fn())).rejects.toThrow(
               'Internal Server Error',
             )
 
             expect(res.render).not.toHaveBeenCalled()
+            expect(permissionsApiClient.checkHighProfilePrisonerStatuses).toHaveBeenCalledWith([
+              'A1234BC',
+              'G6123VU',
+              'B2222BB',
+            ])
           })
         })
 
