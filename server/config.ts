@@ -3,7 +3,7 @@ import { AgentConfig } from '@ministryofjustice/hmpps-rest-client'
 /** true in all k8s namespaces and in docker image */
 const production = process.env.NODE_ENV === 'production'
 
-function get<T>(name: string, fallback: T, options = { requireInProduction: false }): T | string {
+function get<T = string>(name: string, fallback: T, options = { requireInProduction: false }): T | string {
   if (process.env[name]) {
     return process.env[name]
   }
@@ -136,6 +136,14 @@ export default {
       },
       agent: new AgentConfig(Number(get('LOCATIONS_INSIDE_PRISON_API_TIMEOUT_DEADLINE', 3000))),
     },
+    permissionsApi: {
+      url: get('PERMISSIONS_API_URL', 'http://localhost:8082', requiredInProduction),
+      timeout: {
+        response: Number(get('PERMISSIONS_API_TIMEOUT_RESPONSE', 3000)),
+        deadline: Number(get('PERMISSIONS_API_TIMEOUT_DEADLINE', 3000)),
+      },
+      agent: new AgentConfig(Number(get('PERMISSIONS_API_TIMEOUT_DEADLINE', 3000))),
+    },
   },
   serviceUrls: {
     digitalPrisons: get('DIGITAL_PRISONS_URL', 'http://localhost:3001', requiredInProduction),
@@ -166,6 +174,7 @@ export default {
     outageBannerTtl: Number(get('OUTAGE_BANNER_CACHE_TTL', 1)),
   },
   features: {
+    highProfilePrisonersEnabled: get('HIGH_PROFILE_PRISONERS_ENABLED', 'false') === 'true',
     prisonerSearchEnabled: get('PRISONER_SEARCH_ENABLED', 'false') === 'true',
     locationAndRecentArrivalFilters: get('HEALTH_AND_MEDICATION_LOCATION_ARRIVAL_FILTERS_ENABLED', 'false') === 'true',
   },

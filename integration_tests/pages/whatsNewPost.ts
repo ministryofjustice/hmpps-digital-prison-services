@@ -5,15 +5,25 @@ export default class WhatsNewPostPage extends Page {
     super('Whats new one')
   }
 
-  whatsNew = () => {
+  get whatsNew() {
     const whatsNewPost = (): PageElement => cy.get('.whats-new-post--full')
 
     return {
-      title: () => whatsNewPost().find('h1'),
-      summary: () => whatsNewPost().find('.whats-new-post__summary'),
-      date: () => whatsNewPost().find('.whats-new-post__date'),
-      body: () => whatsNewPost().find('.whats-new-post__body'),
-      link: () => whatsNewPost().find('[data-qa=back-to-whats-new-link]'),
+      get title() {
+        return whatsNewPost().find<HTMLHeadingElement>('h1')
+      },
+      get summary() {
+        return whatsNewPost().find<HTMLDivElement | HTMLParagraphElement>('.whats-new-post__summary')
+      },
+      get date() {
+        return whatsNewPost().find<HTMLDivElement | HTMLTimeElement>('.whats-new-post__date')
+      },
+      get body() {
+        return whatsNewPost().find<HTMLPreElement>('.whats-new-post__body')
+      },
+      get link() {
+        return whatsNewPost().find<HTMLAnchorElement>('[data-qa=back-to-whats-new-link]')
+      },
     }
   }
 }

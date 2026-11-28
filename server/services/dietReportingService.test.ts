@@ -59,8 +59,8 @@ describe('DietReportingService', () => {
         },
       ],
     }
-    healthAndMedicationApiClientMock.getHealthAndMedicationForPrison = jest.fn(async () => healthAndMedicationForPrison)
-    prisonApiClientMock.getLatestArrivalDates = jest.fn(async () => [
+    healthAndMedicationApiClientMock.getHealthAndMedicationForPrison.mockResolvedValue(healthAndMedicationForPrison)
+    prisonApiClientMock.getLatestArrivalDates.mockResolvedValue([
       {
         offenderNo: 'A1234AA',
         latestArrivalDate: '2025-01-01',

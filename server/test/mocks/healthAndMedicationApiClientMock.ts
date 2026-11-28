@@ -1,8 +1,8 @@
-import {
+import type {
   HealthAndMedicationApiClient,
   HealthAndMedicationForPrison,
 } from '../../data/interfaces/healthAndMedicationApiClient'
-import { PagedList } from '../../data/interfaces/pagedList'
+import type { PagedList } from '../../data/interfaces/pagedList'
 
 export const mockHealthAndMedicationResponse = {
   content: [
@@ -121,11 +121,9 @@ export const mockHealthAndMedicationFiltersResponse = {
   ],
 }
 
-const healthAndMedicationApiClientMock: HealthAndMedicationApiClient = {
-  getHealthAndMedicationForPrison: jest.fn(async () => mockHealthAndMedicationResponse),
-  getFiltersForPrison: jest.fn(
-    async (_prisonId: string, _filters?: Record<string, string[]>) => mockHealthAndMedicationFiltersResponse,
-  ),
+const healthAndMedicationApiClientMock: jest.Mocked<HealthAndMedicationApiClient> = {
+  getHealthAndMedicationForPrison: jest.fn().mockResolvedValue(mockHealthAndMedicationResponse),
+  getFiltersForPrison: jest.fn().mockResolvedValue(mockHealthAndMedicationFiltersResponse),
 }
 
 export default healthAndMedicationApiClientMock

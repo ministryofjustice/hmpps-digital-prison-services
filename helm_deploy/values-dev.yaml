@@ -30,6 +30,7 @@ generic-service:
     HEALTH_AND_MEDICATION_API_URL: "https://health-and-medication-api-dev.hmpps.service.justice.gov.uk"
     GOTENBERG_API_URL: 'http://hmpps-digital-prison-services-gotenberg'
     LOCATIONS_INSIDE_PRISON_API_URL: https://locations-inside-prison-api-dev.hmpps.service.justice.gov.uk
+    PERMISSIONS_API_URL: https://permissions-api-dev.hmpps.service.justice.gov.uk
 
     # Service URLs
     CHECK_MY_DIARY_URL: https://check-my-diary-dev.prison.service.justice.gov.uk?fromDPS=true
@@ -49,6 +50,7 @@ generic-service:
     AUDIT_ENABLED: "true"
     PRISONER_SEARCH_ENABLED: true
     HEALTH_AND_MEDICATION_LOCATION_ARRIVAL_FILTERS_ENABLED: true
+    HIGH_PROFILE_PRISONERS_ENABLED: "true"
 
   allowlist:
     groups:

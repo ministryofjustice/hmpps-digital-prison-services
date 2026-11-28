@@ -11,7 +11,7 @@ describe('pdfRenderingService', () => {
   })
 
   it('renders the diet report', async () => {
-    gotenbergApiClientMock.renderPdfFromHtml = async () => Buffer.from('test')
+    gotenbergApiClientMock.renderPdfFromHtml.mockResolvedValue(Buffer.from('test'))
     const res = {
       render: jest.fn(),
     } as unknown as Response

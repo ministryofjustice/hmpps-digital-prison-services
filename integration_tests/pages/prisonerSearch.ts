@@ -5,20 +5,39 @@ export default class PrisonerSearch extends Page {
     super('Prisoner search results')
   }
 
-  prisoners = () => ({
-    rows: () => cy.get('table tbody tr'),
-    row: (i: number) => ({
-      photo: () => cy.get('table tbody tr').eq(i).find('td').eq(0),
-      name: () => cy.get('table tbody tr').eq(i).find('td').eq(1),
-      prisonNumber: () => cy.get('table tbody tr').eq(i).find('td').eq(2),
-      location: () => cy.get('table tbody tr').eq(i).find('td').eq(3),
-      incentiveLevel: () => cy.get('table tbody tr').eq(i).find('td').eq(4),
-      age: () => cy.get('table tbody tr').eq(i).find('td').eq(5),
-      alerts: () => cy.get('table tbody tr').eq(i).find('td').eq(6),
-    }),
-    sorting: () => ({
-      name: () => cy.get('table thead th').eq(1),
-      location: () => cy.get('table thead th').eq(3),
-    }),
-  })
+  get prisoners() {
+    const rows = () => cy.get<HTMLTableCellElement>('table tbody tr')
+
+    return {
+      get rows() {
+        return rows()
+      },
+
+      row(i: number) {
+        return {
+          get photo() {
+            return rows().eq(i).find<HTMLTableCellElement>('td:nth-child(1)')
+          },
+          get name() {
+            return rows().eq(i).find<HTMLTableCellElement>('td:nth-child(2)')
+          },
+          get prisonNumber() {
+            return rows().eq(i).find<HTMLTableCellElement>('td:nth-child(3)')
+          },
+          get location() {
+            return rows().eq(i).find<HTMLTableCellElement>('td:nth-child(4)')
+          },
+          get incentiveLevel() {
+            return rows().eq(i).find<HTMLTableCellElement>('td:nth-child(5)')
+          },
+          get age() {
+            return rows().eq(i).find<HTMLTableCellElement>('td:nth-child(6)')
+          },
+          get alerts() {
+            return rows().eq(i).find<HTMLTableCellElement>('td:nth-child(7)')
+          },
+        }
+      },
+    }
+  }
 }

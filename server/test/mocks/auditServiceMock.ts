@@ -1,7 +1,9 @@
-import AuditService from '../../services/auditService'
+import type AuditService from '../../services/auditService'
 
-export default (): AuditService =>
+export default (): jest.Mocked<AuditService> =>
   ({
     auditDietReportView: jest.fn(),
     auditDietReportPrint: jest.fn(),
-  }) as unknown as AuditService
+    auditPrisonerSearch: jest.fn(),
+    auditGlobalSearch: jest.fn(),
+  }) as unknown as jest.Mocked<AuditService>

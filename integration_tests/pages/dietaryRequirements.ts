@@ -25,24 +25,24 @@ export default class DietaryRequirementsPage extends Page {
 
   filters = () => ({
     personalisedDiet: () => ({
-      heading: () => cy.get('[data-qa="filter-group-personalDiet"').find('legend'),
-      options: () => cy.get('[data-qa="filter-group-personalDiet"').find('.govuk-checkboxes__item'),
+      heading: () => cy.get('[data-qa="filter-group-personalDiet"]').find('legend'),
+      options: () => cy.get('[data-qa="filter-group-personalDiet"]').find('.govuk-checkboxes__item'),
     }),
     medicalDiet: () => ({
-      heading: () => cy.get('[data-qa="filter-group-medicalDiet"').find('legend'),
-      options: () => cy.get('[data-qa="filter-group-medicalDiet"').find('.govuk-checkboxes__item'),
+      heading: () => cy.get('[data-qa="filter-group-medicalDiet"]').find('legend'),
+      options: () => cy.get('[data-qa="filter-group-medicalDiet"]').find('.govuk-checkboxes__item'),
     }),
     foodAllergies: () => ({
-      heading: () => cy.get('[data-qa="filter-group-foodAllergies"').find('legend'),
-      options: () => cy.get('[data-qa="filter-group-foodAllergies"').find('.govuk-checkboxes__item'),
+      heading: () => cy.get('[data-qa="filter-group-foodAllergies"]').find('legend'),
+      options: () => cy.get('[data-qa="filter-group-foodAllergies"]').find('.govuk-checkboxes__item'),
     }),
     topLocationLevel: () => ({
-      heading: () => cy.get('[data-qa="filter-group-topLocationLevel"').find('legend'),
-      options: () => cy.get('[data-qa="filter-group-topLocationLevel"').find('.govuk-checkboxes__item'),
+      heading: () => cy.get('[data-qa="filter-group-topLocationLevel"]').find('legend'),
+      options: () => cy.get('[data-qa="filter-group-topLocationLevel"]').find('.govuk-checkboxes__item'),
     }),
     recentArrival: () => ({
-      heading: () => cy.get('[data-qa="filter-group-recentArrival"').find('legend'),
-      options: () => cy.get('[data-qa="filter-group-recentArrival"').find('.govuk-checkboxes__item'),
+      heading: () => cy.get('[data-qa="filter-group-recentArrival"]').find('legend'),
+      options: () => cy.get('[data-qa="filter-group-recentArrival"]').find('.govuk-checkboxes__item'),
     }),
   })
 }

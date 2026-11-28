@@ -3,7 +3,7 @@ import appConfig from '../config'
 import logger, { warnLevelLogger } from '../../logger'
 
 export default abstract class RestClient extends HmppsRestClient {
-  constructor(
+  protected constructor(
     protected readonly name: string,
     protected readonly config: ApiConfig,
     protected readonly token: string,

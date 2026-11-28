@@ -1,5 +1,7 @@
 import { AlertFlagLabel, alertFlagLabels } from '@ministryofjustice/hmpps-connect-dps-shared-items'
 import { Request, Response, RequestHandler } from 'express'
+import logger from '../../logger'
+import config from '../config'
 import {
   generateListMetadata,
   GlobalSearchFilterParams,
@@ -15,8 +17,9 @@ import {
   shouldShowProfileImage,
   shouldShowUpdateLicenceLink,
 } from '../utils/utils'
-import config from '../config'
+import type { RestClientBuilder } from '../data'
 import { HmppsError } from '../data/interfaces/hmppsError'
+import type { PermissionsApiClient } from '../data/interfaces/permissionsApiClient'
 import Prisoner from '../data/interfaces/prisoner'
 import GlobalSearchService from '../services/globalSearchService'
 import { PrisonUser } from '../interfaces/hmppsUser'
@@ -25,7 +28,6 @@ import globalSearchDateValidator from '../utils/globalSearchDateValidator'
 import { formatDate } from '../utils/dateHelpers'
 import MetricsService from '../services/metricsService'
 import AuditService from '../services/auditService'
-import logger from '../../logger'
 
 interface GlobalSearchQueryString {
   page: number
@@ -70,6 +72,7 @@ export default class SearchController {
     private readonly globalSearchService: GlobalSearchService,
     private readonly metricsService: MetricsService,
     private readonly auditService: AuditService,
+    private readonly permissionsApiClientBuilder: RestClientBuilder<PermissionsApiClient>,
   ) {}
 
   backLinkWhitelist: { [key: string]: string } = { licences: config.serviceUrls.licences }
@@ -315,15 +318,31 @@ export default class SearchController {
     }
 
     const resp = await this.globalSearchService.getResultsForUser(clientToken, globalSearchParams)
-    const results = this.mapPrisonersToGlobalSearchResults(user, resp.content)
+    const permissionsApiClient = this.permissionsApiClientBuilder(clientToken)
+    const results = await this.mapPrisonersToGlobalSearchResults(permissionsApiClient, user, resp.content)
+
     const paramsForMetadata: GlobalSearchFilterParams = { page: undefined, searchText, referrer, ...filters }
     const listMetadata = generateListMetadata(resp, paramsForMetadata, 'result')
 
     return { results, listMetadata, errors: [] }
   }
 
-  private mapPrisonersToGlobalSearchResults(user: PrisonUser, prisoners: Prisoner[]): GlobalSearchResult[] {
-    const prisonerBooked = (prisoner: Prisoner) => prisoner.bookingId > 0
+  private async mapPrisonersToGlobalSearchResults(
+    permissionsApiClient: PermissionsApiClient,
+    user: PrisonUser,
+    prisoners: Prisoner[],
+  ): Promise<GlobalSearchResult[]> {
+    const highProfilePrisonerNumberSet = config.features.highProfilePrisonersEnabled
+      ? await permissionsApiClient.checkHighProfilePrisonerStatuses(
+          prisoners.map(({ prisonerNumber }) => prisonerNumber),
+        )
+      : new Set<string>()
+    const isHighProfilePrisonerOutsideCaseloads = ({ prisonerNumber, prisonId }: Prisoner) =>
+      highProfilePrisonerNumberSet.has(prisonerNumber) &&
+      prisonId &&
+      prisonId !== 'TRN' &&
+      prisonId !== 'OUT' &&
+      !user.caseLoads.some(caseLoad => caseLoad.caseLoadId === prisonId)
 
     return prisoners.map(prisoner => ({
       prisonerNumber: prisoner.prisonerNumber,
@@ -331,11 +350,10 @@ export default class SearchController {
       workingName: formatName(prisoner.firstName, '', prisoner.lastName, { style: 'lastCommaFirst' }),
       dateOfBirth: formatDate(prisoner.dateOfBirth, 'short'),
       currentFacialImageId: prisoner.currentFacialImageId,
-      latestLocation: prisoner.locationDescription,
+      latestLocation: isHighProfilePrisonerOutsideCaseloads(prisoner) ? 'Restricted' : prisoner.locationDescription,
       prisonerProfileUrl: `${config.serviceUrls.prisonerProfile}/prisoner/${prisoner.prisonerNumber}`,
-      updateLicenceLink: prisonerBooked(prisoner)
-        ? `${config.serviceUrls.licences}/hdc/taskList/${prisoner.bookingId}`
-        : undefined,
+      updateLicenceLink:
+        prisoner.bookingId > 0 ? `${config.serviceUrls.licences}/hdc/taskList/${prisoner.bookingId}` : undefined,
       showUpdateLicenceLink: shouldShowUpdateLicenceLink(user, prisoner),
       showProfileLink: shouldLinkProfile(user, prisoner),
       showProfileImage: shouldShowProfileImage(user, prisoner),
