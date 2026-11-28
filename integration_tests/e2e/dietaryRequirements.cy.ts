@@ -5,7 +5,7 @@ import Page from '../pages/page'
 context('Dietary requirements report', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.setupUserAuth({ roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`, `ROLE_${Role.DietAndAllergiesReport}`] })
+    cy.setupUserAuth({ roles: ['ROLE_PRISON', `ROLE_${Role.GlobalSearch}`, `ROLE_${Role.DietAndAllergiesReport}`] })
     cy.task('stubHealthAndMedicationForPrison', 'LEI')
     cy.task('stubHealthAndMedicationFiltersForPrison', 'LEI')
     cy.task('stubLatestArrivalDates')
@@ -175,7 +175,7 @@ context('Dietary requirements report', () => {
   context('No results when filters applied', () => {
     beforeEach(() => {
       cy.task('reset')
-      cy.setupUserAuth({ roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`, `ROLE_${Role.DietAndAllergiesReport}`] })
+      cy.setupUserAuth({ roles: ['ROLE_PRISON', `ROLE_${Role.GlobalSearch}`, `ROLE_${Role.DietAndAllergiesReport}`] })
       cy.task('stubHealthAndMedicationForPrisonEmptyResults', 'LEI')
       cy.task('stubHealthAndMedicationFiltersForPrison', 'LEI')
       cy.task('stubLatestArrivalDates')

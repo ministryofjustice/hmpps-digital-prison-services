@@ -6,7 +6,7 @@ import { prisonEstablishmentRollSummaryMock } from '../../server/mocks/prisonRol
 context('Homepage (with FE Components services)', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.setupUserAuth({ roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`] })
+    cy.setupUserAuth({ roles: ['ROLE_PRISON', `ROLE_${Role.GlobalSearch}`] })
     cy.setupComponentsData({
       caseLoads: [
         { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },
@@ -131,7 +131,7 @@ context('Homepage (with FE Components services)', () => {
 context('Homepage - no global search', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.setupUserAuth({ roles: [`ROLE_PRISON`] })
+    cy.setupUserAuth({ roles: ['ROLE_PRISON'] })
     cy.setupComponentsData()
     cy.task('stubPrisonRollCountSummary')
     cy.task('stubWhatsNewPosts')
@@ -155,7 +155,7 @@ context('Homepage - no global search', () => {
 context('Homepage - no active caseload', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.setupUserAuth({ roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`] })
+    cy.setupUserAuth({ roles: ['ROLE_PRISON', `ROLE_${Role.GlobalSearch}`] })
     cy.setupComponentsData({
       caseLoads: [
         { caseloadFunction: '', caseLoadId: 'MDI', currentlyActive: false, description: 'Moorland (HMP)', type: '' },
@@ -179,7 +179,7 @@ context('Homepage - no active caseload', () => {
 context('Homepage - No caseloads', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.setupUserAuth({ roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`] })
+    cy.setupUserAuth({ roles: ['ROLE_PRISON', `ROLE_${Role.GlobalSearch}`] })
     cy.setupComponentsData({ caseLoads: [] })
     cy.task('stubWhatsNewPosts')
     cy.task('stubOutageBanner')
@@ -194,7 +194,7 @@ context('Homepage - No caseloads', () => {
 context('Homepage (without FE Components services)', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.setupUserAuth({ roles: [`ROLE_PRISON`, `ROLE_${Role.GlobalSearch}`] })
+    cy.setupUserAuth({ roles: ['ROLE_PRISON', `ROLE_${Role.GlobalSearch}`] })
     cy.task('stubUserCaseLoads', [
       {
         caseLoadId: 'LEI',

@@ -193,17 +193,17 @@ export default {
       },
     }),
 
-  stubGlobalSearch: () =>
+  stubGlobalSearch: ({ prisoners = [prisonerMockDataA] }: { prisoners?: Prisoner[] } = {}) =>
     stubFor({
       request: {
         method: 'POST',
-        urlPattern: `/prisoner-search/global-search.*`,
+        urlPath: '/prisoner-search/global-search',
       },
       response: {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: {
-          content: [prisonerMockDataA],
+          content: prisoners,
           pageable: {
             pageNumber: 0,
             pageSize: 100,

@@ -5,7 +5,7 @@ import { prisonerMockDataA } from '../mockApis/prisonerSearch'
 context('Prisoner search', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.setupUserAuth({ roles: [`ROLE_PRISON`] })
+    cy.setupUserAuth({ roles: ['ROLE_PRISON'] })
     cy.setupComponentsData({
       caseLoads: [
         { caseloadFunction: '', caseLoadId: 'LEI', currentlyActive: true, description: 'Leeds (HMP)', type: '' },

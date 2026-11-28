@@ -45,7 +45,7 @@ export default {
     return stubFor({
       request: {
         method: 'PUT',
-        urlPattern: `/prison/api/users/me/activeCaseLoad`,
+        urlPath: '/prison/api/users/me/activeCaseLoad',
       },
       response: {
         status,
@@ -61,7 +61,7 @@ export default {
     return stubFor({
       request: {
         method: 'POST',
-        urlPattern: `/prison/api/movements/offenders/latest-arrival-date`,
+        urlPath: '/prison/api/movements/offenders/latest-arrival-date',
       },
       response: {
         status: 200,

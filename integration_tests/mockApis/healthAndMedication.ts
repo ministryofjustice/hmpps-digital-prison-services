@@ -63,7 +63,7 @@ export default {
     return stubFor({
       request: {
         method: 'POST',
-        urlPattern: `/health-and-medication/prisons/${prisonId}`,
+        urlPath: `/health-and-medication/prisons/${prisonId}`,
       },
       response: {
         status: 200,
@@ -158,7 +158,7 @@ export default {
     return stubFor({
       request: {
         method: 'POST',
-        urlPattern: `/health-and-medication/prisons/${prisonId}`,
+        urlPath: `/health-and-medication/prisons/${prisonId}`,
       },
       response: {
         status: 200,
