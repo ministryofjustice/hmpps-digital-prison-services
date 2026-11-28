@@ -1,4 +1,5 @@
-import { stubFor } from './wiremock'
+import type { SuperAgentRequest } from 'superagent'
+import { stubFor, stubPing } from './wiremock'
 import Prisoner from '../../server/data/interfaces/prisoner'
 
 export const prisonerMockDataA: Prisoner = {
@@ -150,18 +151,7 @@ export const prisonerMockDataA: Prisoner = {
 }
 
 export default {
-  stubPrisonerSearchPing: (httpStatus = 200) =>
-    stubFor({
-      request: {
-        method: 'GET',
-        urlPattern: '/prisoner-search/health/ping',
-      },
-      response: {
-        status: httpStatus,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: { status: httpStatus === 200 ? 'UP' : 'DOWN' },
-      },
-    }),
+  stubPrisonerSearchPing: (httpStatus = 200): SuperAgentRequest => stubPing('/prisonersearch', httpStatus),
 
   stubLocationSearch: ({ prisonId }: { prisonId: string }) =>
     stubFor({

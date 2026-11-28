@@ -1,21 +1,12 @@
 import { format } from 'date-fns/format'
 import { subDays } from 'date-fns'
-import { stubFor } from './wiremock'
+import type { SuperAgentRequest } from 'superagent'
+import { stubFor, stubPing } from './wiremock'
 import { HealthAndMedicationFilter } from '../../server/data/interfaces/healthAndMedicationApiClient'
 
 export default {
-  stubHealthAndMedicationPing: (httpStatus = 200) =>
-    stubFor({
-      request: {
-        method: 'GET',
-        urlPattern: '/health-and-medication/health/ping',
-      },
-      response: {
-        status: httpStatus,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: { status: httpStatus === 200 ? 'UP' : 'DOWN' },
-      },
-    }),
+  stubHealthAndMedicationPing: (httpStatus = 200): SuperAgentRequest => stubPing('/health-and-medication', httpStatus),
+
   stubHealthAndMedicationForPrison: (prisonId: string) => {
     const content = [
       {

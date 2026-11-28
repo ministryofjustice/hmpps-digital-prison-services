@@ -1,23 +1,13 @@
 import { format } from 'date-fns/format'
 import { subDays } from 'date-fns'
-import { stubFor } from './wiremock'
+import type { SuperAgentRequest } from 'superagent'
+import { stubFor, stubPing } from './wiremock'
 import { CaseLoad } from '../../server/data/interfaces/caseLoad'
 import { userDetailsMock } from '../../server/test/mocks/userDetailsMock'
 import { prisonEstablishmentRollSummaryMock } from '../../server/mocks/prisonRollCountSummaryMock'
 
 export default {
-  stubPrisonApiPing: (httpStatus = 200) =>
-    stubFor({
-      request: {
-        method: 'GET',
-        urlPattern: '/prison/health/ping',
-      },
-      response: {
-        status: httpStatus,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: { status: httpStatus === 200 ? 'UP' : 'DOWN' },
-      },
-    }),
+  stubPrisonApiPing: (httpStatus = 200): SuperAgentRequest => stubPing('/prison', httpStatus),
 
   stubUserCaseLoads: (caseLoads: CaseLoad[] = []) => {
     return stubFor({
