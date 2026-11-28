@@ -5,16 +5,39 @@ export default class GlobalSearchResults extends Page {
     super('Global search results')
   }
 
-  prisoners = () => ({
-    rows: () => cy.get('table tbody tr'),
-    row: (i: number) => ({
-      photo: () => cy.get('table tbody tr').eq(i).find('td').eq(0),
-      name: () => cy.get('table tbody tr').eq(i).find('td').eq(1),
-      prisonNumber: () => cy.get('table tbody tr').eq(i).find('td').eq(2),
-      dateOfBirth: () => cy.get('table tbody tr').eq(i).find('td').eq(3),
-      location: () => cy.get('table tbody tr').eq(i).find('td').eq(4),
-      workingName: () => cy.get('table tbody tr').eq(i).find('td').eq(5),
-      licences: () => cy.get('table tbody tr').eq(i).find('td').eq(6),
-    }),
-  })
+  get prisoners() {
+    const rows = () => cy.get<HTMLTableCellElement>('table tbody tr')
+
+    return {
+      get rows() {
+        return rows()
+      },
+
+      row(i: number) {
+        return {
+          get photo() {
+            return rows().eq(i).find<HTMLTableCellElement>('td:nth-child(1)')
+          },
+          get name() {
+            return rows().eq(i).find<HTMLTableCellElement>('td:nth-child(2)')
+          },
+          get prisonNumber() {
+            return rows().eq(i).find<HTMLTableCellElement>('td:nth-child(3)')
+          },
+          get dateOfBirth() {
+            return rows().eq(i).find<HTMLTableCellElement>('td:nth-child(4)')
+          },
+          get location() {
+            return rows().eq(i).find<HTMLTableCellElement>('td:nth-child(5)')
+          },
+          get workingName() {
+            return rows().eq(i).find<HTMLTableCellElement>('td:nth-child(6)')
+          },
+          get licences() {
+            return rows().eq(i).find<HTMLTableCellElement>('td:nth-child(7)')
+          },
+        }
+      },
+    }
+  }
 }
